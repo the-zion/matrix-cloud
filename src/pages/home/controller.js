@@ -1,9 +1,11 @@
 import {ref} from 'vue'
 
 export function controller() {
-    let handleClick = function (tab, event) {
-        console.log(tab, event)
+    let classSelect = function (index) {
+        console.log(index)
     }
-
-    return {handleClick}
+    let subClassSelect = function (index) {
+        console.log(index)
+    }
+    return {classSelect, subClassSelect}
 }

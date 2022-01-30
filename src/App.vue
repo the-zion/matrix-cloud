@@ -3,34 +3,14 @@
     <!--    <el-scrollbar class="main-scrollbar">-->
     <!--    </el-scrollbar>-->
     <el-header class="main-header">
-      <el-menu class="main-menu" mode="horizontal" :router=true :default-active="defaultActiveIndex">
+      <el-menu class="main-menu">
         <el-image class="main-cube-logo"
-                  :src="logoImageUrl"
+                  src="./src/assets/images/dark.svg"
                   fit="contain"
         ></el-image>
         <div style="flex-grow: 1"></div>
-        <!--          <el-menu-item class="main-menu-item" :route="item.state" :index="item.state" v-for="item in menulist">-->
-        <!--            {{ item.name }}-->
-        <!--          </el-menu-item>-->
-        <!--          <div style="flex-grow: 1"></div>-->
-        <!--          <el-row class="main-search">-->
-        <!--            <el-input v-model="input4" class="w-50 m-2" placeholder="Type something">-->
-        <!--              <template #prefix>-->
-        <!--                <el-icon class="el-input__icon">-->
-        <!--                  <search/>-->
-        <!--                </el-icon>-->
-        <!--              </template>-->
-        <!--            </el-input>-->
-        <!--          </el-row>-->
-        <!--          <el-tooltip content="我要发表" placement="bottom" effect="light">-->
-        <!--            <el-badge :hidden=true class="main-menu-icon">-->
-        <!--              <el-icon :size="20">-->
-        <!--                <edit/>-->
-        <!--              </el-icon>-->
-        <!--            </el-badge>-->
-        <!--          </el-tooltip>-->
-        <el-icon :size="20">
-          <message/>
+        <el-icon :size="20" class="main-menu-icon">
+          <search/>
         </el-icon>
         <el-badge :value="messageValue" :max="99" class="main-menu-icon" :hidden=messageCount(messageValue)>
           <el-icon :size="20" @click="add">
@@ -56,42 +36,37 @@
     </el-header>
     <el-container class="main-sub-container">
       <el-aside class="main-aside">
-        <el-scrollbar>
-          <el-row class="tac main-menu-row">
-            <el-col :span="24">
-              <el-menu
-                  default-active="0"
-                  class="el-menu-vertical-demo main-menu"
-              >
-                <el-menu-item index="0">
+        <el-row class="tac main-menu-row">
+          <el-col :span="24">
+            <el-menu
+                default-active="home"
+                class="el-menu-vertical-demo main-menu"
+                :router=true
+            >
+              <el-menu-item :route="item.state" :index="item.state" v-for="(item,index) in menulist">
+                <template #title>
                   <el-icon>
-                    <house/>
+                    <component :is="item.icon"></component>
                   </el-icon>
-                  <span>全部</span>
-                </el-menu-item>
-                <el-menu-item :index="index+1+''" v-for="(item,index) in menulist">
-                  <template #title>
-                    <el-icon>
-                      <component :is="item.icon"></component>
-                    </el-icon>
-                    <span>{{ item.name }}</span>
-                  </template>
-                </el-menu-item>
-              </el-menu>
-            </el-col>
-          </el-row>
-        </el-scrollbar>
+                  <span>{{ item.name }}</span>
+                </template>
+              </el-menu-item>
+            </el-menu>
+          </el-col>
+        </el-row>
       </el-aside>
-      <el-container>
-        <el-scrollbar class="main-scrollbar">
-          <el-main class="main-area">
-            <router-view></router-view>
-          </el-main>
-          <el-footer>Footer</el-footer>
-        </el-scrollbar>
-      </el-container>
+      <el-scrollbar class="main-scrollbar">
+        <el-main class="main-area">
+          <router-view></router-view>
+        </el-main>
+        <el-footer class="main-footer">
+          <a class="beian" href="https://beian.miit.gov.cn/" target="_blank">魔方技术 互联网ICP备案：粤ICP备2021123846号 </a>
+          <img style="margin: 0 2px 0 5px;" src="./assets/images/police.png">
+          <a class="beian" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=45040302000206"
+             target="_blank"> 桂公网安备 45040302000206号</a>
+        </el-footer>
+      </el-scrollbar>
     </el-container>
-    <!--      <el-footer class="main-footer">Footer</el-footer>-->
   </el-container>
 </template>
 
@@ -109,16 +84,49 @@ const menulist = ref([{
   key: "home",
   name: "首页",
   state: "home",
+  icon: "house"
 }, {
   id: 1,
   key: "community",
   name: "江湖",
   state: "community",
+  icon: "chat-dot-round"
 }, {
   id: 2,
+  key: "blog",
+  name: "我要发表",
+  state: "blog",
+  icon: "edit-pen"
+}, {
+  id: 3,
+  key: "message",
+  name: "消息中心",
+  state: "message",
+  icon: "message"
+}, {
+  id: 4,
+  key: "search",
+  name: "站内搜索",
+  state: "search",
+  icon: "search"
+}, {
+  id: 5,
+  key: "user",
+  name: "个人中心",
+  state: "user",
+  icon: "user"
+}, {
+  id: 6,
+  key: "setting",
+  name: "账号设置",
+  state: "setting",
+  icon: "setting"
+}, {
+  id: 7,
   key: "about",
   name: "关于Cube",
   state: "about",
+  icon: "question-filled"
 }])
 let messageValue = ref(0)
 
@@ -142,20 +150,21 @@ body {
 .main-container {
   position: absolute;
   top: 0;
-  bottom: -60px;
+  bottom: 0px;
   left: 0;
   right: 0;
 
   .main-header {
     padding: unset;
     height: 50px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
 
     .main-menu {
       display: flex;
       padding: 0 20px;
       height: 50px;
       align-items: center;
-      background: #001529;
+      background: #FFFFFF;
 
       .main-cube-logo {
         width: 100px;
@@ -168,7 +177,7 @@ body {
       }
 
       .main-menu-icon {
-        color: white;
+        color: #909399;
         margin: 0 15px;
         cursor: pointer;
         display: flex;
@@ -185,17 +194,27 @@ body {
   }
 
   .main-sub-container {
-    height: calc(100% - 50px);
+    position: relative;
+    top: 1px;
 
     .main-aside {
-      width: 180px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+      width: 208px;
 
       .main-menu-row {
         height: 100%;
 
         .main-menu {
           height: 100%;
+
+          .el-menu-item {
+            height: 48px;
+            padding: 0 16px !important;
+          }
+
+          .el-menu-item.is-active {
+            background: #e6f7ff;
+            border-right: 2px solid;
+          }
         }
 
       }
@@ -204,8 +223,8 @@ body {
     .main-scrollbar {
       position: absolute;
       top: 0;
-      bottom: -60px;
-      left: 0;
+      bottom: 0;
+      left: 208px;
       right: 0;
 
       .el-scrollbar__view {
@@ -215,16 +234,23 @@ body {
       .main-area {
         min-height: 100%;
         padding: unset;
+        background: #f0f2f5;
+      }
+
+      .main-footer {
+        background: #f0f2f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .beian {
+          font: 12px -apple-system, BlinkMacSystemFont, Helvetica Neue, Helvetica, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif;
+          color: rgba(0, 0, 0, .45);
+          text-decoration: unset;
+        }
       }
     }
   }
 
-
-  .main-footer {
-    background: #f6f9fa;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
 }
 </style>

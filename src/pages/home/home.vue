@@ -1,69 +1,51 @@
 <template>
   <el-container class="home-container">
-<!--    <el-aside class="home-aside">-->
-<!--      <el-scrollbar>-->
-<!--        <el-row class="tac home-menu-row">-->
-<!--          <el-col :span="24">-->
-<!--            <el-menu-->
-<!--                default-active="0"-->
-<!--                class="el-menu-vertical-demo home-menu"-->
-<!--            >-->
-<!--              <el-menu-item index="0">-->
-<!--                <el-icon>-->
-<!--                  <house/>-->
-<!--                </el-icon>-->
-<!--                <span>全部</span>-->
-<!--              </el-menu-item>-->
-<!--              <el-menu-item :index="index+1+''" v-for="(item,index) in menuList">-->
-<!--                <template #title>-->
-<!--                  <el-icon>-->
-<!--                    <component :is="item.icon"></component>-->
-<!--                  </el-icon>-->
-<!--                  <span>{{ item.name }}</span>-->
-<!--                </template>-->
-<!--              </el-menu-item>-->
-<!--            </el-menu>-->
-<!--          </el-col>-->
-<!--        </el-row>-->
-<!--      </el-scrollbar>-->
-<!--    </el-aside>-->
-    <el-main>
-      <div class="home-main-select">
-        <div style="flex-grow: 1">
-          <el-tabs class="home-tabs" v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane label="全部" name="all"></el-tab-pane>
-            <el-tab-pane label="按热度" name="hot"></el-tab-pane>
-          </el-tabs>
-        </div>
-        <div>
-          <el-tabs>
-            <el-tab-pane :disabled=true name="time">
-              <template #label>
-                <el-select v-model="value" class="m-2" placeholder="Select">
-                  <el-option
-                      v-for="item in options"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                  >
-                  </el-option>
-                </el-select>
-              </template>
-            </el-tab-pane>
-          </el-tabs>
-        </div>
-      </div>
+    <el-main class="home-main">
+      <el-row class="home-row">
+        <div class="home-group-label">所属类目：</div>
+        <el-radio-group v-model="classIndex" class="home-radio-group" @change="classSelect">
+          <el-radio :label="0">全部</el-radio>
+          <el-radio :label="index + 1" v-for="(item,index) in classList">{{ item.name }}</el-radio>
+        </el-radio-group>
+      </el-row>
+      <el-row class="home-row" v-if="classIndex !== 0">
+        <div class="home-group-label">所属子类：</div>
+        <el-radio-group v-model="subClassIndex" @change="subClassSelect">
+          <el-radio :label="index" v-for="(item,index) in classList[classIndex-1].child">{{ item.name }}</el-radio>
+        </el-radio-group>
+      </el-row>
+      <el-row class="home-row">
+        <div class="home-group-label">筛选排序：</div>
+        <el-select v-model="value" class="m-2" placeholder="Select">
+          <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+          >
+          </el-option>
+        </el-select>
+      </el-row>
+      <!--      <el-form ref="formRef" :model="form" label-width="120px">-->
+      <!--        <el-form-item label="所属类目：">-->
+      <!--          <el-checkbox-group v-model="form.type">-->
+      <!--            <el-checkbox label="Online activities" name="type"></el-checkbox>-->
+      <!--            <el-checkbox label="Promotion activities" name="type"></el-checkbox>-->
+      <!--            <el-checkbox label="Offline activities" name="type"></el-checkbox>-->
+      <!--            <el-checkbox label="Simple brand exposure" name="type"></el-checkbox>-->
+      <!--          </el-checkbox-group>-->
+      <!--        </el-form-item>-->
+      <!--      </el-form>-->
     </el-main>
   </el-container>
 </template>
 <script setup>
 import {ref} from "vue"
-import {metaData} from "./metaData.js"
+import {initData} from "./initData.js"
 import {controller} from "./controller.js"
 
-let {menuList, activeName} = metaData()
-let {handleClick} = controller()
-
+let {classIndex, subClassIndex, classList} = initData()
+let {classSelect, subClassSelect} = controller(subClassIndex)
 const value = ref('')
 
 const options = [
@@ -88,30 +70,40 @@ const options = [
     label: 'Option5',
   },
 ]
+
 </script>
 
 <style scoped lang="scss">
 .home-container {
   height: 100%;
 
-  .home-aside {
-    padding: 2px 0 0 0;
-    width: 180px;
-    .home-menu-row {
-      height: 100%;
+  .home-main {
+    margin: 24px 24px 0;
+    background: #FFFFFF;
 
-      .home-menu {
-        height: 100%;
+
+    .home-row {
+      align-items: start;
+      border-bottom: 1px solid #f0f0f0;
+      margin-bottom: 16px;
+      padding-bottom: 11px;
+
+      .home-group-label {
+        height: 32px;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
       }
 
+      .home-radio-group {
+        width: 90%;
+      }
     }
-  }
 
-  .home-main-select {
-    display: flex;
-
-    .home-tabs {
-      width: 100%;
+    .home-row:last-child {
+      border-bottom: unset;
+      margin-bottom: unset;
+      padding-bottom: unset;
     }
   }
 }

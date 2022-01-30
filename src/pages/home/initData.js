@@ -1,8 +1,12 @@
-import {ref} from 'vue'
+import {ref, watch} from 'vue'
 
-export function metaData() {
-    let activeName = ref('all')
-    let menuList = ref(
+export function initData() {
+    let classIndex = ref(0)
+    let subClassIndex = ref(0)
+    watch(classIndex, (i) => {
+        subClassIndex.value = 0
+    })
+    let classList = ref(
         [{
             "key": "language",
             "name": "语言",
@@ -104,5 +108,7 @@ export function metaData() {
             }]
         }]
     )
-    return {menuList, activeName}
+    return {
+        classIndex, subClassIndex, classList
+    }
 }
