@@ -7,5 +7,11 @@ export function controller() {
     let subClassSelect = function (index) {
         console.log(index)
     }
-    return {classSelect, subClassSelect}
+    let orderSelect = function (value) {
+        console.log(value)
+    }
+    let dateSelect = function (value) {
+        console.log(value)
+    }
+    return {classSelect, subClassSelect, orderSelect, dateSelect}
 }

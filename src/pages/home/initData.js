@@ -1,11 +1,33 @@
-import {ref, watch} from 'vue'
+import {h, ref, watch} from 'vue'
+import {ElDivider} from 'element-plus'
 
 export function initData() {
     let classIndex = ref(0)
     let subClassIndex = ref(0)
+    let date = ref('')
     watch(classIndex, (i) => {
         subClassIndex.value = 0
     })
+    let orderValue = ref('id')
+    let spacer = h(ElDivider, {direction: 'vertical'})
+    let orderOptions = ref([
+        {
+            value: 'id',
+            label: '默认排序',
+        },
+        {
+            value: 'love',
+            label: '点赞最多',
+        },
+        {
+            value: 'collect',
+            label: '收藏越多',
+        },
+        {
+            value: 'week',
+            label: '一周热榜',
+        }
+    ])
     let classList = ref(
         [{
             "key": "language",
@@ -108,7 +130,9 @@ export function initData() {
             }]
         }]
     )
+
     return {
-        classIndex, subClassIndex, classList
+        classIndex, subClassIndex, classList, orderValue, orderOptions, date, spacer
     }
+
 }
