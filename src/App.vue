@@ -55,8 +55,8 @@
           </el-col>
         </el-row>
       </el-aside>
-      <el-scrollbar class="main-scrollbar">
-        <el-main class="main-area">
+      <div class="main-scrollbar" style="overflow:auto;">
+        <el-main class="main-area" v-infinite-scroll="load" :infinite-scroll-immediate=false :infinite-scroll-delay=500>
           <router-view></router-view>
         </el-main>
         <el-footer class="main-footer">
@@ -65,13 +65,24 @@
           <a class="beian" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=45040302000206"
              target="_blank"> 桂公网安备 45040302000206号</a>
         </el-footer>
-      </el-scrollbar>
+      </div>
+      <!--      <ul v-infinite-scroll="load" class="main-scrollbar" style="overflow: auto">-->
+      <!--        <el-main class="main-area">-->
+      <!--          <router-view></router-view>-->
+      <!--        </el-main>-->
+      <!--        <el-footer class="main-footer">-->
+      <!--          <a class="beian" href="https://beian.miit.gov.cn/" target="_blank">魔方技术 互联网ICP备案：粤ICP备2021123846号 </a>-->
+      <!--          <img style="margin: 0 2px 0 5px;" src="./assets/images/police.png">-->
+      <!--          <a class="beian" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=45040302000206"-->
+      <!--             target="_blank"> 桂公网安备 45040302000206号</a>-->
+      <!--        </el-footer>-->
+      <!--      </ul>-->
     </el-container>
   </el-container>
 </template>
 
 <script setup>
-import {ref, reactive, toRefs} from 'vue'
+import {ref, reactive, toRefs, provide} from 'vue'
 
 const url = reactive({
   userImageUrl: new URL(`./assets/images/user.jpg`, import.meta.url).href,
@@ -79,6 +90,17 @@ const url = reactive({
 })
 const {userImageUrl, logoImageUrl} = toRefs(url)
 const defaultActiveIndex = "home"
+let infiniteScrollValue = ref(1)
+//使用 提供/注入 命令子组件做事
+provide('infinite-scroll', infiniteScrollValue);
+let load = function () {
+  console.log(1)
+  infiniteScrollValue.value = 1
+  setTimeout(function () {
+    infiniteScrollValue.value = 0
+  }, 50)
+}
+
 const menulist = ref([{
   id: 0,
   key: "home",

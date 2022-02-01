@@ -6,13 +6,13 @@
           <div class="home-group-label">所属类目：</div>
           <el-radio-group v-model="classIndex" class="home-radio-group" @change="classSelect">
             <el-radio :label="0">全部</el-radio>
-            <el-radio :label="index + 1" v-for="(item,index) in classList">{{ item.name }}</el-radio>
+            <el-radio :label="index + 1" v-for="(item,index) in classList">{{ item.label }}</el-radio>
           </el-radio-group>
         </el-row>
         <el-row class="home-row" v-if="classIndex !== 0">
           <div class="home-group-label">所属子类：</div>
           <el-radio-group v-model="subClassIndex" @change="subClassSelect">
-            <el-radio :label="index" v-for="(item,index) in classList[classIndex-1].child">{{ item.name }}</el-radio>
+            <el-radio :label="index" v-for="(item,index) in classList[classIndex-1].child">{{ item.label }}</el-radio>
           </el-radio-group>
         </el-row>
         <el-row class="home-row">
@@ -39,7 +39,7 @@
       </div>
       <div class="home-body">
         <!--        <el-empty description="暂无数据"></el-empty>-->
-        <div class="body-item">
+        <div class="body-item" v-for="item in testBox">
           <el-row class="body-item-row body-item-title">{{ 'Alipay' }}</el-row>
           <el-row class="body-item-row">
             <el-space wrap :size="10">
@@ -97,12 +97,14 @@
   </el-container>
 </template>
 <script setup>
-import {ref} from "vue"
+import {ref, watch, inject} from "vue"
 import {initData} from "./initData.js"
 import {controller} from "./controller.js"
+import {watchData} from "./watch.js"
 
-let {classIndex, subClassIndex, classList, orderValue, orderOptions, date, spacer} = initData()
+let {classIndex, subClassIndex, classList, orderValue, orderOptions, date, spacer, testBox} = initData()
 let {classSelect, subClassSelect, orderSelect, dateSelect} = controller()
+watchData(classIndex, subClassIndex, date, orderValue)
 const tags = ref([
   {type: '', label: 'Tag 1'},
   {type: 'success', label: 'Tag 2'},
@@ -111,6 +113,18 @@ const tags = ref([
   {type: 'warning', label: 'Tag 5'},
 ])
 const bodyContent = ref("蚂蚁金服设计平台 ant.design，用最小的工作量，无缝接入蚂蚁金服生态，提供跨越设计与开发的体验解决方案。蚂蚁金服设计平台 ant.design，用最小的工作量，无缝接入蚂蚁金服生态，提供跨越设计与开发的体验解决方案。")
+let infiniteScrollValue = inject('infinite-scroll');
+watch(infiniteScrollValue, (item) => {
+  console.log(infiniteScrollValue.value)
+  console.log(2)
+  if (infiniteScrollValue.value === 1) {
+    testBox.value = testBox.value.concat([1,2,3,4,5])
+  }
+});
+
+let load = function (){
+  console.log(222)
+}
 
 </script>
 
@@ -163,6 +177,7 @@ const bodyContent = ref("蚂蚁金服设计平台 ant.design，用最小的工�
 
       .body-item {
         padding: 16px 24px;
+        border-bottom: 1px solid #f0f0f0;
 
         .body-item-title {
           color: #409EFF;
@@ -214,6 +229,10 @@ const bodyContent = ref("蚂蚁金服设计平台 ant.design，用最小的工�
         .body-item-descriptions {
           width: 730px;
         }
+      }
+
+      .body-item:last-child {
+        border-bottom: unset;
       }
     }
   }

@@ -3,7 +3,7 @@ import {ElDivider} from 'element-plus'
 
 export function initData() {
     let classIndex = ref(0)
-    let subClassIndex = ref(0)
+    let subClassValue = ref('all')
     let date = ref('')
     let orderValue = ref('id')
     let spacer = h(ElDivider, {direction: 'vertical'})
@@ -12,14 +12,6 @@ export function initData() {
         {
             value: 'id',
             label: '默认排序',
-        },
-        {
-            value: 'love',
-            label: '点赞最多',
-        },
-        {
-            value: 'collect',
-            label: '收藏最多',
         },
         {
             value: 'week',
@@ -130,7 +122,7 @@ export function initData() {
     )
 
     return {
-        classIndex, subClassIndex, classList, orderValue, orderOptions, date, spacer, testBox
+        classIndex, subClassValue, classList, orderValue, orderOptions, date, spacer, testBox
     }
 
 }
