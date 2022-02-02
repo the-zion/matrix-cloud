@@ -8,6 +8,8 @@ export function initData() {
     let orderValue = ref('id')
     let spacer = h(ElDivider, {direction: 'vertical'})
     let testBox = ref([1, 2, 3, 4, 5, 6, 7, 8, 9])
+    let loading = ref(false)
+    let dataLoading = ref(false)
     let orderOptions = ref([
         {
             value: 'id',
@@ -130,7 +132,7 @@ export function initData() {
     )
 
     return {
-        classIndex, subClassIndex, classList, orderValue, orderOptions, date, spacer, testBox
+        classIndex, subClassIndex, classList, orderValue, orderOptions, date, spacer, testBox, loading, dataLoading
     }
 
 }

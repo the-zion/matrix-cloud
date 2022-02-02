@@ -55,28 +55,15 @@
           </el-col>
         </el-row>
       </el-aside>
-      <div class="main-scrollbar" style="overflow:auto;">
-        <el-main class="main-area" v-infinite-scroll="load" :infinite-scroll-immediate=false :infinite-scroll-delay=500>
-          <router-view></router-view>
-        </el-main>
+      <el-scrollbar class="main-scrollbar" :native="true">
+        <router-view></router-view>
         <el-footer class="main-footer">
           <a class="beian" href="https://beian.miit.gov.cn/" target="_blank">魔方技术 互联网ICP备案：粤ICP备2021123846号 </a>
           <img style="margin: 0 2px 0 5px;" src="./assets/images/police.png">
           <a class="beian" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=45040302000206"
              target="_blank"> 桂公网安备 45040302000206号</a>
         </el-footer>
-      </div>
-      <!--      <ul v-infinite-scroll="load" class="main-scrollbar" style="overflow: auto">-->
-      <!--        <el-main class="main-area">-->
-      <!--          <router-view></router-view>-->
-      <!--        </el-main>-->
-      <!--        <el-footer class="main-footer">-->
-      <!--          <a class="beian" href="https://beian.miit.gov.cn/" target="_blank">魔方技术 互联网ICP备案：粤ICP备2021123846号 </a>-->
-      <!--          <img style="margin: 0 2px 0 5px;" src="./assets/images/police.png">-->
-      <!--          <a class="beian" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=45040302000206"-->
-      <!--             target="_blank"> 桂公网安备 45040302000206号</a>-->
-      <!--        </el-footer>-->
-      <!--      </ul>-->
+      </el-scrollbar>
     </el-container>
   </el-container>
 </template>
@@ -90,16 +77,6 @@ const url = reactive({
 })
 const {userImageUrl, logoImageUrl} = toRefs(url)
 const defaultActiveIndex = "home"
-let infiniteScrollValue = ref(1)
-//使用 提供/注入 命令子组件做事
-provide('infinite-scroll', infiniteScrollValue);
-let load = function () {
-  console.log(1)
-  infiniteScrollValue.value = 1
-  setTimeout(function () {
-    infiniteScrollValue.value = 0
-  }, 50)
-}
 
 const menulist = ref([{
   id: 0,
@@ -162,6 +139,16 @@ function add() {
 
 </script>
 <style lang="scss">
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #0003;
+  border-radius: 10px;
+  transition: all .2s ease-in-out;
+}
+
 body {
   margin: unset;
   overflow: hidden;
@@ -248,15 +235,10 @@ body {
       bottom: 0;
       left: 208px;
       right: 0;
+      background: #f0f2f5;
 
       .el-scrollbar__view {
         height: 100%;
-      }
-
-      .main-area {
-        min-height: 100%;
-        padding: unset;
-        background: #f0f2f5;
       }
 
       .main-footer {
