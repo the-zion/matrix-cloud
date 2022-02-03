@@ -1,6 +1,9 @@
 import {createStore} from 'vuex'
 
 const store = createStore({
+    routerTo() {
+        console.log("login")
+    },
     state() {
         return {
             count: 666
@@ -16,11 +19,11 @@ const store = createStore({
             state.count++
         }
     },
-    actions:{
-        asyncAdd({commit}){
-            setTimeout(()=>{
+    actions: {
+        asyncAdd({commit}) {
+            setTimeout(() => {
                 commit('add')
-            },1000)
+            }, 1000)
         }
     }
 })

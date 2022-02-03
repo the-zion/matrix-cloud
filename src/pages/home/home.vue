@@ -65,7 +65,7 @@
             </el-descriptions>
             <el-row class="body-item-row" :gutter="20">
             <span class="body-item-userimage">
-              <el-avatar :size="24" :src="'./src/assets/images/user.jpg'"></el-avatar>
+              <el-avatar :size="24" :src="'../src/assets/images/user.jpg'"></el-avatar>
             </span>
               <span class="body-item-username">{{ '付小小' }}</span>
               <span class="body-item-icon">
@@ -152,7 +152,7 @@ const bodyContent = ref("蚂蚁金服设计平台 ant.design，用最小的工�
 let load = function () {
   loading.value = true
   setTimeout(function () {
-    // loading.value = false
+    loading.value = false
     // testBox.value = testBox.value.concat([1, 2, 3, 4, 5])
     console.log(222)
   }, 5000)
@@ -268,6 +268,9 @@ let load = function () {
             width: 730px;
           }
         }
+        .body-item:last-child {
+          border-bottom: unset;
+        }
       }
 
       .body-footer {
@@ -291,10 +294,6 @@ let load = function () {
             color: #909399;
           }
         }
-      }
-
-      .body-item:last-child {
-        border-bottom: unset;
       }
 
     }
