@@ -1,11 +1,19 @@
 <template>
   <el-container class="main-container">
     <el-header class="main-header">
-      <el-menu class="main-menu">
+      <el-menu class="main-menu" :router=true default-active="home">
         <el-image class="main-cube-logo"
-                  src="../src/assets/images/dark.svg"
+                  src="../src/assets/images/cube.svg"
                   fit="contain"
         ></el-image>
+        <el-menu-item :route="item.state" :index="item.state" v-for="(item,index) in menulist">
+          <template #title>
+            <el-icon>
+              <component :is="item.icon"></component>
+            </el-icon>
+            <span>{{ item.name }}</span>
+          </template>
+        </el-menu-item>
         <div style="flex-grow: 1"></div>
         <el-icon :size="20" class="main-menu-icon" @click="showSearchClick">
           <search/>
@@ -44,26 +52,18 @@
       </el-menu>
     </el-header>
     <el-container class="main-sub-container">
-      <el-aside class="main-aside">
-        <el-row class="tac main-menu-row">
-          <el-col :span="24">
-            <el-menu
-                default-active="home"
-                class="el-menu-vertical-demo main-menu"
-                :router=true
-            >
-              <el-menu-item :route="item.state" :index="item.state" v-for="(item,index) in menulist">
-                <template #title>
-                  <el-icon>
-                    <component :is="item.icon"></component>
-                  </el-icon>
-                  <span>{{ item.name }}</span>
-                </template>
-              </el-menu-item>
-            </el-menu>
-          </el-col>
-        </el-row>
-      </el-aside>
+<!--      <el-aside class="main-aside">-->
+<!--        <el-row class="tac main-menu-row">-->
+<!--          <el-col :span="24">-->
+<!--            <el-menu-->
+<!--                default-active="home"-->
+<!--                class="el-menu-vertical-demo main-menu"-->
+<!--                :router=true-->
+<!--            >-->
+<!--            </el-menu>-->
+<!--          </el-col>-->
+<!--        </el-row>-->
+<!--      </el-aside>-->
       <el-scrollbar class="main-scrollbar" :native="true">
         <router-view></router-view>
         <el-footer class="main-footer">
@@ -106,19 +106,17 @@ body {
 .main-container {
   position: absolute;
   top: 0;
-  bottom: 0px;
+  bottom: 0;
   left: 0;
   right: 0;
 
   .main-header {
-    padding: unset;
-    height: 50px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+    border-bottom: 1px solid #EBEEF5;
 
     .main-menu {
       display: flex;
-      padding: 0 20px;
-      height: 50px;
+      border: unset;
+      height: 100%;
       align-items: center;
       background: #FFFFFF;
 
@@ -171,38 +169,36 @@ body {
 
   .main-sub-container {
     position: relative;
-    top: 1px;
 
-    .main-aside {
-      width: 208px;
-
-      .main-menu-row {
-        height: 100%;
-
-        .main-menu {
-          height: 100%;
-
-          .el-menu-item {
-            height: 48px;
-            padding: 0 16px !important;
-          }
-
-          .el-menu-item.is-active {
-            background: #e6f7ff;
-            border-right: 2px solid;
-          }
-        }
-
-      }
-    }
+    //.main-aside {
+    //  width: 208px;
+    //
+    //  .main-menu-row {
+    //    height: 100%;
+    //
+    //    .main-menu {
+    //      height: 100%;
+    //
+    //      .el-menu-item {
+    //        height: 48px;
+    //        padding: 0 16px !important;
+    //      }
+    //
+    //      .el-menu-item.is-active {
+    //        background: #e6f7ff;
+    //        border-right: 2px solid;
+    //      }
+    //    }
+    //
+    //  }
+    //}
 
     .main-scrollbar {
       position: absolute;
       top: 0;
       bottom: 0;
-      left: 208px;
+      left: 0;
       right: 0;
-      background: #f0f2f5;
 
       .el-scrollbar__view {
         height: 100%;

@@ -8,7 +8,7 @@ import Community from '../pages/community/community.vue'
 import Blog from '../pages/blog/blog.vue'
 import Message from '../pages/message/message.vue'
 import Search from '../pages/search/search.vue'
-import About from '../pages/about/about.vue'
+// import About from '../pages/about/about.vue'
 import Login from "../pages/login/login.vue"
 
 const routes = [
@@ -48,11 +48,12 @@ const routes = [
                 name: 'search',
                 component: Search
             },
-            {
-                path: 'about',
-                name: 'about',
-                component: About
-            }]
+            // {
+            //     path: 'about',
+            //     name: 'about',
+            //     component: About
+            // }]
+        ]
     },
     {
         path: '/login',

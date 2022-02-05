@@ -1,5 +1,20 @@
 <template>
   <el-container class="home-container" v-infinite-scroll="load">
+    <el-aside class="home-aside">
+      <el-tree node-key="value"
+               ref="treeRef"
+               :data="classList"
+               check-on-click-node
+               show-checkbox
+               highlight-current
+               accordion
+               :default-expanded-keys="['All']"
+               :default-checked-keys="['all']"
+               :current-node-key="'all'"
+               @check="treeCheck"
+               :props="{ class: 'is-penultimate' }"
+      />
+    </el-aside>
     <el-main class="home-main">
       <div class="home-options">
         <el-row class="home-row">
@@ -139,7 +154,8 @@ let {
   loading,
   dataLoading
 } = initData()
-let {classSelect, subClassSelect, orderSelect, dateSelect} = controller(dataLoading)
+let treeRef = ref()
+let {classSelect, subClassSelect, orderSelect, dateSelect, treeCheck} = controller(dataLoading,treeRef)
 watchData(classIndex, subClassIndex, date, orderValue)
 const tags = ref([
   {type: '', label: 'Tag 1'},
@@ -160,8 +176,39 @@ let load = function () {
 
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
+
 .home-container {
+
+  .home-aside {
+    width: 208px;
+    padding: 20px;
+    border-right: 1px solid #EBEEF5;
+
+    .is-penultimate > .el-tree-node__content > .el-tree-node__label {
+      font-size: 13px !important;
+      font-weight: 300;
+    }
+
+    .main-menu-row {
+      height: 100%;
+
+      .main-menu {
+        height: 100%;
+
+        .el-menu-item {
+          height: 48px;
+          padding: 0 16px !important;
+        }
+
+        .el-menu-item.is-active {
+          background: #e6f7ff;
+          border-right: 2px solid;
+        }
+      }
+
+    }
+  }
 
   .home-main {
     height: fit-content;
@@ -268,6 +315,7 @@ let load = function () {
             width: 730px;
           }
         }
+
         .body-item:last-child {
           border-bottom: unset;
         }

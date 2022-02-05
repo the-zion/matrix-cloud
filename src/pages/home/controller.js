@@ -1,6 +1,6 @@
 import {ref} from 'vue'
 
-export function controller(dataLoading) {
+export function controller(dataLoading, treeRef) {
     let classSelect = function (index) {
         dataLoading.value = true
         console.log(index)
@@ -17,5 +17,10 @@ export function controller(dataLoading) {
         dataLoading.value = true
         console.log(value)
     }
-    return {classSelect, subClassSelect, orderSelect, dateSelect}
+
+    function treeCheck() {
+        console.log(treeRef.value.getCheckedKeys(true))
+    }
+
+    return {classSelect, subClassSelect, orderSelect, dateSelect, treeCheck}
 }

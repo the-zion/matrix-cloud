@@ -4,21 +4,21 @@
       <div class="login-left">
         <div class="login-body">
           <div class="login-block">
-            <div class="login-title">欢迎使用干货鸭</div>
+            <div class="login-title">欢迎使用Cube</div>
             <el-tabs v-model="activeName" @tab-click="handleClick">
-              <el-tab-pane label="手机号" name="first">
-                <!--                <el-input v-model="inputPhone" placeholder="请输入你的手机号" size="large"/>-->
-              </el-tab-pane>
-              <el-tab-pane label="邮箱" name="second">
-                <!--                <el-input v-model="inputEmail" placeholder="请输入你的邮箱" size="large"/>-->
-              </el-tab-pane>
+              <el-tab-pane label="手机号" name="first"></el-tab-pane>
+              <el-tab-pane label="邮箱" name="second"></el-tab-pane>
             </el-tabs>
             <div class="login-input-block">
-              <transition name="input-tran">
-                <div v-if="email" class="phone-email">
-                  <el-input class="login-input" v-model="inputPhone" placeholder="请输入你的手机号" size="large"/>
-                  <el-input class="login-input" v-model="inputEmail" placeholder="请输入你的邮箱" size="large"/>
-                </div>
+              <transition name="phone-tran">
+                <el-input v-show="!email" class="login-input-phone" v-model="inputPhone" placeholder="请输入你的手机号" size="large"/>
+                <!--                <div v-bind:key="email" class="phone-email">-->
+                <!--                  <el-input class="login-input" v-model="inputEmail" placeholder="请输入你的邮箱" size="large"/>-->
+                <!--                </div>-->
+
+              </transition>
+              <transition name="email-tran">
+                <el-input v-show="email" class="login-input-email" v-model="inputEmail" placeholder="请输入你的邮箱" size="large"/>
               </transition>
             </div>
             <el-row class="login-button">
@@ -58,7 +58,7 @@
         </div>
       </div>
       <div class="login-right">
-        <img class="login-background" src="../../assets/images/dark-complate.svg">
+        <img class="login-background" src="../../assets/images/cube-main.svg">
       </div>
     </el-main>
   </el-container>
@@ -120,26 +120,37 @@ let {visitor} = controller()
 
         .login-input-block {
           overflow: hidden;
+          position: relative;
+          height: 40px;
 
-          .phone-email {
-            width: 792px;
-            display: flex;
-            justify-content: space-between;
-            position: relative;
+          .login-input-phone {
+            width: 380px;
+            position: absolute;
             right: 0;
-
-            .login-input {
-              width: 380px;
-            }
           }
 
-          .input-tran-enter-active, .fade-leave-active {
-            transition: right 0.5s linear;
+          .login-input-email {
+            width: 380px;
+            position: absolute;
+            right: 0;
           }
 
-          .input-tran-enter-from, .fade-leave-to {
+          .phone-tran-enter-active, .phone-tran-leave-active {
+            transition: right 0.3s linear;
+          }
+
+          .phone-tran-enter-from, .phone-tran-leave-to {
             right: 412px;
           }
+
+          .email-tran-enter-active, .email-tran-leave-active {
+            transition: right 0.3s linear;
+          }
+
+          .email-tran-enter-from, .email-tran-leave-to {
+            right: -412px;
+          }
+
         }
 
         .login-button {

@@ -30,13 +30,16 @@ export function initData() {
     ])
     let classList = ref(
         [{
-            "value": "language",
-            "label": "编程语言",
-            "icon": "reading",
-            "child": [{
+            "value": "All",
+            "label": "全部",
+            "children": [{
                 "value": "all",
                 "label": "不限",
-            }, {
+            }],
+        }, {
+            "value": "language",
+            "label": "编程语言",
+            "children": [{
                 "value": "python",
                 "label": "Python",
             }, {
@@ -58,11 +61,7 @@ export function initData() {
         }, {
             "value": "middleware",
             "label": "中间件",
-            "icon": "connection",
-            "child": [{
-                "value": "all",
-                "label": "不限",
-            }, {
+            "children": [{
                 "value": "redis",
                 "label": "Redis",
             }, {
@@ -72,11 +71,7 @@ export function initData() {
         }, {
             "value": "virtualization",
             "label": "云原生",
-            "icon": "cloud",
-            "child": [{
-                "value": "all",
-                "label": "不限",
-            }, {
+            "children": [{
                 "value": "docker",
                 "label": "Docker",
             }, {
@@ -89,22 +84,14 @@ export function initData() {
         }, {
             "value": "database",
             "label": "数据库",
-            "icon": "coin",
-            "child": [{
-                "value": "all",
-                "label": "不限",
-            }, {
+            "children": [{
                 "value": "mysql",
                 "label": "Mysql",
             }]
         }, {
             "value": "basics",
             "label": "计算机基础",
-            "icon": "cpu",
-            "child": [{
-                "value": "all",
-                "label": "不限",
-            }, {
+            "children": [{
                 "value": "network",
                 "label": "网络",
             }, {
@@ -120,11 +107,7 @@ export function initData() {
         }, {
             "value": "other",
             "label": "其他",
-            "icon": "more",
-            "child": [{
-                "value": "all",
-                "label": "不限",
-            }, {
+            "children": [{
                 "value": "live",
                 "label": "生活",
             }]
