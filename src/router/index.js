@@ -10,6 +10,11 @@ import Message from '../pages/message/message.vue'
 import Search from '../pages/search/search.vue'
 // import About from '../pages/about/about.vue'
 import Login from "../pages/login/login.vue"
+import LoginMain from "../pages/login/main/main.vue"
+import PhoneCode from "../pages/login/phoneCode/phoneCode.vue"
+import Password from "../pages/login/password/password.vue"
+import PasswordReset from "../pages/login/passwordReset/passwordReset.vue"
+
 
 const routes = [
     {
@@ -58,7 +63,30 @@ const routes = [
     {
         path: '/login',
         name: 'login',
-        component: Login
+        component: Login,
+        redirect: { name: 'loginMain' },
+        children: [
+            {
+                path: 'loginMain',
+                name: 'loginMain',
+                component: LoginMain
+            },
+            {
+                path: 'phoneCode',
+                name: 'phoneCode',
+                component: PhoneCode
+            },
+            {
+                path: 'password',
+                name: 'password',
+                component: Password
+            },
+            {
+                path: 'passwordReset',
+                name: 'passwordReset',
+                component: PasswordReset
+            }
+        ]
     }
 ]
 

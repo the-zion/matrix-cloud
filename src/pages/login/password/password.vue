@@ -1,0 +1,109 @@
+<template>
+  <div class="base-back" @click="back">
+    <span class="base-back-icon">
+      <el-icon><arrow-left-bold/></el-icon>
+    </span>
+    <span class="base-back-word">返回</span>
+  </div>
+  <div class="login-password-title">输入密码</div>
+  <div class="login-password-input-block">
+    <el-input class="login-password-input-phone" v-model="inputPassword"
+              placeholder="请输入密码" size="large"
+              @input="passwordInput"
+              show-password
+    />
+  </div>
+  <el-row class="login-password-statement blue">{{ "验证码登录" }}</el-row>
+  <el-row class="login-password-statement">
+    <span>{{ "忘记密码?" }}</span>
+    <span class="blue password-reset" @click="passwordReset">点此重置</span>
+  </el-row>
+  <div class="flex-grow"></div>
+  <el-row class="login-password-button">
+    <el-button class="button-style" size="large" :disabled="!buttonDisable"
+               :type="!buttonDisable?'info':'primary'"
+               @click="buttonNext">下一步
+    </el-button>
+  </el-row>
+</template>
+
+<script setup>
+import {initData} from "./initData.js"
+import {controller} from "./controller.js"
+
+let {inputPassword, buttonDisable, routerParams} = initData()
+let {init, passwordInput, back, passwordReset} = controller(buttonDisable, routerParams)
+
+init()
+</script>
+
+<style lang="scss">
+.base-back {
+  position: relative;
+  top: 2px;
+  align-items: center;
+  display: flex;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  padding: 0 4px 0 2px;
+  cursor: pointer;
+  background-color: transparent;
+
+  .base-back-icon {
+    display: flex;
+    color: #606266;
+  }
+
+  .base-back-word {
+    color: #606266;
+  }
+}
+
+.login-password-title {
+  font-size: 22px;
+  color: #1f2329;
+  font-weight: 600;
+  line-height: 30px;
+  white-space: pre-wrap;
+  margin-bottom: 24px;
+}
+
+.login-password-input-block {
+  overflow: hidden;
+  position: relative;
+  height: 40px;
+
+}
+
+.login-password-button {
+  margin-top: 16px;
+
+  .button-style {
+    width: 100%;
+    border-radius: 6px;
+  }
+
+}
+
+.login-password-statement {
+  margin-top: 20px;
+  color: #646a73;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.blue {
+  color: #409EFF;
+  cursor: pointer;
+}
+
+.password-reset {
+  margin: 0 5px;
+}
+
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+</style>
