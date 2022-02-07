@@ -38,7 +38,8 @@ export function controller(activeName, inputPhone, inputEmail, buttonDisable, cu
         params['state'] = tab
         setTimeout(function () {
             isLoading.value = false
-            router.push({name: 'code', replace: true, params: params})
+            // router.push({name: 'code', replace: true, params: params})
+            router.push({name: 'code', params: params})
         }, 1000)
     }
 

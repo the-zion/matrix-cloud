@@ -4,60 +4,11 @@
       <div class="login-left">
         <div class="login-body">
           <div class="login-block">
-            <router-view></router-view>
-<!--            <div class="login-title">欢迎使用Cube</div>-->
-<!--            <el-tabs v-model="activeName" @tab-click="handleClick">-->
-<!--              <el-tab-pane label="手机号" name="phone"></el-tab-pane>-->
-<!--              <el-tab-pane label="邮箱" name="email"></el-tab-pane>-->
-<!--            </el-tabs>-->
-<!--            <div class="login-input-block">-->
-<!--              <transition name="phone-tran">-->
-<!--                <el-input v-if="activeName === 'phone'" class="login-input-phone" v-model="inputPhone"-->
-<!--                          placeholder="请输入你的手机号" size="large"-->
-<!--                          @input="phoneInput"/>-->
-
-<!--              </transition>-->
-<!--              <transition name="email-tran">-->
-<!--                <el-input v-show="activeName === 'email'" class="login-input-email" v-model="inputEmail"-->
-<!--                          placeholder="请输入你的邮箱" size="large"-->
-<!--                          @input="emailInput"/>-->
-<!--              </transition>-->
-<!--            </div>-->
-<!--            <el-row class="login-button">-->
-<!--              <el-button class="button-style" size="large" :disabled="buttonDisable"-->
-<!--                         :type="buttonDisable?'info':'primary'">下一步-->
-<!--              </el-button>-->
-<!--            </el-row>-->
-<!--            <el-row class="login-statement">{{ currentNode }}</el-row>-->
-<!--            <div class="flex-grow"></div>-->
-<!--            <div class="more-options-container">-->
-<!--              <el-row>-->
-<!--                <el-col :span="9">-->
-<!--                  <hr class="option-hr"/>-->
-<!--                </el-col>-->
-<!--                <el-col :span="6" class="option-word">更多登录方式</el-col>-->
-<!--                <el-col :span="9">-->
-<!--                  <hr class="option-hr"/>-->
-<!--                </el-col>-->
-<!--              </el-row>-->
-<!--              <el-row>-->
-<!--                <el-col :span="8" class="option-col">-->
-<!--                  <el-tooltip content="游客浏览" placement="right" effect="light">-->
-<!--                    <img @click="visitor" src="../../assets/images/user.jpg" class="option-icon">-->
-<!--                  </el-tooltip>-->
-<!--                </el-col>-->
-<!--                <el-col :span="8" class="option-col">-->
-<!--                  <el-tooltip content="微信登录" placement="right" effect="light">-->
-<!--                    <img src="../../assets/images/wechat.svg" class="option-icon">-->
-<!--                  </el-tooltip>-->
-<!--                </el-col>-->
-<!--                <el-col :span="8" class="option-col">-->
-<!--                  <el-tooltip content="github登录" placement="right" effect="light">-->
-<!--                    <img src="../../assets/images/GitHub.svg" class="option-icon">-->
-<!--                  </el-tooltip>-->
-<!--                </el-col>-->
-<!--              </el-row>-->
-<!--            </div>-->
+            <router-view v-slot="{ Component }">
+              <transition name="login" mode="out-in">
+                <component :is="Component"/>
+              </transition>
+            </router-view>
           </div>
         </div>
       </div>
@@ -72,7 +23,7 @@
 
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .login-main {
   position: absolute;
   padding: unset;
@@ -102,8 +53,17 @@
         display: flex;
         flex-direction: column;
       }
+
+      .login-enter-active, .login-leave-active {
+        transition: opacity 0.3s linear;
+      }
+
+      .login-enter-from, .login-leave-to {
+        opacity: 0;
+      }
     }
   }
+
 
   .login-right {
     width: 36%;

@@ -65,7 +65,12 @@
 <!--        </el-row>-->
 <!--      </el-aside>-->
       <el-scrollbar class="main-scrollbar" :native="true">
-        <router-view></router-view>
+<!--        <router-view></router-view>-->
+        <router-view v-slot="{ Component }">
+          <transition name="fade" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </router-view>
         <el-footer class="main-footer">
           <a class="beian" href="https://beian.miit.gov.cn/" target="_blank">魔方技术 互联网ICP备案：粤ICP备2021123846号 </a>
           <img style="margin: 0 2px 0 5px;" src="../../assets/images/police.png">
@@ -202,6 +207,14 @@ body {
 
       .el-scrollbar__view {
         height: 100%;
+      }
+
+      .fade-enter-active, .fade-leave-active {
+        transition: opacity 0.3s linear;
+      }
+
+      .fade-enter-from, .fade-leave-to {
+        opacity: 0;
       }
 
       .main-footer {

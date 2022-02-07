@@ -1,30 +1,32 @@
 <template>
-  <div class="base-back" @click="back">
+  <el-container direction="vertical">
+    <div class="base-back" @click="back">
     <span class="base-back-icon">
       <el-icon><arrow-left-bold/></el-icon>
     </span>
-    <span class="base-back-word">返回</span>
-  </div>
-  <div class="login-password-title">输入密码</div>
-  <div class="login-password-input-block">
-    <el-input class="login-password-input-phone" v-model="inputPassword"
-              placeholder="请输入密码" size="large"
-              @input="passwordInput"
-              show-password
-    />
-  </div>
-  <el-row class="login-password-statement blue" @click="codeLogin">{{ "验证码登录" }}</el-row>
-  <el-row class="login-password-statement">
-    <span>{{ "忘记密码?" }}</span>
-    <span class="blue password-reset" @click="passwordReset">点此重置</span>
-  </el-row>
-  <div class="flex-grow"></div>
-  <el-row class="login-password-button">
-    <el-button class="button-style" size="large" :disabled="!buttonDisable" :loading="isLoading"
-               :type="!buttonDisable?'info':'primary'"
-               @click="buttonNext">下一步
-    </el-button>
-  </el-row>
+      <span class="base-back-word">返回</span>
+    </div>
+    <div class="login-password-title">输入密码</div>
+    <div class="login-password-input-block">
+      <el-input class="login-password-input-phone" v-model="inputPassword"
+                placeholder="请输入密码" size="large"
+                @input="passwordInput"
+                show-password
+      />
+    </div>
+    <el-row class="login-password-statement blue" @click="codeLogin">{{ "验证码登录" }}</el-row>
+    <el-row class="login-password-statement">
+      <span>{{ "忘记密码?" }}</span>
+      <span class="blue password-reset" @click="passwordReset">点此重置</span>
+    </el-row>
+    <div class="flex-grow"></div>
+    <el-row class="login-password-button">
+      <el-button class="button-style" size="large" :disabled="!buttonDisable" :loading="isLoading"
+                 :type="!buttonDisable?'info':'primary'"
+                 @click="buttonNext">下一步
+      </el-button>
+    </el-row>
+  </el-container>
 </template>
 
 <script setup>

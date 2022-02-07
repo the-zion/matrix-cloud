@@ -69,12 +69,12 @@ const routes = [
             {
                 path: 'loginMain',
                 name: 'loginMain',
-                component: LoginMain
+                component: LoginMain,
             },
             {
                 path: 'code',
                 name: 'code',
-                component: Code
+                component: Code,
             },
             {
                 path: 'password',

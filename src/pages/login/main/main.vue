@@ -1,58 +1,61 @@
 <template>
-  <div class="login-phone-title">欢迎使用Cube</div>
-  <el-tabs v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane label="手机号" name="phone"></el-tab-pane>
-    <el-tab-pane label="邮箱" name="email"></el-tab-pane>
-  </el-tabs>
-  <div class="login-phone-input-block">
-    <transition name="phone-tran">
-      <el-input v-if="activeName === 'phone'" class="login-phone-input-phone" v-model="inputPhone"
-                placeholder="请输入你的手机号" size="large"
-                @input="phoneInput"/>
+  <el-container direction="vertical">
+    <div class="login-phone-title">欢迎使用Cube</div>
+    <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tab-pane label="手机号" name="phone"></el-tab-pane>
+      <el-tab-pane label="邮箱" name="email"></el-tab-pane>
+    </el-tabs>
+    <div class="login-phone-input-block">
+      <transition name="phone-tran">
+        <el-input v-if="activeName === 'phone'" class="login-phone-input-phone" v-model="inputPhone"
+                  placeholder="请输入你的手机号" size="large"
+                  @input="phoneInput"/>
 
-    </transition>
-    <transition name="email-tran">
-      <el-input v-show="activeName === 'email'" class="login-phone-input-email" v-model="inputEmail"
-                placeholder="请输入你的邮箱" size="large"
-                @input="emailInput"/>
-    </transition>
-  </div>
-  <el-row class="login-phone-button">
-    <el-button class="button-style" size="large" :disabled="buttonDisable" :loading="isLoading"
-               :type="buttonDisable?'info':'primary'"
-               @click="buttonNext">下一步
-    </el-button>
-  </el-row>
-  <el-row class="login-phone-statement">{{ currentNote }}</el-row>
-  <div class="flex-grow"></div>
-  <div class="more-options-container">
-    <el-row>
-      <el-col :span="9">
-        <hr class="option-hr"/>
-      </el-col>
-      <el-col :span="6" class="option-word">更多登录方式</el-col>
-      <el-col :span="9">
-        <hr class="option-hr"/>
-      </el-col>
+      </transition>
+      <transition name="email-tran">
+        <el-input v-show="activeName === 'email'" class="login-phone-input-email" v-model="inputEmail"
+                  placeholder="请输入你的邮箱" size="large"
+                  @input="emailInput"/>
+      </transition>
+    </div>
+    <el-row class="login-phone-button">
+      <el-button class="button-style" size="large" :disabled="buttonDisable" :loading="isLoading"
+                 :type="buttonDisable?'info':'primary'"
+                 @click="buttonNext">下一步
+      </el-button>
     </el-row>
-    <el-row>
-      <el-col :span="8" class="option-col">
-        <el-tooltip content="游客浏览" placement="right" effect="light">
-          <img @click="visitor" src="../../../assets/images/user.jpg" class="option-icon">
-        </el-tooltip>
-      </el-col>
-      <el-col :span="8" class="option-col">
-        <el-tooltip content="微信登录" placement="right" effect="light">
-          <img src="../../../assets/images/wechat.svg" class="option-icon">
-        </el-tooltip>
-      </el-col>
-      <el-col :span="8" class="option-col">
-        <el-tooltip content="github登录" placement="right" effect="light">
-          <img src="../../../assets/images/GitHub.svg" class="option-icon">
-        </el-tooltip>
-      </el-col>
-    </el-row>
-  </div>
+
+    <el-row class="login-phone-statement">{{ currentNote }}</el-row>
+    <div class="flex-grow"></div>
+    <div class="more-options-container">
+      <el-row>
+        <el-col :span="9">
+          <hr class="option-hr"/>
+        </el-col>
+        <el-col :span="6" class="option-word">更多登录方式</el-col>
+        <el-col :span="9">
+          <hr class="option-hr"/>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="8" class="option-col">
+          <el-tooltip content="游客浏览" placement="right" effect="light">
+            <img @click="visitor" src="../../../assets/images/user.jpg" class="option-icon">
+          </el-tooltip>
+        </el-col>
+        <el-col :span="8" class="option-col">
+          <el-tooltip content="微信登录" placement="right" effect="light">
+            <img src="../../../assets/images/wechat.svg" class="option-icon">
+          </el-tooltip>
+        </el-col>
+        <el-col :span="8" class="option-col">
+          <el-tooltip content="github登录" placement="right" effect="light">
+            <img src="../../../assets/images/GitHub.svg" class="option-icon">
+          </el-tooltip>
+        </el-col>
+      </el-row>
+    </div>
+  </el-container>
 </template>
 
 <script setup>
