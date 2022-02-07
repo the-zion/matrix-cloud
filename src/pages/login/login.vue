@@ -1,5 +1,10 @@
 <template>
-  <el-container>
+  <el-container class="login-container">
+    <el-carousel class="login-carousel" height="100%">
+      <el-carousel-item v-for="item in imagesBox" :key="item">
+        <img :src="'../../src/assets/images/'+item" class="login-image">
+      </el-carousel-item>
+    </el-carousel>
     <el-main class="login-main">
       <div class="login-left">
         <div class="login-body">
@@ -20,59 +25,83 @@
 </template>
 
 <script setup>
+import {ref} from "vue"
 
+const imagesBox = ["background.png", "background2.png", "background3.png", "background4.png", "background5.png"]
 </script>
 
 <style lang="scss">
-.login-main {
+
+.login-container {
+  flex-direction: column;
   position: absolute;
-  padding: unset;
-  display: flex;
-  background: #FFFFFF;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
 
-  .login-left {
-    width: 64%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .login-carousel {
+    height: 100%;
 
-    .login-body {
-      height: 550px;
-      width: 444px;
-      box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-      border-radius: 12px;
-      border: 1px solid #dee0e3;
-
-      .login-block {
-        padding: 32px;
-        height: calc(100% - 64px);
-        display: flex;
-        flex-direction: column;
-      }
-
-      .login-enter-active, .login-leave-active {
-        transition: opacity 0.3s linear;
-      }
-
-      .login-enter-from, .login-leave-to {
-        opacity: 0;
-      }
+    .login-image {
+      //position: absolute;
+      width: 100%;
     }
   }
 
-
-  .login-right {
-    width: 36%;
+  .login-main {
+    position: absolute;
+    padding: unset;
     display: flex;
-    align-items: center;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 
-    .login-background {
-      width: 100%;
+    .login-left {
+      width: 64%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .login-body {
+        background: #FFFFFF;
+        height: 550px;
+        width: 444px;
+        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        border: 1px solid #dee0e3;
+
+        .login-block {
+          padding: 32px;
+          height: calc(100% - 64px);
+          display: flex;
+          flex-direction: column;
+        }
+
+        .login-enter-active, .login-leave-active {
+          transition: opacity 0.3s linear;
+        }
+
+        .login-enter-from, .login-leave-to {
+          opacity: 0;
+        }
+      }
+    }
+
+
+    .login-right {
+      width: 36%;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+      background: #FFFFFF;
+      opacity: 0.8;
+
+      .login-background {
+        width: 100%;
+      }
     }
   }
 }
