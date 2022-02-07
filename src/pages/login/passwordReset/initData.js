@@ -9,7 +9,16 @@ export function initData() {
     let repeatPass = ref(true)
     let passwordError = ref('')
     let repeatError = ref('')
+    let isLoading = ref(false)
     return {
-        inputPassword, repeatPassword, buttonDisable, routerParams, passWordPass, repeatPass, passwordError, repeatError
+        inputPassword,
+        repeatPassword,
+        buttonDisable,
+        routerParams,
+        passWordPass,
+        repeatPass,
+        passwordError,
+        repeatError,
+        isLoading
     }
 }

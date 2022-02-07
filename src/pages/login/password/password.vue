@@ -13,14 +13,14 @@
               show-password
     />
   </div>
-  <el-row class="login-password-statement blue">{{ "验证码登录" }}</el-row>
+  <el-row class="login-password-statement blue" @click="codeLogin">{{ "验证码登录" }}</el-row>
   <el-row class="login-password-statement">
     <span>{{ "忘记密码?" }}</span>
     <span class="blue password-reset" @click="passwordReset">点此重置</span>
   </el-row>
   <div class="flex-grow"></div>
   <el-row class="login-password-button">
-    <el-button class="button-style" size="large" :disabled="!buttonDisable"
+    <el-button class="button-style" size="large" :disabled="!buttonDisable" :loading="isLoading"
                :type="!buttonDisable?'info':'primary'"
                @click="buttonNext">下一步
     </el-button>
@@ -31,8 +31,15 @@
 import {initData} from "./initData.js"
 import {controller} from "./controller.js"
 
-let {inputPassword, buttonDisable, routerParams} = initData()
-let {init, passwordInput, back, passwordReset} = controller(buttonDisable, routerParams)
+let {inputPassword, buttonDisable, routerParams, isLoading} = initData()
+let {
+  init,
+  passwordInput,
+  back,
+  passwordReset,
+  buttonNext,
+  codeLogin
+} = controller(buttonDisable, routerParams, isLoading)
 
 init()
 </script>

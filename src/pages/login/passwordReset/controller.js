@@ -1,8 +1,9 @@
 import {ref} from 'vue'
 import router from '../../../router'
 import {useRoute} from "vue-router";
+import {ElMessage} from 'element-plus'
 
-export function controller(buttonDisable, routerParams, passWordPass, repeatPass, passwordError, repeatError) {
+export function controller(buttonDisable, routerParams, passWordPass, repeatPass, passwordError, repeatError, isLoading) {
 
     let reg = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
     let inputPassword = null
@@ -13,7 +14,7 @@ export function controller(buttonDisable, routerParams, passWordPass, repeatPass
     function init() {
         let route = useRoute()
         routerParams = Object.assign(routerParams, route.params)
-        routerParams.phoneNumber || back()
+        routerParams.phoneNumber || routerParams.emailNumber || back()
     }
 
     function passwordInput(password) {
@@ -42,7 +43,7 @@ export function controller(buttonDisable, routerParams, passWordPass, repeatPass
         !passWordPass.value && (passwordError.value = passwordWord)
         if (inputPassword !== repeatPassword) {
             repeatError.value = repeatWord
-        }else{
+        } else {
             repeatError.value = ''
         }
     }
@@ -51,10 +52,24 @@ export function controller(buttonDisable, routerParams, passWordPass, repeatPass
         !repeatPass.value && (repeatError.value = repeatWord)
         if (!passWordPass.value) {
             passwordError.value = passwordWord
-        }else{
+        } else {
             passwordError.value = ''
         }
     }
 
-    return {init, passwordInput, passwordRepeat, back, passwordBlur, repeatBlur}
+    function buttonNext() {
+        isLoading.value = true
+        setTimeout(function () {
+            isLoading.value = false
+            ElMessage({
+                message: '密码重置成功，即将登录',
+                type: 'success',
+            })
+            setTimeout(function () {
+                router.push({name: 'home', replace: true})
+            }, 1000)
+        }, 1000)
+    }
+
+    return {init, passwordInput, passwordRepeat, back, passwordBlur, repeatBlur, buttonNext}
 }

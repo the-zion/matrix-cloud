@@ -5,10 +5,10 @@
     </span>
     <span class="base-back-word">返回</span>
   </div>
-  <div class="login-phone-code-title">验证手机号</div>
+  <div class="login-phone-code-title">{{ '验证' + routerParams.state === 'phone' ? '手机号' : '电子邮箱' }}</div>
   <div class="login-phone-code-note">
     <span>{{ "请输入发送至 " }}</span>
-    <span class="strong">{{ phoneNumber }}</span>
+    <span class="strong">{{ phoneNumber || emailNumber }}</span>
     <span>{{ " 的 6 位验证码，有效期 10 分钟" }}</span>
   </div>
   <div class="login-phone-code-input-block">
@@ -18,13 +18,10 @@
   </div>
   <el-row class="login-phone-code-statement" v-show="count !== 0">{{ count + " 秒后可重新获取验证码" }}</el-row>
   <el-row class="login-phone-code-statement blue" v-show="count === 0" @click="codeGet">{{ "重新获取验证码" }}</el-row>
-  <el-row v-show="!routerParams.state" class="login-phone-code-statement blue" @click="passwordLogin">{{
+  <el-row v-show="routerParams.state !== 'passwordReset'" class="login-phone-code-statement blue"
+          @click="passwordLogin">{{
       "密码登录"
     }}
-  </el-row>
-  <el-row class="login-phone-code-statement">
-    <span>{{ "手机号已停用?" }}</span>
-    <span class="blue account-find">找回账号</span>
   </el-row>
   <div class="flex-grow"></div>
   <el-row class="login-phone-code-button">
@@ -39,7 +36,7 @@
 import {initData} from "./initData.js"
 import {controller} from "./controller.js"
 
-let {count, isLoading, inputCode, buttonDisable, phoneNumber, routerParams} = initData()
+let {count, isLoading, inputCode, buttonDisable, phoneNumber, emailNumber, routerParams} = initData()
 let {
   init,
   countDown,
@@ -48,7 +45,7 @@ let {
   back,
   passwordLogin,
   buttonNext
-} = controller(count, buttonDisable, phoneNumber, routerParams, isLoading)
+} = controller(count, buttonDisable, phoneNumber, emailNumber, routerParams, isLoading)
 
 init()
 
@@ -125,10 +122,6 @@ init()
 .blue {
   color: #409EFF;
   cursor: pointer;
-}
-
-.account-find {
-  margin: 0 5px;
 }
 
 

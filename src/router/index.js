@@ -11,7 +11,7 @@ import Search from '../pages/search/search.vue'
 // import About from '../pages/about/about.vue'
 import Login from "../pages/login/login.vue"
 import LoginMain from "../pages/login/main/main.vue"
-import PhoneCode from "../pages/login/phoneCode/phoneCode.vue"
+import Code from "../pages/login/code/code.vue"
 import Password from "../pages/login/password/password.vue"
 import PasswordReset from "../pages/login/passwordReset/passwordReset.vue"
 
@@ -72,9 +72,9 @@ const routes = [
                 component: LoginMain
             },
             {
-                path: 'phoneCode',
-                name: 'phoneCode',
-                component: PhoneCode
+                path: 'code',
+                name: 'code',
+                component: Code
             },
             {
                 path: 'password',

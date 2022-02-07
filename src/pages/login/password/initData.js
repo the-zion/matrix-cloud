@@ -4,7 +4,8 @@ export function initData() {
     let inputPassword = ref()
     let buttonDisable = ref(false)
     let routerParams = ref({})
+    let isLoading = ref(false)
     return {
-        inputPassword, buttonDisable, routerParams
+        inputPassword, buttonDisable, routerParams, isLoading
     }
 }

@@ -6,8 +6,9 @@ export function initData() {
     let inputCode = ref()
     let buttonDisable = ref(false)
     let phoneNumber = ref('')
+    let emailNumber = ref('')
     let routerParams = reactive({})
     return {
-        count, isLoading, inputCode, buttonDisable, phoneNumber, routerParams
+        count, isLoading, inputCode, buttonDisable, phoneNumber, emailNumber, routerParams
     }
 }

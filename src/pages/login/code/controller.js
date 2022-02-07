@@ -1,18 +1,21 @@
 import {ref} from 'vue'
 import router from '../../../router'
 import {useRoute} from "vue-router";
+import {ElMessage} from "element-plus";
 
-export function controller(count, buttonDisable, phoneNumber, routerParams, isLoading) {
+export function controller(count, buttonDisable, phoneNumber, emailNumber, routerParams, isLoading) {
 
     function init() {
         let route = useRoute()
         routerParams = Object.assign(routerParams, route.params)
         let phone = routerParams.phoneNumber
-        if (!phone) {
+        let email = routerParams.emailNumber
+        if (!phone && !email) {
             back()
             return 0
         }
-        phoneNumber.value = phone.slice(0, 3) + "******" + phone.slice(-2,)
+        phone && (phoneNumber.value = phone.slice(0, 3) + "******" + phone.slice(-2,))
+        email && (emailNumber.value = email)
         countDown()
 
     }
@@ -41,14 +44,23 @@ export function controller(count, buttonDisable, phoneNumber, routerParams, isLo
     }
 
     function passwordLogin() {
-        router.push({name: 'password', replace: true, params: {phoneNumber: routerParams.phoneNumber}})
+        router.push({name: 'password', replace: true, params: routerParams})
     }
 
     function buttonNext() {
+        let state = routerParams.state
         isLoading.value = true
         setTimeout(function () {
             isLoading.value = false
-            router.push({name: routerParams.state, replace: true, params: {phoneNumber: routerParams.phoneNumber}})
+            if (state === 'passwordReset') {
+                router.push({name: routerParams.state, replace: true, params: routerParams})
+            } else {
+                ElMessage({
+                    message: '已登录，即将跳转',
+                    type: 'success',
+                })
+                router.push({name: 'home', replace: true})
+            }
         }, 1000)
     }
 

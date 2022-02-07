@@ -32,9 +32,13 @@ export function controller(activeName, inputPhone, inputEmail, buttonDisable, cu
 
     function buttonNext() {
         isLoading.value = true
+        let tab = activeName.value
+        let params = {}
+        params[tab + "Number"] = tab === 'phone' ? inputPhone.value : inputEmail.value
+        params['state'] = tab
         setTimeout(function () {
             isLoading.value = false
-            router.push({name: 'phoneCode', replace: true, params: {phoneNumber: inputPhone.value}})
+            router.push({name: 'code', replace: true, params: params})
         }, 1000)
     }
 

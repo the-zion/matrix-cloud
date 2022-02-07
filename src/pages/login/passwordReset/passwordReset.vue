@@ -26,7 +26,7 @@
   </div>
   <div class="flex-grow"></div>
   <el-row class="login-password-reset-button">
-    <el-button class="button-style" size="large" :disabled="!buttonDisable"
+    <el-button class="button-style" size="large" :disabled="!buttonDisable" :loading="isLoading"
                :type="!buttonDisable?'info':'primary'"
                @click="buttonNext">下一步
     </el-button>
@@ -45,7 +45,8 @@ let {
   passWordPass,
   repeatPass,
   passwordError,
-  repeatError
+  repeatError,
+  isLoading
 } = initData()
 let {
   init,
@@ -54,8 +55,9 @@ let {
   back,
   passwordReset,
   passwordBlur,
-  repeatBlur
-} = controller(buttonDisable, routerParams, passWordPass, repeatPass, passwordError, repeatError)
+  repeatBlur,
+  buttonNext
+} = controller(buttonDisable, routerParams, passWordPass, repeatPass, passwordError, repeatError, isLoading)
 
 init()
 </script>
@@ -105,6 +107,7 @@ init()
     line-height: 20px;
   }
 }
+
 
 .login-password-reset-button {
   margin-top: 16px;
