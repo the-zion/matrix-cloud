@@ -2,14 +2,6 @@ import {h, ref, watch} from 'vue'
 import {ElDivider} from 'element-plus'
 
 export function initData() {
-    let classIndex = ref(0)
-    let subClassIndex = ref(0)
-    let date = ref('')
-    let orderValue = ref('id')
-    let spacer = h(ElDivider, {direction: 'vertical'})
-    let testBox = ref([1, 2, 3, 4, 5, 6, 7, 8, 9])
-    let loading = ref(false)
-    let dataLoading = ref(false)
     let orderOptions = ref([
         {
             value: 'id',
@@ -115,7 +107,7 @@ export function initData() {
     )
 
     return {
-        classIndex, subClassIndex, classList, orderValue, orderOptions, date, spacer, testBox, loading, dataLoading
+        classList, orderOptions
     }
 
 }
