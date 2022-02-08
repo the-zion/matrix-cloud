@@ -8,7 +8,7 @@ import Community from '../pages/community/community.vue'
 import Blog from '../pages/blog/blog.vue'
 import Message from '../pages/message/message.vue'
 import Search from '../pages/search/search.vue'
-// import About from '../pages/about/about.vue'
+import About from '../pages/about/about.vue'
 import Login from "../pages/login/login.vue"
 import LoginMain from "../pages/login/main/main.vue"
 import Code from "../pages/login/code/code.vue"
@@ -20,13 +20,13 @@ const routes = [
     {
         path: '/',
         name: 'root',
-        redirect: { name: 'home' },
+        redirect: {name: 'home'},
     },
     {
         path: '/main',
         name: 'main',
         component: Main,
-        redirect: { name: 'home' },
+        redirect: {name: 'home'},
         children: [
             {
                 path: 'home',
@@ -53,18 +53,18 @@ const routes = [
                 name: 'search',
                 component: Search
             },
-            // {
-            //     path: 'about',
-            //     name: 'about',
-            //     component: About
-            // }]
-        ]
+            {
+                path: 'about',
+                name: 'about',
+                component: About
+            }]
+
     },
     {
         path: '/login',
         name: 'login',
         component: Login,
-        redirect: { name: 'loginMain' },
+        redirect: {name: 'loginMain'},
         children: [
             {
                 path: 'loginMain',

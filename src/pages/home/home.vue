@@ -15,31 +15,75 @@
                :props="{ class: 'is-penultimate' }"
       />
     </el-aside>
+    <div id="home"></div>
     <el-main class="home-main">
-      <el-table :data="tableData" height="calc(100% - 40px)" style="width: 100%" class="home-table">
+      <el-table :data="tableData" height="calc(100% - 40px)" class="home-table">
+        <el-table-column type="expand">
+          <template #default="props">
+            <div style="padding: 16px 60px;display: flex;align-items: center">
+              <div style="width: 60%">
+                <el-row style="margin-bottom: 12px;color: rgba(0,0,0,.85);font-size: 16px;line-height: 24px;">
+                  <a>{{ props.row.title }}</a>
+                </el-row>
+                <el-space wrap :size="10" style="margin-bottom: 12px">
+                  <el-tag :key="'key1'" effect="dark">{{props.row.tag}}</el-tag>
+                  <el-tag :key="'key2'" effect="dark" type="danger">{{'专栏'}}</el-tag>
+                </el-space>
+                <el-descriptions style="margin-bottom: 10px">
+                  <el-descriptions-item label="段落示意:">{{ bodyContent }}</el-descriptions-item>
+                </el-descriptions>
+                <el-row style="margin-bottom: 12px;display: flex;align-items: center;" :gutter="20">
+                  <span style="display: flex;margin-left: 5px;margin-right: 5px;">
+                    <el-avatar :size="24" :src="'../src/assets/images/user.jpg'"></el-avatar>
+                  </span>
+                  <span style="font-size: 14px;color: #409EFF;">{{ '付小小' }}</span>
+                  <span style="display: flex;margin: 0 5px 0 10px;color: rgb(144, 147, 153);">
+                    <el-icon><clock/></el-icon>
+                  </span>
+                  <span style="font-size: 13px;color: rgb(144, 147, 153);">{{ '2022-01-31 15:22' }}</span>
+                </el-row>
+              </div>
+              <div style="width: 40%;display: flex;justify-content: center">
+                <el-image
+                    style="width: 50%;border-radius: 5px"
+                    :src="'../src/assets/images/picture1.jpg'"
+                    :fit="cover"
+                ></el-image>
+              </div>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column v-for="item in tableList" :prop="item.key" :label="item.label"
                          :min-width="item.width">
+          <template #default="scope" v-if="item.key === 'title'">
+            <div style="color: #409EFF">{{ scope.row.title }}</div>
+          </template>
+          <!--          <template #default="scope" v-if="item.key === 'cover'">-->
+          <!--            <div style="display: flex">-->
+          <!--              <el-image-->
+          <!--                  style="width: 30px;height: 30px;border-radius: 5px;"-->
+          <!--                  src="../../src/assets/images/img.png"-->
+          <!--                  fit="cover"-->
+          <!--              ></el-image>-->
+          <!--            </div>-->
+          <!--          </template>-->
           <template #default="scope" v-if="item.key === 'tag'">
             <el-tag
                 style="margin-right: 5px"
                 disable-transitions
-                effect="plain"
+                effect="dark"
             >{{ scope.row.tag }}
-            </el-tag
-            >
+            </el-tag>
             <el-tag
                 style="margin-right: 5px"
                 type="danger"
                 disable-transitions
-                effect="plain"
+                effect="dark"
             >{{ '专栏' }}
             </el-tag
             >
           </template>
           <template #default="scope" v-if="item.key === 'operate'">
-            <!--            <el-icon>-->
-            <!--              <img src="../../assets/images/like.svg" class="body-item-like">-->
-            <!--            </el-icon>-->
             <div style="display: flex;align-items: center">
               <el-icon style="margin-right: 5px">
                 <img src="../../assets/images/like.svg" style="color: #409EFF;height: 1em;width: 1em;cursor: pointer">
@@ -56,9 +100,6 @@
             </div>
           </template>
         </el-table-column>
-        <!--        <el-table-column prop="date" label="Date"/>-->
-        <!--        <el-table-column prop="name" label="Name"/>-->
-        <!--        <el-table-column prop="address" label="Address"/>-->
       </el-table>
       <el-pagination
           v-model:currentPage="currentPage3"
@@ -98,6 +139,23 @@ const tableData = [
     title: "Docker入门"
   }
 ]
+
+for (let i = 0; i < 10; i++) {
+  tableData.push({
+        date: '2016-05-03',
+        name: 'Tom',
+        tag: "数据结构和算法",
+        introduction: 'Docker从入门到入土',
+        title: "Docker入门"
+      },
+      {
+        date: '2016-05-03',
+        name: 'Tom',
+        tag: "云原生",
+        introduction: 'Docker从入门到入土',
+        title: "Docker入门"
+      })
+}
 let {
   classList,
   tableList,
@@ -105,6 +163,7 @@ let {
 } = initData()
 let treeRef = ref()
 let {treeCheck} = controller(treeRef)
+
 // watchData(classIndex, subClassIndex, date, orderValue)
 const tags = ref([
   {type: '', label: 'Tag 1'},
@@ -113,7 +172,7 @@ const tags = ref([
   {type: 'danger', label: 'Tag 4'},
   {type: 'warning', label: 'Tag 5'},
 ])
-const bodyContent = ref("蚂蚁金服设计平台 ant.design，用最小的工作量，无缝接入蚂蚁金服生态，提供跨越设计与开发的体验解决方案。蚂蚁金服设计平台 ant.design，用最小的工作量，无缝接入蚂蚁金服生态，提供跨越设计与开发的体验解决方案。")
+const bodyContent = ref("容器其实是一种沙盒技术。顾名思义，沙盒就是能够像一个集装箱一样，把你的应用“装”起来的技术。这样，应用与应用之间，就因为有了边界而不至于相互干扰。")
 
 </script>
 
@@ -157,12 +216,18 @@ const bodyContent = ref("蚂蚁金服设计平台 ant.design，用最小的工�
     padding: 20px;
 
     .home-table {
-      //height: 100%;
+      width: 100%;
+
+      .el-scrollbar {
+        --el-scrollbar-opacity: 0;
+      }
     }
+
 
     .home-pagination {
       margin-top: 10px;
     }
   }
 }
+
 </style>

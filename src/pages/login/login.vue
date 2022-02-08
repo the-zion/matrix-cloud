@@ -27,10 +27,10 @@
 <script setup>
 import {ref} from "vue"
 
-const imagesBox = ["background6.jpg", "background7.jpg", "background8.jpg", "background9.jpg"]
+const imagesBox = ["background1.jpg", "background2.jpg", "background3.jpg", "background4.jpg"]
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 .login-container {
   flex-direction: column;

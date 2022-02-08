@@ -63,7 +63,7 @@ let {
 
 init()
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .base-back {
   position: relative;
   top: 2px;

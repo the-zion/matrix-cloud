@@ -72,7 +72,7 @@ let {
 } = controller(activeName, inputPhone, inputEmail, buttonDisable, currentNote, isLoading)
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .login-phone-title {
   font-size: 22px;
   color: #1f2329;

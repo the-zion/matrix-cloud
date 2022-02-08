@@ -1,12 +1,8 @@
-import {h, ref, watch} from 'vue'
+import {h, ref, onMounted} from 'vue'
 import {ElDivider} from 'element-plus'
 
 export function initData() {
     let tableList = ref([{
-        key: "cover",
-        label: "封面",
-        width: "1"
-    }, {
         key: "title",
         label: "标题",
         width: "2"
