@@ -27,7 +27,7 @@
 <script setup>
 import {ref} from "vue"
 
-const imagesBox = ["background.png", "background2.png", "background3.png", "background4.png", "background5.png"]
+const imagesBox = ["background6.jpg", "background7.jpg", "background8.jpg", "background9.jpg"]
 </script>
 
 <style lang="scss">
@@ -45,6 +45,7 @@ const imagesBox = ["background.png", "background2.png", "background3.png", "back
 
     .login-image {
       //position: absolute;
+      height: 100%;
       width: 100%;
     }
   }
@@ -97,7 +98,7 @@ const imagesBox = ["background.png", "background2.png", "background3.png", "back
       align-items: center;
       box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
       background: #FFFFFF;
-      opacity: 0.8;
+      opacity: 0.7;
 
       .login-background {
         width: 100%;

@@ -17,12 +17,52 @@
     </el-aside>
     <el-main class="home-main">
       <el-table :data="tableData" height="calc(100% - 40px)" style="width: 100%" class="home-table">
-        <el-table-column prop="date" label="Date" width="180"/>
-        <el-table-column prop="name" label="Name" width="180"/>
-        <el-table-column prop="address" label="Address"/>
+        <el-table-column v-for="item in tableList" :prop="item.key" :label="item.label"
+                         :min-width="item.width">
+          <template #default="scope" v-if="item.key === 'tag'">
+            <el-tag
+                style="margin-right: 5px"
+                disable-transitions
+                effect="plain"
+            >{{ scope.row.tag }}
+            </el-tag
+            >
+            <el-tag
+                style="margin-right: 5px"
+                type="danger"
+                disable-transitions
+                effect="plain"
+            >{{ '专栏' }}
+            </el-tag
+            >
+          </template>
+          <template #default="scope" v-if="item.key === 'operate'">
+            <!--            <el-icon>-->
+            <!--              <img src="../../assets/images/like.svg" class="body-item-like">-->
+            <!--            </el-icon>-->
+            <div style="display: flex;align-items: center">
+              <el-icon style="margin-right: 5px">
+                <img src="../../assets/images/like.svg" style="color: #409EFF;height: 1em;width: 1em;cursor: pointer">
+              </el-icon>
+              <div style="margin-right: 5px;color: #909399">11.1k</div>
+              <el-icon style="cursor: pointer;color: #409EFF;margin-right: 5px">
+                <star/>
+              </el-icon>
+              <div style="margin-right: 5px;color: #909399">11.1k</div>
+              <el-icon style="cursor: pointer;color: #409EFF;margin-right: 5px">
+                <View/>
+              </el-icon>
+              <div style="color: #909399">11.1k</div>
+            </div>
+          </template>
+        </el-table-column>
+        <!--        <el-table-column prop="date" label="Date"/>-->
+        <!--        <el-table-column prop="name" label="Name"/>-->
+        <!--        <el-table-column prop="address" label="Address"/>-->
       </el-table>
       <el-pagination
           v-model:currentPage="currentPage3"
+          class="home-pagination"
           :page-size="100"
           :small="small"
           :disabled="disabled"
@@ -46,186 +86,21 @@ const tableData = [
   {
     date: '2016-05-03',
     name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
+    tag: "数据结构和算法",
+    introduction: 'Docker从入门到入土',
+    title: "Docker入门"
   },
   {
     date: '2016-05-03',
     name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
+    tag: "云原生",
+    introduction: 'Docker从入门到入土',
+    title: "Docker入门"
+  }
 ]
 let {
   classList,
+  tableList,
   orderOptions
 } = initData()
 let treeRef = ref()
@@ -279,10 +154,14 @@ const bodyContent = ref("蚂蚁金服设计平台 ant.design，用最小的工�
 
   .home-main {
     height: 100%;
-    padding: 24px;
+    padding: 20px;
 
     .home-table {
       //height: 100%;
+    }
+
+    .home-pagination {
+      margin-top: 10px;
     }
   }
 }

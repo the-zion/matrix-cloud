@@ -13,12 +13,7 @@
 <style lang="scss">
 ::-webkit-scrollbar {
   width: 6px;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #0003;
-  border-radius: 10px;
-  transition: all .2s ease-in-out;
+  display:none
 }
 
 body {

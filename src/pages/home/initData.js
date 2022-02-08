@@ -2,6 +2,35 @@ import {h, ref, watch} from 'vue'
 import {ElDivider} from 'element-plus'
 
 export function initData() {
+    let tableList = ref([{
+        key: "cover",
+        label: "封面",
+        width: "1"
+    }, {
+        key: "title",
+        label: "标题",
+        width: "2"
+    }, {
+        key: "introduction",
+        label: "简介",
+        width: "3"
+    }, {
+        key: "tag",
+        label: "标签",
+        width: "2"
+    }, {
+        key: "date",
+        label: "发布时间",
+        width: "1"
+    }, {
+        key: "name",
+        label: "作者",
+        width: "1"
+    }, {
+        key: "operate",
+        label: "操作",
+        width: "2"
+    }])
     let orderOptions = ref([
         {
             value: 'id',
@@ -107,7 +136,7 @@ export function initData() {
     )
 
     return {
-        classList, orderOptions
+        classList, tableList, orderOptions
     }
 
 }

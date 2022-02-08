@@ -33,39 +33,10 @@
           </el-icon>
         </el-badge>
         <el-avatar class="main-user-image" :size="35" src="../src/assets/images/user.jpg" @click="login"></el-avatar>
-        <!--        <el-dropdown class="main-user-dropdown" trigger="hover" :show-timeout=50 :hide-timeout=50 disabled>-->
-        <!--          <el-avatar class="main-user-image" :size="35" :src="userImageUrl"></el-avatar>-->
-        <!--          <template #dropdown>-->
-        <!--            <el-dropdown-menu>-->
-        <!--              <div-->
-        <!--                  style="width: 220px;height: 140px;display: flex;align-items: center;justify-content: center;flex-direction: column">-->
-        <!--                <el-avatar :size="70" :src="userImageUrl"></el-avatar>-->
-        <!--                <div style="font-size: 15px;margin-top: 10px">付小小</div>-->
-        <!--              </div>-->
-        <!--              <el-dropdown-item divided>个人中心</el-dropdown-item>-->
-        <!--              <el-dropdown-item divided>账号设置</el-dropdown-item>-->
-        <!--              <el-dropdown-item divided>帮助中心</el-dropdown-item>-->
-        <!--              <el-dropdown-item divided>退出登录</el-dropdown-item>-->
-        <!--            </el-dropdown-menu>-->
-        <!--          </template>-->
-        <!--        </el-dropdown>-->
       </el-menu>
     </el-header>
     <el-container class="main-sub-container">
-<!--      <el-aside class="main-aside">-->
-<!--        <el-row class="tac main-menu-row">-->
-<!--          <el-col :span="24">-->
-<!--            <el-menu-->
-<!--                default-active="home"-->
-<!--                class="el-menu-vertical-demo main-menu"-->
-<!--                :router=true-->
-<!--            >-->
-<!--            </el-menu>-->
-<!--          </el-col>-->
-<!--        </el-row>-->
-<!--      </el-aside>-->
       <el-scrollbar class="main-scrollbar" :native="true">
-<!--        <router-view></router-view>-->
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
             <component :is="Component" />
