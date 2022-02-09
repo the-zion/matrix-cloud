@@ -2,6 +2,11 @@ import {h, ref, onMounted} from 'vue'
 import {ElDivider} from 'element-plus'
 
 export function initData() {
+    let treeRef = ref()
+    let order = ref("id")
+    let date = ref()
+    let tableRef = ref()
+    let expandRowKeys = ref(["1"])
     let tableList = ref([{
         key: "title",
         label: "标题",
@@ -132,7 +137,7 @@ export function initData() {
     )
 
     return {
-        classList, tableList, orderOptions
+        treeRef, order, date, tableRef, expandRowKeys, classList, tableList, orderOptions
     }
 
 }

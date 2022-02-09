@@ -1,9 +1,18 @@
 import {onMounted, ref} from 'vue'
 
-export function controller(treeRef) {
+export function controller(treeRef, tableRef) {
 
     function treeCheck() {
         console.log(treeRef.value.getCheckedKeys(true))
     }
-    return {treeCheck}
+
+    function rowClick(row) {
+        tableRef.value.toggleRowExpansion(row)
+    }
+
+    function userClick() {
+        console.log(123)
+    }
+
+    return {treeCheck, rowClick,userClick}
 }

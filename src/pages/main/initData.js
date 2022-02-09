@@ -14,7 +14,7 @@ export function initData() {
     }, {
         id: 1,
         key: "community",
-        name: "江湖",
+        name: "畅所欲言",
         state: "community",
         icon: "chat-dot-round"
     }, {
