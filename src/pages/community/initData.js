@@ -2,6 +2,7 @@ import {h, ref, watch} from 'vue'
 import {ElDivider} from 'element-plus'
 
 export function initData() {
+    let backTop = ref()
     let classSelect = ref(0)
     let subClassSelect = ref("")
     let orderSelect = ref("id")
@@ -112,6 +113,6 @@ export function initData() {
             }]
         }]
     )
-    return {carouselBox, classList, classSelect, subClassSelect, orderSelect}
+    return {backTop, carouselBox, classList, classSelect, subClassSelect, orderSelect}
 
 }

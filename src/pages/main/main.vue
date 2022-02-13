@@ -36,10 +36,10 @@
       </el-menu>
     </el-header>
     <el-container class="main-sub-container">
-      <el-scrollbar class="main-scrollbar" :native="true">
+      <div class="main-scrollbar">
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
-            <component :is="Component" />
+            <component :is="Component"/>
           </transition>
         </router-view>
         <el-footer class="main-footer">
@@ -48,7 +48,7 @@
           <a class="beian" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=45040302000206"
              target="_blank"> 桂公网安备 45040302000206号</a>
         </el-footer>
-      </el-scrollbar>
+      </div>
     </el-container>
   </el-container>
 </template>
@@ -146,35 +146,13 @@ body {
   .main-sub-container {
     position: relative;
 
-    //.main-aside {
-    //  width: 208px;
-    //
-    //  .main-menu-row {
-    //    height: 100%;
-    //
-    //    .main-menu {
-    //      height: 100%;
-    //
-    //      .el-menu-item {
-    //        height: 48px;
-    //        padding: 0 16px !important;
-    //      }
-    //
-    //      .el-menu-item.is-active {
-    //        background: #e6f7ff;
-    //        border-right: 2px solid;
-    //      }
-    //    }
-    //
-    //  }
-    //}
-
     .main-scrollbar {
       position: absolute;
       top: 0;
       bottom: 0;
       left: 0;
       right: 0;
+      overflow: auto;
 
       .el-scrollbar__view {
         height: 100%;

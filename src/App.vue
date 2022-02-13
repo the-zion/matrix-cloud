@@ -13,14 +13,18 @@
 <style lang="scss">
 ::-webkit-scrollbar {
   width: 6px;
-  display:none
+  display: none
+}
+
+.el-loading-parent--relative {
+  position: unset !important;
 }
 
 body {
   margin: unset;
   overflow: hidden;
   font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
-  'Microsoft YaHei', '微软雅黑', Arial, sans-serif;;
+  'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
 }
 
 .fade-enter-active, .fade-leave-active {
