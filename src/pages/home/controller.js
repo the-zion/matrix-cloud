@@ -1,5 +1,3 @@
-import {onMounted, ref} from 'vue'
-
 export function controller(treeRef, tableRef) {
 
     function treeCheck() {
@@ -14,5 +12,5 @@ export function controller(treeRef, tableRef) {
         console.log(123)
     }
 
-    return {treeCheck, rowClick,userClick}
+    return {treeCheck, rowClick, userClick}
 }

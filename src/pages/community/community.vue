@@ -63,7 +63,7 @@
                 <img src="../../assets/images/like.svg" style="color: #409EFF;height: 1em;width: 1em;cursor: pointer">
               </el-icon>
               <div class="icon-word">11.1k</div>
-              <el-icon class="icon-symbol" @click="dialogTableVisible = true">
+              <el-icon class="icon-symbol" @click="dialogVisible = true">
                 <chat-dot-round/>
               </el-icon>
               <div class="icon-word">11.1k</div>
@@ -86,6 +86,7 @@
       </el-container>
     </div>
   </el-container>
+  <cube-comment-dialog v-model:visible="dialogVisible"></cube-comment-dialog>
 </template>
 
 <script setup>
@@ -93,9 +94,10 @@ import {initData} from "./initData.js"
 import {controller} from "./controller.js"
 import {reactive, ref, defineEmits} from "vue";
 
+
 let imagesBox = ref(["background1.jpg", "background2.jpg", "background3.jpg"])
 
-let {backTop, carouselBox, classList, classSelect, subClassSelect, orderSelect} = initData()
+let {backTop, carouselBox, classList, classSelect, subClassSelect, orderSelect, dialogVisible} = initData()
 let {
   classClick,
   classSelectChange,

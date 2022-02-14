@@ -1,5 +1,4 @@
-import {h, ref, onMounted} from 'vue'
-import {ElDivider} from 'element-plus'
+import {ref} from 'vue'
 
 export function initData() {
     let treeRef = ref()

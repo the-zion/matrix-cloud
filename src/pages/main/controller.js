@@ -1,4 +1,3 @@
-import {ref} from 'vue'
 import router from '../../router/index'
 
 export function controller(showSearch, messageValue) {

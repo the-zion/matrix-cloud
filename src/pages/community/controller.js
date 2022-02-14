@@ -1,4 +1,3 @@
-import {ref, defineEmits} from 'vue'
 import {globalFunc} from '../../utils/globalFunc.js'
 
 export function controller(classSelect, subClassSelect, orderSelect, backTop) {

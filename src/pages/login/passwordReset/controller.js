@@ -1,6 +1,5 @@
-import {ref} from 'vue'
 import router from '../../../router'
-import {useRoute} from "vue-router";
+import {useRoute} from "vue-router"
 import {ElMessage} from 'element-plus'
 
 export function controller(buttonDisable, routerParams, passWordPass, repeatPass, passwordError, repeatError, isLoading) {

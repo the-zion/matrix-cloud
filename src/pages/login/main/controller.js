@@ -1,4 +1,3 @@
-import {ref} from 'vue'
 import router from '../../../router'
 
 export function controller(activeName, inputPhone, inputEmail, buttonDisable, currentNote, isLoading) {
@@ -19,7 +18,7 @@ export function controller(activeName, inputPhone, inputEmail, buttonDisable, cu
     }
 
     function emailInput(email) {
-        let reg = /^([a-zA-Z0-9]+[-_\.]?)+@[a-zA-Z0-9]+\.[a-z]+$/;
+        let reg = /^([a-zA-Z0-9]+[-_.]?)+@[a-zA-Z0-9]+\.[a-z]+$/
         buttonDisable.value = !reg.test(email)
         currentNote.value = notes[1]
     }

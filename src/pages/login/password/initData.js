@@ -1,4 +1,4 @@
-import {h, reactive, ref, watch} from 'vue'
+import {ref} from 'vue'
 
 export function initData() {
     let inputPassword = ref()

@@ -1,4 +1,4 @@
-import {h, ref, watch} from 'vue'
+import {ref} from 'vue'
 
 export function initData() {
     let activeName = ref('phone')

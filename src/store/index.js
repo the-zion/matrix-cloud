@@ -1,9 +1,6 @@
 import {createStore} from 'vuex'
 
 const store = createStore({
-    routerTo() {
-        console.log("login")
-    },
     state() {
         return {
             count: 666

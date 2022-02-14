@@ -1,5 +1,4 @@
-import {h, ref, watch} from 'vue'
-import {ElDivider} from 'element-plus'
+import {ref} from 'vue'
 
 export function initData() {
     let backTop = ref()
@@ -7,6 +6,7 @@ export function initData() {
     let subClassSelect = ref("")
     let orderSelect = ref("id")
     let carouselBox = ref(["carousel1.png", "carousel2.png", "carousel3.png", "carousel4.png"])
+    let dialogVisible = ref(false)
     let classList = ref(
         [{
             "value": "All",
@@ -113,6 +113,6 @@ export function initData() {
             }]
         }]
     )
-    return {backTop, carouselBox, classList, classSelect, subClassSelect, orderSelect}
+    return {backTop, carouselBox, classList, classSelect, subClassSelect, orderSelect, dialogVisible}
 
 }
