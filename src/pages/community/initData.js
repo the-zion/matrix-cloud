@@ -1,12 +1,14 @@
 import {ref} from 'vue'
 
 export function initData() {
+    let backTopRight = ref(0)
     let backTop = ref()
     let classSelect = ref(0)
     let subClassSelect = ref("")
     let orderSelect = ref("id")
     let carouselBox = ref(["carousel1.png", "carousel2.png", "carousel3.png", "carousel4.png"])
-    let dialogVisible = ref(false)
+    let expressDialogVisible = ref(false)
+    let commentDialogVisible = ref(false)
     let classList = ref(
         [{
             "value": "All",
@@ -113,6 +115,17 @@ export function initData() {
             }]
         }]
     )
-    return {backTop, carouselBox, classList, classSelect, subClassSelect, orderSelect, dialogVisible}
+
+    return {
+        backTopRight,
+        backTop,
+        carouselBox,
+        classList,
+        classSelect,
+        subClassSelect,
+        orderSelect,
+        expressDialogVisible,
+        commentDialogVisible
+    }
 
 }

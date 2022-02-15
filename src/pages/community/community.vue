@@ -1,6 +1,7 @@
 <template>
-  <el-backtop target=".main-scrollbar" ref="backTop"></el-backtop>
-  <el-container class="community-container">
+  <el-container class="community-container" id="communityContainer">
+    <el-backtop target=".main-scrollbar" ref="backTop" :right="backTopRight"></el-backtop>
+    <cube-express-dialog v-model:visible="expressDialogVisible"></cube-express-dialog>
     <div class="community-body">
       <div class="carousel-block">
         <el-carousel height="208px">
@@ -27,21 +28,30 @@
           </el-aside>
         </el-affix>
         <el-main class="body-main">
-          <el-form inline model="formInline">
-            <el-form-item label="分类" v-show="classSelect !== 0">
-              <el-select v-model="subClassSelect" placeholder="please select your zone" @change="classSelectChange">
-                <el-option v-for="item in classList[classSelect].children" :label="item.label"
-                           :value="item.value"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="排序">
-              <el-select v-model="orderSelect" placeholder="please select your zone" @change="orderSelectChange">
-                <el-option label="默认" value="id"></el-option>
-                <el-option label="最热" value="hot"></el-option>
-                <el-option label="一周最热" value="week"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-form>
+          <el-row :justify="'space-between'">
+            <el-form inline model="formInline">
+              <el-form-item label="分类" v-show="classSelect !== 0">
+                <el-select v-model="subClassSelect" placeholder="please select your zone" @change="classSelectChange">
+                  <el-option v-for="item in classList[classSelect].children" :label="item.label"
+                             :value="item.value"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="排序">
+                <el-select v-model="orderSelect" placeholder="please select your zone" @change="orderSelectChange">
+                  <el-option label="默认" value="id"></el-option>
+                  <el-option label="最热" value="hot"></el-option>
+                  <el-option label="一周最热" value="week"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-form>
+            <el-tooltip
+                effect="light"
+                content="来都来了，高低整两句？"
+                placement="left"
+            >
+              <el-button type="primary" :icon="'edit'" circle @click="expressDialogVisible = true"></el-button>
+            </el-tooltip>
+          </el-row>
           <div class="body-separate"></div>
           <div class="body-block" v-for="item in 9">
             <el-space wrap class="user-line">
@@ -63,7 +73,7 @@
                 <img src="../../assets/images/like.svg" style="color: #409EFF;height: 1em;width: 1em;cursor: pointer">
               </el-icon>
               <div class="icon-word">11.1k</div>
-              <el-icon class="icon-symbol" @click="dialogVisible = true">
+              <el-icon class="icon-symbol" @click="commentDialogVisible = true">
                 <chat-dot-round/>
               </el-icon>
               <div class="icon-word">11.1k</div>
@@ -86,29 +96,40 @@
       </el-container>
     </div>
   </el-container>
-  <cube-comment-dialog v-model:visible="dialogVisible"></cube-comment-dialog>
 </template>
 
 <script setup>
 import {initData} from "./initData.js"
 import {controller} from "./controller.js"
-import {reactive, ref, defineEmits} from "vue";
-
+import {onMounted, reactive, ref} from "vue";
 
 let imagesBox = ref(["background1.jpg", "background2.jpg", "background3.jpg"])
 
-let {backTop, carouselBox, classList, classSelect, subClassSelect, orderSelect, dialogVisible} = initData()
+let {
+  backTopRight,
+  backTop,
+  carouselBox,
+  classList,
+  classSelect,
+  subClassSelect,
+  orderSelect,
+  expressDialogVisible,
+  commentDialogVisible
+} = initData()
 let {
   classClick,
   classSelectChange,
   orderSelectChange,
   pageCurrentChange
-} = controller(classSelect, subClassSelect, orderSelect, backTop)
+} = controller(classSelect, subClassSelect, orderSelect, backTop, backTopRight)
 const formInline = reactive({
   user: '',
   region: '',
 })
-const dialogTableVisible = ref(false)
+
+onMounted(() => {
+  backTopRight.value = Math.floor((Math.floor(document.getElementById('communityContainer').clientWidth) - 1000) / 3)
+})
 
 const onSubmit = () => {
   console.log('submit!')

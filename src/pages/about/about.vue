@@ -1,34 +1,39 @@
 <template>
-  <el-button
-      v-loading.fullscreen.lock="fullscreenLoading"
-      type="primary"
-      @click="openFullScreen1"
-  >
-    As a directive
-  </el-button>
-  <el-button type="primary" @click="openFullScreen2"> As a service </el-button>
+  <el-upload action="#" list-type="picture-card" :auto-upload="false" ref="uploadRef" limit="3"
+             :on-exceed="pictureExceed">
+    <template #default>
+      <el-icon>
+        <plus/>
+      </el-icon>
+    </template>
+    <template #file="{ file }">
+      <div>
+        <img class="el-upload-list__item-thumbnail" :src="file.url" alt=""/>
+        <span class="el-upload-list__item-actions">
+          <span
+              class="el-upload-list__item-delete"
+              @click="handleRemove(file)"
+          >
+            <el-icon><delete/></el-icon>
+          </span>
+        </span>
+      </div>
+    </template>
+  </el-upload>
 </template>
-
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { ElLoading } from 'element-plus'
+import {ref} from 'vue'
+import { ElMessage } from 'element-plus'
 
-const fullscreenLoading = ref(false)
-const openFullScreen1 = () => {
-  fullscreenLoading.value = true
-  setTimeout(() => {
-    fullscreenLoading.value = false
-  }, 2000)
+const uploadRef = ref()
+const handleRemove = (file) => {
+  uploadRef.value.handleRemove(file)
 }
 
-const openFullScreen2 = () => {
-  const loading = ElLoading.service({
-    lock: true,
-    text: 'Loading',
-    background: 'rgba(0, 0, 0, 0.7)',
+function pictureExceed() {
+  ElMessage({
+    message: '最多允许上传3张图片',
+    type: 'warning',
   })
-  setTimeout(() => {
-    loading.close()
-  }, 2000)
 }
 </script>

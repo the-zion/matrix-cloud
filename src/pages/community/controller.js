@@ -3,6 +3,7 @@ import {globalFunc} from '../../utils/globalFunc.js'
 export function controller(classSelect, subClassSelect, orderSelect, backTop) {
     let {loadFullScreen} = globalFunc()
 
+
     function classClick(item) {
         let index = item.index
         classSelect.value = index
