@@ -1,7 +1,6 @@
 <template>
-  <!--  <router-view></router-view>-->
   <router-view v-slot="{ Component }">
-    <transition name="fade" mode="out-in">
+    <transition name="app" mode="out-in">
       <component :is="Component"/>
     </transition>
   </router-view>
@@ -20,6 +19,16 @@
   position: unset !important;
 }
 
+.el-dialog {
+  border-radius: 10px;
+}
+
+.el-upload-list--picture-card .el-upload-list__item-thumbnail {
+  width: 148px;
+  height: 148px;
+  object-fit: cover;
+}
+
 body {
   margin: unset;
   overflow: hidden;
@@ -27,11 +36,11 @@ body {
   'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
 }
 
-.fade-enter-active, .fade-leave-active {
+.app-enter-active, .app-leave-active {
   transition: opacity 0.3s linear;
 }
 
-.fade-enter-from, .fade-leave-to {
+.app-enter-from, .app-leave-to {
   opacity: 0;
 }
 </style>

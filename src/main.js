@@ -8,6 +8,7 @@ import App from './App.vue'
 import store from "./store/index"
 import * as ElIconModules from '@element-plus/icons-vue'
 
+
 const app = createApp(App).use(store)
     .use(Components)
     .use(ElementPlus)
