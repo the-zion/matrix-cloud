@@ -1,4 +1,6 @@
-export function initData() {
+import {ref} from "vue"
 
-    return {}
+export function initData() {
+    let commentInput = ref('')
+    return {commentInput}
 }

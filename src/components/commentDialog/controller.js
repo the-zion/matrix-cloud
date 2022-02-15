@@ -1,7 +1,8 @@
-export function controller(emit) {
-    function dialogClose() {
+export function controller(emit, commentInput) {
+    function dialogClosed() {
         emit("update:visible", false)
+        commentInput.value = ""
     }
 
-    return {dialogClose}
+    return {dialogClosed}
 }
