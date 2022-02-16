@@ -6,6 +6,7 @@ export function initData() {
     let date = ref()
     let tableRef = ref()
     let expandRowKeys = ref(["1"])
+    let currentPage = ref(1)
     let tableList = ref([{
         key: "title",
         label: "标题",
@@ -136,7 +137,7 @@ export function initData() {
     )
 
     return {
-        treeRef, order, date, tableRef, expandRowKeys, classList, tableList, orderOptions
+        treeRef, order, date, tableRef, expandRowKeys, classList, tableList, orderOptions, currentPage
     }
 
 }

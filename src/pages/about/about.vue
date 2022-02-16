@@ -1,39 +1,28 @@
 <template>
-  <el-upload action="#" list-type="picture-card" :auto-upload="false" ref="uploadRef" limit="3"
-             :on-exceed="pictureExceed">
-    <template #default>
-      <el-icon>
-        <plus/>
-      </el-icon>
-    </template>
-    <template #file="{ file }">
-      <div>
-        <img class="el-upload-list__item-thumbnail" :src="file.url" alt=""/>
-        <span class="el-upload-list__item-actions">
-          <span
-              class="el-upload-list__item-delete"
-              @click="handleRemove(file)"
-          >
-            <el-icon><delete/></el-icon>
-          </span>
-        </span>
-      </div>
-    </template>
-  </el-upload>
+  <el-space direction="vertical" alignment="start" :size="30">
+    <el-radio-group v-model="size">
+      <el-radio :label="'large'">large</el-radio>
+      <el-radio :label="'default'">default</el-radio>
+      <el-radio :label="'small'">small</el-radio>
+    </el-radio-group>
+
+    <el-space wrap :size="size" direction="vertical">
+      <el-card v-for="i in 3" :key="i" class="box-card" style="width: 250px">
+        <template #header>
+          <div class="card-header">
+            <span>Card name</span>
+            <el-button class="button" type="text">Operation button</el-button>
+          </div>
+        </template>
+        <div v-for="o in 4" :key="o" class="text item">
+          {{ 'List item ' + o }}
+        </div>
+      </el-card>
+    </el-space>
+  </el-space>
 </template>
+
 <script lang="ts" setup>
-import {ref} from 'vue'
-import { ElMessage } from 'element-plus'
-
-const uploadRef = ref()
-const handleRemove = (file) => {
-  uploadRef.value.handleRemove(file)
-}
-
-function pictureExceed() {
-  ElMessage({
-    message: '最多允许上传3张图片',
-    type: 'warning',
-  })
-}
+import { ref } from 'vue'
+const size = ref('default')
 </script>

@@ -16,48 +16,73 @@
       />
     </el-aside>
     <el-main class="home-main">
-      <div class="home-bar">
-        <div class="title">首页</div>
-        <el-select v-model="order" class="filter-select" placeholder="Select">
-          <el-option
-              v-for="item in orderOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-          >
-          </el-option>
-        </el-select>
-        <el-date-picker v-model="date" type="date" placeholder="请选择时间段"></el-date-picker>
-      </div>
+      <el-row class="home-bar" justify="space-between">
+        <el-row class="title" align="middle">首页</el-row>
+        <el-row>
+          <el-space size="large">
+            <el-select v-model="order" placeholder="Select" @change="filterSelectChange">
+              <el-option
+                  v-for="item in orderOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+              >
+              </el-option>
+            </el-select>
+            <el-date-picker v-model="date" type="date" placeholder="请选择时间段" @change="dateSelectChange"></el-date-picker>
+          </el-space>
+        </el-row>
+      </el-row>
       <el-table ref="tableRef" :data="tableData" height="calc(100% - 92px)" class="home-table" highlight-current-row
                 row-key="id" :expand-row-keys="expandRowKeys" tooltip-effect="light" @row-click="rowClick"
                 :header-cell-style="{'background':'var(--el-bg-color)','height':'45px'}">
         <el-table-column type="expand">
           <template #default="props">
-            <div style="padding: 16px 60px;display: flex;align-items: center;height: 240px">
-              <div style="width: 60%">
-                <el-row style="margin-bottom: 12px;color: rgba(0,0,0,.85);font-size: 16px;line-height: 24px;">
+            <el-row style="padding: 16px 60px;height: 240px" align="middle">
+              <el-space style="width: 60%" direction="vertical" fill :size="10">
+                <el-row style="color: rgba(0,0,0,.85);font-size: 16px;line-height: 24px;">
                   <a>{{ props.row.title }}</a>
                 </el-row>
-                <el-space wrap :size="10" style="margin-bottom: 12px">
+                <el-space wrap :size="10">
                   <el-tag :key="'key1'" effect="dark">{{ props.row.tag }}</el-tag>
                   <el-tag :key="'key2'" effect="dark" type="danger">{{ '专栏' }}</el-tag>
                 </el-space>
-                <el-descriptions style="margin-bottom: 10px">
+                <el-descriptions>
                   <el-descriptions-item label="段落示意:">{{ props.row.content || '暂无' }}</el-descriptions-item>
                 </el-descriptions>
-                <el-row style="margin-bottom: 12px;display: flex;align-items: center;" :gutter="20">
-                  <span style="display: flex;margin-left: 5px;margin-right: 5px;cursor: pointer" @click="userClick">
-                    <el-avatar :size="24" :src="'../src/assets/images/user.jpg'"></el-avatar>
-                  </span>
-                  <span style="font-size: 14px;color: #409EFF;cursor: pointer" @click="userClick">{{ '付小小' }}</span>
-                  <span style="display: flex;margin: 0 5px 0 10px;color: rgb(144, 147, 153);">
-                    <el-icon><clock/></el-icon>
-                  </span>
-                  <span style="font-size: 13px;color: rgb(144, 147, 153);">{{ '2022-01-31 15:22' }}</span>
-                </el-row>
-              </div>
-              <div style="height: 100%;width:40%;display: flex;justify-content: center;align-items: center">
+                <el-space style="width: 100%"  direction="horizontal">
+                  <el-space  @click="userClick" :size="3">
+                    <el-row  style="cursor: pointer">
+                      <el-avatar :src="'../src/assets/images/user.jpg'"></el-avatar>
+                    </el-row>
+                    <el-row :span="4" style="font-size: 14px;color: #409EFF;cursor: pointer">{{'付小小'}}</el-row>
+                  </el-space>
+                  <el-space :size="3">
+                    <el-row style="color: rgb(144, 147, 153);">
+                      <el-icon><clock/></el-icon>
+                    </el-row>
+                    <el-row  style="font-size: 13px;color: rgb(144, 147, 153);">
+                      {{ '2022-01-31 15:22' }}
+                    </el-row>
+                  </el-space>
+                </el-space>
+<!--                <el-row :gutter="20" align="middle">-->
+<!--                  <el-row align="middle">-->
+<!--                    <el-col></el-col>-->
+<!--                    <span style="display: flex;margin-left: 5px;margin-right: 5px;cursor: pointer" @click="userClick">-->
+<!--                    <el-avatar :size="24" :src="'../src/assets/images/user.jpg'"></el-avatar>-->
+<!--                  </span>-->
+<!--                    <span style="font-size: 14px;color: #409EFF;cursor: pointer" @click="userClick">{{ '付小小' }}</span>-->
+<!--                  </el-row>-->
+<!--                  <el-row align="middle">-->
+<!--                    <span style="display: flex;margin: 0 5px 0 10px;color: rgb(144, 147, 153);">-->
+<!--                    <el-icon><clock/></el-icon>-->
+<!--                  </span>-->
+<!--                    <span style="font-size: 13px;color: rgb(144, 147, 153);">{{ '2022-01-31 15:22' }}</span>-->
+<!--                  </el-row>-->
+<!--                </el-row>-->
+              </el-space>
+              <el-row style="height: 100%;width:40%;" align="middle" justify="center">
                 <el-image
                     style="height: 70%;width:60%;border-radius: 5px"
                     :src="'../src/assets/images/picture1.jpg'"
@@ -65,24 +90,24 @@
                     :preview-src-list="['../src/assets/images/picture1.jpg']"
                     append-to-body
                 ></el-image>
-              </div>
-            </div>
+              </el-row>
+            </el-row>
           </template>
         </el-table-column>
         <el-table-column v-for="item in tableList" :prop="item.key" :label="item.label"
                          :min-width="item.width" :show-overflow-tooltip="true">
           <template #default="scope" v-if="item.key === 'title'">
-            <div style="color: #409EFF">{{ scope.row.title }}</div>
+            <el-row style="color: #409EFF">{{ scope.row.title }}</el-row>
           </template>
           <template #default="scope" v-if="item.key === 'name'">
-            <div style="display: flex;align-items: center;cursor: pointer">
+            <el-space style="cursor: pointer" :size="1">
               <el-avatar style="margin-right: 5px" :size="20" src="../src/assets/images/user.jpg"
-                         @click="login"></el-avatar>
-              <div style="width: 60%;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{
+              ></el-avatar>
+              <el-row style="width: 60%;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{
                   scope.row.name
                 }}
-              </div>
-            </div>
+              </el-row>
+            </el-space>
           </template>
           <template #default="scope" v-if="item.key === 'tag'">
             <el-tag
@@ -101,34 +126,36 @@
             >
           </template>
           <template #default="scope" v-if="item.key === 'operate'">
-            <div style="display: flex;align-items: center">
-              <el-icon style="margin-right: 5px">
-                <img src="../../assets/images/like.svg" style="color: #409EFF;height: 1em;width: 1em;cursor: pointer">
-              </el-icon>
-              <div style="margin-right: 5px;color: #909399">11.1k</div>
-              <el-icon style="cursor: pointer;color: #409EFF;margin-right: 5px">
-                <star/>
-              </el-icon>
-              <div style="margin-right: 5px;color: #909399">11.1k</div>
-              <el-icon style="cursor: pointer;color: #409EFF;margin-right: 5px">
-                <View/>
-              </el-icon>
-              <div style="color: #909399">11.1k</div>
-            </div>
+            <el-space :size="10">
+              <el-space :size="1">
+                <el-icon>
+                  <img src="../../assets/images/like.svg" style="color: #409EFF;height: 1em;width: 1em;cursor: pointer">
+                </el-icon>
+                <el-row style="color: #909399">11.1k</el-row>
+              </el-space>
+              <el-space :size="1">
+                <el-icon style="cursor: pointer;color: #409EFF">
+                  <star/>
+                </el-icon>
+                <el-row style="color: #909399">11.1k</el-row>
+              </el-space>
+              <el-space :size="1">
+                <el-icon style="cursor: pointer;color: #409EFF">
+                  <View/>
+                </el-icon>
+                <el-row style="color: #909399">11.1k</el-row>
+              </el-space>
+            </el-space>
           </template>
         </el-table-column>
       </el-table>
       <el-pagination
-          v-model:currentPage="currentPage3"
+          v-model:currentPage="currentPage"
           class="home-pagination"
           :page-size="100"
-          :small="small"
-          :disabled="disabled"
-          :background="background"
           layout="prev, pager, next, jumper"
           :total="1000"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
+          @current-change="pageCurrentChange"
       >
       </el-pagination>
     </el-main>
@@ -180,9 +207,17 @@ let {
   classList,
   tableList,
   orderOptions,
+  currentPage,
 } = initData()
 
-let {treeCheck, rowClick, userClick} = controller(treeRef, tableRef)
+let {
+  treeCheck,
+  filterSelectChange,
+  dateSelectChange,
+  rowClick,
+  userClick,
+  pageCurrentChange
+} = controller(treeRef, tableRef)
 
 
 // watchData(classIndex, subClassIndex, date, orderValue)
@@ -229,12 +264,6 @@ let {treeCheck, rowClick, userClick} = controller(treeRef, tableRef)
 
     .home-bar {
       margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-
-      .title {
-        flex-grow: 1;
-      }
 
       .filter-select {
         margin: 0 10px;
@@ -247,10 +276,6 @@ let {treeCheck, rowClick, userClick} = controller(treeRef, tableRef)
       .el-scrollbar {
         --el-scrollbar-opacity: 0;
       }
-
-      //.el-table__inner-wrapper {
-      //  --el-table-border-color: auto
-      //}
     }
 
 
