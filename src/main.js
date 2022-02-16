@@ -1,6 +1,5 @@
 import {createApp} from 'vue'
 import ElementPlus from 'element-plus'
-import ElMessage from 'element-plus'
 import Components from './components/index.ts'
 import 'element-plus/dist/index.css'
 import router from './router/index'
@@ -12,7 +11,7 @@ import * as ElIconModules from '@element-plus/icons-vue'
 const app = createApp(App).use(store)
     .use(Components)
     .use(ElementPlus)
-    .use(ElMessage)
+    // .use(ElMessage)
     .use(router)
 
 
