@@ -1,5 +1,5 @@
 <template>
-  <div class="express">
+  <el-row class="express">
     <el-input
         v-model="textarea"
         maxlength="1000"
@@ -8,9 +8,10 @@
         type="textarea"
         :autosize="{ minRows: 4, maxRows: 5 }"
         @input="inputChange"
+        resize="none"
     />
-    <el-space class="space" :size="30">
-      <el-popover placement="bottom" :width="'fit-content'" trigger="hover">
+    <el-col class="space" :size="30">
+      <el-popover placement="right" :width="'fit-content'" trigger="hover">
         <template #reference>
           <el-icon>
             <img src="../../assets/images/smile.svg" style="height: 1.5em;width: 1.5em;cursor: pointer">
@@ -18,9 +19,9 @@
         </template>
         <VuemojiPicker @emojiClick="handleEmojiClick"/>
       </el-popover>
-    </el-space>
+    </el-col>
     <el-upload v-if="props.mode === 'picture'" class="upload" action="#" list-type="picture-card" :auto-upload="false"
-               ref="uploadRef" limit="3"
+               ref="uploadRef" :limit="3"
                :on-exceed="pictureExceed" :before-upload="beforeAvatarUpload" :on-change="beforeAvatarUpload"
                accept=".jpg,.jpeg,.png,.gif,.JPG,.JPEG,.GIF">
       <template #default>
@@ -29,7 +30,7 @@
         </el-icon>
       </template>
       <template #file="{ file }">
-        <div>
+        <el-row>
           <img class="el-upload-list__item-thumbnail" :src="file.url" alt=""/>
           <span class="el-upload-list__item-actions">
           <span
@@ -39,10 +40,10 @@
             <el-icon><delete/></el-icon>
           </span>
         </span>
-        </div>
+        </el-row>
       </template>
     </el-upload>
-  </div>
+  </el-row>
 </template>
 
 <script>
@@ -56,22 +57,23 @@ import {VuemojiPicker} from 'vuemoji-picker'
 import {ElMessage} from "element-plus";
 
 const textarea = ref('')
-let emitsTextarea = defineEmits('update-textarea')
+let emits = defineEmits(['update:textArea','update:picturesBox'])
 const handleEmojiClick = function (emoji) {
   textarea.value += emoji.unicode
-  emitsTextarea('update-textarea', textarea.value)
+  emits('update:textArea', textarea.value)
 }
 
 function inputChange(text) {
-  emitsTextarea('update-textarea', text)
+  emits('update:textArea', text)
 }
 
 let props = defineProps({
-  mode: String
+  mode: String,
+  textArea: String,
+  picturesBox: null
 })
 //--------- if the mode is picture ---------
 const uploadRef = ref()
-// let picturesEmits = defineEmits('update-picture')
 
 const handleRemove = (file) => {
   uploadRef.value.handleRemove(file)
@@ -97,7 +99,7 @@ function beforeAvatarUpload(fileObject, fileObjectList) {
     ElMessage.error('图片大小不得大于 2MB!')
     uploadRef.value.handleRemove(fileObject)
   }
-  picturesEmits('update-picture', fileObjectList)
+  emits('update:picturesBox', fileObjectList)
   return isJPG && isLt2M
 }
 </script>
