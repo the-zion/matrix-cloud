@@ -53,7 +53,7 @@
                 <el-space style="width: 100%"  direction="horizontal">
                   <el-space  @click="userClick" :size="3">
                     <el-row  style="cursor: pointer">
-                      <el-avatar :src="'../src/assets/images/user.jpg'"></el-avatar>
+                      <el-avatar :size="24" :src="'../src/assets/images/user.jpg'"></el-avatar>
                     </el-row>
                     <el-row :span="4" style="font-size: 14px;color: #409EFF;cursor: pointer">{{'付小小'}}</el-row>
                   </el-space>
@@ -66,21 +66,6 @@
                     </el-row>
                   </el-space>
                 </el-space>
-<!--                <el-row :gutter="20" align="middle">-->
-<!--                  <el-row align="middle">-->
-<!--                    <el-col></el-col>-->
-<!--                    <span style="display: flex;margin-left: 5px;margin-right: 5px;cursor: pointer" @click="userClick">-->
-<!--                    <el-avatar :size="24" :src="'../src/assets/images/user.jpg'"></el-avatar>-->
-<!--                  </span>-->
-<!--                    <span style="font-size: 14px;color: #409EFF;cursor: pointer" @click="userClick">{{ '付小小' }}</span>-->
-<!--                  </el-row>-->
-<!--                  <el-row align="middle">-->
-<!--                    <span style="display: flex;margin: 0 5px 0 10px;color: rgb(144, 147, 153);">-->
-<!--                    <el-icon><clock/></el-icon>-->
-<!--                  </span>-->
-<!--                    <span style="font-size: 13px;color: rgb(144, 147, 153);">{{ '2022-01-31 15:22' }}</span>-->
-<!--                  </el-row>-->
-<!--                </el-row>-->
               </el-space>
               <el-row style="height: 100%;width:40%;" align="middle" justify="center">
                 <el-image

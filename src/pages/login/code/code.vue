@@ -1,22 +1,20 @@
 <template>
   <el-container direction="vertical">
-    <div class="base-back" @click="back">
-    <span class="base-back-icon">
-      <el-icon><arrow-left-bold/></el-icon>
-    </span>
-      <span class="base-back-word">返回</span>
-    </div>
-    <div class="login-phone-code-title">{{ '验证' + routerParams.state === 'phone' ? '手机号' : '电子邮箱' }}</div>
-    <div class="login-phone-code-note">
-      <span>{{ "请输入发送至 " }}</span>
-      <span class="strong">{{ phoneNumber || emailNumber }}</span>
-      <span>{{ " 的 6 位验证码，有效期 10 分钟" }}</span>
-    </div>
-    <div class="login-phone-code-input-block">
-      <el-input class="login-phone-code-input-phone" v-model="inputCode"
+    <el-row class="base-back" @click="back" align="middle">
+      <el-icon class="base-back-icon"><arrow-left-bold/></el-icon>
+      <el-row class="base-back-word">返回</el-row>
+    </el-row>
+    <el-row class="login-phone-code-title">{{ '验证' + routerParams.state === 'phone' ? '手机号' : '电子邮箱' }}</el-row>
+    <el-row class="login-phone-code-note">
+      <el-row>{{ "请输入发送至 " }}</el-row>
+      <el-row class="strong">{{ phoneNumber || emailNumber }}</el-row>
+      <el-row>{{ " 的 6 位验证码，有效期 10 分钟" }}</el-row>
+    </el-row>
+    <el-row class="login-phone-code-input-block">
+      <el-input v-model="inputCode"
                 placeholder="请输入验证码" size="large" maxlength="6"
                 @input="codeInput"/>
-    </div>
+    </el-row>
     <el-row class="login-phone-code-statement" v-show="count !== 0">{{ count + " 秒后可重新获取验证码" }}</el-row>
     <el-row class="login-phone-code-statement blue" v-show="count === 0" @click="codeGet">{{ "重新获取验证码" }}</el-row>
     <el-row v-show="routerParams.state !== 'passwordReset'" class="login-phone-code-statement blue"
@@ -24,7 +22,7 @@
         "密码登录"
       }}
     </el-row>
-    <div class="flex-grow"></div>
+    <el-row class="flex-grow"></el-row>
     <el-row class="login-phone-code-button">
       <el-button class="button-style" size="large" :disabled="!buttonDisable" :loading="isLoading"
                  :type="!buttonDisable?'info':'primary'"
@@ -57,13 +55,10 @@ init()
 .base-back {
   position: relative;
   top: 2px;
-  align-items: center;
-  display: flex;
   margin-bottom: 15px;
   border-radius: 6px;
   padding: 0 4px 0 2px;
   cursor: pointer;
-  background-color: transparent;
 
   .base-back-icon {
     display: flex;

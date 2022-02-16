@@ -6,20 +6,20 @@
       </el-carousel-item>
     </el-carousel>
     <el-main class="login-main">
-      <div class="login-left">
-        <div class="login-body">
-          <div class="login-block">
+      <el-row class="login-left" justify="center" align="middle">
+        <el-row class="login-body">
+          <el-row class="login-block">
             <router-view v-slot="{ Component }">
               <transition name="login" mode="out-in">
                 <component :is="Component"/>
               </transition>
             </router-view>
-          </div>
-        </div>
-      </div>
-      <div class="login-right">
-        <img class="login-background" src="../../assets/images/cube-main.svg">
-      </div>
+          </el-row>
+        </el-row>
+      </el-row>
+      <el-row class="login-right" align="middle">
+        <el-image class="login-background" src="../../src/assets/images/cube-main.svg"></el-image>
+      </el-row>
     </el-main>
   </el-container>
 </template>
@@ -62,9 +62,6 @@ const imagesBox = ["background1.jpg", "background2.jpg", "background3.jpg", "bac
 
     .login-left {
       width: 64%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
 
       .login-body {
         background: #FFFFFF;
@@ -76,9 +73,8 @@ const imagesBox = ["background1.jpg", "background2.jpg", "background3.jpg", "bac
 
         .login-block {
           padding: 32px;
-          height: calc(100% - 64px);
-          display: flex;
-          flex-direction: column;
+          height: 100%;
+          width: 100%;
         }
 
         .login-enter-active, .login-leave-active {
@@ -94,8 +90,6 @@ const imagesBox = ["background1.jpg", "background2.jpg", "background3.jpg", "bac
 
     .login-right {
       width: 36%;
-      display: flex;
-      align-items: center;
       box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
       background: #FFFFFF;
       opacity: 0.7;
