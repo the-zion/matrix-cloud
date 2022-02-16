@@ -8,7 +8,9 @@ export function initData() {
     let orderSelect = ref("id")
     let carouselBox = ref(["carousel1.png", "carousel2.png", "carousel3.png", "carousel4.png"])
     let expressDialogVisible = ref(false)
+    let commentVisible = ref(false)
     let commentDialogVisible = ref(false)
+    let currentPage = ref(1)
     let classList = ref(
         [{
             "value": "All",
@@ -125,7 +127,9 @@ export function initData() {
         subClassSelect,
         orderSelect,
         expressDialogVisible,
-        commentDialogVisible
+        commentVisible,
+        commentDialogVisible,
+        currentPage
     }
 
 }

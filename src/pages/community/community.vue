@@ -2,22 +2,22 @@
   <el-container class="community-container" id="communityContainer">
     <el-backtop target=".main-scrollbar" ref="backTop" :right="backTopRight"></el-backtop>
     <cube-express-dialog v-model:visible="expressDialogVisible"></cube-express-dialog>
-    <div class="community-body">
-      <div class="carousel-block">
+    <el-row class="community-body">
+      <el-col class="carousel-block">
         <el-carousel height="208px">
           <el-carousel-item v-for="item in carouselBox" :key="item">
             <el-image style="width: 100%" :src="'../../src/assets/images/'+item" :fit="'cover'"></el-image>
           </el-carousel-item>
         </el-carousel>
-      </div>
+      </el-col>
       <el-container class="body-container">
         <el-affix :offset="60">
           <el-aside class="body-aside" width="208px">
             <el-menu
-                :default-active="0"
+                default-active="0"
                 class="aside-menu"
             >
-              <el-menu-item v-for="(item,index) in classList" :index="index" class="aside-menu-item"
+              <el-menu-item v-for="(item,index) in classList" :index="index+''" class="aside-menu-item"
                             @click="classClick">
                 <el-icon>
                   <component :is="item.icon"></component>
@@ -29,7 +29,7 @@
         </el-affix>
         <el-main class="body-main">
           <el-row :justify="'space-between'">
-            <el-form inline model="formInline">
+            <el-form inline>
               <el-form-item label="分类" v-show="classSelect !== 0">
                 <el-select v-model="subClassSelect" placeholder="please select your zone" @change="classSelectChange">
                   <el-option v-for="item in classList[classSelect].children" :label="item.label"
@@ -52,41 +52,39 @@
               <el-button type="primary" :icon="'edit'" circle @click="expressDialogVisible = true"></el-button>
             </el-tooltip>
           </el-row>
-          <div class="body-separate"></div>
-          <div class="body-block" v-for="item in 9">
+          <el-row class="body-separate"></el-row>
+          <el-row class="body-block" v-for="item in data" :key="item.id">
             <el-space wrap class="user-line">
-              <el-avatar :size="35" :src="'../../src/assets/images/user1.png'"></el-avatar>
-              <div class="user-name">刘思圆</div>
-              <div class="date">2022-2-12 20:56:30</div>
+              <el-avatar :size="35" :src="item.avatar"></el-avatar>
+              <el-row class="user-name">{{ item.name }}</el-row>
+              <el-row class="date">{{ item.date }}</el-row>
             </el-space>
-            <el-row class="content-word">
-              {{
-                "我觉得，一个人要想活得有朝气，就得没谱儿，得有新东西进来，新东西出去，得完全不知道明天会发生什么，如果还能一直有“新喜欢的东西”和“新不喜欢的东西”那就太幸福了，“新”代表着你还在不停地接触新东西，而“喜欢和不喜欢”代表着你还有态度，永远骂街，永远热泪盈眶"
-              }}
-            </el-row>
-            <div class="images-line">
-              <el-image :preview-src-list="['../../src/assets/images/'+item]" v-for="item in imagesBox"
-                        :src="'../../src/assets/images/'+item" class="image-item"></el-image>
-            </div>
+            <el-col class="content-word">
+              {{ item.text }}
+            </el-col>
+            <el-col class="images-line">
+              <el-image :preview-src-list="['../../src/assets/images/'+image]" v-for="image in item.images"
+                        :src="'../../src/assets/images/'+image" class="image-item"></el-image>
+            </el-col>
             <el-space class="foot-line">
               <el-icon class="icon-symbol">
                 <img src="../../assets/images/like.svg" style="color: #409EFF;height: 1em;width: 1em;cursor: pointer">
               </el-icon>
-              <div class="icon-word">11.1k</div>
-              <el-icon class="icon-symbol" @click="commentDialogVisible = true">
+              <el-row class="icon-word">{{ item.love >= 1000 ? (item.love / 1000).toFixed(1) + 'k' : item.love }}</el-row>
+              <el-icon class="icon-symbol" @click="item.visible = !item.visible">
                 <chat-dot-round/>
               </el-icon>
-              <div class="icon-word">11.1k</div>
+              <el-row class="icon-word">{{
+                  item.comment >= 1000 ? (item.comment / 1000).toFixed(1) + 'k' : item.comment
+                }}
+              </el-row>
             </el-space>
-            <!--            <div class="foot-line">-->
-            <!--              -->
-            <!--            </div>-->
-          </div>
+            <cube-comment v-if="item.visible" style="width:100%"></cube-comment>
+          </el-row>
           <el-pagination
-              v-model:currentPage="currentPage3"
+              v-model:currentPage="currentPage"
               class="body-pagination"
               :page-size="100"
-              :small="small"
               layout="prev, pager, next, jumper"
               :total="1000"
               @current-change="pageCurrentChange"
@@ -94,7 +92,7 @@
           </el-pagination>
         </el-main>
       </el-container>
-    </div>
+    </el-row>
   </el-container>
 </template>
 
@@ -114,26 +112,38 @@ let {
   subClassSelect,
   orderSelect,
   expressDialogVisible,
-  commentDialogVisible
+  commentVisible,
+  commentDialogVisible,
+  currentPage
 } = initData()
+
 let {
   classClick,
   classSelectChange,
   orderSelectChange,
   pageCurrentChange
 } = controller(classSelect, subClassSelect, orderSelect, backTop, backTopRight)
-const formInline = reactive({
-  user: '',
-  region: '',
-})
 
 onMounted(() => {
   backTopRight.value = Math.floor((Math.floor(document.getElementById('communityContainer').clientWidth) - 1000) / 3)
 })
 
-const onSubmit = () => {
-  console.log('submit!')
+let data = ref([])
+
+for (let i = 0; i < 10; i++) {
+  data.value.push({
+    id: i,
+    avatar: '../../src/assets/images/user1.png',
+    name: "刘思圆",
+    date: "2022-2-12 20:56:30",
+    text: "我觉得，一个人要想活得有朝气，就得没谱儿，得有新东西进来，新东西出去，得完全不知道明天会发生什么，如果还能一直有“新喜欢的东西”和“新不喜欢的东西”那就太幸福了，“新”代表着你还在不停地接触新东西，而“喜欢和不喜欢”代表着你还有态度，永远骂街，永远热泪盈眶",
+    images: ["background1.jpg", "background2.jpg", "background3.jpg"],
+    love: 1000,
+    comment: 1000,
+    visible: false
+  })
 }
+
 
 </script>
 
@@ -142,8 +152,6 @@ const onSubmit = () => {
   margin: auto;
 
   .community-body {
-    display: flex;
-    flex-direction: column;
     width: 1000px;
     margin: auto;
     min-height: 100%;
@@ -208,7 +216,6 @@ const onSubmit = () => {
           }
 
           .images-line {
-            display: flex;
             margin-bottom: 20px;
 
             .image-item {
