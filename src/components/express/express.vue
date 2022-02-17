@@ -1,38 +1,41 @@
 <template>
   <el-row class="express">
-    <el-input
-        v-model="textarea"
-        maxlength="1000"
-        placeholder="输入你要发表的内容"
-        show-word-limit
-        type="textarea"
-        :autosize="{ minRows: 4, maxRows: 5 }"
-        @input="inputChange"
-        resize="none"
-    />
-    <el-col class="space" :size="30">
-      <el-popover placement="right" :width="'fit-content'" trigger="hover">
-        <template #reference>
+    <el-space class="space" direction="vertical" fill size="large">
+      <el-input
+          v-model="textarea"
+          :maxlength="props.textNumberMax || 1000"
+          placeholder="输入你要发表的内容"
+          show-word-limit
+          type="textarea"
+          :autosize="{ minRows: 4, maxRows: 5 }"
+          @input="inputChange"
+          resize="none"
+      />
+      <el-row align="middle" justify="space-between">
+        <el-popover placement="right" :width="'fit-content'" trigger="hover" popper-class="express-popover">
+          <template #reference>
+            <el-icon>
+              <img src="../../assets/images/smile.svg" style="height: 1.5em;width: 1.5em;cursor: pointer">
+            </el-icon>
+          </template>
+          <cube-emoji @emojiClick="handleEmojiClick"></cube-emoji>
+        </el-popover>
+        <el-button v-if="props.mode === 'comment'" type="primary">发表</el-button>
+      </el-row>
+
+      <el-upload v-if="props.mode === 'picture'" action="#" list-type="picture-card" :auto-upload="false"
+                 ref="uploadRef" :limit="3"
+                 :on-exceed="pictureExceed" :before-upload="beforeAvatarUpload" :on-change="beforeAvatarUpload"
+                 accept=".jpg,.jpeg,.png,.gif,.JPG,.JPEG,.GIF">
+        <template #default>
           <el-icon>
-            <img src="../../assets/images/smile.svg" style="height: 1.5em;width: 1.5em;cursor: pointer">
+            <plus/>
           </el-icon>
         </template>
-        <VuemojiPicker @emojiClick="handleEmojiClick"/>
-      </el-popover>
-    </el-col>
-    <el-upload v-if="props.mode === 'picture'" class="upload" action="#" list-type="picture-card" :auto-upload="false"
-               ref="uploadRef" :limit="3"
-               :on-exceed="pictureExceed" :before-upload="beforeAvatarUpload" :on-change="beforeAvatarUpload"
-               accept=".jpg,.jpeg,.png,.gif,.JPG,.JPEG,.GIF">
-      <template #default>
-        <el-icon>
-          <plus/>
-        </el-icon>
-      </template>
-      <template #file="{ file }">
-        <el-row>
-          <img class="el-upload-list__item-thumbnail" :src="file.url" alt=""/>
-          <span class="el-upload-list__item-actions">
+        <template #file="{ file }">
+          <el-row>
+            <img class="el-upload-list__item-thumbnail" :src="file.url" alt=""/>
+            <span class="el-upload-list__item-actions">
           <span
               class="el-upload-list__item-delete"
               @click="handleRemove(file)"
@@ -40,15 +43,16 @@
             <el-icon><delete/></el-icon>
           </span>
         </span>
-        </el-row>
-      </template>
-    </el-upload>
+          </el-row>
+        </template>
+      </el-upload>
+    </el-space>
   </el-row>
 </template>
 
 <script>
 export default {
-  name: "CubeExpress"
+  name: "CubeExpress",
 }
 </script>
 <script setup>
@@ -57,9 +61,9 @@ import {VuemojiPicker} from 'vuemoji-picker'
 import {ElMessage} from "element-plus";
 
 const textarea = ref('')
-let emits = defineEmits(['update:textArea','update:picturesBox'])
+let emits = defineEmits(['update:textArea', 'update:picturesBox'])
 const handleEmojiClick = function (emoji) {
-  textarea.value += emoji.unicode
+  textarea.value += emoji
   emits('update:textArea', textarea.value)
 }
 
@@ -70,6 +74,7 @@ function inputChange(text) {
 let props = defineProps({
   mode: String,
   textArea: String,
+  textNumberMax: Number,
   picturesBox: null
 })
 //--------- if the mode is picture ---------
@@ -104,18 +109,16 @@ function beforeAvatarUpload(fileObject, fileObjectList) {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
+.el-popover.express-popover {
+  padding: 0 !important;
+}
+
 .express {
   margin: 0 15px;
 
   .space {
-    margin-top: 20px;
-    margin-left: 5px;
-
-  }
-
-  .upload {
-    margin-top: 20px;
+    width: 100%;
   }
 }
 
