@@ -55,7 +55,7 @@
           <el-row class="body-separate"></el-row>
           <el-row class="body-block" v-for="item in data" :key="item.id">
             <el-space wrap class="user-line">
-              <el-avatar :size="35" :src="item.avatar"></el-avatar>
+              <el-avatar :size="34" :src="item.avatar"></el-avatar>
               <el-row class="user-name">{{ item.name }}</el-row>
               <el-row class="date">{{ item.date }}</el-row>
             </el-space>

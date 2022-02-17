@@ -1,28 +1,25 @@
 <template>
-  <el-space direction="vertical" alignment="start" :size="30">
-    <el-radio-group v-model="size">
-      <el-radio :label="'large'">large</el-radio>
-      <el-radio :label="'default'">default</el-radio>
-      <el-radio :label="'small'">small</el-radio>
-    </el-radio-group>
-
-    <el-space wrap :size="size" direction="vertical">
-      <el-card v-for="i in 3" :key="i" class="box-card" style="width: 250px">
-        <template #header>
-          <div class="card-header">
-            <span>Card name</span>
-            <el-button class="button" type="text">Operation button</el-button>
-          </div>
-        </template>
-        <div v-for="o in 4" :key="o" class="text item">
-          {{ 'List item ' + o }}
-        </div>
-      </el-card>
-    </el-space>
+  <el-space style="width: 300px" fill>
+    <el-row>😄</el-row>
+    <span style="word-break: break-all" v-html="rawHtml"></span>
   </el-space>
 </template>
-
-<script lang="ts" setup>
+<script setup>
 import { ref } from 'vue'
-const size = ref('default')
+const tabPosition = ref('left')
+let rawHtml = ref('<span style="color:red">利用vue</span>112313213213211111111111111111111')
 </script>
+<style>
+.demo-tabs > .el-tabs__content {
+  padding: 32px;
+  background-color: #f4f5f7;
+  color: #6b778c;
+  font-size: 32px;
+  font-weight: 600;
+}
+
+.el-tabs--right .el-tabs__content,
+.el-tabs--left .el-tabs__content {
+  height: 100%;
+}
+</style>
