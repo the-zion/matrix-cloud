@@ -24,7 +24,7 @@
           {{ props.data.comment >= 1000 ? (props.data.comment / 1000).toFixed(1) + 'k' : props.data.comment }}
         </el-row>
       </el-space>
-      <el-row class="word" style="font-size: 12px;cursor: pointer" @click="commentReply">回复</el-row>
+      <el-row class="word" style="font-size: 12px;cursor: pointer" v-show="props.replyVisible" @click="commentReply">回复</el-row>
     </el-space>
   </el-space>
 </template>
@@ -42,7 +42,8 @@ let emits = defineEmits(['comment-click', 'comment-reply'])
 const props = defineProps({
   data: Object,
   fontSize: Number,
-  avatarSize: Number
+  avatarSize: Number,
+  replyVisible: Boolean
 })
 
 let textHtml = props.data.text
