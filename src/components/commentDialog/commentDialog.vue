@@ -8,7 +8,7 @@
   >
     <el-row class="body" align="top">
       <el-space fill direction="vertical" class="space" size="large">
-        <cube-reply :data="props.data" :like="true"></cube-reply>
+        <cube-reply :data="props.data" :like="true" :comment="true"></cube-reply>
         <el-row class="separate"></el-row>
         <el-empty v-if="!subData.length" description="暂无回复哦，来做第一个吧~"></el-empty>
         <el-space fill :size="30">
