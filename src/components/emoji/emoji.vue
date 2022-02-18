@@ -31,14 +31,14 @@ export default {
 import {ref} from "vue"
 
 let currentOption = ref("😄")
-let emit = defineEmits(['emojiClick'])
+let emit = defineEmits(['emoji-click'])
 
 function select(key) {
   currentOption.value = key
 }
 
 function emojiClick(emoji) {
-  emit("emojiClick", emoji)
+  emit("emoji-click", emoji)
 }
 
 const emojiBox = ref({
