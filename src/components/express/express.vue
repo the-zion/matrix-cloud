@@ -12,14 +12,7 @@
           resize="none"
       />
       <el-row align="middle" justify="space-between">
-        <el-popover placement="right" :width="'fit-content'" trigger="hover" popper-class="express-popover">
-          <template #reference>
-            <el-icon>
-              <img src="../../assets/images/smile.svg" style="height: 1.5em;width: 1.5em;cursor: pointer">
-            </el-icon>
-          </template>
-          <cube-emoji @emojiClick="handleEmojiClick"></cube-emoji>
-        </el-popover>
+        <cube-popover-emoji @emoji-click="handleEmojiClick"></cube-popover-emoji>
         <el-button v-if="props.mode === 'comment'" type="primary">发表</el-button>
       </el-row>
 
