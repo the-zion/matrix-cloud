@@ -11,17 +11,22 @@
       <el-tab-pane label="按时间排序" name="time"></el-tab-pane>
     </el-tabs>
     <el-space fill :size="20">
-      <el-space v-for="item in data" class="share" direction="vertical" fill :size="20">
-        <cube-share :data="item" :fontSize="14" @comment-click="commentClick"></cube-share>
-        <el-row class="separate" v-if="subShow"></el-row>
-        <el-space v-if="subShow" direction="vertical" fill class="subShare" :size="30">
-          <cube-share :data="item" :fontSize="13" :avatarSize="25" v-for="item in subData"
-                      @comment-reply="subCommentReply"></cube-share>
-        </el-space>
+      <el-space v-for="(item,index) in dataList" class="share" direction="vertical" fill>
+        <!--        <cube-share :data="item" :fontSize="14" @comment-click="commentClick(item,index)"></cube-share>-->
+        <cube-reply :data="item" @comment-click="commentClick(item,index)" :like="true" :comment="true"></cube-reply>
       </el-space>
+      <el-pagination
+          small
+          background
+          layout="prev, pager, next"
+          :total="50"
+          class="mt-4"
+      >
+      </el-pagination>
     </el-space>
   </el-space>
-  <el-dialog v-model:visible="dialogVisible"></el-dialog>
+  <cube-comment-dialog v-if="dialogVisible" v-model:visible="dialogVisible" :data="data"
+                       :top="'5vh'"></cube-comment-dialog>
 </template>
 
 <script>
@@ -33,26 +38,21 @@ export default {
 import {defineProps, ref} from "vue";
 
 const activeTab = ref("hot")
-const subShow = ref(false)
 const dialogVisible = ref(false)
+const data = ref()
 
 function tabClick() {
   console.log(activeTab.value)
 }
 
-function commentClick() {
-  subShow.value = !subShow.value
-}
-
-function subCommentReply() {
-  console.log(2222)
+function commentClick(item, index) {
+  data.value = item
   dialogVisible.value = !dialogVisible.value
 }
 
-const data = ref([])
-const subData = ref([])
+const dataList = ref([])
 for (let i = 0; i < 5; i++) {
-  data.value.push({
+  dataList.value.push({
     id: i,
     avatar: '../../src/assets/images/user1.png',
     name: '刘思圆',
@@ -61,16 +61,9 @@ for (let i = 0; i < 5; i++) {
     love: 1298,
     comment: 1298
   })
-  subData.value.push({
-    id: i,
-    avatar: '../../src/assets/images/user1.png',
-    name: '刘思圆',
-    relevant: "刘思圆",
-    date: '2022-2-12 20:56:30',
-    text: '我觉得，一个人要想活得有朝气，就得没谱儿，得有新东西进来，新东西出去，得完全不知道明天会发生什么，如果还能一直有“新喜欢的东西”和“新不喜欢的东西”那就太幸福了',
-    love: 1298,
-  })
 }
+
+console.log(data.value)
 
 
 </script>
@@ -85,7 +78,6 @@ for (let i = 0; i < 5; i++) {
 
 .share {
   min-height: 130px;
-  border-bottom: 1px solid var(--el-border-color-base);
 
   .separate {
     height: 8px;
