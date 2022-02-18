@@ -6,6 +6,7 @@ import router from './router/index'
 import App from './App.vue'
 import store from "./store/index"
 import * as ElIconModules from '@element-plus/icons-vue'
+import './assets/icon/iconfont.css'
 
 
 const app = createApp(App).use(store)
