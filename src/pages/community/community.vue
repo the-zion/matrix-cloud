@@ -79,7 +79,7 @@
                 }}
               </el-row>
             </el-space>
-            <cube-comment v-if="item.visible" style="width:100%"></cube-comment>
+            <cube-comment v-if="item.visible"></cube-comment>
           </el-row>
           <el-pagination
               v-model:currentPage="currentPage"

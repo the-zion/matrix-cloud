@@ -1,4 +1,4 @@
-import {globalFunc} from "../../utils/globalFunc";
+import {globalFunc} from "../../utils/globalFunc"
 
 export function controller(treeRef, tableRef) {
     let {loadFullScreen} = globalFunc()
