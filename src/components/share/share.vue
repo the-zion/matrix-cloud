@@ -1,17 +1,20 @@
 <template>
-  <el-space direction="vertical" fill size="small">
+  <el-space direction="vertical" fill :size="30">
     <el-space>
       <el-avatar :size="props.avatarSize || 34" :src="props.data.avatar"></el-avatar>
       <el-row class="name">{{ props.data.name }}</el-row>
       <el-row class="date">{{ props.data.date }}</el-row>
     </el-space>
     <el-space fill>
-      <span class="word" :style="props.fontSize && 'font-size:'+props.fontSize+'px'" style="word-break: break-all"
-            v-html="textHtml"></span>
+      <el-row class="word" :style="props.fontSize && 'font-size:'+props.fontSize+'px'">{{ props.data.text }}</el-row>
+    </el-space>
+    <el-space>
+      <el-image :preview-src-list="['../../src/assets/images/'+image]" v-for="image in props.data.images"
+                :src="'../../src/assets/images/'+image" class="image-item"></el-image>
     </el-space>
     <el-space size="large">
       <el-space size="small">
-        <img src="../../assets/images/like.svg" class="icon">
+        <el-icon class="iconfont icon-like icon"></el-icon>
         <el-row class="count">
           {{ props.data.love >= 1000 ? (props.data.love / 1000).toFixed(1) + 'k' : props.data.love }}
         </el-row>
@@ -24,7 +27,6 @@
           {{ props.data.comment >= 1000 ? (props.data.comment / 1000).toFixed(1) + 'k' : props.data.comment }}
         </el-row>
       </el-space>
-      <el-row class="word" style="font-size: 12px;cursor: pointer" v-show="props.replyVisible" @click="commentReply">回复</el-row>
     </el-space>
   </el-space>
 </template>
@@ -38,25 +40,15 @@ export default {
 <script setup>
 import {defineProps} from "vue";
 
-let emits = defineEmits(['comment-click', 'comment-reply'])
+let emits = defineEmits(['comment-click'])
 const props = defineProps({
   data: Object,
   fontSize: Number,
   avatarSize: Number,
-  replyVisible: Boolean
 })
-
-let textHtml = props.data.text
-if (props.data.relevant) {
-  textHtml = '<span style="color:var(--el-color-primary)">' + '@' + props.data.relevant + ':&nbsp&nbsp&nbsp' + '</span>' + textHtml
-}
 
 function commentClick() {
   emits('comment-click', "")
-}
-
-function commentReply() {
-  emits('comment-reply', "")
 }
 </script>
 
@@ -71,13 +63,19 @@ function commentReply() {
   color: var(--el-text-color-secondary);
 }
 
+.image-item {
+  width: 120px;
+  height: 120px;
+  margin-right: 20px;
+  border-radius: 5px;
+}
+
 .word {
   font-size: 15px;
-  color: var(--el-text-color-regular);
 }
 
 .icon {
-  color: var(--el-color-primary);
+  color: var(--el-text-color-secondary);
   height: 1em;
   width: 1em;
   cursor: pointer
