@@ -53,34 +53,35 @@
             </el-tooltip>
           </el-row>
           <el-row class="body-separate"></el-row>
-          <el-row class="body-block" v-for="item in data" :key="item.id">
-            <el-space wrap class="user-line">
-              <el-avatar :size="34" :src="item.avatar"></el-avatar>
-              <el-row class="user-name">{{ item.name }}</el-row>
-              <el-row class="date">{{ item.date }}</el-row>
-            </el-space>
-            <el-col class="content-word">
-              {{ item.text }}
-            </el-col>
-            <el-col class="images-line">
-              <el-image :preview-src-list="['../../src/assets/images/'+image]" v-for="image in item.images"
-                        :src="'../../src/assets/images/'+image" class="image-item"></el-image>
-            </el-col>
-            <el-space class="foot-line">
-              <el-icon class="icon-symbol">
-                <img src="../../assets/images/like.svg" style="color: #409EFF;height: 1em;width: 1em;cursor: pointer">
-              </el-icon>
-              <el-row class="icon-word">{{ item.love >= 1000 ? (item.love / 1000).toFixed(1) + 'k' : item.love }}</el-row>
-              <el-icon class="icon-symbol" @click="item.visible = !item.visible">
-                <chat-dot-round/>
-              </el-icon>
-              <el-row class="icon-word">{{
-                  item.comment >= 1000 ? (item.comment / 1000).toFixed(1) + 'k' : item.comment
-                }}
-              </el-row>
-            </el-space>
+          <el-space class="body-block" v-for="item in data" :key="item.id" direction="vertical" :size="30">
+            <cube-share :data="item" @comment-click="item.visible = !item.visible"></cube-share>
+<!--            <el-space wrap class="user-line">-->
+<!--              <el-avatar :size="34" :src="item.avatar"></el-avatar>-->
+<!--              <el-row class="user-name">{{ item.name }}</el-row>-->
+<!--              <el-row class="date">{{ item.date }}</el-row>-->
+<!--            </el-space>-->
+<!--            <el-col class="content-word">-->
+<!--              {{ item.text }}-->
+<!--            </el-col>-->
+<!--            <el-col class="images-line">-->
+<!--              <el-image :preview-src-list="['../../src/assets/images/'+image]" v-for="image in item.images"-->
+<!--                        :src="'../../src/assets/images/'+image" class="image-item"></el-image>-->
+<!--            </el-col>-->
+<!--            <el-space class="foot-line">-->
+<!--              <el-icon class="icon-symbol">-->
+<!--                <img src="../../assets/images/like.svg" style="color: #409EFF;height: 1em;width: 1em;cursor: pointer">-->
+<!--              </el-icon>-->
+<!--              <el-row class="icon-word">{{ item.love >= 1000 ? (item.love / 1000).toFixed(1) + 'k' : item.love }}</el-row>-->
+<!--              <el-icon class="icon-symbol" @click="item.visible = !item.visible">-->
+<!--                <chat-dot-round/>-->
+<!--              </el-icon>-->
+<!--              <el-row class="icon-word">{{-->
+<!--                  item.comment >= 1000 ? (item.comment / 1000).toFixed(1) + 'k' : item.comment-->
+<!--                }}-->
+<!--              </el-row>-->
+<!--            </el-space>-->
             <cube-comment v-if="item.visible"></cube-comment>
-          </el-row>
+          </el-space>
           <el-pagination
               v-model:currentPage="currentPage"
               class="body-pagination"
@@ -100,7 +101,6 @@
 import {initData} from "./initData.js"
 import {controller} from "./controller.js"
 import {onMounted, reactive, ref} from "vue";
-
 let imagesBox = ref(["background1.jpg", "background2.jpg", "background3.jpg"])
 
 let {
