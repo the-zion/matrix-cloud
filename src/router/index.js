@@ -14,6 +14,7 @@ import LoginMain from "../pages/login/main/main.vue"
 import Code from "../pages/login/code/code.vue"
 import Password from "../pages/login/password/password.vue"
 import PasswordReset from "../pages/login/passwordReset/passwordReset.vue"
+import User from "../pages/user/user.vue"
 
 
 const routes = [
@@ -57,6 +58,11 @@ const routes = [
                 path: 'about',
                 name: 'about',
                 component: About
+            },
+            {
+                path: 'user',
+                name: 'user',
+                component: User
             }]
 
     },
