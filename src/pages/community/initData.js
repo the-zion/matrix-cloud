@@ -3,7 +3,7 @@ import {ref} from 'vue'
 export function initData() {
     let backTopRight = ref(0)
     let backTop = ref()
-    let classSelect = ref(0)
+    let classSelect = ref('0')
     let subClassSelect = ref("")
     let orderSelect = ref("id")
     let carouselBox = ref(["carousel1.png", "carousel2.png", "carousel3.png", "carousel4.png"])

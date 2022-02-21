@@ -30,7 +30,7 @@
         <el-main class="body-main">
           <el-row :justify="'space-between'">
             <el-form inline>
-              <el-form-item label="分类" v-show="classSelect !== 0">
+              <el-form-item label="分类" v-show="classSelect !== '0'">
                 <el-select v-model="subClassSelect" placeholder="please select your zone" @change="classSelectChange">
                   <el-option v-for="item in classList[classSelect].children" :label="item.label"
                              :value="item.value"></el-option>
@@ -55,31 +55,6 @@
           <el-row class="body-separate"></el-row>
           <el-space class="body-block" v-for="item in data" :key="item.id" direction="vertical" :size="30">
             <cube-share :data="item" @comment-click="item.visible = !item.visible"></cube-share>
-<!--            <el-space wrap class="user-line">-->
-<!--              <el-avatar :size="34" :src="item.avatar"></el-avatar>-->
-<!--              <el-row class="user-name">{{ item.name }}</el-row>-->
-<!--              <el-row class="date">{{ item.date }}</el-row>-->
-<!--            </el-space>-->
-<!--            <el-col class="content-word">-->
-<!--              {{ item.text }}-->
-<!--            </el-col>-->
-<!--            <el-col class="images-line">-->
-<!--              <el-image :preview-src-list="['../../src/assets/images/'+image]" v-for="image in item.images"-->
-<!--                        :src="'../../src/assets/images/'+image" class="image-item"></el-image>-->
-<!--            </el-col>-->
-<!--            <el-space class="foot-line">-->
-<!--              <el-icon class="icon-symbol">-->
-<!--                <img src="../../assets/images/like.svg" style="color: #409EFF;height: 1em;width: 1em;cursor: pointer">-->
-<!--              </el-icon>-->
-<!--              <el-row class="icon-word">{{ item.love >= 1000 ? (item.love / 1000).toFixed(1) + 'k' : item.love }}</el-row>-->
-<!--              <el-icon class="icon-symbol" @click="item.visible = !item.visible">-->
-<!--                <chat-dot-round/>-->
-<!--              </el-icon>-->
-<!--              <el-row class="icon-word">{{-->
-<!--                  item.comment >= 1000 ? (item.comment / 1000).toFixed(1) + 'k' : item.comment-->
-<!--                }}-->
-<!--              </el-row>-->
-<!--            </el-space>-->
             <cube-comment v-if="item.visible"></cube-comment>
           </el-space>
           <el-pagination
@@ -189,56 +164,6 @@ for (let i = 0; i < 10; i++) {
         .body-block {
           padding: 20px;
           border-bottom: 1px solid var(--el-border-color-base);
-
-          .user-line {
-            margin-bottom: 20px !important;
-
-            .user-name {
-              font-size: 14px;
-              color: #606266;
-              line-height: 30px;
-            }
-
-            .date {
-              font-size: 14px;
-              color: #909399;
-              line-height: 30px;
-            }
-          }
-
-          .content-word {
-            min-height: 24px;
-            font-size: 15px;
-            font-weight: 400;
-            white-space: pre-wrap;
-            line-height: 24px;
-            margin-bottom: 20px;
-          }
-
-          .images-line {
-            margin-bottom: 20px;
-
-            .image-item {
-              width: 120px;
-              height: 120px;
-              margin-right: 20px;
-              border-radius: 5px;
-            }
-          }
-
-          .foot-line {
-            margin-bottom: 20px;
-
-            .icon-symbol {
-              cursor: pointer;
-              color: #409EFF
-            }
-
-            .icon-word {
-              color: #909399;
-              margin-right: 20px;
-            }
-          }
         }
 
         .body-pagination {
