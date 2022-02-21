@@ -1,7 +1,7 @@
 <template>
   <el-container class="main-container">
     <el-header class="main-header">
-      <el-menu class="main-menu" :router=true default-active="home">
+      <el-menu class="main-menu" router @select="menuSelect" default-active="home" :active-text-color="activeColor">
         <el-image class="main-cube-logo"
                   src="../src/assets/images/cube.svg"
                   fit="contain"
@@ -15,9 +15,15 @@
           </template>
         </el-menu-item>
         <div style="flex-grow: 1"></div>
-        <el-icon :size="20" class="main-menu-icon" @click="showSearchClick">
-          <search/>
-        </el-icon>
+        <el-tooltip
+            effect="dark"
+            content="站内搜索"
+            placement="bottom"
+        >
+          <el-icon :size="20" class="main-menu-icon" @click="showSearchClick">
+            <search/>
+          </el-icon>
+        </el-tooltip>
         <transition name="search">
           <el-input
               v-if="showSearch"
@@ -27,12 +33,44 @@
               @blur="searchBlur"
           />
         </transition>
-        <el-badge :value="messageValue" :max="99" class="main-menu-icon" :hidden=messageCount(messageValue)>
-          <el-icon :size="20" @click="add">
-            <message/>
+        <el-tooltip
+            effect="dark"
+            content="我要发表"
+            placement="bottom"
+        >
+          <el-icon :size="20" class="main-menu-icon">
+            <edit/>
           </el-icon>
-        </el-badge>
-        <el-avatar class="main-user-image" :size="35" src="../src/assets/images/user.jpg" @click="login"></el-avatar>
+        </el-tooltip>
+        <el-tooltip
+            effect="dark"
+            content="站内信息"
+            placement="bottom"
+        >
+          <el-badge :value="messageValue" :max="99" class="main-menu-icon" :hidden=messageCount(messageValue)>
+            <el-icon :size="20" @click="add">
+              <message/>
+            </el-icon>
+          </el-badge>
+        </el-tooltip>
+        <el-dropdown size="large" trigger="hover" @command="dropdownClick">
+          <!--          @click="login"-->
+          <el-avatar class="main-user-image" :size="35" src="../src/assets/images/user.jpg"></el-avatar>
+          <template #dropdown>
+            <el-row align="middle" justify="center"
+                    style="width: 224px;height: 140px;border-bottom: 1px solid var(--el-border-color-base);">
+              <el-space direction="vertical" :size="5">
+                <el-avatar class="main-user-image" :size="60" src="../src/assets/images/user.jpg"></el-avatar>
+                <el-row style="font-size: 15px">刘思圆</el-row>
+              </el-space>
+            </el-row>
+            <el-dropdown-menu>
+              <el-dropdown-item command="user">个人中心</el-dropdown-item>
+              <el-dropdown-item divided>设置</el-dropdown-item>
+              <el-dropdown-item divided>退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </el-menu>
     </el-header>
     <el-container class="main-sub-container">
@@ -54,11 +92,22 @@
 </template>
 
 <script setup>
+import {ref} from "vue"
 import {initData} from "./initData.js"
 import {controller} from "./controller.js"
 
-let {input, showSearch, messageValue, menulist} = initData()
-let {showSearchClick, searchBlur, messageCount, add, login} = controller(showSearch, messageValue)
+let activeColor = ref()
+
+let {activeMenu, input, showSearch, messageValue, menulist} = initData()
+let {
+  menuSelect,
+  showSearchClick,
+  searchBlur,
+  messageCount,
+  add,
+  login,
+  dropdownClick
+} = controller(activeColor, showSearch, messageValue)
 
 </script>
 <style lang="scss">
@@ -133,12 +182,6 @@ body {
       .main-user-image {
         margin: 0 15px;
         cursor: pointer;
-      }
-
-      .main-user-dropdown {
-        .el-dropdown--default {
-          display: flex;
-        }
       }
     }
   }

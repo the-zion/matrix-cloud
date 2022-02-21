@@ -1,6 +1,10 @@
 import router from '../../router/index'
 
-export function controller(showSearch, messageValue) {
+export function controller(activeColor, showSearch, messageValue) {
+
+    function menuSelect() {
+        activeColor.value = "#409eff"
+    }
 
     function showSearchClick() {
         showSearch.value = !showSearch.value
@@ -22,5 +26,10 @@ export function controller(showSearch, messageValue) {
         router.push({name: 'login'})
     }
 
-    return {showSearchClick, searchBlur, messageCount, add, login}
+    function dropdownClick(item) {
+        activeColor.value = "var(--el-menu-text-color)"
+        router.push({name: item})
+    }
+
+    return {menuSelect, showSearchClick, searchBlur, messageCount, add, login, dropdownClick}
 }

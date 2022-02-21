@@ -1,6 +1,7 @@
 import {ref} from 'vue'
 
 export function initData() {
+    let activeMenu = ref("home")
     let input = ref('')
     let showSearch = ref(false)
     let messageValue = ref(0)
@@ -24,7 +25,7 @@ export function initData() {
         icon: "question-filled"
     }])
     return {
-        input, showSearch, messageValue, menulist
+        activeMenu, input, showSearch, messageValue, menulist
     }
 
 }
