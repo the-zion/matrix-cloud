@@ -8,6 +8,7 @@ import CubePopoverEmoji from './popoverEmoji/popoverEmoji.vue'
 import CubeShare from './share/share.vue'
 import CubeReply from './reply/reply.vue'
 import CubeInput from './input/input.vue'
+import CubeUserInfo from './userInfo/userInfo.vue'
 
 export default {
     install(app: App) {
@@ -20,5 +21,6 @@ export default {
         app.component(CubeShare.name, CubeShare)
         app.component(CubeReply.name, CubeReply)
         app.component(CubeInput.name, CubeInput)
+        app.component(CubeUserInfo.name, CubeUserInfo)
     }
 }
