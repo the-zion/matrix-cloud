@@ -9,6 +9,8 @@ import CubeShare from './share/share.vue'
 import CubeReply from './reply/reply.vue'
 import CubeInput from './input/input.vue'
 import CubeUserInfo from './userInfo/userInfo.vue'
+import CubeTimeLine from './timeline/timeline.vue'
+import CubeUserBlog from './userblog/userblog.vue'
 
 export default {
     install(app: App) {
@@ -22,5 +24,7 @@ export default {
         app.component(CubeReply.name, CubeReply)
         app.component(CubeInput.name, CubeInput)
         app.component(CubeUserInfo.name, CubeUserInfo)
+        app.component(CubeTimeLine.name, CubeTimeLine)
+        app.component(CubeUserBlog.name, CubeUserBlog)
     }
 }
