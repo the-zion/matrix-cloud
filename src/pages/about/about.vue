@@ -1,23 +1,14 @@
 <template>
-  <el-affix position="bottom" :offset="20">
-    <el-button type="primary">距离底部 20px</el-button>
-  </el-affix>
-  <div class="affix-container">
-    <el-affix target=".affix-container" :offset="80" position="top">
-      <el-button type="primary">Target container</el-button>
-    </el-affix>
-  </div>
-  <div class="bffix-container">
-    <el-affix target=".bffix-container" :offset="80" position="bottom">
-      <el-button type="primary">Target</el-button>
-    </el-affix>
-  </div>
+  <el-descriptions title="User Info">
+    <el-descriptions-item label="Username">kooriookami</el-descriptions-item>
+    <el-descriptions-item label="Telephone">18100000000</el-descriptions-item>
+    <el-descriptions-item label="Place">Suzhou</el-descriptions-item>
+    <el-descriptions-item >
+      <el-tag size="small">School</el-tag>
+    </el-descriptions-item>
+    <el-descriptions-item label="Address"
+    >No.1188, Wuzhong Avenue, Wuzhong District, Suzhou, Jiangsu
+      Province</el-descriptions-item
+    >
+  </el-descriptions>
 </template>
-<style scoped lang="scss">
-.affix-container,.bffix-container {
-  text-align: center;
-  height: 2000px;
-  border-radius: 4px;
-  background: var(--el-color-primary-light-9);
-}
-</style>
