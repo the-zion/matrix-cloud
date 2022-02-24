@@ -19,6 +19,20 @@
   position: unset !important;
 }
 
+.el-timeline-item__tail {
+  left: 8px;
+}
+
+.el-timeline-item__node--large {
+  width: 22px;
+  height: 22px;
+}
+
+.el-timeline-item__wrapper {
+  padding-left: 35px;
+  top: 3px;
+}
+
 .el-dialog {
   border-radius: 10px;
 }
