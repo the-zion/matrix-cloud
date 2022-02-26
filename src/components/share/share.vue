@@ -1,5 +1,5 @@
 <template>
-  <el-space direction="vertical" fill :size="30">
+  <el-space direction="vertical" fill :size="30" :style="props.style">
     <el-space>
       <el-avatar :size="props.avatarSize || 34" :src="props.data.avatar"></el-avatar>
       <el-row class="name">{{ props.data.name }}</el-row>
@@ -45,6 +45,7 @@ const props = defineProps({
   data: Object,
   fontSize: Number,
   avatarSize: Number,
+  style: String
 })
 
 function commentClick() {
