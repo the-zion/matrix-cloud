@@ -38,45 +38,7 @@
                 :header-cell-style="{'background':'var(--el-bg-color)','height':'45px'}">
         <el-table-column type="expand">
           <template #default="props">
-            <el-row style="padding: 16px 60px;height: 240px" align="middle">
-              <el-space style="width: 60%" direction="vertical" fill :size="10">
-                <el-row style="color: rgba(0,0,0,.85);font-size: 16px;line-height: 24px;">
-                  <a>{{ props.row.title }}</a>
-                </el-row>
-                <el-space wrap :size="10">
-                  <el-tag :key="'key1'" effect="dark">{{ props.row.tag }}</el-tag>
-                  <el-tag :key="'key2'" effect="dark" type="danger">{{ '专栏' }}</el-tag>
-                </el-space>
-                <el-descriptions>
-                  <el-descriptions-item label="段落示意:">{{ props.row.content || '暂无' }}</el-descriptions-item>
-                </el-descriptions>
-                <el-space style="width: 100%"  direction="horizontal">
-                  <el-space  @click="userClick" :size="3">
-                    <el-row  style="cursor: pointer">
-                      <el-avatar :size="24" :src="'../src/assets/images/user.jpg'"></el-avatar>
-                    </el-row>
-                    <el-row :span="4" style="font-size: 14px;color: #409EFF;cursor: pointer">{{'付小小'}}</el-row>
-                  </el-space>
-                  <el-space :size="3">
-                    <el-row style="color: rgb(144, 147, 153);">
-                      <el-icon><clock/></el-icon>
-                    </el-row>
-                    <el-row  style="font-size: 13px;color: rgb(144, 147, 153);">
-                      {{ '2022-01-31 15:22' }}
-                    </el-row>
-                  </el-space>
-                </el-space>
-              </el-space>
-              <el-row style="height: 100%;width:40%;" align="middle" justify="center">
-                <el-image
-                    style="height: 70%;width:60%;border-radius: 5px"
-                    :src="'../src/assets/images/picture1.jpg'"
-                    fit="cover"
-                    :preview-src-list="['../src/assets/images/picture1.jpg']"
-                    append-to-body
-                ></el-image>
-              </el-row>
-            </el-row>
+            <cube-blog-introduce :row="props.row"></cube-blog-introduce>
           </template>
         </el-table-column>
         <el-table-column v-for="item in tableList" :prop="item.key" :label="item.label"
@@ -151,8 +113,6 @@
 import {ref} from "vue"
 import {initData} from "./initData.js"
 import {controller} from "./controller.js"
-
-
 const tableData = [
   {
     id: '1',
