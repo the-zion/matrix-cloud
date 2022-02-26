@@ -53,10 +53,12 @@
             </el-tooltip>
           </el-row>
           <el-row class="body-separate"></el-row>
-          <el-space class="body-block" v-for="item in data" :key="item.id" direction="vertical" :size="30">
-            <cube-share :data="item" @comment-click="item.visible = !item.visible"></cube-share>
-            <cube-comment v-if="item.visible"></cube-comment>
-          </el-space>
+          <el-row>
+            <el-space class="body-block" v-for="item in data" :key="item.id" :size="30">
+              <cube-share :data="item" @comment-click="item.visible = !item.visible"></cube-share>
+              <cube-comment v-if="item.visible"></cube-comment>
+            </el-space>
+          </el-row>
           <el-pagination
               v-model:currentPage="currentPage"
               class="body-pagination"
@@ -76,6 +78,7 @@
 import {initData} from "./initData.js"
 import {controller} from "./controller.js"
 import {onMounted, reactive, ref} from "vue";
+
 let imagesBox = ref(["background1.jpg", "background2.jpg", "background3.jpg"])
 
 let {
@@ -162,6 +165,7 @@ for (let i = 0; i < 10; i++) {
         }
 
         .body-block {
+          width: 100%;
           padding: 20px;
           border-bottom: 1px solid var(--el-border-color-base);
         }
