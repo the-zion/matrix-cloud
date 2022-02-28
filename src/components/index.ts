@@ -12,6 +12,8 @@ import CubeUserInfo from './userInfo/userInfo.vue'
 import CubeTimeLine from './timeline/timeline.vue'
 import CubeUserBlog from './userblog/userblog.vue'
 import CubeBlogIntroduce from './blogIntroduce/blogIntroduce.vue'
+import CubeDialog from './dialog/dialog.vue'
+import CubeForm from './form/form.vue'
 
 export default {
     install(app: App) {
@@ -28,5 +30,7 @@ export default {
         app.component(CubeTimeLine.name, CubeTimeLine)
         app.component(CubeUserBlog.name, CubeUserBlog)
         app.component(CubeBlogIntroduce.name, CubeBlogIntroduce)
+        app.component(CubeDialog.name, CubeDialog)
+        app.component(CubeForm.name, CubeForm)
     }
 }
