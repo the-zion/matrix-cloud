@@ -54,7 +54,7 @@
           </el-row>
           <el-row class="body-separate"></el-row>
           <el-row>
-            <el-space class="body-block" v-for="item in data" :key="item.id" :size="30">
+            <el-space class="body-block" v-for="item in data" :key="item.id" :size="30" direction="vertical" alignment="flex-start">
               <cube-share :data="item" @comment-click="item.visible = !item.visible"></cube-share>
               <cube-comment v-if="item.visible"></cube-comment>
             </el-space>
