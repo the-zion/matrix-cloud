@@ -25,8 +25,12 @@
                 <cube-comment v-if="activity.type==='community' && activity.data.visible"></cube-comment>
               </el-space>
             </el-row>
-            <el-row v-if="activity.type==='more'" justify="center">
-              <h1>hello word</h1>
+            <el-row v-if="activity.type==='more'" justify="center" align="middle">
+              <el-space>
+                <hr class="line"/>
+                <el-button plain @click="load">加载更多</el-button>
+                <hr class="line"/>
+              </el-space>
             </el-row>
           </el-space>
         </el-timeline-item>
@@ -44,11 +48,16 @@ export default {
 
 <script setup>
 import {ref} from "vue"
-import {MoreFilled} from '@element-plus/icons-vue'
+import {globalFunc} from "../../utils/globalFunc";
 
-function test(test) {
-  test.visible = true
-  console.log(test)
+let {loadFullScreen} = globalFunc()
+
+
+function load() {
+  let loading = loadFullScreen()
+  setTimeout(() => {
+    loading.close()
+  }, 1000)
 }
 
 const activities = ref([
@@ -92,7 +101,7 @@ const activities = ref([
     content: 'Custom size',
     timestamp: '2022-02-25 20:46',
     size: 'large',
-    icon: MoreFilled,
+    icon: "MoreFilled",
     placement: "top",
     type: "blog",
     data: {
@@ -109,7 +118,7 @@ const activities = ref([
     content: 'Custom size',
     timestamp: '2022-02-25 20:46',
     size: 'large',
-    icon: MoreFilled,
+    icon: "MoreFilled",
     placement: "top",
     type: "blog",
     data: {
@@ -126,7 +135,7 @@ const activities = ref([
     content: 'Custom size',
     timestamp: '2022-02-25 20:46',
     size: 'large',
-    icon: MoreFilled,
+    icon: "MoreFilled",
     placement: "top",
     type: "blog",
     data: {
@@ -150,6 +159,14 @@ const activities = ref([
 <style scoped lang="scss">
 .body {
   width: 100%;
+
+  .line {
+    width: 400px;
+    background: #DCDFE6;
+    border: unset;
+    height: 1px
+  }
+
   .block {
     width: 100%;
     min-width: unset;
