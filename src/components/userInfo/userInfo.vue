@@ -64,11 +64,13 @@ export default {
 <script setup>
 import {ref} from "vue"
 import {ElMessage} from "element-plus";
+import {initData} from "./initData.js"
 
+const {provinces} = initData()
 const visible = ref(false)
 const dialogDefine = ref({
   title: "设置",
-  top: "5vh",
+  width: "30%",
   mode: "form",
   footBtn: [{
     name: "取消",
@@ -80,6 +82,10 @@ const dialogDefine = ref({
     type: "primary",
     click: function () {
       visible.value = !visible.value
+      let formData = dialogDefine.value.formDefine.data
+      if (formData.tag.length > 10){
+        ElMessage.error("标签不能超过10个")
+      }
     },
   }],
   beforeClose: function () {
@@ -92,9 +98,10 @@ const dialogDefine = ref({
       align: "middle",
       justify: "center",
       style: "width:100%",
-      size: 150,
+      size: 105,
       component: "el-upload",
       onChange: function (fileObject) {
+        debugger
         let file = fileObject.raw
         const isJPG = (file.type === 'image/jpeg') || (file.type === 'image/png') || (file.type === 'image/gif')
         const isLt2M = file.size / 1024 / 1024 < 2
@@ -106,12 +113,45 @@ const dialogDefine = ref({
           ElMessage.error('图片大小不得大于 2MB!')
         }
         dialogDefine.value.formDefine.data.image = URL.createObjectURL(file)
-        console.log(URL.createObjectURL(file))
         return isJPG && isLt2M
       }
 
-    }],
-    data: {image: "../src/assets/images/user.jpg"}
+    }, {
+      key: "name",
+      component: "el-input",
+      label: "名字",
+      placeholder: "来起一个好听的名字吧~",
+      labelWidth: '70px',
+      maxlength: 10,
+      style: "width:calc(100% - 70px)",
+    }, {
+      key: "introduce",
+      component: "el-input",
+      placeholder: "让大家更好认识你（30个字）",
+      label: "个人简介",
+      labelWidth: '70px',
+      maxlength: 30,
+      style: "width:calc(100% - 70px)",
+    }, {
+      key: "location",
+      component: "el-cascader",
+      placeholder: "选择你的位置",
+      label: "位置",
+      labelWidth: '70px',
+      options: provinces,
+      showAllLevels: false,
+      filterable: true,
+      style: "width:calc(100% - 70px)",
+    },
+      {
+        key: "tag",
+        style: "width:calc(100% - 70px)",
+        component: "el-tag",
+        labelWidth: '70px',
+        placeholder: "请输入",
+        label: "标签",
+      }],
+    data: {image: "../src/assets/images/user.jpg", name: "", introduce: "", location: "", tag: []}
   }
 })
 
