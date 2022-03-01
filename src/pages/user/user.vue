@@ -4,6 +4,7 @@
       <cube-user-info></cube-user-info>
     </el-aside>
     <el-main class="user-main">
+      <el-backtop target=".user-main" ref="backTop"></el-backtop>
       <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
         <el-tab-pane v-for="item in menu" :name="item.name">
           <template #label>
