@@ -1,69 +1,68 @@
 <template>
-  <div class="demo-input-size">
-    <el-input
-        v-model="input1"
-        class="w-50 m-2"
-        size="large"
-        placeholder="Please Input"
-    ></el-input>
-    <el-input v-model="input2" class="w-50 m-2" placeholder="Please Input" />
-    <el-input
-        v-model="input3"
-        class="w-50 m-2"
-        size="small"
-        placeholder="Please Input"
-    />
-  </div>
-  <div class="demo-input-size">
-    <el-input
-        v-model="input1"
-        class="w-50 m-2"
-        size="large"
-        placeholder="Please Input"
-        :suffix-icon="Search"
-    ></el-input>
-    <el-input
-        v-model="input2"
-        class="w-50 m-2"
-        placeholder="Please Input"
-        :suffix-icon="Search"
-    />
-    <el-input
-        v-model="input3"
-        class="w-50 m-2"
-        size="small"
-        placeholder="Please Input"
-        :suffix-icon="Search"
-    />
-  </div>
-  <div class="demo-input-size">
-    <el-input
-        v-model="input1"
-        class="w-50 m-2"
-        size="large"
-        placeholder="Please Input"
-        :prefix-icon="Search"
-    ></el-input>
-    <el-input
-        v-model="input2"
-        class="w-50 m-2"
-        placeholder="Please Input"
-        :prefix-icon="Search"
-    />
-    <el-input
-        v-model="input3"
-        class="w-50 m-2"
-        size="small"
-        placeholder="Please Input"
-        :prefix-icon="Search"
-    />
-  </div>
+  <el-form>
+    <el-row v-for="i in [1]" :key="i">
+      <el-tag
+          v-for="tag in dynamicTags"
+          :key="tag"
+          class="mx-1"
+          closable
+          :disable-transitions="false"
+          @close="handleClose(tag)"
+      >
+        {{ tag }}
+      </el-tag>
+      <el-input
+          style="display: inline-flex;width: 80px"
+          v-if="inputVisible"
+          placeholder="请输入"
+          ref="InputRef"
+          v-model="inputValue"
+          class="ml-1 w-20"
+          size="small"
+          @keyup.enter="handleInputConfirm"
+          @blur="handleInputConfirm"
+      >
+      </el-input>
+      <el-button v-else class="button-new-tag ml-1" size="small" @click="showInput">
+        + New Tag
+      </el-button>
+    </el-row>
+  </el-form>
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue'
-import { Search } from '@element-plus/icons-vue'
-const input1 = ref('')
-const input2 = ref('')
-const input3 = ref('')
+<script setup>
+import {ref, nextTick} from 'vue'
+
+const inputValue = ref('')
+const dynamicTags = ref(['Tag 1', 'Tag 2', 'Tag 3'])
+const inputVisible = ref(false)
+// const test = ref()
+
+const InputRef = ref([])
+
+// function InputRef(el) {
+//   test.value = el
+//   console.log(el.focus())
+// }
+
+const handleClose = (tag) => {
+  dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1)
+}
+
+const showInput = () => {
+  inputVisible.value = true
+  nextTick(() => {
+    // console.log(InputRef)
+    // InputRef.focus()
+  })
+}
+
+const handleInputConfirm = () => {
+  debugger
+  if (inputValue.value) {
+    dynamicTags.value.push(inputValue.value)
+  }
+  inputVisible.value = false
+  inputValue.value = ''
+}
 </script>
