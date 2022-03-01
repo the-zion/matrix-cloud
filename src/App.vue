@@ -15,6 +15,10 @@
   display: none
 }
 
+.el-avatar>img {
+  width: 100%;
+}
+
 .el-loading-parent--relative {
   position: unset !important;
 }
