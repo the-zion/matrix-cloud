@@ -1,7 +1,9 @@
 <template>
   <el-container>
     <el-main>
-      <cube-blog-introduce v-for="item in datalist" :row="item"
+      <el-date-picker v-model="date" type="date" placeholder="选择日期" @change="dataChange">
+      </el-date-picker>
+      <cube-blog-introduce :row="item" v-for="item in datalist"
                            :style="'padding:16px 0px;margin:0 40px;border-bottom:1px solid var(--el-border-color-base)'"></cube-blog-introduce>
     </el-main>
     <el-footer>
@@ -25,21 +27,33 @@ export default {
 </script>
 
 <script setup>
-import {ref} from "vue"
-import {globalFunc} from "../../utils/globalFunc";
+import {defineProps, ref} from "vue"
+import {globalFunc} from "../../../../utils/globalFunc";
 
 const datalist = ref([])
-const currentPage  =ref(1)
-const backTop = ref()
+const currentPage = ref(1)
+const date = ref()
 const {loadFullScreen} = globalFunc()
+const props = defineProps({
+  upToTop: Function,
+})
 
-function pageCurrentChange(item) {
-  console.log(item)
+function dataChange(date) {
+  console.log(date)
   let loading = loadFullScreen()
   setTimeout(() => {
     loading.close()
   }, 1000)
 }
+
+function pageCurrentChange(item) {
+  let loading = loadFullScreen()
+  setTimeout(() => {
+    loading.close()
+  }, 1000)
+  props.upToTop()
+}
+
 
 for (let i = 0; i < 20; i++) {
   datalist.value.push({
