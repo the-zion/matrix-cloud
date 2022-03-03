@@ -3,14 +3,14 @@
       destroy-on-close
       v-model="props.visible"
       :title="props.define.title"
-      :width="props.define.width"
-      :top="props.define.top"
-      :before-close="props.define.beforeClose"
+      :width="props.define.width || '50%'"
+      :top="props.define.top || '15vh'"
+      :before-close="props.define.beforeClose || function (){}"
   >
     <cube-form v-if="props.define.mode === 'form'" :define="props.define.formDefine"></cube-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button :type="btn.type" @click="btn.click" v-for="btn in props.define.footBtn">{{ btn.name }}</el-button>
+        <el-button :type="btn.type" :disabled="btn.disabled" @click="btn.click" v-for="btn in props.define.footBtn">{{ btn.name }}</el-button>
       </span>
     </template>
   </el-dialog>
@@ -26,7 +26,10 @@ import {defineProps} from "vue";
 
 const props = defineProps({
   visible: Boolean,
-  define: Object
+  define: {
+    type: Object,
+    default: {}
+  }
 })
 </script>
 
