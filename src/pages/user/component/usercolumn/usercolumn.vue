@@ -27,15 +27,14 @@ export default {
 }
 </script>
 <script setup>
-import {defineProps, ref} from "vue";
+import {defineEmits, ref} from "vue";
 import {globalFunc} from "../../../../utils/globalFunc";
 
+const emits = defineEmits(["upToTop"])
 const currentPage = ref(1)
 const date = ref()
 const {loadFullScreen} = globalFunc()
-const props = defineProps({
-  upToTop: Function,
-})
+
 
 const dataList = ref([])
 
@@ -61,7 +60,7 @@ function pageCurrentChange(item) {
   setTimeout(() => {
     loading.close()
   }, 1000)
-  props.upToTop()
+  emits("upToTop", "")
 }
 </script>
 

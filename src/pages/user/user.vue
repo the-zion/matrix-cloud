@@ -19,12 +19,12 @@
       </el-tabs>
       <el-row :style="activeName !== 'time' && {'height':'calc(100% - 45px)'}">
         <cube-time-line v-if="activeName === 'time'"></cube-time-line>
-        <cube-user-blog v-if="activeName === 'blog'" :upToTop="upToTop"></cube-user-blog>
-        <cube-user-talk v-if="activeName === 'talk'" :upToTop="upToTop"></cube-user-talk>
-        <cube-user-column v-if="activeName === 'column'" :upToTop="upToTop"></cube-user-column>
-        <cube-user-collect v-if="activeName === 'collect'" :upToTop="upToTop"></cube-user-collect>
-        <cube-user-care v-if="activeName === 'care' || activeName === 'cared'" :upToTop="upToTop"></cube-user-care>
-        <cube-user-message v-if="activeName === 'message'" :upToTop="upToTop"></cube-user-message>
+        <cube-user-blog v-if="activeName === 'blog'" @upToTop="upToTop"></cube-user-blog>
+        <cube-user-talk v-if="activeName === 'talk'" @upToTop="upToTop"></cube-user-talk>
+        <cube-user-column v-if="activeName === 'column'" @upToTop="upToTop"></cube-user-column>
+        <cube-user-collect v-if="activeName === 'collect'" @upToTop="upToTop"></cube-user-collect>
+        <cube-user-care v-if="activeName === 'care' || activeName === 'cared'" @upToTop="upToTop"></cube-user-care>
+        <cube-user-message v-if="activeName === 'message'" @upToTop="upToTop"></cube-user-message>
       </el-row>
     </el-main>
   </el-container>

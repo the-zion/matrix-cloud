@@ -1,14 +1,20 @@
 <template>
   <el-container>
     <el-main>
-      <el-space direction="vertical" class="body" alignment="start" :size="30">
-        <el-date-picker v-model="date" type="date" placeholder="选择日期" @change="dataChange">
-        </el-date-picker>
-        <el-space fill :size="30" v-for="data in dataList" class="block">
+      <el-space direction="vertical" class="body" alignment="start" :size="20" fill>
+        <el-row>
+          <el-date-picker v-model="date" type="date" placeholder="选择日期" @change="dataChange">
+          </el-date-picker>
+        </el-row>
+        <el-row class="body-separate"></el-row>
+        <el-space fill :size="20" v-for="data in dataList" class="block">
           <cube-share :data="data"
+                      :commentShow="true"
                       @comment-click="data.visible = !data.visible"
           ></cube-share>
-          <cube-comment v-if="data.visible"></cube-comment>
+          <el-row class="block-comment" v-if="data.visible">
+            <cube-comment style="max-width: 700px"></cube-comment>
+          </el-row>
         </el-space>
       </el-space>
     </el-main>
@@ -32,16 +38,15 @@ export default {
 }
 </script>
 <script setup>
-import {defineProps, ref} from "vue"
+import {defineEmits, ref} from "vue"
 import {globalFunc} from "../../../../utils/globalFunc";
 
+const emits = defineEmits(["upToTop"])
 const dataList = ref([])
 const currentPage = ref(1)
 const date = ref()
 const {loadFullScreen} = globalFunc()
-const props = defineProps({
-  upToTop: Function,
-})
+
 
 function dataChange(date) {
   console.log(date)
@@ -56,7 +61,7 @@ function pageCurrentChange(item) {
   setTimeout(() => {
     loading.close()
   }, 1000)
-  props.upToTop()
+  emits("upToTop", "")
 }
 
 for (let i = 0; i < 20; i++) {
@@ -79,8 +84,19 @@ for (let i = 0; i < 20; i++) {
 .body {
   width: 100%;
 
+  .body-separate {
+    height: 8px;
+    background: #f5f8fa;
+  }
+
   .block {
-    width: 700px
+    width: 700px;
+    padding: 20px 0 0 0;
+    border-bottom: 1px solid var(--el-border-color-base);
+
+    .block-comment {
+      max-width: 700px;
+    }
   }
 }
 </style>

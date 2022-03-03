@@ -1,17 +1,18 @@
 <template>
   <el-container>
     <el-main>
-      <el-space direction="vertical" class="body" alignment="start" :size="30" fill>
+      <cube-express-dialog v-model:visible="expressDialogVisible"></cube-express-dialog>
+      <el-space direction="vertical" class="body" alignment="start" :size="20" fill>
         <el-row align="middle">
           <el-row>快来给我留言吧：</el-row>
           <el-button type="primary" :icon="'edit'" circle @click="expressDialogVisible = true"></el-button>
         </el-row>
         <el-row class="body-separate"></el-row>
-        <el-space fill :size="30" v-for="data in dataList" class="block">
+        <el-space fill :size="20" v-for="data in dataList" class="block">
           <cube-share :data="data"
+                      :commonShow="false"
                       @comment-click="data.visible = !data.visible"
           ></cube-share>
-          <cube-comment v-if="data.visible"></cube-comment>
         </el-space>
       </el-space>
     </el-main>
@@ -35,15 +36,14 @@ export default {
 }
 </script>
 <script setup>
-import {defineProps, ref} from "vue"
+import {defineEmits, ref} from "vue"
 import {globalFunc} from "../../../../utils/globalFunc";
 
+const emits = defineEmits(["upToTop"])
 const dataList = ref([])
 const currentPage = ref(1)
 const {loadFullScreen} = globalFunc()
-const props = defineProps({
-  upToTop: Function,
-})
+const expressDialogVisible = ref(false)
 
 
 function pageCurrentChange(item) {
@@ -51,7 +51,7 @@ function pageCurrentChange(item) {
   setTimeout(() => {
     loading.close()
   }, 1000)
-  props.upToTop()
+  emits("upToTop", "")
 }
 
 for (let i = 0; i < 20; i++) {
@@ -80,7 +80,9 @@ for (let i = 0; i < 20; i++) {
   }
 
   .block {
-    max-width: 700px
+    width: 700px;
+    padding: 20px 0 0 0;
+    border-bottom: 1px solid var(--el-border-color-base);
   }
 }
 </style>

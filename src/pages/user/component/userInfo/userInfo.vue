@@ -10,28 +10,39 @@
         </el-row>
         <el-space direction="vertical" :size="25">
           <el-avatar :size="104" src="../src/assets/images/user.jpg"></el-avatar>
-          <el-space fill :size="4">
+          <el-space fill :size="8">
             <el-row class="name" justify="center">刘思圆</el-row>
             <el-row class="introduce" justify="center">海纳百川，有容乃大</el-row>
+            <el-row justify="center">
+              <el-button type="primary">+ 关注</el-button>
+            </el-row>
           </el-space>
           <el-space size="large" class="info" fill>
-            <el-space>
-              <el-icon>
-                <iphone/>
-              </el-icon>
-              <el-row class="info-word">199******58</el-row>
-            </el-space>
-            <el-space>
-              <el-icon>
-                <message/>
-              </el-icon>
-              <el-row class="info-word">945212191@qq.com</el-row>
-            </el-space>
             <el-space>
               <el-icon>
                 <location/>
               </el-icon>
               <el-row class="info-word">浙江省杭州市</el-row>
+            </el-space>
+            <el-space>
+              <el-icon>
+                <plus/>
+              </el-icon>
+              <el-row class="info-word">关注数：120</el-row>
+            </el-space>
+            <el-space>
+              <el-icon>
+                <user/>
+              </el-icon>
+              <el-row class="info-word">粉丝数：120</el-row>
+            </el-space>
+            <el-space>
+              <el-icon class="iconfont icon-like icon"></el-icon>
+              <el-row class="info-word">获赞数：120</el-row>
+            </el-space>
+            <el-space>
+              <el-icon><View /></el-icon>
+              <el-row class="info-word">阅读数：120</el-row>
             </el-space>
           </el-space>
         </el-space>
@@ -83,7 +94,7 @@ const dialogDefine = ref({
     click: function () {
       visible.value = !visible.value
       let formData = dialogDefine.value.formDefine.data
-      if (formData.tag.length > 10){
+      if (formData.tag.length > 10) {
         ElMessage.error("标签不能超过10个")
       }
     },
@@ -182,6 +193,13 @@ const dialogDefine = ref({
 
     .info {
       width: 200px;
+
+      .icon {
+        color: var(--el-text-color-secondary);
+        height: 1em;
+        width: 1em;
+        cursor: pointer
+      }
 
       .info-word {
         font-size: 14px;
