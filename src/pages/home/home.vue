@@ -75,22 +75,21 @@
           <template #default="scope" v-if="item.key === 'operate'">
             <el-space :size="10">
               <el-space :size="1">
-                <el-icon>
-                  <img src="../../assets/images/like.svg" style="color: #409EFF;height: 1em;width: 1em;cursor: pointer">
-                </el-icon>
-                <el-row style="color: #909399">11.1k</el-row>
+                <el-icon class="iconfont icon-like"
+                         style="color: var(--el-text-color-secondary);height: 1em;width: 1em"></el-icon>
+                <el-row style="color: var(--el-text-color-secondary)">11.1k</el-row>
               </el-space>
               <el-space :size="1">
-                <el-icon style="cursor: pointer;color: #409EFF">
+                <el-icon style="cursor: pointer;color: var(--el-text-color-secondary)">
                   <star/>
                 </el-icon>
-                <el-row style="color: #909399">11.1k</el-row>
+                <el-row style="color: var(--el-text-color-secondary)">11.1k</el-row>
               </el-space>
               <el-space :size="1">
-                <el-icon style="cursor: pointer;color: #409EFF">
+                <el-icon style="cursor: pointer;color: var(--el-text-color-secondary)">
                   <View/>
                 </el-icon>
-                <el-row style="color: #909399">11.1k</el-row>
+                <el-row style="color: var(--el-text-color-secondary)">11.1k</el-row>
               </el-space>
             </el-space>
           </template>
@@ -113,6 +112,7 @@
 import {ref} from "vue"
 import {initData} from "./initData.js"
 import {controller} from "./controller.js"
+
 const tableData = [
   {
     id: '1',
