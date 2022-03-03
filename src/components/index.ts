@@ -14,6 +14,7 @@ import CubeDialog from './dialog/dialog.vue'
 import CubeForm from './form/form.vue'
 import CubeColumnCard from './card/column/column.vue'
 import CubeUserCard from './card/user/user.vue'
+import CubeAside from './aside/aside.vue'
 
 export default {
     install(app: App) {
@@ -32,5 +33,6 @@ export default {
         app.component(CubeForm.name, CubeForm)
         app.component(CubeColumnCard.name, CubeColumnCard)
         app.component(CubeUserCard.name, CubeUserCard)
+        app.component(CubeAside.name, CubeAside)
     }
 }
