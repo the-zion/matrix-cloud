@@ -1,5 +1,5 @@
 <template>
-  <el-space direction="vertical" fill :size="30" :style="props.style">
+  <el-space direction="vertical" fill :size="20" :style="props.style">
     <el-space>
       <el-avatar :size="props.avatarSize || 34" :src="props.data.avatar"></el-avatar>
       <el-row class="name">{{ props.data.name }}</el-row>
@@ -19,7 +19,7 @@
           {{ props.data.love >= 1000 ? (props.data.love / 1000).toFixed(1) + 'k' : props.data.love }}
         </el-row>
       </el-space>
-      <el-space size="small" v-show="props.data.comment" @click="commentClick">
+      <el-space size="small" v-show="props.data.comment" @click="commentClick" v-if="props.commentShow">
         <el-icon class="icon">
           <chat-dot-round/>
         </el-icon>
@@ -42,10 +42,14 @@ import {defineProps} from "vue";
 
 let emits = defineEmits(['comment-click'])
 const props = defineProps({
-  data: Object,
+  data: {
+    type: Object,
+    default: {}
+  },
   fontSize: Number,
   avatarSize: Number,
-  style: String
+  style: String,
+  commentShow: Boolean
 })
 
 function commentClick() {
@@ -73,6 +77,7 @@ function commentClick() {
 
 .word {
   font-size: 15px;
+  max-width: 700px;
 }
 
 .icon {
