@@ -12,20 +12,7 @@
       </el-col>
       <el-container class="body-container">
         <el-affix :offset="60">
-          <el-aside class="body-aside" width="208px">
-            <el-menu
-                default-active="0"
-                class="aside-menu"
-            >
-              <el-menu-item v-for="(item,index) in classList" :index="index+''" class="aside-menu-item"
-                            @click="classClick">
-                <el-icon>
-                  <component :is="item.icon"></component>
-                </el-icon>
-                <span>{{ item.label }}</span>
-              </el-menu-item>
-            </el-menu>
-          </el-aside>
+          <cube-aside :classList="classList" @classClick="classClick"></cube-aside>
         </el-affix>
         <el-main class="body-main">
           <el-row :justify="'space-between'">
@@ -54,8 +41,9 @@
           </el-row>
           <el-row class="body-separate"></el-row>
           <el-row>
-            <el-space class="body-block" v-for="item in data" :key="item.id" :size="30" direction="vertical" alignment="flex-start">
-              <cube-share :data="item" @comment-click="item.visible = !item.visible"></cube-share>
+            <el-space class="body-block" v-for="item in data" :key="item.id" :size="20" direction="vertical"
+                      alignment="flex-start">
+              <cube-share :data="item" @comment-click="item.visible = !item.visible" :commentShow="true"></cube-share>
               <cube-comment v-if="item.visible"></cube-comment>
             </el-space>
           </el-row>
@@ -141,17 +129,6 @@ for (let i = 0; i < 10; i++) {
 
     .body-container {
       height: 100%;
-
-      .body-aside {
-        .aside-menu {
-          height: 100%;
-          border-right: unset;
-
-          .el-menu-item.is-active {
-            background: var(--el-menu-hover-bg-color);
-          }
-        }
-      }
 
       .body-main {
         position: relative;
