@@ -12,7 +12,8 @@
         <el-row class="separate"></el-row>
         <el-empty v-if="!subData.length" description="暂无回复哦，来做第一个吧~"></el-empty>
         <el-space fill :size="30">
-          <cube-reply v-if="subData.length" v-for="item in subData" :data="item" :reply="true" :like="true"></cube-reply>
+          <cube-reply v-if="subData.length" v-for="item in subData" :data="item" :reply="true"
+                      :like="true"></cube-reply>
         </el-space>
       </el-space>
     </el-row>
@@ -34,8 +35,14 @@ let textarea = ref('')
 const props = defineProps({
   visible: Boolean,
   top: String,
-  data: Object,
-  subData: Array
+  data: {
+    type: Object,
+    default: {}
+  },
+  subData: {
+    type: Array,
+    default: []
+  }
 })
 const emit = defineEmits(["update:visible"])
 const subData = ref([])
