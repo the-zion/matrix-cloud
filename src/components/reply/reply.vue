@@ -47,7 +47,10 @@ const textarea = ref('')
 const replyVisible = ref(false)
 const emit = defineEmits(["comment-click"])
 const props = defineProps({
-  data: Object,
+  data: {
+    type: Object,
+    default: {}
+  },
   reply: Boolean,
   comment: Boolean,
   like: Boolean
