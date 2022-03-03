@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "15933094",
+      "name": "微信",
+      "font_class": "weixin",
+      "unicode": "e607",
+      "unicode_decimal": 58887
+    },
+    {
+      "icon_id": "1381403",
+      "name": "like1",
+      "font_class": "like-fill",
+      "unicode": "e632",
+      "unicode_decimal": 58930
+    },
+    {
       "icon_id": "1381404",
       "name": "like",
       "font_class": "like",
@@ -137,13 +151,6 @@
       "font_class": "moneycollect",
       "unicode": "e80c",
       "unicode_decimal": 59404
-    },
-    {
-      "icon_id": "4936669",
-      "name": "like-fill",
-      "font_class": "like-fill",
-      "unicode": "e90c",
-      "unicode_decimal": 59660
     },
     {
       "icon_id": "4766774",
