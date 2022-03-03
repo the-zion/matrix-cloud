@@ -19,7 +19,10 @@ export default {
 import {defineProps} from "vue";
 
 const props = defineProps({
-  data: Object,
+  data: {
+    type: Object,
+    default: {}
+  },
   option: String
 })
 </script>
