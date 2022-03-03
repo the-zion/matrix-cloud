@@ -15,7 +15,7 @@ import Code from "../pages/login/code/code.vue"
 import Password from "../pages/login/password/password.vue"
 import PasswordReset from "../pages/login/passwordReset/passwordReset.vue"
 import User from "../pages/user/user.vue"
-
+import Set from "../pages/set/set.vue"
 
 const routes = [
     {
@@ -63,6 +63,11 @@ const routes = [
                 path: 'user',
                 name: 'user',
                 component: User
+            },
+            {
+                path: 'set',
+                name: 'set',
+                component: Set
             }]
 
     },
