@@ -66,8 +66,8 @@
             </el-row>
             <el-dropdown-menu>
               <el-dropdown-item command="user">个人中心</el-dropdown-item>
-              <el-dropdown-item divided>设置</el-dropdown-item>
-              <el-dropdown-item divided>退出登录</el-dropdown-item>
+              <el-dropdown-item command="set" divided>账号设置</el-dropdown-item>
+              <el-dropdown-item command="login" divided>退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
