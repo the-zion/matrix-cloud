@@ -7,6 +7,9 @@ import CubeUserColumn from './user/component/usercolumn/usercolumn.vue'
 import CubeUserCollect from './user/component/usercollect/usercollect.vue'
 import CubeUserCare from './user/component/usercare/usercare.vue'
 import CubeUserMessage from './user/component/usermessage/usermessage.vue'
+import CubeSecurity from './set/component/security/security.vue'
+import CubeBind from './set/component/bind/bind.vue'
+import CubeMessageSet from './set/component/messageSet/messageSet.vue'
 
 export default {
     install(app: App) {
@@ -17,5 +20,8 @@ export default {
         app.component(CubeUserCollect.name, CubeUserCollect)
         app.component(CubeUserCare.name, CubeUserCare)
         app.component(CubeUserMessage.name, CubeUserMessage)
+        app.component(CubeSecurity.name, CubeSecurity)
+        app.component(CubeBind.name, CubeBind)
+        app.component(CubeMessageSet.name, CubeMessageSet)
     }
 }
