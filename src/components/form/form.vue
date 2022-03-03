@@ -1,6 +1,6 @@
 <template>
-  <el-form ref="formRef" :model="props.define.data">
-    <el-form-item :label="item.label || ''" v-for="item in props.define.form" :label-width="item.labelWidth">
+  <el-form ref="formRef" :model="props.define.data" :rules="props.define.rules" @validate="props.define.validate">
+    <el-form-item :label="item.label || ''" v-for="item in props.define.form" :label-width="item.labelWidth" :prop="item.key">
       <el-row v-if="item.component === 'el-upload'" :align="item.align" :justify="item.justify" :style="item.style">
         <el-upload
             :show-file-list="item.showFileList || false"
@@ -19,6 +19,7 @@
       </el-row>
       <el-input v-if="item.component === 'el-input'" v-model="props.define.data[item.key]"
                 :placeholder="item.placeholder"
+                :type="item.type"
                 :maxlength="item.maxlength"
                 show-word-limit
                 :style="item.style"></el-input>
@@ -32,6 +33,16 @@
           :style="item.style"
           @change="item.change"
       ></el-cascader>
+      <el-select v-if="item.component === 'el-select'" v-model="props.define.data[item.key]"
+                 :placeholder="item.placeholder" :size="item.size" :style="item.style">
+        <el-option
+            v-for="item_ in item.options"
+            :key="item_.value"
+            :label="item_.label"
+            :value="item_.value"
+        >
+        </el-option>
+      </el-select>
       <el-row v-show="item.component === 'el-tag'" :style="item.style">
         <el-tag
             v-for="tag in props.define.data[item.key]"
@@ -69,21 +80,13 @@ export default {
 <script setup>
 import {defineProps, nextTick, ref} from "vue"
 
-const form = ref({
-  name: '',
-  region: '',
-  date1: '',
-  date2: '',
-  delivery: false,
-  type: [],
-  resource: '',
-  desc: '',
-})
-
 const inputValue = ref('')
 const inputVisible = ref(false)
 const props = defineProps({
-  define: Object
+  define: {
+    type: Object,
+    default: {}
+  }
 })
 
 function tagClose(tags, tag) {
