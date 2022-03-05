@@ -78,6 +78,7 @@ console.log(data.value)
 
 .share {
   min-height: 130px;
+  border-bottom: 1px solid var(--el-border-color-base);;
 
   .separate {
     height: 8px;
