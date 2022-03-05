@@ -156,6 +156,7 @@ let {
 } = initData()
 
 let {
+  init,
   treeCheck,
   filterSelectChange,
   dateSelectChange,
@@ -164,6 +165,7 @@ let {
   pageCurrentChange
 } = controller(treeRef, tableRef)
 
+init()
 
 // watchData(classIndex, subClassIndex, date, orderValue)
 </script>
@@ -176,7 +178,7 @@ let {
   .home-aside {
     width: 208px;
     padding: 20px;
-    border-right: 1px solid #EBEEF5;
+    border-right: 1px solid var(--el-border-color-base);
 
     .is-penultimate > .el-tree-node__content > .el-tree-node__label {
       font-size: 13px !important;

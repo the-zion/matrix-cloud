@@ -3,6 +3,10 @@ import {globalFunc} from "../../utils/globalFunc"
 export function controller(treeRef, tableRef) {
     let {loadFullScreen} = globalFunc()
 
+    function init() {
+        console.log(123)
+    }
+
     function treeCheck() {
         console.log(treeRef.value.getCheckedKeys(true))
         let loading = loadFullScreen()
@@ -43,5 +47,5 @@ export function controller(treeRef, tableRef) {
         }, 1000)
     }
 
-    return {treeCheck, filterSelectChange, dateSelectChange, rowClick, userClick, pageCurrentChange}
+    return {init, treeCheck, filterSelectChange, dateSelectChange, rowClick, userClick, pageCurrentChange}
 }
