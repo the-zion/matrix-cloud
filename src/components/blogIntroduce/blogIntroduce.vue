@@ -1,5 +1,5 @@
 <template>
-  <el-row class="blog-introduce" align="middle" :style="props.style">
+  <el-row class="blog-introduce" align="middle" :style="props.style" @click="blogDetail">
     <el-space class="body" direction="vertical" fill :size="10">
       <el-row class="title">
         <a>{{ props.row.title }}</a>
@@ -49,6 +49,7 @@ export default {
 </script>
 <script setup>
 import {defineProps} from "vue";
+import router from "../../router";
 
 const props = defineProps({
   row: {
@@ -57,12 +58,17 @@ const props = defineProps({
   },
   style: String
 })
+
+function blogDetail() {
+  router.push({name: "blog"})
+}
 </script>
 
 <style scoped lang="scss">
 .blog-introduce {
   padding: 16px 60px;
   height: 240px;
+  cursor: pointer;
 
   .body {
     width: 60%;
