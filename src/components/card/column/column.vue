@@ -1,5 +1,5 @@
 <template>
-  <el-card :body-style="{ padding: '10px' }" class="card">
+  <el-card :body-style="{ padding: '10px' }" class="card" @click="cardClick">
     <img
         src="../../../../src/assets/images/picture1.jpg"
         class="image"
@@ -33,6 +33,7 @@ export default {
 </script>
 <script setup>
 import {defineProps} from "vue";
+import router from "../../../router";
 
 const props = defineProps({
   data: {
@@ -41,6 +42,11 @@ const props = defineProps({
   },
   option: String
 })
+
+function cardClick() {
+  router.push({"name": "column"})
+}
+
 </script>
 
 <style scoped lang="scss">
