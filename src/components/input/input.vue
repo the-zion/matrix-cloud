@@ -13,7 +13,7 @@
     <el-row class="popover" align="middle">
       <cube-popover-emoji :placement="'top'" @emoji-click="handleEmojiClick"></cube-popover-emoji>
     </el-row>
-    <el-button type="primary">Primary</el-button>
+    <el-button type="primary">发送</el-button>
   </el-row>
 </template>
 
