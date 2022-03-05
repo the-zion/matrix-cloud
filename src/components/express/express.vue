@@ -102,7 +102,14 @@ function beforeAvatarUpload(fileObject, fileObjectList) {
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
+
+.el-upload-list--picture-card .el-upload-list__item-thumbnail {
+  width: 148px;
+  height: 148px;
+  object-fit: cover;
+}
+
 .el-popover.express-popover {
   padding: 0 !important;
 }
