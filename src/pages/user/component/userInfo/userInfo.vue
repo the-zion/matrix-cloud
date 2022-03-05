@@ -41,7 +41,9 @@
               <el-row class="info-word">获赞数：120</el-row>
             </el-space>
             <el-space>
-              <el-icon><View /></el-icon>
+              <el-icon>
+                <View/>
+              </el-icon>
               <el-row class="info-word">阅读数：120</el-row>
             </el-space>
           </el-space>
@@ -110,9 +112,9 @@ const dialogDefine = ref({
       justify: "center",
       style: "width:100%",
       size: 105,
+      type: "avatar",
       component: "el-upload",
       onChange: function (fileObject) {
-        debugger
         let file = fileObject.raw
         const isJPG = (file.type === 'image/jpeg') || (file.type === 'image/png') || (file.type === 'image/gif')
         const isLt2M = file.size / 1024 / 1024 < 2
