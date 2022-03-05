@@ -15,36 +15,13 @@
   display: none
 }
 
-.el-avatar>img {
-  width: 100%;
-}
-
 .el-loading-parent--relative {
   position: unset !important;
 }
 
-.el-timeline-item__tail {
-  left: 8px;
-}
-
-.el-timeline-item__node--large {
-  width: 22px;
-  height: 22px;
-}
-
-.el-timeline-item__wrapper {
-  padding-left: 35px;
-  top: 3px;
-}
 
 .el-dialog {
   border-radius: 10px;
-}
-
-.el-upload-list--picture-card .el-upload-list__item-thumbnail {
-  width: 148px;
-  height: 148px;
-  object-fit: cover;
 }
 
 body {
