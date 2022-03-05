@@ -1,8 +1,9 @@
 <template>
   <el-container class="main-container">
-    <el-header class="main-header">
-      <el-menu class="main-menu" router @select="menuSelect" default-active="home" :active-text-color="activeColor">
-        <el-image class="main-cube-logo"
+    <el-header class="main-header" height="50px">
+      <el-menu class="main-menu" router @select="menuSelect" :default-active="activeMenu"
+               :active-text-color="activeColor">
+        <el-image class="main-cube-logo" @click="backToHome"
                   src="../src/assets/images/cube.svg"
                   fit="contain"
         ></el-image>
@@ -38,7 +39,7 @@
             content="我要发表"
             placement="bottom"
         >
-          <el-icon :size="20" class="main-menu-icon">
+          <el-icon :size="20" class="main-menu-icon" @click="editBlog">
             <edit/>
           </el-icon>
         </el-tooltip>
@@ -95,19 +96,29 @@
 import {ref} from "vue"
 import {initData} from "./initData.js"
 import {controller} from "./controller.js"
+import router from "../../router";
+import {useRoute} from "vue-router";
 
 let activeColor = ref()
 
 let {activeMenu, input, showSearch, messageValue, menulist} = initData()
 let {
+  init,
+  backToHome,
   menuSelect,
   showSearchClick,
   searchBlur,
   messageCount,
   add,
   login,
-  dropdownClick
-} = controller(activeColor, showSearch, messageValue)
+  dropdownClick,
+  editBlog
+} = controller(activeMenu, activeColor, showSearch, messageValue)
+
+init()
+router.afterEach(function (route) {
+  activeMenu.value = route.name
+})
 
 </script>
 <style lang="scss">
@@ -136,7 +147,7 @@ body {
   right: 0;
 
   .main-header {
-    border-bottom: 1px solid #EBEEF5;
+    border-bottom: 1px solid var(--el-border-color-base);
 
     .main-menu {
       display: flex;
@@ -148,6 +159,7 @@ body {
       .main-cube-logo {
         width: 100px;
         margin-right: 100px;
+        cursor: pointer;
       }
 
       .main-search {

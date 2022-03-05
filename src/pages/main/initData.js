@@ -1,7 +1,7 @@
 import {ref} from 'vue'
 
 export function initData() {
-    let activeMenu = ref("home")
+    let activeMenu = ref()
     let input = ref('')
     let showSearch = ref(false)
     let messageValue = ref(0)

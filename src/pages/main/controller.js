@@ -1,6 +1,15 @@
 import router from '../../router/index'
+import {useRoute} from "vue-router"
 
-export function controller(activeColor, showSearch, messageValue) {
+export function controller(activeMenu, activeColor, showSearch, messageValue) {
+
+    function init() {
+        activeMenu.value = useRoute().name
+    }
+
+    function backToHome() {
+        router.push({name: "home"})
+    }
 
     function menuSelect() {
         activeColor.value = "#409eff"
@@ -27,9 +36,23 @@ export function controller(activeColor, showSearch, messageValue) {
     }
 
     function dropdownClick(item) {
-        activeColor.value = "var(--el-menu-text-color)"
         router.push({name: item})
     }
 
-    return {menuSelect, showSearchClick, searchBlur, messageCount, add, login, dropdownClick}
+    function editBlog() {
+        router.push({name: "express"})
+    }
+
+    return {
+        init,
+        backToHome,
+        menuSelect,
+        showSearchClick,
+        searchBlur,
+        messageCount,
+        add,
+        login,
+        dropdownClick,
+        editBlog
+    }
 }
