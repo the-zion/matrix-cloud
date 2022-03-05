@@ -10,6 +10,8 @@ import CubeUserMessage from './user/component/usermessage/usermessage.vue'
 import CubeSecurity from './set/component/security/security.vue'
 import CubeBind from './set/component/bind/bind.vue'
 import CubeMessageSet from './set/component/messageSet/messageSet.vue'
+import CubeBlogDetail from './blog/component/blogdetail/blogdetail.vue'
+import CubeColumnCatalogue from './blog/component/columncatalogue/columncatalogue.vue'
 
 export default {
     install(app: App) {
@@ -23,5 +25,7 @@ export default {
         app.component(CubeSecurity.name, CubeSecurity)
         app.component(CubeBind.name, CubeBind)
         app.component(CubeMessageSet.name, CubeMessageSet)
+        app.component(CubeBlogDetail.name, CubeBlogDetail)
+        app.component(CubeColumnCatalogue.name, CubeColumnCatalogue)
     }
 }
