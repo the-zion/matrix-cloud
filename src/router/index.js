@@ -5,6 +5,7 @@ import {
 import Main from "../pages/main/main.vue"
 import Home from '../pages/home/home.vue'
 import Community from '../pages/community/community.vue'
+import Express from '../pages/express/express.vue'
 import Blog from '../pages/blog/blog.vue'
 import Message from '../pages/message/message.vue'
 import Search from '../pages/search/search.vue'
@@ -40,8 +41,18 @@ const routes = [
                 component: Community
             },
             {
+                path: 'express',
+                name: 'express',
+                component: Express
+            },
+            {
                 path: 'blog',
                 name: 'blog',
+                component: Blog
+            },
+            {
+                path: 'column',
+                name: 'column',
                 component: Blog
             },
             {
