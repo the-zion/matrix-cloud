@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-main>
-      <el-timeline>
+      <el-timeline class="timeline">
         <el-timeline-item
             v-for="(activity, index) in activities"
             :key="index"
@@ -21,6 +21,7 @@
               <el-space fill :size="30">
                 <cube-share v-if="activity.type==='community'" :data="activity.data"
                             @comment-click="activity.data.visible = !activity.data.visible"
+                            :commentShow="true"
                 ></cube-share>
                 <cube-comment v-if="activity.type==='community' && activity.data.visible"></cube-comment>
               </el-space>
@@ -157,23 +158,41 @@ const activities = ref([
 </script>
 
 <style scoped lang="scss">
-.body {
-  width: 100%;
 
-  .line {
-    width: 400px;
-    background: #DCDFE6;
-    border: unset;
-    height: 1px
+.timeline {
+
+  ::v-deep(.el-timeline-item__tail) {
+    left: 8px;
   }
 
-  .block {
+  ::v-deep(.el-timeline-item__node--large) {
+    width: 22px;
+    height: 22px;
+  }
+
+  ::v-deep(.el-timeline-item__wrapper) {
+    padding-left: 35px;
+    top: 3px;
+  }
+
+  .body {
     width: 100%;
-    min-width: unset;
-    padding: 16px 40px;
-    border: 1px solid var(--el-border-color-base);
-    border-radius: 10px;
-    margin: 10px 0
+
+    .line {
+      width: 400px;
+      background: #DCDFE6;
+      border: unset;
+      height: 1px
+    }
+
+    .block {
+      width: 100%;
+      min-width: unset;
+      padding: 16px 40px;
+      border: 1px solid var(--el-border-color-base);
+      border-radius: 10px;
+      margin: 10px 0
+    }
   }
 }
 </style>
