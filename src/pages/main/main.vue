@@ -1,6 +1,6 @@
 <template>
   <el-container class="main-container">
-    <el-header class="main-header" height="50px">
+    <el-header class="main-header" height="60px">
       <el-menu class="main-menu" router @select="menuSelect" :default-active="activeMenu"
                :active-text-color="activeColor">
         <el-image class="main-cube-logo" @click="backToHome"
@@ -208,6 +208,7 @@ body {
       left: 0;
       right: 0;
       overflow: auto;
+      background: #f6f6f6;
 
       .el-scrollbar__view {
         height: 100%;
