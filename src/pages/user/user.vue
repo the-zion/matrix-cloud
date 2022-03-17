@@ -1,10 +1,13 @@
 <template>
-  <el-container class="user-container">
-    <el-aside class="user-aside">
+  <el-container class="user-container" direction="vertical">
+    <el-backtop target=".main-scrollbar" ref="backTop"></el-backtop>
+    <!--    <el-aside class="user-aside">-->
+    <!--      <cube-user-info></cube-user-info>-->
+    <!--    </el-aside>-->
+    <el-row class="user-info">
       <cube-user-info></cube-user-info>
-    </el-aside>
+    </el-row>
     <el-main class="user-main">
-      <el-backtop target=".user-main" ref="backTop"></el-backtop>
       <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
         <el-tab-pane v-for="item in menu" :name="item.name">
           <template #label>
@@ -44,11 +47,23 @@ const {upToTop} = controller(backTop)
 
 <style scoped lang="scss">
 .user-container {
-  height: 100%;
+  //height: 100%;
+  width: 1000px;
+  margin: auto;
 
-  .user-aside {
-    padding: 24px;
-    border-right: 1px solid var(--el-border-color-base);
+  .user-info {
+    height: 275px;
+    width: 100%;
+    background: var(--el-color-white);
+    margin: 10px 0;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgb(18 18 18 / 10%)
   }
+
+  .user-main {
+    background: var(--el-color-white);
+    box-shadow: 0 1px 3px rgb(18 18 18 / 10%)
+  }
+
 }
 </style>

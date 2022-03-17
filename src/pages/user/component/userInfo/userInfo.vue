@@ -1,71 +1,9 @@
 <template>
-  <el-row>
-    <el-space fill class="body" size="large">
-      <el-row justify="center" class="base-info">
-        <el-row class="setting" justify="end">
-          <cube-dialog :visible="visible" :define="dialogDefine"></cube-dialog>
-          <el-icon @click="visible = !visible">
-            <setting/>
-          </el-icon>
-        </el-row>
-        <el-space direction="vertical" :size="25">
-          <el-avatar :size="104" src="../src/assets/images/user.jpg"></el-avatar>
-          <el-space fill :size="8">
-            <el-row class="name" justify="center">刘思圆</el-row>
-            <el-row class="introduce" justify="center">海纳百川，有容乃大</el-row>
-            <el-row justify="center">
-              <el-button type="primary">+ 关注</el-button>
-            </el-row>
-          </el-space>
-          <el-space size="large" class="info" fill>
-            <el-space>
-              <el-icon>
-                <location/>
-              </el-icon>
-              <el-row class="info-word">浙江省杭州市</el-row>
-            </el-space>
-            <el-space>
-              <el-icon>
-                <plus/>
-              </el-icon>
-              <el-row class="info-word">关注数：120</el-row>
-            </el-space>
-            <el-space>
-              <el-icon>
-                <user/>
-              </el-icon>
-              <el-row class="info-word">粉丝数：120</el-row>
-            </el-space>
-            <el-space>
-              <el-icon class="iconfont icon-like icon"></el-icon>
-              <el-row class="info-word">获赞数：120</el-row>
-            </el-space>
-            <el-space>
-              <el-icon>
-                <View/>
-              </el-icon>
-              <el-row class="info-word">阅读数：120</el-row>
-            </el-space>
-          </el-space>
-        </el-space>
-      </el-row>
-      <el-row>
-        <el-descriptions title="标签">
-          <el-descriptions-item>
-            <el-tag size="small">School</el-tag>
-          </el-descriptions-item>
-          <el-descriptions-item>
-            <el-tag size="small" type="success">School</el-tag>
-          </el-descriptions-item>
-          <el-descriptions-item>
-            <el-tag size="small" type="info">School</el-tag>
-          </el-descriptions-item>
-          <el-descriptions-item>
-            <el-tag size="small" type="warning">School</el-tag>
-          </el-descriptions-item>
-        </el-descriptions>
-      </el-row>
-    </el-space>
+  <el-image class="background" :src="'../../src/assets/images/carousel2.png'" :fit="'cover'"></el-image>
+  <el-row class="body">
+    <el-row class="image-block" justify="center" align="middle">
+      <el-avatar shape="square" :size="160" src="../src/assets/images/user.jpg"></el-avatar>
+    </el-row>
   </el-row>
 </template>
 
@@ -171,42 +109,25 @@ const dialogDefine = ref({
 </script>
 
 <style scoped lang="scss">
-.body {
+.background {
+  height: 132px;
   width: 100%;
+}
 
-  .base-info {
-    border-bottom: 1px solid var(--el-border-color-base);
+.body {
+  position: relative;
+  margin: 0 20px 24px;
+  width: 100%;
+  height: calc(100% - 156px);
 
-    .setting {
-      width: 100%;
-      font-size: 20px;
-      color: #909399;
-      cursor: pointer;
-    }
-
-    .name {
-      font-size: 20px;
-    }
-
-    .introduce {
-      font-size: 13px;
-      font-weight: 100;
-    }
-
-    .info {
-      width: 200px;
-
-      .icon {
-        color: var(--el-text-color-secondary);
-        height: 1em;
-        width: 1em;
-        cursor: pointer
-      }
-
-      .info-word {
-        font-size: 14px;
-      }
-    }
+  .image-block {
+    position: absolute;
+    border-radius: 8px;
+    top: -74px;
+    left: 0;
+    width: 168px;
+    height: 168px;
+    background: var(--el-color-white);
   }
 }
 </style>
