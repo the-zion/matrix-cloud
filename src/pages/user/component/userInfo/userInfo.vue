@@ -4,6 +4,32 @@
     <el-row class="image-block" justify="center" align="middle">
       <el-avatar shape="square" :size="160" src="../src/assets/images/user.jpg"></el-avatar>
     </el-row>
+    <el-space class="info-block" direction="vertical" alignment="first" :size="30">
+      <el-space class="info-title" size="large">
+        <el-row class="name">刘思圆</el-row>
+        <el-row class="introduce">海纳百川，有容纳大</el-row>
+      </el-space>
+      <el-space class="info-body">
+        <el-space>
+          <el-row class="tag">性别</el-row>
+          <el-row class="word">男</el-row>
+        </el-space>
+        <el-space>
+          <el-row class="tag">居住地</el-row>
+          <el-row class="word">深圳</el-row>
+        </el-space>
+        <el-space>
+          <el-row class="tag">所在行业</el-row>
+          <el-row class="word">IT</el-row>
+        </el-space>
+      </el-space>
+<!--      <el-row class="info-profile">-->
+<!--        <el-space>-->
+<!--          <el-row class="tag">个人简介：</el-row>-->
+<!--          <el-row class="word">海纳百川，有容纳大</el-row>-->
+<!--        </el-space>-->
+<!--      </el-row>-->
+    </el-space>
   </el-row>
 </template>
 
@@ -128,6 +154,41 @@ const dialogDefine = ref({
     width: 168px;
     height: 168px;
     background: var(--el-color-white);
+  }
+
+  .info-block {
+    width: 100%;
+    padding-top: 16px;
+    padding-left: 32px;
+    border-left: 164px solid transparent;
+
+    .info-title {
+      height: 30px;
+      width: 100%;
+
+      .name {
+        font-size: 26px;
+        font-weight: 600;
+        font-synthesis: style;
+        height: fit-content;
+      }
+
+      .introduce {
+        font-size: 18px;
+        height: fit-content;
+      }
+    }
+
+    .info-profile, .info-body {
+      .tag {
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      .word {
+        font-size: 14px;
+      }
+    }
   }
 }
 </style>
