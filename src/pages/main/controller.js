@@ -1,7 +1,7 @@
 import router from '../../router/index'
 import {useRoute} from "vue-router"
 
-export function controller(activeMenu, activeColor, showSearch, messageValue) {
+export function controller(activeMenu, activeColor, messageValue) {
 
     function init() {
         activeMenu.value = useRoute().name
@@ -13,14 +13,6 @@ export function controller(activeMenu, activeColor, showSearch, messageValue) {
 
     function menuSelect() {
         activeColor.value = "#409eff"
-    }
-
-    function showSearchClick() {
-        showSearch.value = !showSearch.value
-    }
-
-    function searchBlur() {
-        showSearchClick()
     }
 
     function messageCount(value) {
@@ -47,8 +39,6 @@ export function controller(activeMenu, activeColor, showSearch, messageValue) {
         init,
         backToHome,
         menuSelect,
-        showSearchClick,
-        searchBlur,
         messageCount,
         add,
         login,
