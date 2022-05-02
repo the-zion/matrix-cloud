@@ -13,7 +13,8 @@
           </template>
         </el-menu-item>
         <div style="flex-grow: 1"></div>
-        <el-row class="main-login-word" v-show="!userLogin">登录</el-row>
+        <el-row class="main-login-word" v-show="!userLogin" @click="login">登录</el-row>
+        <cube-login v-model:visible="loginVisible" class="loginDialog"></cube-login>
         <el-row align="middle" v-show="userLogin">
           <el-tooltip
               effect="dark"
@@ -83,7 +84,7 @@ import {useRoute} from "vue-router";
 
 let activeColor = ref()
 
-let {activeMenu, userLogin, messageValue, menulist} = initData()
+let {activeMenu, userLogin, messageValue, menulist, loginVisible} = initData()
 let {
   init,
   backToHome,
@@ -93,7 +94,7 @@ let {
   login,
   dropdownClick,
   editBlog
-} = controller(activeMenu, activeColor, messageValue)
+} = controller(activeMenu, activeColor, messageValue, loginVisible)
 
 init()
 router.afterEach(function (route) {
@@ -143,6 +144,7 @@ body {
         font-size: 13px;
       }
 
+
       .main-matrix-logo {
         width: 85px;
         cursor: pointer;
@@ -151,7 +153,18 @@ body {
 
       .main-login-word {
         font-size: 13px;
-        color:var(--el-text-color-regular);
+        cursor: pointer;
+        color: var(--el-text-color-regular);
+      }
+
+      .loginDialog{
+        border-radius: 20px;
+        .el-dialog__header{
+          display: none;
+        };
+        .el-dialog__body{
+          padding: unset;
+        }
       }
 
       .main-menu-icon {

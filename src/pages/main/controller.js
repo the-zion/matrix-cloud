@@ -1,7 +1,7 @@
 import router from '../../router/index'
 import {useRoute} from "vue-router"
 
-export function controller(activeMenu, activeColor, messageValue) {
+export function controller(activeMenu, activeColor, messageValue, loginVisible) {
 
     function init() {
         activeMenu.value = useRoute().name
@@ -24,7 +24,7 @@ export function controller(activeMenu, activeColor, messageValue) {
     }
 
     function login() {
-        router.push({name: 'login'})
+        loginVisible.value = true
     }
 
     function dropdownClick(item) {

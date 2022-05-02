@@ -4,6 +4,7 @@ export function initData() {
     let activeMenu = ref()
     let userLogin = ref(false)
     let messageValue = ref(0)
+    let loginVisible = ref(false)
     const menulist = ref([{
         id: 0,
         key: "home",
@@ -16,7 +17,7 @@ export function initData() {
         state: "about",
     }])
     return {
-        activeMenu, userLogin, messageValue, menulist
+        activeMenu, userLogin, messageValue, menulist, loginVisible
     }
 
 }
