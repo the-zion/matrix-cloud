@@ -2,6 +2,7 @@ import {createApp} from 'vue'
 import ElementPlus from 'element-plus'
 import Components from './components/index.ts'
 import PageComponents from './pages/index.ts'
+import PageMainComponents from './pages/main/index.ts'
 import 'element-plus/dist/index.css'
 import router from './router/index'
 import App from './App.vue'
@@ -13,6 +14,7 @@ import './assets/icon/iconfont.css'
 const app = createApp(App).use(store)
     .use(Components)
     .use(PageComponents)
+    .use(PageMainComponents)
     .use(ElementPlus)
     .use(router)
 
