@@ -12,8 +12,10 @@
       <el-row justify="center" class="title">
         <el-image class="logo" :src="'../../../../src/assets/images/matrix.svg'"></el-image>
       </el-row>
-      <cube-login-account v-if="mode === 'account'" v-model:mode="mode"></cube-login-account>
-      <cube-login-code v-if="mode === 'code'" v-model:mode="mode"></cube-login-code>
+      <cube-login-account v-if="mode === 'account'" v-model:mode="mode" @close="closeDialog"></cube-login-account>
+      <cube-login-code v-if="mode === 'code'" v-model:mode="mode" @close="closeDialog"></cube-login-code>
+      <cube-login-register v-if="mode === 'register'" v-model:mode="mode" @close="closeDialog"></cube-login-register>
+      <cube-login-forget v-if="mode === 'forget'" v-model:mode="mode" @close="closeDialog"></cube-login-forget>
       <el-row class="others-login" justify="space-around">
         <el-avatar :size="36" class="icon qq iconfont icon-QQ"/>
         <el-avatar :size="36" class="icon wechat  iconfont icon-wechat-fill"/>
@@ -45,8 +47,13 @@ function beforeClose() {
 }
 
 function dialogClosed() {
-  mode.value = "account"
+  mode.value = "code"
 }
+
+function closeDialog() {
+  beforeClose()
+}
+
 </script>
 
 <style scoped lang="scss">
