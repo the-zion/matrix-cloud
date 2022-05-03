@@ -1,6 +1,6 @@
 <template>
   <el-container class="user-container" direction="vertical">
-    <el-backtop target=".main-scrollbar" ref="backTop"></el-backtop>
+    <el-backtop target=".el-scrollbar__wrap" ref="backTop"></el-backtop>
     <!--    <el-aside class="user-aside">-->
     <!--      <cube-user-info></cube-user-info>-->
     <!--    </el-aside>-->
