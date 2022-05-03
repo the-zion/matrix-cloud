@@ -19,11 +19,6 @@
   position: unset !important;
 }
 
-
-//.el-dialog {
-//  border-radius: 10px;
-//}
-
 body {
   margin: unset;
   overflow: hidden;
