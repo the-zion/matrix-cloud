@@ -1,6 +1,6 @@
 <template>
   <el-container class="community-container" id="communityContainer">
-    <el-backtop target=".main-scrollbar" ref="backTop" :right="backTopRight"></el-backtop>
+<!--    <el-backtop target=".main-scrollbar" ref="backTop" :right="backTopRight"></el-backtop>-->
     <cube-express-dialog v-model:visible="expressDialogVisible"></cube-express-dialog>
     <el-row class="community-body">
       <el-col class="carousel-block">
