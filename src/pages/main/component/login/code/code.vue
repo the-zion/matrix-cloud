@@ -23,7 +23,7 @@
     </el-row>
     <el-row class="choose-block" justify="space-between">
       <el-row style="cursor: pointer" @click="mode">账号密码登录</el-row>
-      <el-row style="cursor: pointer">邮箱注册</el-row>
+      <el-row style="cursor: pointer">邮箱注册test</el-row>
     </el-row>
   </el-row>
 </template>
