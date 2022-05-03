@@ -9,21 +9,25 @@
           </template>
         </el-input>
       </el-form-item>
-
       <el-form-item prop="code">
         <el-input class="inputCode" v-model="form.code" type="text" placeholder="验证码">
           <template #append>
-            <el-button icon="Search" />
+            <el-row v-show="!codeSending" :style="{width: width + 'px'}" style="cursor:pointer;" @click="sendCode">
+              {{ text + (interval ? ' 秒后可重发' : '') }}
+            </el-row>
+
+            <el-button v-show="codeSending" class="sending" type="primary" loading>发送中</el-button>
           </template>
         </el-input>
       </el-form-item>
     </el-form>
     <el-row class="button-block">
-      <el-button class="button" color="rgb(36, 37, 40)" size="large" @click="login(formRef)">登录/注册</el-button>
+      <el-button class="button" color="rgb(36, 37, 40)" size="large" :loading="loading" @click="login(formRef)">登录/注册
+      </el-button>
     </el-row>
     <el-row class="choose-block" justify="space-between">
-      <el-row style="cursor: pointer" @click="mode">账号密码登录</el-row>
-      <el-row style="cursor: pointer">邮箱注册test</el-row>
+      <el-row style="cursor: pointer" @click="mode('account')">账号密码登录</el-row>
+      <el-row style="cursor: pointer" @click="mode('register')">邮箱注册</el-row>
     </el-row>
   </el-row>
 </template>
@@ -38,33 +42,76 @@ export default {
 import {ref} from "vue"
 import {message} from "../../../../../utils/message"
 
-const emit = defineEmits(["update:mode"])
+const emits = defineEmits(["update:mode", "close"])
 const {success, error} = message()
 const form = ref({
   phone: "",
   code: ""
 })
-
 const formRef = ref()
 const rules = ref({
   phone: [{validator: validatePhone, trigger: 'blur'}],
   code: [{validator: validateCode, trigger: 'blur'}],
 })
 
-function mode() {
-  emit("update:mode", "account")
+let width = ref(68)
+let text = ref("获取验证码")
+let codeSending = ref(false)
+let interval = ref(null)
+let loading = ref(false)
+
+function sendCode() {
+  if (interval.value || !checkPhone("+86" + form.value.phone)) {
+    interval.value || error("手机号有误，请检查")
+    return null
+  }
+  codeSending.value = true
+  setTimeout(function () {
+    countDown()
+  }, 500)
+}
+
+function countDown() {
+  let countdown = 300
+  codeSending.value = false
+  width.value = 90
+  text.value = countdown
+  interval.value = setInterval(() => {
+    countdown--
+    text.value = countdown
+    if (countdown === 0) {
+      cancelInterval()
+    }
+  }, 1000)
+}
+
+function cancelInterval() {
+  if (!interval.value) {
+    return null
+  }
+  width.value = 68
+  text.value = "获取验证码"
+  clearInterval(interval.value)
+  interval.value = null
+}
+
+function mode(mode) {
+  cancelInterval()
+  emits("update:mode", mode)
 }
 
 function validatePhone(rule, value, callback) {
-  if (value === "" || !(checkPhone("+86" + value))) {
-    callback(new Error())
+  if (!checkPhone("+86" + value)) {
+    value || callback(new Error("手机号不能为空"))
+    callback(new Error("手机号格式错误"))
   }
   callback()
 }
 
 function validateCode(rule, value, callback) {
-  if (value === "" || !(checkCode(value))) {
-    callback(new Error())
+  if (!checkCode(value)) {
+    value || callback(new Error("验证码不能为空"))
+    callback(new Error("验证码为6位数字"))
   }
   callback()
 }
@@ -75,7 +122,7 @@ function checkPhone(value) {
 }
 
 function checkCode(value) {
-  return value.length === 6 && value.match("^[0-9]+$")
+  return value.match("^[0-9]{6}$")
 }
 
 function login(formRef) {
@@ -87,10 +134,19 @@ function login(formRef) {
     if (!valid) {
       error("手机号或验证码有误，请检查")
     } else {
-      success("登录成功")
+      loading.value = true
+      setTimeout(function () {
+        loading.value = false
+        success("登录成功")
+        closeDialog()
+      }, 500)
       return true
     }
   })
+}
+
+function closeDialog() {
+  emits("close", "")
 }
 </script>
 
@@ -132,6 +188,18 @@ function login(formRef) {
 
       ::v-deep(.el-input__wrapper) {
         border-radius: 8px 0 0 8px;
+      }
+
+      ::v-deep(.el-input-group__append) {
+        background-color: unset;
+        border-radius: 0 8px 8px 0;
+        color: var(--el-text-color-regular);
+      }
+
+      ::v-deep(.sending) {
+        display: flex;
+        font-weight: 400;
+        font-size: 13px;
       }
     }
   }
