@@ -9,6 +9,7 @@
           </template>
         </el-input>
       </el-form-item>
+
       <el-form-item prop="code">
         <el-input class="inputCode" v-model="form.code" type="text" placeholder="验证码">
           <template #append>
