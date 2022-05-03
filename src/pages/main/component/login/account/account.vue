@@ -10,11 +10,12 @@
       </el-form-item>
     </el-form>
     <el-row class="button-block">
-      <el-button class="button" color="rgb(36, 37, 40)" size="large" @click="login(formRef)">登录</el-button>
+      <el-button class="button" color="rgb(36, 37, 40)" size="large" :loading="loading" @click="login(formRef)">登录
+      </el-button>
     </el-row>
     <el-row class="choose-block" justify="space-between">
-      <el-row style="cursor: pointer" @click="mode">验证码登录</el-row>
-      <el-row style="cursor: pointer">忘记密码</el-row>
+      <el-row style="cursor: pointer" @click="mode('code')">验证码登录</el-row>
+      <el-row style="cursor: pointer" @click="mode('forget')">忘记密码</el-row>
     </el-row>
   </el-row>
 </template>
@@ -28,37 +29,36 @@ export default {
 import {ref} from "vue"
 import {message} from "../../../../../utils/message"
 
-const emit = defineEmits(["update:mode"])
+const emits = defineEmits(["update:mode", "close"])
 const {success, error} = message()
 const form = ref({
   account: "",
   password: ""
 })
-
 const formRef = ref()
 const rules = ref({
   account: [{validator: validateAccount, trigger: 'blur'}],
-  password: [{validator: validatePassWord, trigger: 'blur'}],
+  password: [{validator: validatePassword, trigger: 'blur'}],
 })
 
-function mode() {
-  emit("update:mode","code")
+let loading = ref(false)
+
+function mode(mode) {
+  emits("update:mode", mode)
 }
 
 function validateAccount(rule, value, callback) {
-  if (value === "" || !(checkPhone("+86" + value) || checkEmail(value))) {
-    callback(new Error())
+  if (!(checkPhone("+86" + value) || checkEmail(value))) {
+    value || callback(new Error("账号不能为空"))
+    callback(new Error("手机/邮箱 格式错误"))
   }
   callback()
 }
 
-function validatePassWord(rule, value, callback) {
-  if (value === "") {
-    callback(new Error())
-  }
+function validatePassword(rule, value, callback) {
+  value || callback(new Error("密码不能为空"))
   callback()
 }
-
 
 function checkPhone(value) {
   return value.match("^\\+[1-9]?[0-9]{7,14}$")
@@ -77,10 +77,19 @@ function login(formRef) {
     if (!valid) {
       error("账号或密码有误，请检查")
     } else {
-      success("登录成功")
+      loading.value = true
+      setTimeout(function () {
+        success("登录成功")
+        loading.value = false
+        closeDialog()
+      }, 500)
       return true
     }
   })
+}
+
+function closeDialog() {
+  emits("close", "")
 }
 
 </script>
