@@ -1,5 +1,7 @@
 import {App} from 'vue'
 
+import CubeUserCard from './user/component/usercard/usercard.vue'
+import CubeUserProfile from './user/component/userprofile/userprofile.vue'
 import CubeUserBlog from './user/component/userblog/userblog.vue'
 import CUbeUserTalk from './user/component/usertalk/usertalk.vue'
 import CubeInfo from './user/component/userInfo/userInfo.vue'
@@ -15,6 +17,8 @@ import CubeColumnCatalogue from './blog/component/columncatalogue/columncatalogu
 
 export default {
     install(app: App) {
+        app.component(CubeUserCard.name, CubeUserCard)
+        app.component(CubeUserProfile.name, CubeUserProfile)
         app.component(CubeUserBlog.name, CubeUserBlog)
         app.component(CUbeUserTalk.name, CUbeUserTalk)
         app.component(CubeInfo.name, CubeInfo)
