@@ -6,18 +6,60 @@
   "description": "",
   "glyphs": [
     {
-      "icon_id": "1381403",
-      "name": "like1",
-      "font_class": "like-fill",
-      "unicode": "e632",
-      "unicode_decimal": 58930
+      "icon_id": "4936522",
+      "name": "message-fill",
+      "font_class": "message-fill",
+      "unicode": "e8b7",
+      "unicode_decimal": 59575
     },
     {
-      "icon_id": "1381404",
+      "icon_id": "4936635",
+      "name": "read-fill",
+      "font_class": "read-fill",
+      "unicode": "e8f2",
+      "unicode_decimal": 59634
+    },
+    {
+      "icon_id": "4765896",
+      "name": "eye",
+      "font_class": "eye",
+      "unicode": "e7a5",
+      "unicode_decimal": 59301
+    },
+    {
+      "icon_id": "4766954",
+      "name": "star",
+      "font_class": "star",
+      "unicode": "e83a",
+      "unicode_decimal": 59450
+    },
+    {
+      "icon_id": "4936668",
+      "name": "eye-fill",
+      "font_class": "eye-fill",
+      "unicode": "e90b",
+      "unicode_decimal": 59659
+    },
+    {
+      "icon_id": "4936673",
+      "name": "star-fill",
+      "font_class": "star-fill",
+      "unicode": "e90f",
+      "unicode_decimal": 59663
+    },
+    {
+      "icon_id": "4766692",
       "name": "like",
       "font_class": "like",
-      "unicode": "e631",
-      "unicode_decimal": 58929
+      "unicode": "e7c8",
+      "unicode_decimal": 59336
+    },
+    {
+      "icon_id": "4936669",
+      "name": "like-fill",
+      "font_class": "like-fill",
+      "unicode": "e869",
+      "unicode_decimal": 59497
     },
     {
       "icon_id": "4936984",
