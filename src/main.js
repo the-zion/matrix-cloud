@@ -9,6 +9,7 @@ import App from './App.vue'
 import store from "./store/index"
 import * as ElIconModules from '@element-plus/icons-vue'
 import './assets/icon/iconfont.css'
+import * as echarts from 'echarts/core';
 
 
 const app = createApp(App).use(store)
@@ -16,6 +17,7 @@ const app = createApp(App).use(store)
     .use(PageComponents)
     .use(PageMainComponents)
     .use(ElementPlus)
+    .use(echarts)
     .use(router)
 
 
