@@ -143,7 +143,6 @@ let skills = ref([
 <style scoped lang="scss">
 .profile {
   min-height: 100px;
-  background-color: var(--el-color-white);
   padding: 1rem;
 
   .space {
