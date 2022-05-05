@@ -1,15 +1,19 @@
 <template>
-  <el-container class="container" direction="vertical">
+  <el-container class="user-container" direction="vertical">
     <el-backtop target=".el-scrollbar__wrap" ref="backTop"></el-backtop>
-    <!--    <el-aside class="user-aside">-->
-    <!--      <cube-user-info></cube-user-info>-->
-    <!--    </el-aside>-->
-    <el-header class="header">
+    <el-header class="user-header">
       <cube-user-card></cube-user-card>
     </el-header>
-    <el-aside class="aside">
-      <cube-user-profile></cube-user-profile>
-    </el-aside>
+    <el-container>
+      <el-aside class="shadow-radius">
+        <cube-user-profile></cube-user-profile>
+      </el-aside>
+      <el-main class="user-main">
+        <el-row class="shadow-radius">
+          <cube-user-calendar></cube-user-calendar>
+        </el-row>
+      </el-main>
+    </el-container>
     <!--    <el-main class="user-main">-->
     <!--      <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">-->
     <!--        <el-tab-pane v-for="item in menu" :name="item.name">-->
@@ -49,23 +53,25 @@ const {upToTop} = controller(backTop)
 </script>
 
 <style scoped lang="scss">
-.container {
+.user-container {
   width: 1200px;
   margin: auto;
 
-  .header {
+  .shadow-radius {
+    border-radius: 0.5rem;
+    box-shadow: var(--el-box-shadow-light);
+    background-color: var(--el-color-white);
+    height: fit-content;
+  }
+
+  .user-header {
     padding: unset;
     height: fit-content;
   }
 
-  .aside {
-    box-shadow: var(--el-box-shadow);
-    border-radius: 0.5rem;
-  }
-
   .user-main {
-    background: var(--el-color-white);
-    box-shadow: 0 1px 3px rgb(18 18 18 / 10%)
+    padding: 0 var(--el-main-padding);
+    overflow: unset;
   }
 
 }
