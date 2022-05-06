@@ -12,10 +12,11 @@
       <el-row justify="center" class="title">
         <el-image class="logo" :src="'../../../../src/assets/images/matrix.svg'"></el-image>
       </el-row>
-      <cube-login-account v-if="mode === 'account'" v-model:mode="mode" @close="closeDialog"></cube-login-account>
-      <cube-login-code v-if="mode === 'code'" v-model:mode="mode" @close="closeDialog"></cube-login-code>
-      <cube-login-register v-if="mode === 'register'" v-model:mode="mode" @close="closeDialog"></cube-login-register>
-      <cube-login-forget v-if="mode === 'forget'" v-model:mode="mode" @close="closeDialog"></cube-login-forget>
+      <matrix-login-account v-if="mode === 'account'" v-model:mode="mode" @close="closeDialog"></matrix-login-account>
+      <matrix-login-code v-if="mode === 'code'" v-model:mode="mode" @close="closeDialog"></matrix-login-code>
+      <matrix-login-register v-if="mode === 'register'" v-model:mode="mode"
+                             @close="closeDialog"></matrix-login-register>
+      <matrix-login-forget v-if="mode === 'forget'" v-model:mode="mode" @close="closeDialog"></matrix-login-forget>
       <el-row class="others-login" justify="space-around">
         <el-avatar :size="36" class="icon qq iconfont icon-QQ"/>
         <el-avatar :size="36" class="icon wechat  iconfont icon-wechat-fill"/>
@@ -29,7 +30,7 @@
 
 <script>
 export default {
-  name: "CubeLogin"
+  name: "MatrixLogin"
 }
 </script>
 

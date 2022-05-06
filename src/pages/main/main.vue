@@ -14,8 +14,8 @@
             </template>
           </el-menu-item>
           <div style="flex-grow: 1"></div>
-<!--                  <el-row class="main-login-word" v-show="!userLogin" @click="login">登录</el-row>-->
-          <!--        s<cube-login v-model:visible="loginVisible" class="loginDialog"></cube-login>-->
+          <el-row class="main-login-word" v-show="!userLogin" @click="login">登录</el-row>
+          <matrix-login v-model:visible="loginVisible" class="loginDialog"></matrix-login>
           <el-row align="middle" v-show="!userLogin">
             <el-tooltip
                 effect="dark"

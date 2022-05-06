@@ -21,7 +21,7 @@
 </template>
 <script>
 export default {
-  name: "CubeLoginAccount"
+  name: "MatrixLoginAccount"
 }
 </script>
 

@@ -34,7 +34,7 @@
 
 <script>
 export default {
-  name: "CubeLoginCode"
+  name: "MatrixLoginCode"
 }
 </script>
 
@@ -115,7 +115,6 @@ function validateCode(rule, value, callback) {
   }
   callback()
 }
-
 
 function checkPhone(value) {
   return value.match("^\\+[1-9]?[0-9]{7,14}$")

@@ -21,7 +21,7 @@
 
 <script>
 export default {
-  name: "CubeLoginRegister"
+  name: "MatrixLoginRegister"
 }
 </script>
 

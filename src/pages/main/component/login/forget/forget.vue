@@ -57,7 +57,7 @@
 
 <script>
 export default {
-  name: "CubeLoginForget"
+  name: "MatrixLoginForget"
 }
 </script>
 

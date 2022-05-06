@@ -1,17 +1,17 @@
 import {App} from 'vue'
 
-import CubeLogin from './component/login/main.vue'
-import CubeLoginAccount from './component/login/account/account.vue'
-import CubeLoginCode from './component/login/code/code.vue'
-import CubeLoginRegister from './component/login/register/register.vue'
-import CubeLoginForget from './component/login/forget/forget.vue'
+import MatrixLogin from './component/login/main.vue'
+import MatrixLoginAccount from './component/login/account/account.vue'
+import MatrixLoginCode from './component/login/code/code.vue'
+import MatrixLoginRegister from './component/login/register/register.vue'
+import MatrixLoginForget from './component/login/forget/forget.vue'
 
 export default {
     install(app: App) {
-        app.component(CubeLogin.name, CubeLogin)
-        app.component(CubeLoginAccount.name, CubeLoginAccount)
-        app.component(CubeLoginCode.name, CubeLoginCode)
-        app.component(CubeLoginRegister.name, CubeLoginRegister)
-        app.component(CubeLoginForget.name, CubeLoginForget)
+        app.component(MatrixLogin.name, MatrixLogin)
+        app.component(MatrixLoginAccount.name, MatrixLoginAccount)
+        app.component(MatrixLoginCode.name, MatrixLoginCode)
+        app.component(MatrixLoginRegister.name, MatrixLoginRegister)
+        app.component(MatrixLoginForget.name, MatrixLoginForget)
     }
 }
