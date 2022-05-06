@@ -2,41 +2,35 @@
   <el-container class="user-container" direction="vertical">
     <el-backtop target=".el-scrollbar__wrap" ref="backTop"></el-backtop>
     <el-header class="user-header">
-      <cube-user-card></cube-user-card>
+      <matrix-user-card></matrix-user-card>
     </el-header>
     <el-container>
       <el-aside class="shadow-radius">
-        <cube-user-profile></cube-user-profile>
+        <matrix-user-profile></matrix-user-profile>
       </el-aside>
       <el-main class="user-main">
-        <el-row class="shadow-radius">
-          <cube-user-calendar></cube-user-calendar>
-        </el-row>
+        <el-space fill class="space" direction="vertical" :size="15">
+          <el-row class="shadow-radius">
+            <matrix-user-calendar></matrix-user-calendar>
+          </el-row>
+          <el-row class="shadow-radius">
+            <el-main class="main">
+              <el-row class="bar">
+                <el-row class="menu" :class="{'select':menu.select}" v-for="menu in menus">
+                  <el-space @click="menuSelect(menu)">
+                    <el-row class="iconfont icon" :class="menu.icon"></el-row>
+                    <el-row class="word">{{ menu.label }}</el-row>
+                  </el-space>
+                </el-row>
+              </el-row>
+              <el-row class="body">
+                <matrix-user-blog v-if="current === 'blog'"></matrix-user-blog>
+              </el-row>
+            </el-main>
+          </el-row>
+        </el-space>
       </el-main>
     </el-container>
-    <!--    <el-main class="user-main">-->
-    <!--      <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">-->
-    <!--        <el-tab-pane v-for="item in menu" :name="item.name">-->
-    <!--          <template #label>-->
-    <!--            <el-space>-->
-    <!--              <el-icon>-->
-    <!--                <component :is="item.icon"></component>-->
-    <!--              </el-icon>-->
-    <!--              <el-row>{{ item.label }}</el-row>-->
-    <!--            </el-space>-->
-    <!--          </template>-->
-    <!--        </el-tab-pane>-->
-    <!--      </el-tabs>-->
-    <!--      <el-row :style="activeName !== 'time' && {'height':'calc(100% - 45px)'}">-->
-    <!--        <cube-time-line v-if="activeName === 'time'"></cube-time-line>-->
-    <!--        <cube-user-blog v-if="activeName === 'blog'" @upToTop="upToTop"></cube-user-blog>-->
-    <!--        <cube-user-talk v-if="activeName === 'talk'" @upToTop="upToTop"></cube-user-talk>-->
-    <!--        <cube-user-column v-if="activeName === 'column'" @upToTop="upToTop"></cube-user-column>-->
-    <!--        <cube-user-collect v-if="activeName === 'collect'" @upToTop="upToTop"></cube-user-collect>-->
-    <!--        <cube-user-care v-if="activeName === 'care' || activeName === 'cared'" @upToTop="upToTop"></cube-user-care>-->
-    <!--        <cube-user-message v-if="activeName === 'message'" @upToTop="upToTop"></cube-user-message>-->
-    <!--      </el-row>-->
-    <!--    </el-main>-->
   </el-container>
 </template>
 
@@ -45,11 +39,19 @@ import {ref} from "vue"
 import {initData} from "./initData.js"
 import {controller} from "./controller.js"
 
-const activeName = ref("time")
 const backTop = ref()
 
-const {menu} = initData()
+const {menus} = initData()
 const {upToTop} = controller(backTop)
+
+let current = ref("blog")
+
+function menuSelect(menu) {
+  menus.value.forEach(function (item) {
+    item.select = menu.name === item.name
+  })
+  current.value = menu.name
+}
 </script>
 
 <style scoped lang="scss">
@@ -72,6 +74,44 @@ const {upToTop} = controller(backTop)
   .user-main {
     padding: 0 var(--el-main-padding);
     overflow: unset;
+
+    .space {
+      width: 100%;
+
+      .main {
+        padding: 1rem;
+
+        .bar {
+          width: 100%;
+          height: 45px;
+
+          .menu {
+            padding: 10px 1rem 10px 1rem;
+            color: var(--el-text-color-regular);
+            cursor: pointer;
+
+            .icon {
+              font-size: 1.5rem;
+            }
+
+            .word {
+              font-size: 14px;
+            }
+          }
+
+          .select {
+            color: var(--el-text-color-primary);
+            background-color: var(--el-fill-color);
+            border-radius: 5px;
+          }
+        }
+
+        .body {
+          width: 100%;
+          margin-top: 1rem;
+        }
+      }
+    }
   }
 
 }

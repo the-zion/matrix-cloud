@@ -108,7 +108,7 @@
 
 <script>
 export default {
-  name: "CubeUserProfile"
+  name: "MatrixUserProfile"
 }
 </script>
 

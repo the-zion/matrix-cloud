@@ -26,7 +26,7 @@
 </template>
 <script>
 export default {
-  name: "CubeUserCard"
+  name: "MatrixUserCard"
 }
 </script>
 

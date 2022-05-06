@@ -1,38 +1,26 @@
 import {ref} from 'vue'
 
 export function initData() {
-    let menu = ref([{
-            name: "time",
-            label: "动态",
-            icon: "timer"
-        }, {
+    let menus = ref([{
             name: "blog",
             label: "博客",
-            icon: "document"
-        }, {
-            name: "talk",
-            label: "畅所欲言",
-            icon: "chat-dot-round"
+            icon: "icon-read",
+            select: true,
         }, {
             name: "column",
             label: "专栏",
-            icon: "folder"
+            icon: "icon-folder",
+            select: false
+        }, {
+            name: "talk",
+            label: "讨论发起",
+            icon: "icon-message",
+            select: false
         }, {
             name: "collect",
             label: "收藏",
-            icon: "star"
-        }, {
-            name: "care",
-            label: "我关注的",
-            icon: "user"
-        }, {
-            name: "cared",
-            label: "关注我的",
-            icon: "user"
-        }, {
-            name: "message",
-            label: "留言",
-            icon: "message"
+            icon: "icon-star",
+            select: false
         }]
     )
 
@@ -82,8 +70,8 @@ export function initData() {
     let calendarOptions = {
         tooltip: {
             show: true,
-            formatter: function (params, ticket, callback) {
-                return params.value[0] + ' ' + params.value[1] + '篇'
+            formatter: function (params) {
+                return params.value[0] + ' ' + params.value[1] + '篇';
             }
         },
         gradientColor: [
@@ -94,15 +82,48 @@ export function initData() {
             'rgba(255, 127, 0, 0.8)'
         ],
         visualMap: {
-            show: false,
+            min: 1,
+            max: 5,
+            type: 'piecewise',
+            orient: 'horizontal',
+            left: 'center',
+            contentColor: '#5793f3',
+            categories: [1, 2, 3, 4, 5],
+            top: 130,
+            formatter: function (value) {
+                return value + '篇'
+            }
         },
-        calendar: [],
-        series: []
+        calendar: {
+            top: 20,
+            left: 0,
+            right: 0,
+            dayLabel: {
+                show: false
+            },
+            cellSize: ['auto', 15],
+            range: 2016,
+            splitLine: {
+                show: false,
+            },
+            itemStyle: {
+                borderWidth: 0.5
+            },
+            yearLabel: {show: false},
+            monthLabel: {
+                color: 'rgb(175, 180, 189)',
+                nameMap: 'ZH'
+            }
+        },
+        series: {
+            type: 'heatmap',
+            coordinateSystem: 'calendar',
+            data: [[]]
+        }
     }
 
-
     return {
-        menu, cartoonOptions, calendarOptions
+        menus, cartoonOptions, calendarOptions
     }
 
 }

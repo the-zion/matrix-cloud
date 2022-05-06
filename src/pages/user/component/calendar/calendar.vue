@@ -24,16 +24,13 @@
 
 <script>
 export default {
-  name: "CubeUserCalendar"
+  name: "MatrixUserCalendar"
 }
 </script>
 
 <script setup>
 import {ref, onMounted} from "vue"
 import {globalFunc} from "../../../../utils/globalFunc";
-// import * as echarts from 'echarts';
-
-
 import {initData} from "../../initData";
 
 const {echartsInit} = globalFunc()
@@ -63,36 +60,8 @@ function getVirtulData(year) {
 }
 
 function setCalenderOptions(year) {
-  for (let i = 1; i <= 12; i++) {
-    calendarOptions.calendar.push({
-      top: 0,
-      yearLabel: {
-        show: false,
-      },
-      dayLabel: {
-        show: false,
-      },
-      monthLabel: {
-        position: "end",
-      },
-      cellSize: 13,
-      range: year + '-' + (i < 10 ? '0' + i : i),
-      left: (i - 1) * 65
-    })
-    // calendarOptions.series.push({
-    //   type: 'heatmap',
-    //   coordinateSystem: 'calendar',
-    //   calendarIndex: i - 1,
-    //   data: [[year + "-" + (i < 10 ? '0' + i : i) + '-01'], 5]
-    // })
-  }
-  calendarOptions.series = [{
-    type: 'heatmap',
-    coordinateSystem: 'calendar',
-    calendarIndex: 1,
-    data: [["2022-02-01", 100]]
-  }]
-  // calendarOptions.series.data = getVirtulData(year)
+  calendarOptions.calendar.range = year
+  calendarOptions.series.data = getVirtulData(year)
   chart.setOption(calendarOptions)
 }
 
@@ -138,7 +107,8 @@ onMounted(() => {
 
     .body {
       width: 100%;
-      height: 120px;
+      height: 150px;
+      margin-top: 8px;
     }
   }
 }
