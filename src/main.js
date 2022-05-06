@@ -1,23 +1,21 @@
+import App from './App.vue'
 import {createApp} from 'vue'
 import ElementPlus from 'element-plus'
 import Components from './components/index.ts'
-import PageComponents from './pages/index.ts'
 import PageMainComponents from './pages/main/index.ts'
-import 'element-plus/dist/index.css'
+import PageUserComponents from './pages/user/index.ts'
 import router from './router/index'
-import App from './App.vue'
 import store from "./store/index"
 import * as ElIconModules from '@element-plus/icons-vue'
 import './assets/icon/iconfont.css'
-import * as echarts from 'echarts/core';
+import 'element-plus/dist/index.css'
 
 
 const app = createApp(App).use(store)
     .use(Components)
-    .use(PageComponents)
     .use(PageMainComponents)
+    .use(PageUserComponents)
     .use(ElementPlus)
-    .use(echarts)
     .use(router)
 
 
