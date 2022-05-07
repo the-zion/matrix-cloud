@@ -1,19 +1,27 @@
 import {variable} from "./variable.js"
+import {watch} from "vue";
 
 export function controller() {
-    let {mode, data} = variable()
+    let {data, currentPage} = variable()
+    let mode = null
+    let emit = null
+
+    watch(currentPage, (value) => {
+        emit("current-page", "")
+    })
 
     function initVariable() {
-        return {data}
+        return {data, currentPage}
     }
 
-    function init(props) {
-        initData(props)
+    function init(props, emits) {
+        initData(props, emits)
         getData()
     }
 
-    function initData(props) {
+    function initData(props, emits) {
         mode = props.mode
+        emit = emits
     }
 
     function getData() {

@@ -1,9 +1,8 @@
 import {ref} from 'vue'
 
 export function variable() {
-
-    let mode = null
     let data = ref([])
+    let currentPage = ref(1)
 
-    return {mode, data}
+    return {data, currentPage}
 }

@@ -6,6 +6,15 @@
         <matrix-blog :data="item"></matrix-blog>
       </el-row>
     </el-space>
+    <el-row class="foot" justify="center">
+      <el-pagination
+          v-model:current-page="currentPage"
+          :page-size="20"
+          :pager-count="11"
+          layout="prev, pager, next"
+          :total="1000"
+      />
+    </el-row>
   </el-row>
 </template>
 
@@ -16,16 +25,19 @@ export default {
 </script>
 
 <script setup>
-import {defineProps} from "vue"
+import {defineProps, defineEmits, onMounted} from "vue"
 import {controller} from "./controller";
 
+const emits = defineEmits(["current-page"])
 const props = defineProps({
   mode: Number,
 })
 let {initVariable, init} = controller()
-let {data} = initVariable()
-init(props)
+let {data, currentPage} = initVariable()
 
+onMounted(() => {
+  init(props, emits)
+})
 </script>
 
 <style scoped lang="scss">
@@ -44,6 +56,11 @@ init(props)
       border-radius: 8px;
       border: 1px solid var(--el-border-color);
     }
+  }
+
+  .foot {
+    margin-top: 1rem;
+    width: 100%;
   }
 }
 </style>
