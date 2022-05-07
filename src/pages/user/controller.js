@@ -3,7 +3,7 @@ import {variable} from "./variable.js"
 export function controller() {
     let {current, menus} = variable()
 
-    function initData() {
+    function initVariable() {
         return {current, menus}
     }
 
@@ -14,5 +14,5 @@ export function controller() {
         current.value = menu.name
     }
 
-    return {initData, menuSelect}
+    return {initVariable, menuSelect}
 }

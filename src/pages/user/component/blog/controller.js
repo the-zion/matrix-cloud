@@ -4,7 +4,7 @@ export function controller() {
 
     let {select, search, options} = variable()
 
-    function initData() {
+    function initVariable() {
         return {select, search, options}
     }
 
@@ -16,5 +16,5 @@ export function controller() {
         scroll.setScrollTop(427)
     }
 
-    return {initData, init, pageChange}
+    return {initVariable, init, pageChange}
 }

@@ -9,7 +9,7 @@ export function controller() {
     let echarts = echartsInit()
     let chart = null
 
-    function initData() {
+    function initVariable() {
         return {username, introduce, tags}
     }
 
@@ -18,5 +18,5 @@ export function controller() {
         chart.setOption(cartoonOptions)
     }
 
-    return {initData, init}
+    return {initVariable, init}
 }

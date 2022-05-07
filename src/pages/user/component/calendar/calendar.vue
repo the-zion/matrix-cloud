@@ -32,8 +32,8 @@ export default {
 import {onMounted} from "vue"
 import {controller} from "./controller";
 
-const {initData, init} = controller()
-let {time, nums, options} = initData()
+const {initVariable, init} = controller()
+let {time, nums, options} = initVariable()
 
 onMounted(() => {
   init()

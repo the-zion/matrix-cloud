@@ -28,8 +28,8 @@ export default {
 import {controller} from "./controller";
 import {defineProps, onMounted} from "vue";
 
-let {initData, init, pageChange} = controller()
-let {select, search, options} = initData()
+let {initVariable, init, pageChange} = controller()
+let {select, search, options} = initVariable()
 const props = defineProps({
   scroll: Object,
 })

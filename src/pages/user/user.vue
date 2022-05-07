@@ -38,8 +38,8 @@
 import {defineProps} from "vue"
 import {controller} from "./controller.js"
 
-const {initData, menuSelect} = controller()
-let {current, menus} = initData()
+const {initVariable, menuSelect} = controller()
+let {current, menus} = initVariable()
 const props = defineProps({
   scroll: Object,
 })

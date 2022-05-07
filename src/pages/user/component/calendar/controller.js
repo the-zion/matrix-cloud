@@ -9,7 +9,7 @@ export function controller() {
     let echarts = echartsInit()
     let chart = null
 
-    function initData() {
+    function initVariable() {
         return {time, nums, options}
     }
 
@@ -39,5 +39,5 @@ export function controller() {
         chart.setOption(calendarOptions)
     }
 
-    return {initData, init}
+    return {initVariable, init}
 }
