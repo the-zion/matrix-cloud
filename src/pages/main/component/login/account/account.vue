@@ -29,9 +29,9 @@ export default {
 import {defineEmits, onMounted} from "vue"
 import {controller} from "./controller";
 
-const {initData, init, login, mode} = controller()
+const {initVariable, init, login, mode} = controller()
 const emits = defineEmits(["update:mode", "close"])
-let {loading, form, formRef, rules} = initData()
+let {loading, form, formRef, rules} = initVariable()
 onMounted(function () {
   init(emits)
 })

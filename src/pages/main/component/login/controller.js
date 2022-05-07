@@ -5,7 +5,7 @@ export function controller() {
     let {mode} = variable()
     let emits = null
 
-    function initData() {
+    function initVariable() {
         return {mode}
     }
 
@@ -26,5 +26,5 @@ export function controller() {
     }
 
 
-    return {initData, init, beforeClose, dialogClosed, closeDialog}
+    return {initVariable, init, beforeClose, dialogClosed, closeDialog}
 }

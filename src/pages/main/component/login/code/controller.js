@@ -13,7 +13,7 @@ export function controller() {
     let emits = null
     const {success, error} = message()
 
-    function initData() {
+    function initVariable() {
         return {width, text, codeSending, interval, loading, form, formRef, rules}
     }
 
@@ -109,5 +109,5 @@ export function controller() {
         emits("close", "")
     }
 
-    return {initData, init, sendCode, mode, login}
+    return {initVariable, init, sendCode, mode, login}
 }

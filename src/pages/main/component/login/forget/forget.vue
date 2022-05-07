@@ -65,9 +65,9 @@ export default {
 import {defineEmits, onMounted} from "vue"
 import {controller} from "./controller";
 
-const {initData, init, selectChange, sendCode, nextStep, passwordReset, mode} = controller()
+const {initVariable, init, selectChange, sendCode, nextStep, passwordReset, mode} = controller()
 const emit = defineEmits(["update:mode"])
-let {width, text, codeSending, interval, step, loading, formRef1, formRef2, options, form1, form2, rules1, rules2} = initData()
+let {width, text, codeSending, interval, step, loading, formRef1, formRef2, options, form1, form2, rules1, rules2} = initVariable()
 onMounted(function () {
   init(emit)
 })

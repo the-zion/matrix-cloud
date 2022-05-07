@@ -18,7 +18,7 @@ export function controller() {
     let emit = null
     const {success, error} = message()
 
-    function initData() {
+    function initVariable() {
         return {
             width,
             text,
@@ -185,5 +185,5 @@ export function controller() {
         interval.value = null
     }
 
-    return {initData, init, selectChange, sendCode, nextStep, passwordReset, mode}
+    return {initVariable, init, selectChange, sendCode, nextStep, passwordReset, mode}
 }
