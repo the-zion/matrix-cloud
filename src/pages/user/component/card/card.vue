@@ -31,31 +31,15 @@ export default {
 </script>
 
 <script setup>
-import {ref, onMounted} from "vue"
-import {initData} from "../../initData";
-import {globalFunc} from "../../../../utils/globalFunc";
+import {onMounted} from "vue"
+import {controller} from "./controller";
 
-const {echartsInit} = globalFunc()
-const {cartoonOptions} = initData()
-let username = ref("刘小圆sama")
-let introduce = ref("海纳百川，有容乃大")
-let echarts = echartsInit()
-let chart = null
+const {initData, init} = controller()
+let {username, introduce, tags} = initData()
+
 onMounted(() => {
-  chart = echarts.init(document.getElementById('cartoon'));
-  chart.setOption(cartoonOptions)
+  init()
 })
-
-let tags = ref([
-  {
-    "key": 1,
-    "label": "go"
-  },
-  {
-    "key": 2,
-    "label": "IT互联网"
-  }
-])
 </script>
 
 <style scoped lang="scss">
