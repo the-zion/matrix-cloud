@@ -1,6 +1,6 @@
 <template>
   <el-container class="main-container">
-    <el-scrollbar class="main-scroll" max-height="100%">
+    <el-scrollbar class="main-scroll" max-height="100%" ref="scroll">
       <el-header class="main-header" height="50px">
         <el-menu class="main-menu" router @select="menuSelect" :default-active="activeMenu"
                  :active-text-color="activeColor">
@@ -8,7 +8,7 @@
                     src="../src/assets/images/matrix.svg"
                     fit="contain"
           ></el-image>
-          <el-menu-item class="main-menu-item" :route="item.state" :index="item.state" v-for="(item,index) in menulist">
+          <el-menu-item class="main-menu-item" :route="item.state" :index="item.state" v-for="(item) in menulist">
             <template #title>
               <span>{{ item.name }}</span>
             </template>
@@ -61,7 +61,7 @@
       <el-main class="main-body">
         <router-view v-slot="{ Component }">
           <transition name="el-fade-in" mode="out-in">
-            <component :is="Component"/>
+            <component :is="Component" :scroll="scroll"/>
           </transition>
         </router-view>
       </el-main>
@@ -83,6 +83,7 @@ import router from "../../router";
 import {useRoute} from "vue-router";
 
 let activeColor = ref()
+const scroll = ref()
 
 let {activeMenu, userLogin, messageValue, menulist, loginVisible} = initData()
 let {
