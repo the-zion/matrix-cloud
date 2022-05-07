@@ -8,6 +8,7 @@
       <el-space class="info">
         <el-row class="name">{{ name }}</el-row>
         <el-row class="time">{{ "发布于 " + time }}</el-row>
+        <el-tag v-show="tags" type="info" v-for="tag in tags.split(';')">{{ tag }}</el-tag>
       </el-space>
       <el-space class="body">
         <el-image class="image" fit="cover" :src="image"></el-image>
@@ -17,19 +18,19 @@
     <el-space class="foot">
       <el-space :size="3">
         <el-icon class="iconfont icon-like icon"></el-icon>
-        <span class="num">{{agree}}</span>
+        <span class="num">{{ agree }}</span>
       </el-space>
       <el-space :size="3">
         <el-icon class="iconfont icon-eye icon"></el-icon>
-        <span class="num">{{view}}</span>
+        <span class="num">{{ view }}</span>
       </el-space>
       <el-space :size="3">
         <el-icon class="iconfont icon-message icon"></el-icon>
-        <span class="num">{{comment}}</span>
+        <span class="num">{{ comment }}</span>
       </el-space>
       <el-space :size="3">
         <el-icon class="iconfont icon-star icon"></el-icon>
-        <span class="num">{{collect}}</span>
+        <span class="num">{{ collect }}</span>
       </el-space>
     </el-space>
   </el-row>
@@ -48,8 +49,8 @@ import {controller} from "./controller";
 const props = defineProps({
   data: Object,
 })
-let {initVariable,init} = controller()
-let {avatar, title, name, time, image, content, agree, view, comment, collect} = initVariable()
+const {initVariable, init} = controller()
+let {avatar, title, name, time, tags, image, content, agree, view, comment, collect} = initVariable()
 init(props)
 
 </script>

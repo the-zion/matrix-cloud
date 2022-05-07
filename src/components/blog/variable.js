@@ -4,6 +4,7 @@ export function variable() {
     let title = ref()
     let name = ref()
     let time = ref()
+    let tags = ref()
     let image = ref()
     let content = ref()
     let agree = ref()
@@ -11,5 +12,5 @@ export function variable() {
     let comment = ref()
     let collect = ref()
 
-    return {avatar, title, name, time, image, content, agree, view, comment, collect}
+    return {avatar, title, name, time, tags, image, content, agree, view, comment, collect}
 }
