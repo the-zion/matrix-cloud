@@ -29,45 +29,14 @@ export default {
 </script>
 
 <script setup>
-import {ref, onMounted} from "vue"
-import {globalFunc} from "../../../../utils/globalFunc";
-import {initData} from "../../initData";
+import {onMounted} from "vue"
+import {controller} from "./controller";
 
-const {echartsInit} = globalFunc()
-let echarts = echartsInit()
-let chart = null
-const {calendarOptions} = initData()
-
-let date = new Date()
-let year = date.getFullYear()
-let time = ref(year)
-let nums = ref(0)
-const options = [year, year - 1, year - 2]
-
-function getVirtulData(year) {
-  year = year || '2017';
-  let date = +echarts.number.parseDate(year + '-01-01');
-  let end = +echarts.number.parseDate(+year + 1 + '-01-01');
-  let dayTime = 3600 * 24 * 1000;
-  let data = [];
-  for (let time = date; time < end; time += dayTime) {
-    data.push([
-      echarts.format.formatTime('yyyy-MM-dd', time),
-      Math.floor(Math.random() * 5)
-    ]);
-  }
-  return data;
-}
-
-function setCalenderOptions(year) {
-  calendarOptions.calendar.range = year
-  calendarOptions.series.data = getVirtulData(year)
-  chart.setOption(calendarOptions)
-}
+const {initData, init} = controller()
+let {time, nums, options} = initData()
 
 onMounted(() => {
-  chart = echarts.init(document.getElementById('calendar'));
-  setCalenderOptions("2022")
+  init()
 })
 
 
