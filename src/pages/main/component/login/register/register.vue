@@ -26,67 +26,16 @@ export default {
 </script>
 
 <script setup>
-import {ref} from "vue"
-import {message} from "../../../../../utils/message"
+import {defineEmits, onMounted} from "vue"
+import {controller} from "./controller";
 
+const {initData, init, register, mode} = controller()
 const emits = defineEmits(["update:mode", "close"])
-const {success, error} = message()
-const form = ref({
-  email: "",
-  password: ""
+let {form, formRef, loading, rules} = initData()
+
+onMounted(function () {
+  init(emits)
 })
-const formRef = ref()
-const rules = ref({
-  email: [{validator: validateEmail, trigger: 'blur'}],
-  password: [{validator: validatePassword, trigger: 'blur'}]
-})
-
-let loading = ref(false)
-
-function validateEmail(rule, value, callback) {
-  if (!checkEmail(value)) {
-    value || callback(new Error("邮箱不能为空"))
-    callback(new Error("邮箱格式错误"))
-  }
-  callback()
-}
-
-function validatePassword(rule, value, callback) {
-  value || callback(new Error("密码不能为空"))
-  callback()
-}
-
-function checkEmail(value) {
-  return value.match("^[a-z0-9]+([._\\\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$")
-}
-
-function register(formRef) {
-  if (!formRef) {
-    error("未知错误")
-    return
-  }
-  formRef.validate((valid) => {
-    if (!valid) {
-      error("邮箱输入有误，请检查")
-    } else {
-      loading.value = true
-      setTimeout(function () {
-        loading.value = false
-        success("账号注册成功")
-        closeDialog()
-      }, 500)
-      return true
-    }
-  })
-}
-
-function mode(mode) {
-  emits("update:mode", mode)
-}
-
-function closeDialog() {
-  emits("close", "")
-}
 </script>
 
 <style scoped lang="scss">
