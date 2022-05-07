@@ -34,27 +34,21 @@ export default {
 }
 </script>
 
-<script setup>
-import {ref, defineProps} from "vue";
 
-let mode = ref("account")
+<script setup>
+import {ref, defineProps, onMounted} from "vue";
+import {controller} from "./controller";
+
+const {initData, init, beforeClose, dialogClosed, closeDialog} = controller()
+let {mode} = initData()
 const emits = defineEmits(["update:visible"])
 const props = defineProps({
   visible: Boolean,
 })
 
-function beforeClose() {
-  emits("update:visible", false)
-}
-
-function dialogClosed() {
-  mode.value = "code"
-}
-
-function closeDialog() {
-  beforeClose()
-}
-
+onMounted(function () {
+  init(emits)
+})
 </script>
 
 <style scoped lang="scss">
