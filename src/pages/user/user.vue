@@ -16,15 +16,17 @@
           <el-row class="shadow-radius">
             <el-main class="main">
               <el-row class="bar">
-                <el-row class="menu" :class="{'select':menu.select}" v-for="menu in menus">
-                  <el-space @click="menuSelect(menu)">
+                <el-row class="menu" :class="{'select':menu.select}" v-for="menu in menus" @click="menuSelect(menu)">
+                  <el-space>
                     <el-row class="iconfont icon" :class="menu.icon"></el-row>
                     <el-row class="word">{{ menu.label }}</el-row>
                   </el-space>
                 </el-row>
               </el-row>
               <el-row class="body">
-                <matrix-user-blog v-if="current === 'blog'" :scroll="props.scroll"></matrix-user-blog>
+                <matrix-user-blog v-show="current === 'blog'" :scroll="props.scroll"></matrix-user-blog>
+                <matrix-user-column v-show="current === 'column'" :scroll="props.scroll"></matrix-user-column>
+                <matrix-user-talk v-show="current === 'talk'" :scroll="props.scroll"></matrix-user-talk>
               </el-row>
             </el-main>
           </el-row>
