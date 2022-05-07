@@ -15,7 +15,7 @@
           prefix-icon="Search"
       />
     </el-row>
-    <matrix-list :mode="1"></matrix-list>
+    <matrix-list :mode="1" @current-page="pageChange(props.scroll)"></matrix-list>
   </el-container>
 </template>
 <script>
@@ -25,22 +25,18 @@ export default {
 </script>
 
 <script setup>
-import {ref} from "vue"
+import {controller} from "./controller";
+import {defineProps, onMounted} from "vue";
 
-let select = ref("new")
-let search = ref()
-const options = ref([{
-  key: "new",
-  label: "最新发表"
-}, {
-  key: "hot",
-  label: "最多点赞"
-}, {
-  key: "collect",
-  label: "最多收藏"
-}])
+let {initData, init, pageChange} = controller()
+let {select, search, options} = initData()
+const props = defineProps({
+  scroll: Object,
+})
+onMounted(() => {
+  init(props)
+})
 </script>
-
 <style scoped lang="scss">
 .blog {
   width: 100%;
