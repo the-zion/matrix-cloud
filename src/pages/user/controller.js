@@ -1,7 +1,18 @@
-export function controller(backTop) {
-    function upToTop() {
-        backTop.value.handleClick()
+import {variable} from "./variable.js"
+
+export function controller() {
+    let {current, menus} = variable()
+
+    function initData() {
+        return {current, menus}
     }
 
-    return {upToTop}
+    function menuSelect(menu) {
+        menus.value.forEach(function (item) {
+            item.select = menu.name === item.name
+        })
+        current.value = menu.name
+    }
+
+    return {initData, menuSelect}
 }

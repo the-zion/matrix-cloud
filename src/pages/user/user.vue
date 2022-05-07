@@ -1,6 +1,6 @@
 <template>
   <el-container class="user-container" direction="vertical">
-    <el-backtop target=".el-scrollbar__wrap" ref="backTop"></el-backtop>
+    <el-backtop target=".el-scrollbar__wrap"></el-backtop>
     <el-header class="user-header">
       <matrix-user-card></matrix-user-card>
     </el-header>
@@ -24,7 +24,7 @@
                 </el-row>
               </el-row>
               <el-row class="body">
-                <matrix-user-blog v-if="current === 'blog'"></matrix-user-blog>
+                <matrix-user-blog v-if="current === 'blog'" :scroll="props.scroll"></matrix-user-blog>
               </el-row>
             </el-main>
           </el-row>
@@ -35,23 +35,15 @@
 </template>
 
 <script setup>
-import {ref} from "vue"
-import {initData} from "./initData.js"
+import {defineProps} from "vue"
 import {controller} from "./controller.js"
 
-const backTop = ref()
+const {initData, menuSelect} = controller()
+let {current, menus} = initData()
+const props = defineProps({
+  scroll: Object,
+})
 
-const {menus} = initData()
-const {upToTop} = controller(backTop)
-
-let current = ref("blog")
-
-function menuSelect(menu) {
-  menus.value.forEach(function (item) {
-    item.select = menu.name === item.name
-  })
-  current.value = menu.name
-}
 </script>
 
 <style scoped lang="scss">
