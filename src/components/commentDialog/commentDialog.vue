@@ -29,7 +29,7 @@ export default {
 }
 </script>
 <script setup>
-import {defineProps, ref} from "vue";
+import {ref} from "vue";
 
 let textarea = ref('')
 const props = defineProps({

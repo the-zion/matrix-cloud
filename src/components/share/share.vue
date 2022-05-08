@@ -38,7 +38,6 @@ export default {
 </script>
 
 <script setup>
-import {defineProps} from "vue";
 
 let emits = defineEmits(['comment-click'])
 const props = defineProps({

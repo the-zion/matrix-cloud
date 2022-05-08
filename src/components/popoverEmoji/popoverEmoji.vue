@@ -15,7 +15,6 @@ export default {
 }
 </script>
 <script setup>
-import {defineProps} from "vue";
 
 const emit = defineEmits(["emoji-click"])
 const props = defineProps({

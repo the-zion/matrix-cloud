@@ -32,7 +32,6 @@ export default {
 }
 </script>
 <script setup>
-import {defineProps} from "vue";
 import router from "../../../router";
 
 const props = defineProps({

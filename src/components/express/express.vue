@@ -49,7 +49,7 @@ export default {
 }
 </script>
 <script setup>
-import {defineProps, ref} from 'vue'
+import {ref} from 'vue'
 import {VuemojiPicker} from 'vuemoji-picker'
 import {ElMessage} from "element-plus";
 

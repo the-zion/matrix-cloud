@@ -41,7 +41,7 @@ export default {
 }
 </script>
 <script setup>
-import {defineProps, ref} from "vue";
+import {ref} from "vue";
 
 const textarea = ref('')
 const replyVisible = ref(false)
