@@ -37,7 +37,6 @@
 </template>
 
 <script setup>
-import {defineProps} from "vue"
 import {controller} from "./controller.js"
 
 const {initVariable, menuSelect} = controller()

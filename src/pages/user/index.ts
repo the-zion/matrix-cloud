@@ -6,6 +6,7 @@ import MatrixUserCalendar from './component/calendar/calendar.vue'
 import MatrixUserBlog from './component/blog/blog.vue'
 import MatrixUserColumn from './component/column/column.vue'
 import MatrixUserTalk from './component/talk/talk.vue'
+import MatrixUserCollect from './component/collect/collect.vue'
 
 export default {
     install(app: App) {
@@ -15,5 +16,6 @@ export default {
         app.component(MatrixUserBlog.name, MatrixUserBlog)
         app.component(MatrixUserColumn.name, MatrixUserColumn)
         app.component(MatrixUserTalk.name, MatrixUserTalk)
+        app.component(MatrixUserCollect.name, MatrixUserCollect)
     }
 }

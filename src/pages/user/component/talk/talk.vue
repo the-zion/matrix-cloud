@@ -26,7 +26,7 @@ export default {
 
 <script setup>
 import {controller} from "./controller";
-import {defineProps, onMounted} from "vue";
+import {onMounted} from "vue";
 
 let {initVariable, init, pageChange} = controller()
 let {select, search, options} = initVariable()
