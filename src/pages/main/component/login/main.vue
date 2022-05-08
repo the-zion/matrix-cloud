@@ -36,7 +36,7 @@ export default {
 
 
 <script setup>
-import {ref, defineProps, onMounted} from "vue";
+import {onMounted} from "vue";
 import {controller} from "./controller";
 
 const {initVariable, init, beforeClose, dialogClosed, closeDialog} = controller()
