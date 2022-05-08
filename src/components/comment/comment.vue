@@ -35,7 +35,6 @@ export default {
 }
 </script>
 <script setup>
-import {defineProps, ref} from "vue";
 
 const activeTab = ref("hot")
 const dialogVisible = ref(false)

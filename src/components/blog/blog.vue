@@ -43,7 +43,6 @@ export default {
 </script>
 
 <script setup>
-import {defineProps} from "vue"
 import {controller} from "./controller";
 
 const props = defineProps({
