@@ -39,7 +39,7 @@ export default {
 </script>
 
 <script setup>
-import {defineEmits, onMounted} from "vue"
+import {onMounted} from "vue"
 import {controller} from "./controller";
 
 const {initVariable, init, sendCode, mode, login} = controller()
