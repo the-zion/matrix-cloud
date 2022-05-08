@@ -24,9 +24,10 @@
                 </el-row>
               </el-row>
               <el-row class="body">
-                <matrix-user-blog v-show="current === 'blog'" :scroll="props.scroll"></matrix-user-blog>
-                <matrix-user-column v-show="current === 'column'" :scroll="props.scroll"></matrix-user-column>
-                <matrix-user-talk v-show="current === 'talk'" :scroll="props.scroll"></matrix-user-talk>
+                <matrix-user-blog v-if="current === 'blog'" :scroll="props.scroll"></matrix-user-blog>
+                <matrix-user-column v-if="current === 'column'" :scroll="props.scroll"></matrix-user-column>
+                <matrix-user-talk v-if="current === 'talk'" :scroll="props.scroll"></matrix-user-talk>
+                <matrix-user-collect v-if="current === 'collect'" :scroll="props.scroll"></matrix-user-collect>
               </el-row>
             </el-main>
           </el-row>
