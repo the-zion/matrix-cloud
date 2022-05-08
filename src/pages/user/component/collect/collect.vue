@@ -1,0 +1,52 @@
+<template>
+  <el-container class="collect">
+    <el-row class="filter" justify="space-between">
+      <el-select v-model="select" placeholder="Select" class="select">
+        <el-option
+            v-for="item in options"
+            :label="item.label"
+            :value="item.key"
+        />
+      </el-select>
+    </el-row>
+    <matrix-list v-if="select === 'blog'" :mode="1" @current-page="pageChange(props.scroll)"></matrix-list>
+    <matrix-list v-if="select === 'column'" :mode="2" @current-page="pageChange(props.scroll)"></matrix-list>
+  </el-container>
+</template>
+<script>
+export default {
+  name: "MatrixUserCollect"
+}
+</script>
+
+<script setup>
+import {controller} from "./controller";
+import {onMounted} from "vue";
+
+let {initVariable, init, pageChange} = controller()
+let {select, options} = initVariable()
+const props = defineProps({
+  scroll: Object,
+})
+onMounted(() => {
+  init(props)
+})
+</script>
+<style scoped lang="scss">
+.collect {
+  width: 100%;
+  flex-direction: column;
+
+  .filter {
+    width: 100%;
+
+    .select {
+      width: 150px;
+    }
+
+    .search {
+      width: 250px;
+    }
+  }
+}
+</style>
