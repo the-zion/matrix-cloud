@@ -30,7 +30,7 @@ export default {
 
 <script setup>
 import "@wangeditor/editor/dist/css/style.css"
-import {defineProps, onBeforeUnmount, ref} from 'vue'
+import {onBeforeUnmount} from 'vue'
 import {Editor, getEditor, removeEditor} from '@wangeditor/editor-for-vue'
 
 const editorId = `w-e-${Math.random().toString().slice(-5)}` //【注意】编辑器 id ，要全局唯一
