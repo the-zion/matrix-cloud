@@ -76,6 +76,7 @@ export function controller() {
                         collect: 500
                     })
                 }
+                break
         }
     }
 

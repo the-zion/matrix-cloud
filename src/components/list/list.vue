@@ -3,9 +3,9 @@
     <el-empty v-show="data.length === 0" class="empty" description="未找到相关内容"/>
     <el-space class="data" fill>
       <el-row v-for="item in data" class="each">
-        <matrix-blog v-show="props.mode === 1" :data="item"></matrix-blog>
-        <matrix-column v-show="props.mode === 2" :data="item"></matrix-column>
-        <matrix-talk v-show="props.mode === 3" :data="item"></matrix-talk>
+        <matrix-blog v-if="props.mode === 1" :data="item"></matrix-blog>
+        <matrix-column v-if="props.mode === 2" :data="item"></matrix-column>
+        <matrix-talk v-if="props.mode === 3" :data="item"></matrix-talk>
       </el-row>
     </el-space>
     <el-row class="foot" justify="center">
