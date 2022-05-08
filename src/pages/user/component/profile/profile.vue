@@ -2,7 +2,16 @@
   <el-container class="profile">
     <el-space fill direction="vertical" class="space">
       <el-row class="info">
-        <el-row justify="center" class="follow" align="middle">
+        <el-dialog
+            custom-class="followDialog"
+            :width="640"
+            v-model="visible"
+            :before-close="followDialogClose"
+            destroy-on-close
+        >
+          <matrix-user-follow></matrix-user-follow>
+        </el-dialog>
+        <el-row justify="center" class="follow" align="middle" @click="follow">
           <el-row class="block" justify="center">
             <el-row class="word">关注了</el-row>
             <el-row class="word c">{{ data.follow }}</el-row>
@@ -15,7 +24,7 @@
         </el-row>
         <el-row class="operate" justify="space-between">
           <el-button class="btn-message" icon="message" color="rgba(0,10,32,.05)">留言</el-button>
-          <el-button class="btn-follow" color="#FFB800">+ 关注</el-button>
+          <el-button class="btn-follow" type="primary">+ 关注</el-button>
         </el-row>
         <el-row class="personal">
           <el-row class="title">个人简介</el-row>
@@ -113,31 +122,14 @@ export default {
 </script>
 
 <script setup>
-import {ref} from "vue"
-import {Female} from "@element-plus/icons-vue";
+import {controller} from "./controller";
+import {onMounted} from "vue";
 
-// let data = ref({})
-let data = ref({
-  follow: 2,
-  follower: 36,
-  profile: "vegetable chicken 我不会GO，如果看到我的提交记录是GO写的，说明那天我摸了复制了代码打卡",
-  sex: "男",
-  location: "广东省深圳市",
-  school: "中国海洋大学",
-  industry: "互联网",
-  email: "945212191@qq.com"
+const {initVariable, init, follow, followDialogClose} = controller()
+let {data, achievement, skills, visible} = initVariable()
+onMounted(function () {
+  init()
 })
-
-// let achievement = ref({})
-let achievement = ref({
-  view: "18.8k",
-  agree: "361",
-  collect: "329",
-})
-
-let skills = ref([
-  "go", "kubernetes", "docker", "云原生", "javascript", "python"
-])
 </script>
 
 <style scoped lang="scss">
@@ -159,9 +151,24 @@ let skills = ref([
     .info {
       width: 100%;
 
+      ::v-deep(.followDialog) {
+        border-radius: 20px;
+        height: 540px;
+
+        .el-dialog__header {
+          display: none;
+        }
+
+        .el-dialog__body {
+          padding: 1.25rem;
+          height: calc(100% - 2.5rem);
+        }
+      }
+
       .follow {
         width: 100%;
         margin-bottom: 0.875rem;
+        cursor: pointer;
 
         .block {
           width: 42px;
