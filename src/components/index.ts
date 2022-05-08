@@ -12,7 +12,6 @@ import CubePopoverEmoji from './popoverEmoji/popoverEmoji.vue'
 import CubeShare from './share/share.vue'
 import CubeReply from './reply/reply.vue'
 import CubeInput from './input/input.vue'
-import CubeTimeLine from './timeline/timeline.vue'
 import CubeBlogIntroduce from './blogIntroduce/blogIntroduce.vue'
 import CubeDialog from './dialog/dialog.vue'
 import CubeForm from './form/form.vue'
@@ -35,7 +34,6 @@ export default {
         app.component(CubeShare.name, CubeShare)
         app.component(CubeReply.name, CubeReply)
         app.component(CubeInput.name, CubeInput)
-        app.component(CubeTimeLine.name, CubeTimeLine)
         app.component(CubeBlogIntroduce.name, CubeBlogIntroduce)
         app.component(CubeDialog.name, CubeDialog)
         app.component(CubeForm.name, CubeForm)
