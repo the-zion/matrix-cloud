@@ -9,7 +9,8 @@ import Blog from '../pages/blog/blog.vue'
 import Message from '../pages/message/message.vue'
 import About from '../pages/about/about.vue'
 import User from "../pages/user/user.vue"
-import Set from "../pages/set/set.vue"
+import Center from "../pages/center/center.vue"
+
 
 const routes = [
     {
@@ -59,9 +60,9 @@ const routes = [
                 component: User
             },
             {
-                path: 'set',
-                name: 'set',
-                component: Set
+                path: 'center',
+                name: 'center',
+                component: Center
             }]
 
     },
