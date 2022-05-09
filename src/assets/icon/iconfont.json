@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "4765741",
+      "name": "time-circle",
+      "font_class": "time-circle",
+      "unicode": "e792",
+      "unicode_decimal": 59282
+    },
+    {
       "icon_id": "4765866",
       "name": "message",
       "font_class": "message",
