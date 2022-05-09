@@ -4,6 +4,7 @@ import ElementPlus from 'element-plus'
 import Components from './components/index.ts'
 import PageMainComponents from './pages/main/index.ts'
 import PageUserComponents from './pages/user/index.ts'
+import PageSetComponents from './pages/center/index.ts'
 import router from './router/index'
 import store from "./store/index"
 import * as ElIconModules from '@element-plus/icons-vue'
@@ -15,6 +16,7 @@ const app = createApp(App).use(store)
     .use(Components)
     .use(PageMainComponents)
     .use(PageUserComponents)
+    .use(PageSetComponents)
     .use(ElementPlus)
     .use(router)
 
