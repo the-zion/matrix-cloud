@@ -34,10 +34,9 @@ export default {
 </script>
 
 <script setup>
-import {controller} from "./controller";
+import {initVariable, init, select, dataLoad} from "./controller";
 import {onMounted} from "vue";
 
-const {initVariable, init, select, dataLoad} = controller()
 let {data, list, visible, scroll, bar} = initVariable()
 onMounted(function () {
   init()
