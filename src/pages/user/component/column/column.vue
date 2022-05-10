@@ -15,7 +15,7 @@
           prefix-icon="Search"
       />
     </el-row>
-    <matrix-list :mode="2" @current-page="pageChange(props.scroll)"></matrix-list>
+    <matrix-list :mode="2" @current-page="pageChange"></matrix-list>
   </el-container>
 </template>
 <script>
@@ -29,11 +29,8 @@ import {initVariable, init, pageChange} from "./controller";
 import {onMounted} from "vue";
 
 let {select, search, options} = initVariable()
-const props = defineProps({
-  scroll: Object,
-})
 onMounted(() => {
-  init(props)
+  init()
 })
 </script>
 <style scoped lang="scss">

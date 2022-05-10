@@ -7,7 +7,7 @@ export function initVariable() {
     return {select, search, options}
 }
 
-export function init(props) {
+export function init() {
 
 }
 

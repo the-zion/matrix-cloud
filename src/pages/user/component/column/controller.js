@@ -1,4 +1,5 @@
 import {variable} from "./variable.js"
+import {scrollTo} from "../../../../utils/globalFunc";
 
 let {select, search, options} = variable()
 
@@ -6,10 +7,10 @@ export function initVariable() {
     return {select, search, options}
 }
 
-export function init(props) {
+export function init() {
 
 }
 
-export function pageChange(scroll) {
-    scroll.setScrollTop(427)
+export function pageChange() {
+    scrollTo(427)
 }
