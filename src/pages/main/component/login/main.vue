@@ -37,9 +37,8 @@ export default {
 
 <script setup>
 import {onMounted} from "vue";
-import {controller} from "./controller";
+import {initVariable, init, beforeClose, dialogClosed, closeDialog} from "./controller";
 
-const {initVariable, init, beforeClose, dialogClosed, closeDialog} = controller()
 let {mode} = initVariable()
 const emits = defineEmits(["update:visible"])
 const props = defineProps({

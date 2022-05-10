@@ -1,30 +1,23 @@
 import {variable} from "./variable.js"
+let {mode} = variable()
+let emits = null
 
-export function controller() {
+export function initVariable() {
+    return {mode}
+}
 
-    let {mode} = variable()
-    let emits = null
+export function init(emitsObject) {
+    emits = emitsObject
+}
 
-    function initVariable() {
-        return {mode}
-    }
+export function beforeClose() {
+    emits("update:visible", false)
+}
 
-    function init(emitsObject) {
-        emits = emitsObject
-    }
+export function dialogClosed() {
+    mode.value = "code"
+}
 
-    function beforeClose() {
-        emits("update:visible", false)
-    }
-
-    function dialogClosed() {
-        mode.value = "code"
-    }
-
-    function closeDialog() {
-        beforeClose()
-    }
-
-
-    return {initVariable, init, beforeClose, dialogClosed, closeDialog}
+export function closeDialog() {
+    beforeClose()
 }
