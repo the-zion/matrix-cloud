@@ -44,6 +44,8 @@ onMounted(() => {
 
   .filter {
     width: 100%;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--el-border-color);
 
     .select {
       width: 150px;

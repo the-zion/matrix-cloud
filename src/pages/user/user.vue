@@ -1,6 +1,6 @@
 <template>
   <el-container class="user-container" direction="vertical">
-    <el-backtop target=".el-scrollbar__wrap"></el-backtop>
+    <el-backtop></el-backtop>
     <el-header class="user-header">
       <matrix-user-card></matrix-user-card>
     </el-header>

@@ -1,4 +1,5 @@
 import {variable} from "./variable.js"
+import {scrollTo} from "../../../../utils/globalFunc";
 
 export function controller() {
 
@@ -12,8 +13,8 @@ export function controller() {
 
     }
 
-    function pageChange(scroll) {
-        scroll.setScrollTop(427)
+    function pageChange() {
+        scrollTo(427)
     }
 
     return {initVariable, init, pageChange}

@@ -1,11 +1,11 @@
 import {variable} from "./variable.js"
-import {globalFunc} from "../../../../utils/globalFunc";
+import {echartsInit} from "../../../../utils/globalFunc";
 
 export function controller() {
 
     let {time, nums, options, calendarOptions} = variable()
 
-    const {echartsInit} = globalFunc()
+
     let echarts = echartsInit()
     let chart = null
 
