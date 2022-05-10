@@ -1,10 +1,10 @@
 import router from '../../router/index'
 import {useRoute} from "vue-router"
 import {variable} from "./variable.js"
-let {activeMenu, userLogin, messageValue, menuList, loginVisible, activeColor, scroll} = variable()
+let {activeMenu, userLogin, messageValue, menuList, loginVisible, activeColor} = variable()
 
 export function initVariable() {
-    return {activeMenu, userLogin, messageValue, menuList, loginVisible, activeColor, scroll}
+    return {activeMenu, userLogin, messageValue, menuList, loginVisible, activeColor}
 }
 
 export function init() {

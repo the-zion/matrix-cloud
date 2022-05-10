@@ -34,7 +34,7 @@
     <el-main class="main-body">
       <router-view v-slot="{ Component }">
         <transition name="el-fade-in" mode="out-in">
-          <component :is="Component" :scroll="scroll"/>
+          <component :is="Component" />
         </transition>
       </router-view>
     </el-main>
@@ -51,7 +51,7 @@
 import {initVariable, init, backToHome, menuSelect, messageCount, add, login, dropdownClick} from "./controller.js"
 import router from "../../router"
 
-let {activeMenu, userLogin, messageValue, menuList, loginVisible, activeColor, scroll} = initVariable()
+let {activeMenu, userLogin, messageValue, menuList, loginVisible, activeColor} = initVariable()
 init()
 
 router.afterEach(function (route) {
@@ -61,19 +61,6 @@ router.afterEach(function (route) {
 
 </script>
 <style lang="scss">
-
-::-webkit-scrollbar { //隐藏滚轮display: none;
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track-piece {
-  background: #eee;
-}
-
-::-webkit-scrollbar-thumb:vertical {
-  background: #666;
-}
 
 body {
   margin: unset;

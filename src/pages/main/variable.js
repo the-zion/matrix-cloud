@@ -6,7 +6,6 @@ export function variable() {
     let messageValue = ref(0)
     let loginVisible = ref(false)
     let activeColor = ref()
-    let scroll = ref()
     let menuList = ref([{
         id: 0,
         key: "home",
@@ -19,6 +18,6 @@ export function variable() {
         state: "about",
     }])
     return {
-        activeMenu, userLogin, messageValue, menuList, loginVisible, activeColor, scroll
+        activeMenu, userLogin, messageValue, menuList, loginVisible, activeColor
     }
 }
