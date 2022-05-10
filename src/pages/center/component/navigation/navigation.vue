@@ -34,11 +34,10 @@ export default {
 </script>
 
 <script setup>
-import {controller} from "./controller";
+import {initVariable, init, menuSelect} from "./controller";
 import {onMounted} from "vue";
 
 const emits = defineEmits(["change"])
-const {initVariable, init, menuSelect} = controller()
 let {nickname, name, menu} = initVariable()
 onMounted(function () {
   init(emits)
