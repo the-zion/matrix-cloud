@@ -27,9 +27,8 @@ export default {
 
 <script setup>
 import {onMounted} from "vue"
-import {controller} from "./controller";
+import {initVariable, init, register, mode} from "./controller";
 
-const {initVariable, init, register, mode} = controller()
 const emits = defineEmits(["update:mode", "close"])
 let {form, formRef, loading, rules} = initVariable()
 
