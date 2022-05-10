@@ -1,16 +1,10 @@
 import {variable} from "./variable.js"
+let {menu} = variable()
 
-export function controller() {
+export function initVariable() {
+    return {menu}
+}
 
-    let {menu} = variable()
-
-    function initVariable() {
-        return {menu}
-    }
-
-    function menuChange(value) {
-        menu.value = value
-    }
-
-    return {initVariable, menuChange}
+export function menuChange(value) {
+    menu.value = value
 }

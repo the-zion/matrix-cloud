@@ -13,9 +13,8 @@
 </template>
 
 <script setup>
-import {controller} from "./controller";
+import {initVariable, menuChange} from "./controller";
 
-const {initVariable, menuChange} = controller()
 let {menu} = initVariable()
 </script>
 
