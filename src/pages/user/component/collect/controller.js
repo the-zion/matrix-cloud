@@ -1,20 +1,14 @@
 import {variable} from "./variable.js"
+let {select, options} = variable()
 
-export function controller() {
+export function initVariable() {
+    return {select, options}
+}
 
-    let {select, options} = variable()
+export function init(props) {
 
-    function initVariable() {
-        return {select, options}
-    }
+}
 
-    function init(props) {
-
-    }
-
-    function pageChange(scroll) {
-        scroll.setScrollTop(427)
-    }
-
-    return {initVariable, init, pageChange}
+export function pageChange(scroll) {
+    scroll.setScrollTop(427)
 }

@@ -20,10 +20,9 @@ export default {
 </script>
 
 <script setup>
-import {controller} from "./controller";
+import {initVariable, init, pageChange} from "./controller";
 import {onMounted} from "vue";
 
-let {initVariable, init, pageChange} = controller()
 let {select, options} = initVariable()
 const props = defineProps({
   scroll: Object,
