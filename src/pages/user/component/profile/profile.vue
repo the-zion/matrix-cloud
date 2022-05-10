@@ -122,10 +122,9 @@ export default {
 </script>
 
 <script setup>
-import {controller} from "./controller";
+import {initVariable, init, follow, followDialogClose} from "./controller";
 import {onMounted} from "vue";
 
-const {initVariable, init, follow, followDialogClose} = controller()
 let {data, achievement, skills, visible} = initVariable()
 onMounted(function () {
   init()
