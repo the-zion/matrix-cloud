@@ -5,6 +5,7 @@ import MatrixLoginAccount from './component/login/account/account.vue'
 import MatrixLoginCode from './component/login/code/code.vue'
 import MatrixLoginRegister from './component/login/register/register.vue'
 import MatrixLoginForget from './component/login/forget/forget.vue'
+import MatrixCenter from './component/center/center.vue'
 
 export default {
     install(app: App) {
@@ -13,5 +14,6 @@ export default {
         app.component(MatrixLoginCode.name, MatrixLoginCode)
         app.component(MatrixLoginRegister.name, MatrixLoginRegister)
         app.component(MatrixLoginForget.name, MatrixLoginForget)
+        app.component(MatrixCenter.name, MatrixCenter)
     }
 }
