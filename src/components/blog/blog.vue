@@ -43,12 +43,11 @@ export default {
 </script>
 
 <script setup>
-import {controller} from "./controller";
+import {initVariable, init} from "./controller";
 
 const props = defineProps({
   data: Object,
 })
-const {initVariable, init} = controller()
 let {avatar, title, name, time, tags, image, content, agree, view, comment, collect} = initVariable()
 init(props)
 
