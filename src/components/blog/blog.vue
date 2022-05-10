@@ -2,35 +2,35 @@
   <el-row class="blog">
     <el-space class="main" fill>
       <el-space class="head">
-        <el-avatar class="avatar" :size="24" :src="avatar"/>
-        <el-row class="title">{{ title }}</el-row>
+        <el-avatar class="avatar" :size="24" :src="props.data.avatar"/>
+        <el-row class="title">{{ props.data.title }}</el-row>
       </el-space>
       <el-space class="info">
-        <el-row class="name">{{ name }}</el-row>
-        <el-row class="time">{{ "发布于 " + time }}</el-row>
-        <el-tag v-show="tags" type="info" v-for="tag in tags.split(';')">{{ tag }}</el-tag>
+        <el-row class="name">{{ props.data.name }}</el-row>
+        <el-row class="time">{{ "发布于 " + props.data.time }}</el-row>
+        <el-tag v-show="props.data.tags" type="info" v-for="tag in props.data.tags.split(';')">{{ tag }}</el-tag>
       </el-space>
       <el-space class="body">
-        <el-image class="image" fit="cover" :src="image"></el-image>
-        <span class="content">{{ content }}</span>
+        <el-image class="image" fit="cover" :src="props.data.image"></el-image>
+        <span class="content">{{ props.data.content }}</span>
       </el-space>
     </el-space>
     <el-space class="foot">
       <el-space :size="3">
         <el-icon class="iconfont icon-like icon"></el-icon>
-        <span class="num">{{ agree }}</span>
+        <span class="num">{{ props.data.agree > 1000 ? (props.data.agree / 1000).toFixed(1) + "k" : props.data.agree }}</span>
       </el-space>
       <el-space :size="3">
         <el-icon class="iconfont icon-eye icon"></el-icon>
-        <span class="num">{{ view }}</span>
+        <span class="num">{{ props.data.view > 1000 ? (props.data.view / 1000).toFixed(1) + "k" : props.data.view}}</span>
       </el-space>
       <el-space :size="3">
         <el-icon class="iconfont icon-message icon"></el-icon>
-        <span class="num">{{ comment }}</span>
+        <span class="num">{{ props.data.comment > 1000 ? (props.data.comment / 1000).toFixed(1) + "k" : props.data.comment}}</span>
       </el-space>
       <el-space :size="3">
         <el-icon class="iconfont icon-star icon"></el-icon>
-        <span class="num">{{ collect }}</span>
+        <span class="num">{{ props.data.collect > 1000 ? (props.data.collect / 1000).toFixed(1) + "k" : props.data.collect}}</span>
       </el-space>
     </el-space>
   </el-row>
@@ -43,13 +43,25 @@ export default {
 </script>
 
 <script setup>
-import {initVariable, init} from "./controller";
+import {ref} from "vue";
 
 const props = defineProps({
   data: Object,
 })
-let {avatar, title, name, time, tags, image, content, agree, view, comment, collect} = initVariable()
-init(props)
+
+let data = ref({
+  avatar: "",
+  title: "",
+  name: "",
+  time: "",
+  tags: "",
+  image: "",
+  content: "",
+  agree: 0,
+  view: 0,
+  comment: 0,
+  collect: 0
+})
 
 </script>
 
