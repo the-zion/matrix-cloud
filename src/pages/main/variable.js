@@ -1,11 +1,13 @@
 import {ref} from 'vue'
 
-export function initData() {
+export function variable() {
     let activeMenu = ref()
     let userLogin = ref(false)
     let messageValue = ref(0)
     let loginVisible = ref(false)
-    const menulist = ref([{
+    let activeColor = ref()
+    let scroll = ref()
+    let menuList = ref([{
         id: 0,
         key: "home",
         name: "学习与讨论",
@@ -17,7 +19,6 @@ export function initData() {
         state: "about",
     }])
     return {
-        activeMenu, userLogin, messageValue, menulist, loginVisible
+        activeMenu, userLogin, messageValue, menuList, loginVisible, activeColor, scroll
     }
-
 }

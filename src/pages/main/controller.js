@@ -1,9 +1,20 @@
 import router from '../../router/index'
 import {useRoute} from "vue-router"
+import {variable} from "./variable.js"
 
-export function controller(activeMenu, activeColor, messageValue, loginVisible) {
+export function controller() {
+
+    let {activeMenu, userLogin, messageValue, menuList, loginVisible, activeColor, scroll} = variable()
+
+    function initVariable() {
+        return {activeMenu, userLogin, messageValue, menuList, loginVisible, activeColor, scroll}
+    }
 
     function init() {
+        initData()
+    }
+
+    function initData(){
         activeMenu.value = useRoute().name
     }
 
@@ -31,18 +42,14 @@ export function controller(activeMenu, activeColor, messageValue, loginVisible) 
         router.push({name: item})
     }
 
-    function editBlog() {
-        router.push({name: "express"})
-    }
-
     return {
+        initVariable,
         init,
         backToHome,
         menuSelect,
         messageCount,
         add,
         login,
-        dropdownClick,
-        editBlog
+        dropdownClick
     }
 }
