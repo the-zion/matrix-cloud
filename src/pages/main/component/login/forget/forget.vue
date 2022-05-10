@@ -63,11 +63,24 @@ export default {
 
 <script setup>
 import {onMounted} from "vue"
-import {controller} from "./controller";
+import {initVariable, init, selectChange, sendCode, nextStep, passwordReset, mode} from "./controller";
 
-const {initVariable, init, selectChange, sendCode, nextStep, passwordReset, mode} = controller()
 const emit = defineEmits(["update:mode"])
-let {width, text, codeSending, interval, step, loading, formRef1, formRef2, options, form1, form2, rules1, rules2} = initVariable()
+let {
+  width,
+  text,
+  codeSending,
+  interval,
+  step,
+  loading,
+  formRef1,
+  formRef2,
+  options,
+  form1,
+  form2,
+  rules1,
+  rules2
+} = initVariable()
 onMounted(function () {
   init(emit)
 })
