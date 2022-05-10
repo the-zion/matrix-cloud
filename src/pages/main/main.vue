@@ -48,10 +48,9 @@
 </template>
 
 <script setup>
-import {controller} from "./controller.js"
+import {initVariable, init, backToHome, menuSelect, messageCount, add, login, dropdownClick} from "./controller.js"
 import router from "../../router"
 
-const {initVariable, init, backToHome, menuSelect, messageCount, add, login, dropdownClick} = controller()
 let {activeMenu, userLogin, messageValue, menuList, loginVisible, activeColor, scroll} = initVariable()
 init()
 

@@ -1,55 +1,40 @@
 import router from '../../router/index'
 import {useRoute} from "vue-router"
 import {variable} from "./variable.js"
+let {activeMenu, userLogin, messageValue, menuList, loginVisible, activeColor, scroll} = variable()
 
-export function controller() {
+export function initVariable() {
+    return {activeMenu, userLogin, messageValue, menuList, loginVisible, activeColor, scroll}
+}
 
-    let {activeMenu, userLogin, messageValue, menuList, loginVisible, activeColor, scroll} = variable()
+export function init() {
+    initData()
+}
 
-    function initVariable() {
-        return {activeMenu, userLogin, messageValue, menuList, loginVisible, activeColor, scroll}
-    }
+function initData(){
+    activeMenu.value = useRoute().name
+}
 
-    function init() {
-        initData()
-    }
+export function backToHome() {
+    router.push({name: "home"})
+}
 
-    function initData(){
-        activeMenu.value = useRoute().name
-    }
+export function menuSelect() {
+    activeColor.value = "#409eff"
+}
 
-    function backToHome() {
-        router.push({name: "home"})
-    }
+export function messageCount(value) {
+    return value === 0
+}
 
-    function menuSelect() {
-        activeColor.value = "#409eff"
-    }
+export function add() {
+    messageValue.value += 1
+}
 
-    function messageCount(value) {
-        return value === 0
-    }
+export function login() {
+    loginVisible.value = true
+}
 
-    function add() {
-        messageValue.value += 1
-    }
-
-    function login() {
-        loginVisible.value = true
-    }
-
-    function dropdownClick(item) {
-        router.push({name: item})
-    }
-
-    return {
-        initVariable,
-        init,
-        backToHome,
-        menuSelect,
-        messageCount,
-        add,
-        login,
-        dropdownClick
-    }
+export function dropdownClick(item) {
+    router.push({name: item})
 }
