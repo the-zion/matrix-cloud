@@ -102,24 +102,30 @@ export function globalFunc() {
         }]
     }
 
-    function echartsInit() {
-        echarts.use([
-            TitleComponent,
-            TooltipComponent,
-            GridComponent,
-            DatasetComponent,
-            TransformComponent,
-            LabelLayout,
-            UniversalTransition,
-            GraphicComponent,
-            HeatmapChart,
-            CalendarComponent,
-            VisualMapComponent,
-            CanvasRenderer,
-        ])
+    return {loadFullScreen, getClassList}
+}
 
-        return echarts
-    }
+export function echartsInit() {
+    echarts.use([
+        TitleComponent,
+        TooltipComponent,
+        GridComponent,
+        DatasetComponent,
+        TransformComponent,
+        LabelLayout,
+        UniversalTransition,
+        GraphicComponent,
+        HeatmapChart,
+        CalendarComponent,
+        VisualMapComponent,
+        CanvasRenderer,
+    ])
+    return echarts
+}
 
-    return {loadFullScreen, getClassList, echartsInit}
+export function scrollTo(location) {
+    window.scrollTo({
+        top: location || 0,
+        behavior: "smooth"
+    })
 }
