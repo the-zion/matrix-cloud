@@ -28,7 +28,7 @@ export default {
 
 <script setup>
 import {onMounted} from "vue"
-import {controller} from "./controller";
+import {initVariable, init} from "./controller";
 
 const emits = defineEmits(["current-page"])
 const props = defineProps({
@@ -36,7 +36,6 @@ const props = defineProps({
   gap: Number,
   shape: String
 })
-const {initVariable, init} = controller()
 let {data, currentPage} = initVariable()
 
 onMounted(() => {
