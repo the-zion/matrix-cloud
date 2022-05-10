@@ -1,21 +1,14 @@
 import {variable} from "./variable.js"
 import {echartsInit} from "../../../../utils/globalFunc";
+let {username, introduce, tags, cartoonOptions} = variable()
+let echarts = echartsInit()
+let chart = null
 
-export function controller() {
+export function initVariable() {
+    return {username, introduce, tags}
+}
 
-    let {username, introduce, tags, cartoonOptions} = variable()
-
-    let echarts = echartsInit()
-    let chart = null
-
-    function initVariable() {
-        return {username, introduce, tags}
-    }
-
-    function init() {
-        chart = echarts.init(document.getElementById('cartoon'));
-        chart.setOption(cartoonOptions)
-    }
-
-    return {initVariable, init}
+export function init() {
+    chart = echarts.init(document.getElementById('cartoon'));
+    chart.setOption(cartoonOptions)
 }
