@@ -7,7 +7,7 @@
       </el-space>
     </el-space>
     <el-row class="body">
-      <matrix-list :mode="1"></matrix-list>
+      <matrix-list :mode="1" @current-page="pageChange"></matrix-list>
     </el-row>
   </el-container>
 </template>
@@ -19,7 +19,7 @@ export default {
 </script>
 
 <script setup>
-import {initVariable, init, filterSelect} from "./controller";
+import {initVariable, filterSelect, pageChange} from "./controller";
 
 let {bar} = initVariable()
 
