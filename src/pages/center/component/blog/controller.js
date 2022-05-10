@@ -1,22 +1,15 @@
 import {variable} from "./variable.js"
+let {bar} = variable()
 
-export function controller() {
+export function initVariable() {
+    return {bar}
+}
 
-    let {bar} = variable()
+export function init(props) {
+}
 
-    function initVariable() {
-        return {bar}
-    }
-
-    function init(props) {
-    }
-
-    function filterSelect(each) {
-        bar.value.forEach(function (item) {
-            item.select = each.key === item.key
-        })
-    }
-
-
-    return {initVariable, init, filterSelect}
+export function filterSelect(each) {
+    bar.value.forEach(function (item) {
+        item.select = each.key === item.key
+    })
 }

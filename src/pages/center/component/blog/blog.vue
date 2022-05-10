@@ -19,9 +19,8 @@ export default {
 </script>
 
 <script setup>
-import {controller} from "./controller";
+import {initVariable, init, filterSelect} from "./controller";
 
-const {initVariable, init, filterSelect} = controller()
 let {bar} = initVariable()
 
 </script>
