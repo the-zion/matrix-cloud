@@ -38,9 +38,7 @@
 </template>
 
 <script setup>
-import {controller} from "./controller.js"
-
-const {initVariable, menuSelect} = controller()
+import {initVariable, menuSelect} from "./controller.js"
 let {current, menus} = initVariable()
 const props = defineProps({
   scroll: Object,

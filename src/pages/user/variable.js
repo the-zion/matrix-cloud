@@ -29,5 +29,4 @@ export function variable() {
     return {
         current, menus
     }
-
 }
