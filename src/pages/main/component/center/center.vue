@@ -24,10 +24,9 @@ export default {
 </script>
 
 <script setup>
-import {controller} from "./controller";
+import {initVariable, init} from "./controller";
 import {onMounted} from "vue";
 
-const {initVariable, init} = controller()
 let {name, introduce, menu} = initVariable()
 onMounted(function () {
   init()
