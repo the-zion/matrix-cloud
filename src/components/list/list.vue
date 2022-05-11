@@ -6,6 +6,17 @@
         <matrix-blog v-if="props.mode === 1" :data="data[index]"></matrix-blog>
         <matrix-column v-if="props.mode === 2" :data="data[index]"></matrix-column>
         <matrix-talk v-if="props.mode === 3" :data="data[index]"></matrix-talk>
+        <el-space class="operation" size="large">
+          <div v-for="op in props.operation">
+            <el-icon v-show="op === 'edit'" class="icon" @click="doEdit">
+              <edit/>
+            </el-icon>
+            <el-icon v-show="op === 'delete'" class="icon" @click="doDelete(item)">
+              <delete/>
+            </el-icon>
+            <el-icon v-show="op === 'star'" class="iconfont icon-star-fill star" @click="doCollect(item)"></el-icon>
+          </div>
+        </el-space>
       </el-row>
     </el-space>
     <el-row class="foot" justify="center">
@@ -28,19 +39,41 @@ export default {
 
 <script setup>
 import {ref, watch, onMounted} from "vue";
+import {confirm} from "../../utils/globalFunc";
+import {success} from "../../utils/message";
 
 const emits = defineEmits(["current-page"])
 const props = defineProps({
   mode: Number,
   gap: Number,
-  shape: String
+  shape: String,
+  operation: {
+    type: Array,
+    default: []
+  }
 })
 
 let data = ref([])
 let currentPage = ref(1)
+let dataType = ""
 
 function init() {
+  initData()
   getData()
+}
+
+function initData() {
+  switch (props.mode) {
+    case 1:
+      dataType = "博客"
+      break
+    case 2:
+      dataType = "专栏"
+      break
+    case 3:
+      dataType = "讨论"
+      break
+  }
 }
 
 function getData() {
@@ -65,9 +98,9 @@ function getData() {
     case 2:
       for (let i = 0; i <= 9; i++) {
         data.value.push({
-          title: "数组和字符串" + i,
+          title: "数组和字符串",
           avatar: "../src/assets/images/boy.png",
-          image: "../src/assets/images/img.png",
+          image: "../src/assets/images/column.png",
           name: "刘小圆sama",
           time: "2022-05-06",
           content: "简介：数组是数据结构中的基本模块之一。因为字符串是由字符数组形成的，所以二者是相似的。大多数面试问题都属于这个范畴。",
@@ -99,6 +132,24 @@ function getData() {
   }
 }
 
+function doEdit() {
+
+}
+
+function doDelete(item) {
+  confirm("删除", "确定删除" + dataType + "：\"" + item.title + "\" 吗？").then(function () {
+    success("删除成功")
+  }).catch(() => {
+  })
+}
+
+function doCollect(item) {
+  confirm("取消收藏", "确定取消收藏" + dataType + "：\"" + item.title + "\" 吗？").then(function () {
+    success("取消成功")
+  }).catch(() => {
+  })
+}
+
 watch(currentPage, () => {
   emits("current-page", "")
 })
@@ -120,7 +171,30 @@ onMounted(() => {
     width: 100%;
 
     .each {
+      position: relative;
       border-bottom: 1px solid var(--el-border-color);
+
+      .operation {
+        position: absolute;
+        top: 16px;
+        right: 0;
+
+        .icon {
+          color: var(--el-text-color-placeholder);
+          font-size: 20px;
+          cursor: pointer;
+        }
+
+        .star {
+          color: #ffa116;
+          font-size: 20px;
+          cursor: pointer;
+        }
+
+        .icon:hover {
+          color: var(--el-color-primary);
+        }
+      }
     }
 
     .card {
