@@ -1,4 +1,4 @@
-import {ElLoading} from 'element-plus'
+import {ElLoading, ElMessage, ElMessageBox} from 'element-plus'
 import * as echarts from 'echarts/core';
 import {HeatmapChart} from 'echarts/charts';
 import {
@@ -128,4 +128,23 @@ export function scrollTo(location) {
         top: location || 0,
         behavior: "smooth"
     })
+}
+
+export function scrollToTop() {
+    window.scrollTo({
+        top: 0
+    })
+}
+
+export function confirm(title, message, type) {
+    return ElMessageBox.confirm(
+        message,
+        title,
+        {
+            customClass: 'matrix-message-box',
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: type || "warning",
+        }
+    )
 }
