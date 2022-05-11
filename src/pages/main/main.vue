@@ -34,7 +34,7 @@
     <el-main class="main-body">
       <router-view v-slot="{ Component }">
         <transition name="el-fade-in" mode="out-in">
-          <component :is="Component" />
+          <component :is="Component"/>
         </transition>
       </router-view>
     </el-main>
@@ -48,11 +48,62 @@
 </template>
 
 <script setup>
-import {initVariable, init, backToHome, menuSelect, messageCount, add, login, dropdownClick} from "./controller.js"
 import router from "../../router"
+import {ref, onMounted} from "vue";
+import {useRoute} from "vue-router";
 
-let {activeMenu, userLogin, messageValue, menuList, loginVisible, activeColor} = initVariable()
-init()
+let activeMenu = ref()
+let userLogin = ref(false)
+let messageValue = ref(0)
+let loginVisible = ref(false)
+let activeColor = ref()
+let menuList = ref([{
+  id: 0,
+  key: "home",
+  name: "学习与讨论",
+  state: "home",
+}, {
+  id: 1,
+  key: "about",
+  name: "关于matrix",
+  state: "about",
+}])
+
+function init() {
+  initData()
+}
+
+function initData() {
+  activeMenu.value = useRoute().name
+}
+
+function backToHome() {
+  router.push({name: "home"})
+}
+
+function menuSelect() {
+  activeColor.value = "#409eff"
+}
+
+function messageCount(value) {
+  return value === 0
+}
+
+function add() {
+  messageValue.value += 1
+}
+
+function login() {
+  loginVisible.value = true
+}
+
+function dropdownClick(item) {
+  router.push({name: item})
+}
+
+onMounted(function () {
+  init()
+})
 
 router.afterEach(function (route) {
   activeMenu.value = route.name
@@ -75,6 +126,11 @@ body {
       display: none;
     }
   }
+
+  .matrix-message-box {
+    vertical-align: unset;
+  }
+
 }
 
 .main-container {
