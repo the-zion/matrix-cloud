@@ -8,14 +8,23 @@
     </el-aside>
     <el-main>
       <matrix-center-blog v-if="menu === 'blog'"></matrix-center-blog>
+      <matrix-center-column v-if="menu === 'column'"></matrix-center-column>
+      <matrix-center-talk v-if="menu === 'talk'"></matrix-center-talk>
+      <matrix-center-collect v-if="menu === 'collect'"></matrix-center-collect>
     </el-main>
   </el-container>
 </template>
 
 <script setup>
-import {initVariable, menuChange} from "./controller";
+import {ref} from "vue";
+import {scrollToTop} from "../../utils/globalFunc";
 
-let {menu} = initVariable()
+let menu = ref("blog")
+
+function menuChange(value) {
+  menu.value = value
+  scrollToTop()
+}
 </script>
 
 <style scoped lang="scss">
