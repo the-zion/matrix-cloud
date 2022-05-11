@@ -34,10 +34,72 @@ export default {
 </script>
 
 <script setup>
-import {initVariable, init, select, dataLoad} from "./controller";
-import {onMounted} from "vue";
+import {ref, onMounted} from "vue";
 
-let {data, list, visible, scroll, bar} = initVariable()
+let data = ref({})
+let list = ref([])
+let visible = ref(true)
+let scroll = ref()
+let element = null
+let bar = ref([
+  {
+    key: "follow",
+    label: "关注了",
+    select: true
+  },
+  {
+    key: "follower",
+    label: "关注者",
+    select: false
+  }
+])
+
+function init() {
+  initData()
+  getData()
+  getList()
+}
+
+function initData() {
+  element = document.getElementById('scroll')
+  console.log(element)
+}
+
+function getData() {
+  data.value = {
+    "follow": 2,
+    "follower": 36
+  }
+}
+
+function getList() {
+  for (let i = 0; i <= 9; i++) {
+    list.value.push({
+      name: "刘小圆sama",
+      introduce: "海纳百川，有容乃大",
+      image: '../src/assets/images/boy.png'
+    })
+  }
+}
+
+function select(each) {
+  bar.value.forEach(function (item) {
+    item.select = item.key === each.key
+  })
+}
+
+function dataLoad() {
+  visible.value = false
+  setTimeout(function () {
+        setTimeout(function () {
+          visible.value = true
+          getList()
+        }, 2000)
+        scroll.value.setScrollTop(element.scrollHeight)
+      }, 10
+  )
+}
+
 onMounted(function () {
   init()
 })
