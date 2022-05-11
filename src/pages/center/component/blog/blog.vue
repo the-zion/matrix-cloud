@@ -7,7 +7,7 @@
       </el-space>
     </el-space>
     <el-row class="body">
-      <matrix-list :mode="1" @current-page="pageChange"></matrix-list>
+      <matrix-list :mode="1" :operation="['edit', 'delete']" @current-page="pageChange"></matrix-list>
     </el-row>
   </el-container>
 </template>
@@ -19,9 +19,40 @@ export default {
 </script>
 
 <script setup>
-import {initVariable, filterSelect, pageChange} from "./controller";
+import {ref} from "vue";
+import {scrollTo} from "../../../../utils/globalFunc";
 
-let {bar} = initVariable()
+let bar = ref([{
+  key: "new",
+  label: "最新发表",
+  icon: "icon-time-circle",
+  select: true
+}, {
+  key: "hot",
+  label: "最多点赞",
+  icon: "icon-like",
+  select: false
+}, {
+  key: "collect",
+  label: "最多收藏",
+  icon: "icon-star",
+  select: false
+}, {
+  key: "view",
+  label: "最多观看",
+  icon: "icon-eye",
+  select: false
+}])
+
+function filterSelect(each) {
+  bar.value.forEach(function (item) {
+    item.select = each.key === item.key
+  })
+}
+
+function pageChange() {
+  scrollTo()
+}
 
 </script>
 
