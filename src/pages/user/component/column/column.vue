@@ -25,13 +25,26 @@ export default {
 </script>
 
 <script setup>
-import {initVariable, init, pageChange} from "./controller";
-import {onMounted} from "vue";
+import {ref} from "vue";
+import {scrollTo} from "../../../../utils/globalFunc";
 
-let {select, search, options} = initVariable()
-onMounted(() => {
-  init()
-})
+let select = ref("new")
+let search = ref()
+const options = ref([{
+  key: "new",
+  label: "最新发表"
+}, {
+  key: "hot",
+  label: "最多点赞"
+}, {
+  key: "collect",
+  label: "最多收藏"
+}])
+
+function pageChange() {
+  scrollTo(427)
+}
+
 </script>
 <style scoped lang="scss">
 .column {
