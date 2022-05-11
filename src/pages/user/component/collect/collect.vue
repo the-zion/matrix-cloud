@@ -20,13 +20,22 @@ export default {
 </script>
 
 <script setup>
-import {initVariable, init, pageChange} from "./controller";
-import {onMounted} from "vue";
+import {ref} from "vue";
+import {scrollTo} from "../../../../utils/globalFunc";
 
-let {select, options} = initVariable()
-onMounted(() => {
-  init()
-})
+let select = ref("blog")
+const options = ref([{
+  key: "blog",
+  label: "博客"
+}, {
+  key: "column",
+  label: "专栏"
+}])
+
+function pageChange() {
+  scrollTo(427)
+}
+
 </script>
 <style scoped lang="scss">
 .collect {
