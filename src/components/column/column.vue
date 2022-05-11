@@ -1,33 +1,38 @@
 <template>
   <el-row class="column" align="middle">
     <el-image class="image" fit="cover" :src="props.data.image"></el-image>
-    <el-row class="container">
-      <el-space class="main" fill>
-        <el-space class="head">
-          <el-avatar class="avatar" :size="24" :src="props.data.avatar"/>
-          <el-row class="title">{{ props.data.title }}</el-row>
-        </el-space>
+    <el-row class="container" align="top">
+      <el-space class="main">
+        <el-row class="title">{{ props.data.title }}</el-row>
         <el-space class="info">
           <el-tag v-show="props.data.tags" type="info" v-for="tag in props.data.tags.split(';')">{{ tag }}</el-tag>
         </el-space>
-        <span class="content">{{ props.data.content }}</span>
       </el-space>
+      <el-row class="content">{{ props.data.content }}</el-row>
       <el-space class="foot">
         <el-space :size="3">
           <el-icon class="iconfont icon-like icon"></el-icon>
-          <span class="num">{{ props.data.agree > 1000 ? (props.data.agree / 1000).toFixed(1) + "k" : props.data.agree }}</span>
+          <span class="num">{{
+              props.data.agree > 1000 ? (props.data.agree / 1000).toFixed(1) + "k" : props.data.agree
+            }}</span>
         </el-space>
         <el-space :size="3">
           <el-icon class="iconfont icon-eye icon"></el-icon>
-          <span class="num">{{ props.data.view > 1000 ? (props.data.view / 1000).toFixed(1) + "k" : props.data.view }}</span>
+          <span class="num">{{
+              props.data.view > 1000 ? (props.data.view / 1000).toFixed(1) + "k" : props.data.view
+            }}</span>
         </el-space>
         <el-space :size="3">
           <el-icon class="iconfont icon-message icon"></el-icon>
-          <span class="num">{{ props.data.comment > 1000 ? (props.data.comment / 1000).toFixed(1) + "k" : props.data.comment }}</span>
+          <span class="num">{{
+              props.data.comment > 1000 ? (props.data.comment / 1000).toFixed(1) + "k" : props.data.comment
+            }}</span>
         </el-space>
         <el-space :size="3">
           <el-icon class="iconfont icon-star icon"></el-icon>
-          <span class="num">{{ props.data.collect > 1000 ? (props.data.collect / 1000).toFixed(1) + "k" : props.data.collect }}</span>
+          <span class="num">{{
+              props.data.collect > 1000 ? (props.data.collect / 1000).toFixed(1) + "k" : props.data.collect
+            }}</span>
         </el-space>
       </el-space>
     </el-row>
@@ -69,55 +74,47 @@ let data = ref({
   padding: 16px;
 
   .image {
-    height: 95%;
-    width: 200px;
+    height: 120px;
+    width: 90px;
     border-radius: 6px;
     margin-right: 16px;
-
+    box-shadow: var(--el-box-shadow-light);
   }
 
   .container {
-    width: calc(100% - 216px);
+    width: 70%;
+    height: 100%;
   }
 
   .main {
     width: 100%;
+    height: fit-content;
 
-    .head {
-      width: 100%;
-
-      ::v-deep(.el-avatar--circle) {
-        border: 1px solid var(--el-border-color-lighter);
-      }
-
-      .avatar {
-        border: 1px solid var(--el-border-color-lighter);
-      }
-
-      .title {
-        font-size: 16px;
-        font-weight: 500;
-        color: var(--el-text-color-primary)
-      }
+    .title {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 500;
+      color: var(--el-text-color-secondary)
     }
 
     .info {
       width: 100%;
     }
+  }
 
-    .content {
-      width: 100%;
-      height: 45px;
-      font-size: 14px;
-      line-height: 24px;
-      color: var(--el-text-color-regular);
-      word-break: break-word;
-      align-self: stretch;
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-    }
+  .content {
+    margin-top: 8px;
+    width: 360px;
+    height: 40px;
+    font-size: 12px;
+    line-height: 20px;
+    color: var(--el-text-color-secondary);
+    word-break: break-word;
+    align-self: stretch;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 
   .foot {
