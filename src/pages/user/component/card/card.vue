@@ -57,7 +57,7 @@ let cartoonOptions = {
         left: 'center',
         top: 'center',
         style: {
-          text: 'HELLO WORLD',
+          text: 'HELLOWORLD',
           fontSize: 60,
           fontWeight: 'bold',
           lineDash: [0, 200],
