@@ -174,6 +174,8 @@ onMounted(function () {
   min-height: 100px;
   padding: 1rem;
 
+
+
   .space {
     width: 100%;
 
