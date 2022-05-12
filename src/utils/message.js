@@ -35,3 +35,11 @@ export function error(message){
         grouping: true
     })
 }
+
+export function info(message){
+    ElMessage({
+        message: message,
+        type: 'info',
+        grouping: true
+    })
+}
