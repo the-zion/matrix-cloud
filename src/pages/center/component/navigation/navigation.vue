@@ -10,18 +10,18 @@
     <el-row class="navigation-block">
       <el-space v-for="item in menu.slice(0,4)" class="each" :class="{'select': item.select}"
                 @click="menuSelect(item)">
-        <el-icon color="var(--el-text-color-regular)">
+        <el-icon color="var(--el-text-color-regular)" :class="{'select': item.select}">
           <component :is="item.icon"></component>
         </el-icon>
-        <span class="label">{{ item.label }}</span>
+        <span class="label" :class="{'select': item.select}">{{ item.label }}</span>
       </el-space>
       <el-divider class="divider"/>
       <el-space v-for="item in menu.slice(4,)" class="each" :class="{'select': item.select}"
                 @click="menuSelect(item)">
-        <el-icon color="var(--el-text-color-regular)">
+        <el-icon color="var(--el-text-color-regular)" :class="{'select': item.select}">
           <component :is="item.icon"></component>
         </el-icon>
-        <span class="label">{{ item.label }}</span>
+        <span class="label" :class="{'select': item.select}">{{ item.label }}</span>
       </el-space>
     </el-row>
   </el-container>
@@ -122,6 +122,10 @@ function menuSelect(each) {
       .label {
         font-size: 14px;
         color: var(--el-text-color-secondary);
+      }
+
+      .select {
+        color: var(--el-color-primary);
       }
     }
 
