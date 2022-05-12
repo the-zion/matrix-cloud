@@ -1,5 +1,5 @@
 <template>
-  <el-container class="set-container">
+  <el-container class="center-container">
     <el-backtop></el-backtop>
     <el-aside class="aside">
       <el-affix :offset="0">
@@ -11,6 +11,7 @@
       <matrix-center-column v-if="menu === 'column'"></matrix-center-column>
       <matrix-center-talk v-if="menu === 'talk'"></matrix-center-talk>
       <matrix-center-collect v-if="menu === 'collect'"></matrix-center-collect>
+      <matrix-center-profile v-if="menu === 'profile'"></matrix-center-profile>
     </el-main>
   </el-container>
 </template>
@@ -28,8 +29,9 @@ function menuChange(value) {
 </script>
 
 <style scoped lang="scss">
-.set-container {
-  width: 1200px;
+.center-container {
+  max-width: 1200px;
+  width: fit-content;
   margin: auto;
 
   .aside {
