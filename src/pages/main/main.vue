@@ -129,6 +129,7 @@ body {
 
   .matrix-message-box {
     vertical-align: unset;
+    border-radius: 8px;
   }
 
 }

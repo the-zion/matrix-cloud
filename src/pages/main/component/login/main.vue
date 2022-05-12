@@ -2,7 +2,6 @@
   <el-dialog
       custom-class="loginDialog"
       :close-on-click-modal=false
-      class="login"
       destroy-on-close
       :width="385"
       :before-close="beforeClose"
