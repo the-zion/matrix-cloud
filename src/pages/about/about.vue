@@ -1,64 +1,49 @@
 <template>
-  <el-form>
-    <el-row v-for="i in [1]" :key="i">
-      <el-tag
-          v-for="tag in dynamicTags"
-          :key="tag"
-          class="mx-1"
-          closable
-          :disable-transitions="false"
-          @close="handleClose(tag)"
-      >
-        {{ tag }}
-      </el-tag>
-      <el-input
-          style="display: inline-flex;width: 80px"
-          v-if="inputVisible"
-          placeholder="请输入"
-          ref="InputRef"
-          v-model="inputValue"
-          class="ml-1 w-20"
-          size="small"
-          @keyup.enter="handleInputConfirm"
-          @blur="handleInputConfirm"
-      >
-      </el-input>
-      <el-button v-else class="button-new-tag ml-1" size="small" @click="showInput">
-        + New Tag
-      </el-button>
-    </el-row>
-  </el-form>
+  <el-tag
+      v-for="tag in dynamicTags"
+      :key="tag"
+      class="mx-1"
+      closable
+      :disable-transitions="false"
+      @close="handleClose(tag)"
+  >
+    {{ tag }}
+  </el-tag>
+  <el-input
+      v-if="inputVisible"
+      ref="InputRef"
+      v-model="inputValue"
+      class="ml-1 w-20"
+      size="small"
+      @keyup.enter="handleInputConfirm"
+      @blur="handleInputConfirm"
+  />
+  <el-button v-else class="button-new-tag ml-1" size="small" @click="showInput">
+    + New Tag
+  </el-button>
 </template>
 
-<script setup>
-import {ref, nextTick} from 'vue'
+<script lang="ts" setup>
+import { nextTick, ref } from 'vue'
+import type { ElInput } from 'element-plus'
 
 const inputValue = ref('')
 const dynamicTags = ref(['Tag 1', 'Tag 2', 'Tag 3'])
 const inputVisible = ref(false)
-// const test = ref()
+const InputRef = ref<InstanceType<typeof ElInput>>()
 
-const InputRef = ref([])
-
-// function InputRef(el) {
-//   test.value = el
-//   console.log(el.focus())
-// }
-
-const handleClose = (tag) => {
+const handleClose = (tag: string) => {
   dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1)
 }
 
 const showInput = () => {
   inputVisible.value = true
   nextTick(() => {
-    // console.log(InputRef)
-    // InputRef.focus()
+    InputRef.value!.input!.focus()
   })
 }
 
 const handleInputConfirm = () => {
-  debugger
   if (inputValue.value) {
     dynamicTags.value.push(inputValue.value)
   }
