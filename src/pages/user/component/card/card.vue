@@ -32,7 +32,7 @@ export default {
 
 <script setup>
 import {ref, onMounted} from "vue"
-import {echartsInit} from "../../../../utils/globalFunc";
+import {echartsInit} from "../../../../utils/echarts";
 
 let username = ref("刘小圆sama")
 let introduce = ref("海纳百川，有容乃大")
