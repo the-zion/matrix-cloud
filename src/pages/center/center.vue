@@ -12,13 +12,14 @@
       <matrix-center-talk v-if="menu === 'talk'"></matrix-center-talk>
       <matrix-center-collect v-if="menu === 'collect'"></matrix-center-collect>
       <matrix-center-profile v-if="menu === 'profile'"></matrix-center-profile>
+      <matrix-center-security v-if="menu === 'security'"></matrix-center-security>
     </el-main>
   </el-container>
 </template>
 
 <script setup>
 import {ref} from "vue";
-import {scrollToTop} from "../../utils/globalFunc";
+import {scrollToTop} from "../../utils/scroll";
 
 let menu = ref("blog")
 
@@ -30,7 +31,7 @@ function menuChange(value) {
 
 <style scoped lang="scss">
 .center-container {
-  max-width: 1200px;
+  max-width: 1128px;
   width: fit-content;
   margin: auto;
 
