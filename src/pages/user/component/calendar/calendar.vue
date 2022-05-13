@@ -30,7 +30,7 @@ export default {
 
 <script setup>
 import {ref, onMounted} from "vue"
-import {echartsInit} from "../../../../utils/globalFunc"
+import {echartsInit} from "../../../../utils/echarts"
 
 let date = new Date()
 let year = date.getFullYear()
