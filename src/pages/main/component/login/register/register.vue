@@ -28,6 +28,7 @@ export default {
 <script setup>
 import {ref} from "vue";
 import {message} from "../../../../../utils/message";
+import {validateEmail, validatePassword} from "../../../../../utils/check"
 
 const emits = defineEmits(["update:mode", "close"])
 
@@ -42,23 +43,6 @@ const rules = ref({
   password: [{validator: validatePassword, trigger: 'blur'}]
 })
 const {success, error} = message()
-
-function validateEmail(rule, value, callback) {
-  if (!checkEmail(value)) {
-    value || callback(new Error("邮箱不能为空"))
-    callback(new Error("邮箱格式错误"))
-  }
-  callback()
-}
-
-function validatePassword(rule, value, callback) {
-  value || callback(new Error("密码不能为空"))
-  callback()
-}
-
-function checkEmail(value) {
-  return value.match("^[a-z0-9]+([._\\\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$")
-}
 
 function register(formRef) {
   if (!formRef) {
