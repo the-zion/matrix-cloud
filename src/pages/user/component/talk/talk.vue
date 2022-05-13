@@ -26,7 +26,7 @@ export default {
 
 <script setup>
 import {ref} from "vue";
-import {scrollTo} from "../../../../utils/globalFunc";
+import {scrollTo} from "../../../../utils/scroll";
 
 let select = ref("new")
 let search = ref()
