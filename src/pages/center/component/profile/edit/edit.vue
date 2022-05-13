@@ -103,6 +103,15 @@
             </el-popover>
           </el-space>
         </el-space>
+        <el-form-item label="个人介绍" prop="introduce">
+          <el-input v-model="form.introduce"
+                    :rows="6"
+                    maxlength="100"
+                    placeholder="编辑个人介绍"
+                    show-word-limit
+                    type="textarea"
+          />
+        </el-form-item>
       </el-form>
     </el-scrollbar>
     <template #footer>
@@ -249,6 +258,7 @@ function save(formRef) {
   .tag {
     position: relative;
     width: 100%;
+    margin-bottom: 18px !important;
 
     .info_filled {
       position: absolute;
