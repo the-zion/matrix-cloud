@@ -154,7 +154,7 @@ function editProfile() {
 
   .title-block {
     padding: 0 20px 14px;
-    border-bottom: 1px solid var(--el-border-color);
+    border-bottom: 1px solid var(--el-border-color-lighter);
 
     .world {
       font-size: 16px;
