@@ -1,18 +1,4 @@
 import {ElLoading, ElMessage, ElMessageBox} from 'element-plus'
-import * as echarts from 'echarts/core';
-import {HeatmapChart} from 'echarts/charts';
-import {
-    TitleComponent,
-    TooltipComponent,
-    GridComponent,
-    DatasetComponent,
-    TransformComponent,
-    GraphicComponent,
-    VisualMapComponent,
-    CalendarComponent,
-} from 'echarts/components';
-import {LabelLayout, UniversalTransition} from 'echarts/features';
-import {CanvasRenderer} from 'echarts/renderers';
 
 export function globalFunc() {
 
@@ -103,37 +89,6 @@ export function globalFunc() {
     }
 
     return {loadFullScreen, getClassList}
-}
-
-export function echartsInit() {
-    echarts.use([
-        TitleComponent,
-        TooltipComponent,
-        GridComponent,
-        DatasetComponent,
-        TransformComponent,
-        LabelLayout,
-        UniversalTransition,
-        GraphicComponent,
-        HeatmapChart,
-        CalendarComponent,
-        VisualMapComponent,
-        CanvasRenderer,
-    ])
-    return echarts
-}
-
-export function scrollTo(location) {
-    window.scrollTo({
-        top: location || 0,
-        behavior: "smooth"
-    })
-}
-
-export function scrollToTop() {
-    window.scrollTo({
-        top: 0
-    })
 }
 
 export function confirm(title, message, type) {
