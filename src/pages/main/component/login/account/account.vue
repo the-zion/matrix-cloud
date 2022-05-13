@@ -28,6 +28,7 @@ export default {
 <script setup>
 import {ref} from "vue";
 import {message} from "../../../../../utils/message";
+import {validateAccount, validatePassword} from "../../../../../utils/check"
 
 const emits = defineEmits(["update:mode", "close"])
 
@@ -43,27 +44,6 @@ const rules = ref({
   password: [{validator: validatePassword, trigger: 'blur'}],
 })
 const {success, error} = message()
-
-function validateAccount(rule, value, callback) {
-  if (!(checkPhone("+86" + value) || checkEmail(value))) {
-    value || callback(new Error("账号不能为空"))
-    callback(new Error("手机/邮箱 格式错误"))
-  }
-  callback()
-}
-
-function validatePassword(rule, value, callback) {
-  value || callback(new Error("密码不能为空"))
-  callback()
-}
-
-function checkPhone(value) {
-  return value.match("^\\+[1-9]?[0-9]{7,14}$")
-}
-
-function checkEmail(value) {
-  return value.match("^[a-z0-9]+([._\\\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$")
-}
 
 function login(formRef) {
   if (!formRef) {
