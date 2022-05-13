@@ -41,6 +41,7 @@ export default {
 <script setup>
 import {ref} from "vue";
 import {message} from "../../../../../utils/message";
+import {validatePhone, validateCode} from "../../../../../utils/check"
 
 const emits = defineEmits(["update:mode", "close"])
 
@@ -99,30 +100,6 @@ function cancelInterval() {
 function mode(mode) {
   cancelInterval()
   emits("update:mode", mode)
-}
-
-function validatePhone(rule, value, callback) {
-  if (!checkPhone("+86" + value)) {
-    value || callback(new Error("手机号不能为空"))
-    callback(new Error("手机号格式错误"))
-  }
-  callback()
-}
-
-function validateCode(rule, value, callback) {
-  if (!checkCode(value)) {
-    value || callback(new Error("验证码不能为空"))
-    callback(new Error("验证码为6位数字"))
-  }
-  callback()
-}
-
-function checkPhone(value) {
-  return value.match("^\\+[1-9]?[0-9]{7,14}$")
-}
-
-function checkCode(value) {
-  return value.match("^[0-9]{6}$")
 }
 
 function login(formRef) {
