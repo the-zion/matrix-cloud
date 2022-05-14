@@ -38,18 +38,18 @@ export function validateEmail(rule, value, callback) {
     callback()
 }
 
-function checkCode(value) {
-    return value.match("^[0-9]{6}$")
-}
-
-function checkPhone(value) {
+export function checkPhone(value) {
     return value.match("^\\+[1-9]?[0-9]{7,14}$")
 }
 
-function checkEmail(value) {
+export function checkCode(value) {
+    return value.match("^[0-9]{6}$")
+}
+
+export function checkEmail(value) {
     return value.match("^[a-z0-9]+([._\\\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$")
 }
 
-function checkPassword(value) {
+export function checkPassword(value) {
     return value.match("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,20}$")
 }
