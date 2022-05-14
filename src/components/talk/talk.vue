@@ -1,6 +1,6 @@
 <template>
   <el-row class="talk" align="middle">
-    <el-image v-show="props.data.image" class="image" fit="cover" :src="props.data.image"></el-image>
+    <el-image v-show="props.data.image" class="image" fit="cover" :src="props.data.image" lazy></el-image>
     <el-row class="container" :class="{'full':!props.data.image}">
       <el-space class="main" fill>
         <el-space class="head">
