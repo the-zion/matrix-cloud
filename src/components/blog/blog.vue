@@ -11,7 +11,7 @@
         <el-tag v-show="props.data.tags" type="info" v-for="tag in props.data.tags.split(';')">{{ tag }}</el-tag>
       </el-space>
       <el-space class="body">
-        <el-image class="image" fit="cover" :src="props.data.image"></el-image>
+        <el-image class="image" fit="cover" :src="props.data.image" lazy></el-image>
         <span class="content">{{ props.data.content }}</span>
       </el-space>
     </el-space>
