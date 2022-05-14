@@ -64,7 +64,7 @@ export default {
 <script setup>
 import {ref} from "vue";
 import {message} from "../../../../../utils/message";
-import {validatePhone, validateCode, validateEmail, validatePassword} from "../../../../../utils/check"
+import {validatePhone, validateCode, validateEmail, validatePassword, checkPhone, checkEmail} from "../../../../../utils/check"
 
 const emit = defineEmits(["update:mode"])
 
@@ -110,7 +110,7 @@ const {success, error} = message()
 function validateRepeat(rule, value, callback) {
   if (!checkRepeat(value)) {
     value || callback(new Error("密码不能为空"))
-    callback(new Error("密码需同时包含字母和数字，至少 8 个字符"))
+    callback(new Error("两次密码输入不一致"))
   }
   callback()
 }

@@ -41,7 +41,7 @@ export default {
 <script setup>
 import {ref} from "vue";
 import {message} from "../../../../../utils/message";
-import {validatePhone, validateCode} from "../../../../../utils/check"
+import {validatePhone, validateCode, checkPhone} from "../../../../../utils/check"
 
 const emits = defineEmits(["update:mode", "close"])
 
