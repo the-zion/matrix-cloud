@@ -1,6 +1,6 @@
 <template>
   <el-row class="column" align="middle">
-    <el-image class="image" fit="cover" :src="props.data.image"></el-image>
+    <el-image class="image" fit="cover" :src="props.data.image" lazy></el-image>
     <el-row class="container" align="top">
       <el-space class="main">
         <el-row class="title">{{ props.data.title }}</el-row>
