@@ -1,13 +1,15 @@
 <template>
   <el-container class="main-container">
     <el-header class="main-header" height="50px">
-      <el-menu class="main-menu" router @select="menuSelect" :default-active="activeMenu"
+      <el-menu class="main-menu" @select="menuActive" :default-active="activeMenu"
                :active-text-color="activeColor">
         <el-image class="main-matrix-logo" @click="backToHome"
-                  src="../src/assets/images/matrix.svg"
+                  src="../../src/assets/images/matrix.svg"
                   fit="contain"
+                  lazy
         ></el-image>
-        <el-menu-item class="main-menu-item" :route="item.state" :index="item.state" v-for="(item) in menuList">
+        <el-menu-item class="main-menu-item" :index="item.state" v-for="(item) in menuList"
+                      @click="menuSelect(item.state)">
           <template #title>
             <span>{{ item.name }}</span>
           </template>
@@ -33,9 +35,7 @@
     </el-header>
     <el-main class="main-body">
       <router-view v-slot="{ Component }">
-        <transition name="el-fade-in" mode="out-in">
-          <component :is="Component"/>
-        </transition>
+        <component :is="Component"/>
       </router-view>
     </el-main>
     <el-footer class="main-footer">
@@ -81,8 +81,12 @@ function backToHome() {
   router.push({name: "home"})
 }
 
-function menuSelect() {
+function menuActive() {
   activeColor.value = "#409eff"
+}
+
+function menuSelect(state) {
+  router.push({name: state})
 }
 
 function messageCount(value) {
@@ -154,6 +158,7 @@ body {
 
       .main-menu-item {
         font-size: 13px;
+        height: 100%;
       }
 
 
