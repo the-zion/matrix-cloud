@@ -82,8 +82,8 @@ function getData() {
       for (let i = 0; i <= 9; i++) {
         data.value.push({
           title: "迭代法实现二叉树的前序、中序和后序遍历" + i,
-          avatar: "../src/assets/images/boy.png",
-          image: "../src/assets/images/img.png",
+          avatar: "../../src/assets/images/boy.png",
+          image: "../../src/assets/images/img.png",
           name: "刘小圆sama",
           time: "2022-05-06",
           content: "本文的目的是为了总结出一个通用的，改动较少的非递归模板，可以分别适用于二叉树的前序、中序和后续遍历，方便记忆。前序遍历前序遍历的遍历顺序为：根 -> 左 -> 右。只要有左子树，就把左子树入栈，同时把值加入答案数组，然后依次弹出栈顶元素，移动到它的右子树，重复操作。「代码块」中序遍历中序遍历的遍",
@@ -99,8 +99,8 @@ function getData() {
       for (let i = 0; i <= 9; i++) {
         data.value.push({
           title: "数组和字符串",
-          avatar: "../src/assets/images/boy.png",
-          image: "../src/assets/images/column.png",
+          avatar: "../../src/assets/images/boy.png",
+          image: "../../src/assets/images/column.png",
           name: "刘小圆sama",
           time: "2022-05-06",
           content: "简介：数组是数据结构中的基本模块之一。因为字符串是由字符数组形成的，所以二者是相似的。大多数面试问题都属于这个范畴。",
@@ -116,7 +116,7 @@ function getData() {
       for (let i = 0; i <= 9; i++) {
         data.value.push({
           title: "Shopee 送命题：进程切换为什么比线程切换慢" + i,
-          avatar: "../src/assets/images/boy.png",
+          avatar: "../../src/assets/images/boy.png",
           // image: "../src/assets/images/img.png",
           name: "刘小圆sama",
           time: "2022-05-06",
