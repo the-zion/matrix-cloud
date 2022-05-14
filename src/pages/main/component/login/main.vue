@@ -9,7 +9,7 @@
       v-model="props.visible">
     <el-row class="container">
       <el-row justify="center" class="title">
-        <el-image class="logo" :src="'../../../../src/assets/images/matrix.svg'"></el-image>
+        <el-image class="logo" :src="'../../../../src/assets/images/matrix.svg'" lazy></el-image>
       </el-row>
       <matrix-login-account v-if="mode === 'account'" v-model:mode="mode" @close="closeDialog"></matrix-login-account>
       <matrix-login-code v-if="mode === 'code'" v-model:mode="mode" @close="closeDialog"></matrix-login-code>
