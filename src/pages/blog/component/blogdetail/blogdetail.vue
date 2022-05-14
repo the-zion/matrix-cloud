@@ -10,7 +10,7 @@
         <el-row class="date">2022-03-05</el-row>
       </el-space>
       <el-image class="image" :src="'../../src/assets/images/background1.jpg'" fit="cover"
-                :preview-src-list="['../../src/assets/images/background1.jpg']"></el-image>
+                :preview-src-list="['../../src/assets/images/background1.jpg']" lazy></el-image>
       <Editor
           :editorId="editorId"
           :defaultConfig="Object.assign({readOnly:true},props.editorConfig)"
