@@ -9,6 +9,7 @@ const Blog = () => import('../pages/blog/blog.vue')
 const Message = () => import('../pages/message/message.vue')
 const About = () => import('../pages/about/about.vue')
 const User = () => import('../pages/user/user.vue')
+const HomeBlog = () => import("../pages/home/blog/blog.vue")
 const Center = () => import("../pages/center/center.vue")
 const CenterBlog = () => import("../pages/center/blog/blog.vue")
 const CenterColumn = () => import("../pages/center/column/column.vue")
@@ -22,18 +23,24 @@ const routes = [
     {
         path: '/',
         name: 'root',
-        redirect: {name: 'home'},
+        redirect: {name: 'home.blog'},
     },
     {
         path: '/main',
         name: 'main',
         component: Main,
-        redirect: {name: 'home'},
+        redirect: {name: 'home.blog'},
         children: [
             {
                 path: 'home',
                 name: 'home',
-                component: Home
+                component: Home,
+                redirect: {name: 'home.blog'},
+                children: [{
+                    path: 'blog',
+                    name: "home.blog",
+                    component: HomeBlog
+                }]
             },
             {
                 path: 'express',
