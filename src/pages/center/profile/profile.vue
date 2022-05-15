@@ -37,7 +37,15 @@
           </el-space>
         </el-space>
       </el-row>
-      <el-avatar class="avatar" shape="square" :size="66" :src="'../src/assets/images/boy.png'"></el-avatar>
+      <el-upload
+          :show-file-list="false"
+          :before-upload="beforeAvatarUpload"
+      >
+        <el-avatar class="avatar" shape="square" :size="66" :src="imageUrl"></el-avatar>
+        <el-row class="avatar-shadow" align="middle" justify="center">
+          <el-icon :size="25" color="var(--el-color-white)"><CameraFilled /></el-icon>
+        </el-row>
+      </el-upload>
     </el-space>
     <el-space class="info-block" fill>
       <el-space class="title" size="large">
@@ -62,18 +70,14 @@
   </el-container>
 </template>
 
-<script>
-export default {
-  name: "MatrixCenterProfile"
-}
-</script>
-
 <script setup>
 import {h, ref} from "vue"
 import {ElDivider} from 'element-plus'
+import {error} from "../../../utils/message";
 
 const spacer = h(ElDivider, {direction: 'vertical'})
 let visible = ref(false)
+let imageUrl = ref('../../src/assets/images/boy.png')
 let infoMeta = ref([{
   key: "nickname",
   label: "昵称"
@@ -129,6 +133,17 @@ function editProfile() {
   visible.value = true
 }
 
+function beforeAvatarUpload(rawFile){
+  if (rawFile.type !== 'image/jpeg') {
+    error('头像必须是 jpg 格式的')
+    return false
+  } else if (rawFile.size / 1024 / 1024 > 1) {
+    error('图片大小不超过 1MB')
+    return false
+  }
+  return true
+}
+
 </script>
 
 <style scoped lang="scss">
@@ -177,6 +192,22 @@ function editProfile() {
       position: absolute;
       top: 16px;
       right: 40px;
+      border-radius: 8px;
+    }
+
+    .avatar-shadow {
+      opacity: 0;
+      height: 66px;
+      width: 66px;
+      position: absolute;
+      top: 16px;
+      right: 40px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    .avatar-shadow:hover{
+      opacity: 1;
     }
 
     .title {
