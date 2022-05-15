@@ -4,7 +4,9 @@
     <el-row class="title" justify="center">{{ title }}</el-row>
     <el-row class="description" justify="center">{{ description }}</el-row>
     <matrix-identity-verification v-if="step === 'one'" @open="subOpen"></matrix-identity-verification>
-    <!--    <el-button type="primary">Primary</el-button>-->
+    <matrix-security-email v-if="step === 'two' && mode === 'email'" @open="subOpen"></matrix-security-email>
+    <matrix-security-phone v-if="step === 'two' && mode === 'phone'" @open="subOpen"></matrix-security-phone>
+    <matrix-security-password v-if="step === 'two' && mode === 'password'" @open="subOpen"></matrix-security-password>
     <template #footer>
           <span class="dialog-footer">
             <el-button @click="close">取消</el-button>
@@ -25,7 +27,7 @@ export default {
 
 <script setup>
 import {ref} from "vue"
-import {success, error} from "../../../../../utils/message";
+import {success, error} from "../../../../utils/message";
 
 const emits = defineEmits(["update:visible"])
 const props = defineProps({
@@ -36,7 +38,7 @@ const props = defineProps({
 let title = ref("")
 let description = ref("")
 let step = ref("")
-let mode = ""
+let mode = ref("")
 let form = null
 let formRef = null
 
@@ -45,14 +47,14 @@ function open() {
 }
 
 function initData() {
-  mode = props.mode
+  mode.value = props.mode
   step.value = "one"
   title.value = "身份验证"
   description.value = "为了保护你的帐号安全，请验证身份，验证成功后进行下一步操作"
 }
 
 function titleSet() {
-  switch (mode) {
+  switch (mode.value) {
     case "email":
       title.value = "邮箱设置"
       description.value = "请输入邮箱账号与验证码完成邮箱设置"
@@ -97,8 +99,19 @@ function nextStep() {
   })
 }
 
-function save() {
-
+function save(){
+  if (!formRef) {
+    error("未知错误")
+    return
+  }
+  formRef.validate((valid) => {
+    if (!valid) {
+      error("提交的信息有误，请检查")
+    } else {
+      close()
+      return true
+    }
+  })
 }
 </script>
 
