@@ -1,27 +1,27 @@
 <template>
   <el-container class="navigation">
     <el-space class="avatar-block">
-      <el-avatar class="avatar" shape="square" :size="60" :src="'../src/assets/images/boy.png'"></el-avatar>
+      <el-avatar class="avatar" shape="square" :size="60" :src="'../../src/assets/images/boy.png'"></el-avatar>
       <el-space fill>
         <span class="nickname">{{ nickname }}</span>
         <span class="name">{{ name }}</span>
       </el-space>
     </el-space>
     <el-row class="navigation-block">
-      <el-space v-for="item in menu.slice(0,4)" class="each" :class="{'select': item.select}"
+      <el-space v-for="item in menu.slice(0,4)" class="each" :class="{'select': currentMenu === item.key}"
                 @click="menuSelect(item)">
-        <el-icon color="var(--el-text-color-regular)" :class="{'select': item.select}">
+        <el-icon color="var(--el-text-color-regular)" :class="{'select': currentMenu === item.key}">
           <component :is="item.icon"></component>
         </el-icon>
-        <span class="label" :class="{'select': item.select}">{{ item.label }}</span>
+        <span class="label" :class="{'select': currentMenu === item.key}">{{ item.label }}</span>
       </el-space>
       <el-divider class="divider"/>
-      <el-space v-for="item in menu.slice(4,)" class="each" :class="{'select': item.select}"
+      <el-space v-for="item in menu.slice(4,)" class="each" :class="{'select': currentMenu === item.key}"
                 @click="menuSelect(item)">
-        <el-icon color="var(--el-text-color-regular)" :class="{'select': item.select}">
+        <el-icon color="var(--el-text-color-regular)" :class="{'select': currentMenu === item.key}">
           <component :is="item.icon"></component>
         </el-icon>
-        <span class="label" :class="{'select': item.select}">{{ item.label }}</span>
+        <span class="label" :class="{'select': currentMenu === item.key}">{{ item.label }}</span>
       </el-space>
     </el-row>
   </el-container>
@@ -35,48 +35,49 @@ export default {
 
 <script setup>
 import {ref} from "vue";
-
-const emits = defineEmits(["change"])
+import {useRoute} from "vue-router";
+import {scrollToTop} from "../../../../utils/scroll";
+import router from "../../../../router";
 
 let nickname = ref("刘小圆sama")
 let name = ref("neo")
+let currentMenu = ref(useRoute().query["menu"])
 let menu = ref([{
   key: "blog",
   label: "我的博客",
   icon: "document",
-  select: true,
+  router: "center.user"
 }, {
   key: "column",
   label: "我的专栏",
   icon: "files",
-  select: false
+  router: "center.column"
 }, {
   key: "talk",
   label: "讨论发起",
   icon: "chat-dot-round",
-  select: false
+  router: "center.talk"
 }, {
   key: "collect",
   label: "我的收藏",
   icon: "star",
-  select: false
+  router: "center.collect"
 }, {
   key: "profile",
   label: "个人资料",
   icon: "user",
-  select: false
+  router: "center.profile"
 }, {
   key: "security",
   label: "账号安全",
   icon: "lock",
-  select: false
+  router: "center.security"
 }])
 
 function menuSelect(each) {
-  menu.value.forEach(function (item) {
-    item.select = each.key === item.key
-  })
-  emits("change", each.key)
+  currentMenu.value = each.key
+  scrollToTop()
+  router.push({name: each.router, query: {menu: each.key}})
 }
 
 </script>
