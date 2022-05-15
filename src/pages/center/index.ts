@@ -1,27 +1,21 @@
 import {App} from 'vue'
 
 import MatrixCenterNavigation from './component/navigation/navigation.vue'
-import MatrixCenterBlog from './component/blog/blog.vue'
-import MatrixCenterColumn from './component/column/column.vue'
-import MatrixCenterTalk from './component/talk/talk.vue'
-import MatrixCenterCollect from './component/collect/collect.vue'
-import MatrixCenterProfile from './component/profile/profile.vue'
-import MatrixCenterProfileEdit from './component/profile/edit/edit.vue'
-import MatrixCenterSecurity from './component/security/security.vue'
-import MatrixCenterSecurityEdit from './component/security/edit/edit.vue'
-import MatrixIdentityVerification from './component/security/edit/identity/identity.vue'
+import MatrixCenterProfileEdit from './component/profile/edit.vue'
+import MatrixCenterSecurityEdit from './component/security/edit.vue'
+import MatrixIdentityVerification from './component/identity/identity.vue'
+import MatrixSecurityEmail from './component/email/email.vue'
+import MatrixSecurityPhone from './component/phone/phone.vue'
+import MatrixSecurityPassword from './component/password/password.vue'
 
 export default {
     install(app: App) {
         app.component(MatrixCenterNavigation.name, MatrixCenterNavigation)
-        app.component(MatrixCenterBlog.name, MatrixCenterBlog)
-        app.component(MatrixCenterColumn.name, MatrixCenterColumn)
-        app.component(MatrixCenterTalk.name, MatrixCenterTalk)
-        app.component(MatrixCenterCollect.name, MatrixCenterCollect)
-        app.component(MatrixCenterProfile.name, MatrixCenterProfile)
         app.component(MatrixCenterProfileEdit.name, MatrixCenterProfileEdit)
-        app.component(MatrixCenterSecurity.name, MatrixCenterSecurity)
         app.component(MatrixCenterSecurityEdit.name, MatrixCenterSecurityEdit)
         app.component(MatrixIdentityVerification.name, MatrixIdentityVerification)
+        app.component(MatrixSecurityEmail.name, MatrixSecurityEmail)
+        app.component(MatrixSecurityPhone.name, MatrixSecurityPhone)
+        app.component(MatrixSecurityPassword.name, MatrixSecurityPassword)
     }
 }
