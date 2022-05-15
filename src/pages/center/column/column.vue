@@ -12,15 +12,9 @@
   </el-container>
 </template>
 
-<script>
-export default {
-  name: "MatrixCenterColumn"
-}
-</script>
-
 <script setup>
 import {ref} from "vue";
-import {scrollTo} from "../../../../utils/scroll";
+import {scrollTo} from "../../../utils/scroll";
 
 let bar = ref([{
   key: "new",
