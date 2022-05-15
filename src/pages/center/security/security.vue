@@ -36,12 +36,6 @@
   </el-container>
 </template>
 
-<script>
-export default {
-  name: "MatrixCenterSecurity"
-}
-</script>
-
 <script setup>
 import {ref} from "vue"
 
@@ -128,7 +122,6 @@ function connectGithub() {
   flex-direction: column;
 
   ::v-deep(.editDialog) {
-    //border-radius: 8px;
 
     .el-dialog__header {
       display: none;
