@@ -15,15 +15,9 @@
   </el-container>
 </template>
 
-<script>
-export default {
-  name: "MatrixCenterCollect"
-}
-</script>
-
 <script setup>
 import {ref} from "vue";
-import {scrollTo} from "../../../../utils/scroll";
+import {scrollTo} from "../../../utils/scroll";
 
 let current = ref("blog")
 let bar = ref([{
