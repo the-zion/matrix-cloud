@@ -74,7 +74,7 @@ function init() {
 }
 
 function initData() {
-  activeMenu.value = useRoute().name
+  activeMenu.value = useRoute().name.split(".")[0]
 }
 
 function backToHome() {
@@ -110,7 +110,7 @@ onMounted(function () {
 })
 
 router.afterEach(function (route) {
-  activeMenu.value = route.name
+  activeMenu.value = route.name.split(".")[0]
 })
 
 

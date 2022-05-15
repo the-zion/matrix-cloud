@@ -42,7 +42,7 @@ const props = defineProps({
   visible: Boolean,
 })
 
-let mode = ref("account")
+let mode = ref("code")
 
 function beforeClose() {
   emits("update:visible", false)
