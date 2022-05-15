@@ -42,7 +42,7 @@ export default {
 
 <script setup>
 import {onMounted, ref} from "vue"
-import {validateAccount, validatePassword, validateCode} from "../../../../../../utils/check";
+import {validateAccount, validatePassword, validateCode} from "../../../../utils/check";
 
 const emits = defineEmits(["open"])
 const rules = ref({
@@ -143,7 +143,6 @@ onMounted(function () {
 
       ::v-deep(.el-input__wrapper) {
         height: 40px;
-        //border-radius: unset;
       }
 
       .select {
