@@ -6,6 +6,90 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "307024",
+      "name": "微淘数字 4",
+      "font_class": "number-4",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
+      "icon_id": "307025",
+      "name": "微淘数字 5",
+      "font_class": "number-5",
+      "unicode": "e62c",
+      "unicode_decimal": 58924
+    },
+    {
+      "icon_id": "307026",
+      "name": "微淘数字 6",
+      "font_class": "number-6",
+      "unicode": "e62d",
+      "unicode_decimal": 58925
+    },
+    {
+      "icon_id": "307027",
+      "name": "微淘数字 7",
+      "font_class": "number-7",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    },
+    {
+      "icon_id": "1731436",
+      "name": "微淘数字 9",
+      "font_class": "number-9",
+      "unicode": "e748",
+      "unicode_decimal": 59208
+    },
+    {
+      "icon_id": "1731463",
+      "name": "微淘数字 8",
+      "font_class": "number-8",
+      "unicode": "e74c",
+      "unicode_decimal": 59212
+    },
+    {
+      "icon_id": "1731465",
+      "name": "微淘数字 3",
+      "font_class": "number-3",
+      "unicode": "e74d",
+      "unicode_decimal": 59213
+    },
+    {
+      "icon_id": "1731480",
+      "name": "微淘数字 2",
+      "font_class": "number-2",
+      "unicode": "e750",
+      "unicode_decimal": 59216
+    },
+    {
+      "icon_id": "14123355",
+      "name": "微淘数字1",
+      "font_class": "number-1",
+      "unicode": "e808",
+      "unicode_decimal": 59400
+    },
+    {
+      "icon_id": "249599",
+      "name": "博客分类",
+      "font_class": "blog",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "8555685",
+      "name": "专栏",
+      "font_class": "column",
+      "unicode": "e675",
+      "unicode_decimal": 58997
+    },
+    {
+      "icon_id": "11372708",
+      "name": "讨论区",
+      "font_class": "talk",
+      "unicode": "e8b9",
+      "unicode_decimal": 59577
+    },
+    {
       "icon_id": "4765743",
       "name": "earth",
       "font_class": "earth",

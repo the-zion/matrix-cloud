@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3372573 */
-  src: url('iconfont.woff2?t=1652278261715') format('woff2'),
-       url('iconfont.woff?t=1652278261715') format('woff'),
-       url('iconfont.ttf?t=1652278261715') format('truetype');
+  src: url('iconfont.woff2?t=1652623563517') format('woff2'),
+       url('iconfont.woff?t=1652623563517') format('woff'),
+       url('iconfont.ttf?t=1652623563517') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,54 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-number-4:before {
+  content: "\e62b";
+}
+
+.icon-number-5:before {
+  content: "\e62c";
+}
+
+.icon-number-6:before {
+  content: "\e62d";
+}
+
+.icon-number-7:before {
+  content: "\e62e";
+}
+
+.icon-number-9:before {
+  content: "\e748";
+}
+
+.icon-number-8:before {
+  content: "\e74c";
+}
+
+.icon-number-3:before {
+  content: "\e74d";
+}
+
+.icon-number-2:before {
+  content: "\e750";
+}
+
+.icon-number-1:before {
+  content: "\e808";
+}
+
+.icon-blog:before {
+  content: "\e61e";
+}
+
+.icon-column:before {
+  content: "\e675";
+}
+
+.icon-talk:before {
+  content: "\e8b9";
 }
 
 .icon-earth:before {
