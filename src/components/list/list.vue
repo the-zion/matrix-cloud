@@ -1,6 +1,20 @@
 <template>
   <el-row class="list">
-    <el-empty v-show="data.length === 0" class="empty" description="未找到相关内容"/>
+    <el-empty v-show="data.length === 0" class="empty" description=" "
+              :image-size="250" image="../../src/assets/images/no_data.svg"
+    />
+    <el-space class="tag" v-show="props.tag">
+      <el-tag
+          style="cursor: pointer"
+          v-for="item in tags"
+          :key="item.label"
+          :effect="item.select?'dark':'light'"
+          round
+          @click="selectTag(item)"
+      >
+        {{ item.label }}
+      </el-tag>
+    </el-space>
     <el-space class="data" fill :size="props.gap || 0">
       <el-row v-for="(item,index) in data" class="each" :class="props.shape" :key="index">
         <matrix-blog v-if="props.mode === 1" :data="data[index]"></matrix-blog>
@@ -19,8 +33,9 @@
         </el-space>
       </el-row>
     </el-space>
-    <el-row class="foot" justify="center">
+    <el-row class="foot" justify="center" v-show="data.length !== 0">
       <el-pagination
+          :background="pageBackground"
           v-model:current-page="currentPage"
           :page-size="20"
           :pager-count="11"
@@ -47,6 +62,8 @@ const props = defineProps({
   mode: Number,
   gap: Number,
   shape: String,
+  tag: Boolean,
+  pageBackground: Boolean,
   operation: {
     type: Array,
     default: []
@@ -56,6 +73,22 @@ const props = defineProps({
 let data = ref([])
 let currentPage = ref(1)
 let dataType = ""
+let tags = ref([{
+  label: "go",
+  select: false
+}, {
+  label: "k8s",
+  select: false
+}, {
+  label: "云原生",
+  select: false
+}, {
+  label: "python",
+  select: false
+}, {
+  label: "docker",
+  select: false
+}])
 
 function init() {
   initData()
@@ -150,6 +183,10 @@ function doCollect(item) {
   })
 }
 
+function selectTag(each) {
+  each.select = !each.select
+}
+
 watch(currentPage, () => {
   emits("current-page", "")
 })
@@ -167,12 +204,18 @@ onMounted(() => {
     width: 100%;
   }
 
+  .tag {
+    width: 100%;
+    margin-bottom: 14px;
+  }
+
   .data {
     width: 100%;
 
     .each {
       position: relative;
       border-bottom: 1px solid var(--el-border-color);
+      background-color: var(--el-color-white);
 
       .operation {
         position: absolute;
@@ -199,7 +242,7 @@ onMounted(() => {
 
     .card {
       border-radius: 8px;
-      border: 1px solid var(--el-border-color);
+      box-shadow: var(--el-box-shadow-lighter);
     }
   }
 
