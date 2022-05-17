@@ -63,7 +63,7 @@ export default {
 
 <script setup>
 import {ref} from "vue";
-import {message} from "../../../../../utils/message";
+import {success, error} from "../../../../../utils/message";
 import {validatePhone, validateCode, validateEmail, validatePassword, checkPhone, checkEmail} from "../../../../../utils/check"
 
 const emit = defineEmits(["update:mode"])
@@ -105,7 +105,6 @@ const rules2 = ref({
   password: [{validator: validatePassword, trigger: 'blur'}],
   repeat: [{validator: validateRepeat, trigger: 'blur'}],
 })
-const {success, error} = message()
 
 function validateRepeat(rule, value, callback) {
   if (!checkRepeat(value)) {
