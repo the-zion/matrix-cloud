@@ -27,7 +27,7 @@ export default {
 
 <script setup>
 import {ref} from "vue";
-import {message} from "../../../../../utils/message";
+import {success, error} from "../../../../../utils/message";
 import {validateAccount, validatePassword} from "../../../../../utils/check"
 
 const emits = defineEmits(["update:mode", "close"])
@@ -43,7 +43,6 @@ const rules = ref({
   account: [{validator: validateAccount, trigger: 'blur'}],
   password: [{validator: validatePassword, trigger: 'blur'}],
 })
-const {success, error} = message()
 
 function login(formRef) {
   if (!formRef) {
