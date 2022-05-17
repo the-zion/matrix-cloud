@@ -62,7 +62,7 @@ function initData() {
 }
 
 function userPage() {
-  router.push({name: "user"})
+  router.push({name: "user", query: {id: 1}})
 }
 
 function userCenter() {
