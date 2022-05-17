@@ -1,4 +1,5 @@
-import {ElLoading, ElMessage, ElMessageBox} from 'element-plus'
+import {ElLoading, ElMessageBox} from 'element-plus'
+import router from "../router";
 
 export function globalFunc() {
 
@@ -102,4 +103,13 @@ export function confirm(title, message, type) {
             type: type || "warning",
         }
     )
+}
+
+export function GotoUserPage(id) {
+    const params = { id: id };
+    const {href} = router.resolve({
+        name: "user",
+        query: params
+    });
+    window.open(href, "_blank");
 }
