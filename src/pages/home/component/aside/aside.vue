@@ -6,20 +6,22 @@
         <span>{{ item.label }}</span>
       </el-space>
     </el-row>
-    <el-row class="body">
-      <el-row class="title">必读榜</el-row>
-      <el-row v-for="(item, index) in leaderboard" class="each">
-        <el-icon :size="10" class="icon iconfont"
-                 :class="'icon-number-'+item.number + (index < 3?' gold':'')"></el-icon>
-        <el-space class="info" direction="vertical" fill :size="0" alignment="start">
-          <el-space class="info-head" :size="4">
-            <el-avatar :src="item.image" :size="22"></el-avatar>
-            <span class="info-title">{{ item.title }}</span>
+    <el-affix>
+      <el-row class="body">
+        <el-row class="title">必读榜</el-row>
+        <el-row v-for="(item, index) in leaderboard" class="each">
+          <el-icon :size="10" class="icon iconfont"
+                   :class="'icon-number-'+item.number + (index < 3?' gold':'')"></el-icon>
+          <el-space class="info" direction="vertical" fill :size="0" alignment="start">
+            <el-space class="info-head" :size="4">
+              <el-avatar :src="item.image" :size="22"></el-avatar>
+              <span class="info-title">{{ item.title }}</span>
+            </el-space>
+            <span class="text">{{ item.text }}</span>
           </el-space>
-          <span class="text">{{ item.text }}</span>
-        </el-space>
+        </el-row>
       </el-row>
-    </el-row>
+    </el-affix>
   </el-container>
 </template>
 
@@ -86,7 +88,7 @@ onMounted(function () {
 
   .body {
     width: 100%;
-    padding: 16px 16px 4px;
+    padding: 16px 0;
     border-radius: 8px;
     background-color: var(--el-color-white);
     box-shadow: var(--el-box-shadow-lighter);
@@ -97,11 +99,14 @@ onMounted(function () {
       color: var(--el-text-color-regular);
       font-weight: 500;
       margin-bottom: 10px;
+      padding: 0 18px;
+      width: 100%;
     }
 
     .each {
       margin-bottom: 4px;
-      padding: 6px 0;
+      padding: 6px 16px;
+      cursor: pointer;
 
       .icon {
         width: 10px;
@@ -144,6 +149,10 @@ onMounted(function () {
           color: var(--el-text-color-disabled);
         }
       }
+    }
+
+    .each:hover {
+      background-color: var(--el-fill-color-light);
     }
   }
 }
