@@ -1,24 +1,5 @@
 import {ElMessage} from "element-plus";
 
-export function message() {
-    function success(message) {
-        ElMessage({
-            message: message,
-            type: 'success',
-            grouping: true
-        })
-    }
-
-    function error(message){
-        ElMessage({
-            message: message,
-            type: 'error',
-            grouping: true
-        })
-    }
-
-    return {success, error}
-}
 
 export function success(message) {
     ElMessage({
@@ -28,7 +9,15 @@ export function success(message) {
     })
 }
 
-export function error(message){
+export function warning(message) {
+    ElMessage({
+        message: message,
+        type: 'warning',
+        grouping: true
+    })
+}
+
+export function error(message) {
     ElMessage({
         message: message,
         type: 'error',
@@ -36,7 +25,7 @@ export function error(message){
     })
 }
 
-export function info(message){
+export function info(message) {
     ElMessage({
         message: message,
         type: 'info',
