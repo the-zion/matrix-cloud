@@ -1,13 +1,13 @@
 <template>
-  <el-container class="express-container" id="express-container">
+  <el-container class="write-container" id="write-container">
     <!--    <el-button @click="click">click</el-button>-->
     <cube-dialog :visible="visible" :define="dialogDefine"></cube-dialog>
-    <el-header class="express-header">
+    <el-header class="write-header">
       <el-row align="middle" justify="space-between" class="header-block">
         <Toolbar
             :editorId="editorId"
             :defaultConfig="toolbarConfig"
-            :mode="mode"
+            :editor="editorRef"
             class="toolbar"
         />
         <el-row class="button">
@@ -30,18 +30,18 @@
         </el-row>
       </el-row>
     </el-header>
-    <el-main class="express-main">
-      <el-backtop target=".express-main" ref="backTop" :right="backTopRight"></el-backtop>
+    <el-main class="write-main">
+      <!--      <el-backtop target=".write-main" ref="backTop" :right="backTopRight"></el-backtop>-->
       <el-row class="edit-container">
         <el-space fill class="body">
           <el-row class="title-container">
             <input placeholder="请输入标题" class="title-input">
           </el-row>
           <Editor
-              :editorId="editorId"
+              id="edit-container"
               :defaultConfig="editorConfig"
-              :defaultHtml="defaultHtml"
-              :mode="mode"
+              v-model="valueHtml"
+              @onCreated="handleCreated"
               class="editor-container"
           />
         </el-space>
@@ -51,14 +51,25 @@
 </template>
 
 <script setup>
-import "@wangeditor/editor/dist/css/style.css"
-import {onBeforeUnmount, onMounted} from 'vue'
-import {Editor, Toolbar, getEditor, removeEditor} from '@wangeditor/editor-for-vue'
-import {DomEditor} from '@wangeditor/editor'
-import router from "../../router";
+import '@wangeditor/editor/dist/css/style.css'
+import { onBeforeUnmount, ref, shallowRef, onMounted } from 'vue'
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import router from "../../../router";
 import {ElMessageBox, ElMessage} from 'element-plus'
 import {initData} from "./initData";
 import {controller} from "./controller";
+import {scrollTo} from "../../../utils/scroll";
+
+let editorRef = shallowRef()
+const valueHtml = ref('<p>hello</p>')
+const handleCreated = (editor) => {
+  editorRef.value = editor // 记录 editor 实例，重要！
+  const e = editorRef.value
+  const node = { type: 'paragraph', children: [{ text: 'simple text' }] }
+  e.insertNode(node)
+}
+
+let oldHeight = null
 
 const {
   input,
@@ -88,7 +99,20 @@ onBeforeUnmount(() => {
   removeEditor(editorId)
 })
 
+var callback = function (mutations, observer) {
+  console.log(mutations)
+  // mutations.forEach(function (mutation) {
+  //   console.log(mutation);
+  // });
+}
+
+var mo = new MutationObserver(callback);
+var element = null
+
 router.beforeEach(function (to, from) {
+  console.log(element.clientHeight)
+  console.log(mo.takeRecords())
+
   if (routerJumpConfirm.value) {
     return true
   } else {
@@ -116,15 +140,37 @@ router.beforeEach(function (to, from) {
 })
 
 onMounted(() => {
-  backTopRight.value = Math.floor((Math.floor(document.getElementById('express-container').clientWidth) - 680) / 3)
+
+
+  // element = document.getElementById("edit-container")
+  // element = document.body
+  //
+  // var options = {
+  //   attributes: true,
+  //   attributeOldValue: true,
+  // }
+  //
+  // mo.observe(element, options);
+
+  const ro = new ResizeObserver(res => {
+    if(!oldHeight){
+      oldHeight = res[0].contentRect.height
+    }
+    let newHeight = res[0].contentRect.height
+    scrollTo(window.scrollY + newHeight - oldHeight)
+    oldHeight = newHeight
+  })
+
+  ro.observe(document.getElementById("edit-container"));
+
 })
 </script>
 <style scoped lang="scss">
 
-.express-container {
+.write-container {
   height: 100%;
 
-  .express-header {
+  .write-header {
     padding: unset;
     height: fit-content;
     border-bottom: 1px solid var(--el-border-color-base);
@@ -146,12 +192,12 @@ onMounted(() => {
     }
   }
 
-  .express-main {
+  .write-main {
     background: rgb(245, 245, 245);
 
     .edit-container {
       width: 780px;
-      min-height: 1070px;
+      //min-height: 1070px;
       background: #FFFFFF;
       margin: 20px auto;
       padding: 20px 50px 50px 50px;
@@ -182,8 +228,9 @@ onMounted(() => {
 
         .editor-container {
           width: 100%;
-          overflow-y: hidden;
-          min-height: 900px;
+          //height: 300px !important;
+          //overflow-y: hidden;
+          //min-height: 900px;
 
           ::v-deep(.w-e-text-placeholder) {
             font-style: unset;

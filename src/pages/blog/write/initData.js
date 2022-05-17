@@ -19,7 +19,7 @@ export function initData() {
 
     return {
         input, routerJumpConfirm, editorId, defaultHtml, toolbarConfig, editorConfig, visible,
-        dialogDefine,backTopRight
+        dialogDefine, backTopRight
     }
 
 }

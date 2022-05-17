@@ -1,5 +1,5 @@
 import {ElMessage} from "element-plus"
-import {globalFunc} from "../../utils/globalFunc"
+import {globalFunc} from "../../../utils/globalFunc"
 
 export function controller(visible, dialogDefine) {
     const {item, getClassList} = globalFunc()
