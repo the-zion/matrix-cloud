@@ -27,7 +27,7 @@ export default {
 
 <script setup>
 import {ref} from "vue";
-import {message} from "../../../../../utils/message";
+import {success, error} from "../../../../../utils/message";
 import {validateEmail, validatePassword} from "../../../../../utils/check"
 
 const emits = defineEmits(["update:mode", "close"])
@@ -42,7 +42,6 @@ const rules = ref({
   email: [{validator: validateEmail, trigger: 'blur'}],
   password: [{validator: validatePassword, trigger: 'blur'}]
 })
-const {success, error} = message()
 
 function register(formRef) {
   if (!formRef) {
