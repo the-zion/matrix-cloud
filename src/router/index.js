@@ -2,14 +2,18 @@ import {
     createRouter,
     createWebHistory,
 } from 'vue-router'
+
 const Main = () => import('../pages/main/main.vue')
-const Home = () => import('../pages/home/home.vue')
-const Express = () => import('../pages/express/express.vue')
-const Blog = () => import('../pages/blog/blog.vue')
+const Blog1 = () => import('../pages/blog1/blog.vue')
 const Message = () => import('../pages/message/message.vue')
 const About = () => import('../pages/about/about.vue')
 const User = () => import('../pages/user/user.vue')
+const write = () => import('../pages/write/write.vue')
+const WriteBlog = () => import('../pages/write/blog.vue')
+const Home = () => import('../pages/home/home.vue')
 const HomeBlog = () => import("../pages/home/blog/blog.vue")
+const HomeColumn = () => import("../pages/home/column/column.vue")
+const HomeTalk = () => import("../pages/home/talk/talk.vue")
 const Center = () => import("../pages/center/center.vue")
 const CenterBlog = () => import("../pages/center/blog/blog.vue")
 const CenterColumn = () => import("../pages/center/column/column.vue")
@@ -40,17 +44,20 @@ const routes = [
                     path: 'blog',
                     name: "home.blog",
                     component: HomeBlog
+                }, {
+                    path: 'column',
+                    name: "home.column",
+                    component: HomeColumn
+                }, {
+                    path: 'talk',
+                    name: "home.talk",
+                    component: HomeTalk
                 }]
             },
             {
-                path: 'express',
-                name: 'express',
-                component: Express
-            },
-            {
-                path: 'blog',
-                name: 'blog',
-                component: Blog
+                path: 'blog1',
+                name: 'blog1',
+                component: Blog1
             },
             {
                 path: 'message',
@@ -98,6 +105,17 @@ const routes = [
                 }]
             }]
 
+    },
+    {
+        path: '/write',
+        name: 'write',
+        redirect: {name: 'write.blog'},
+        component: write,
+        children: [{
+            path: 'blog',
+            name: "write.blog",
+            component: WriteBlog
+        }]
     },
 ]
 
