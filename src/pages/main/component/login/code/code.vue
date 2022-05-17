@@ -40,7 +40,7 @@ export default {
 
 <script setup>
 import {ref} from "vue";
-import {message} from "../../../../../utils/message";
+import {success, error} from "../../../../../utils/message";
 import {validatePhone, validateCode, checkPhone} from "../../../../../utils/check"
 
 const emits = defineEmits(["update:mode", "close"])
@@ -60,7 +60,6 @@ const rules = ref({
   phone: [{validator: validatePhone, trigger: 'blur'}],
   code: [{validator: validateCode, trigger: 'blur'}],
 })
-const {success, error} = message()
 
 function sendCode() {
   if (interval.value || !checkPhone("+86" + form.value.phone)) {
