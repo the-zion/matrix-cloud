@@ -5,7 +5,7 @@
       <el-space class="main">
         <el-row class="title">{{ props.data.title }}</el-row>
         <el-space class="info">
-          <el-tag v-show="props.data.tags" type="info" v-for="tag in props.data.tags.split(';')">{{ tag }}</el-tag>
+          <el-tag round v-show="props.data.tags" type="info" v-for="tag in props.data.tags.split(';')">{{ tag }}</el-tag>
         </el-space>
       </el-space>
       <el-row class="content">{{ props.data.content }}</el-row>
@@ -95,6 +95,10 @@ let data = ref({
       line-height: 24px;
       font-weight: 500;
       color: var(--el-text-color-secondary)
+    }
+
+    .title:hover {
+      color: var(--el-color-primary);
     }
 
     .info {
