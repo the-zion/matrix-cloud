@@ -216,6 +216,7 @@ onMounted(() => {
       position: relative;
       border-bottom: 1px solid var(--el-border-color);
       background-color: var(--el-color-white);
+      cursor: pointer;
 
       .operation {
         position: absolute;
