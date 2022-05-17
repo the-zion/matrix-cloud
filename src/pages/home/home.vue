@@ -1,5 +1,6 @@
 <template>
   <el-container class="home-container">
+    <el-backtop></el-backtop>
     <el-main class="main">
       <el-row class="menu" justify="space-between">
         <el-row v-for="item in menu" class="menu-item" @click="select(item)">
@@ -18,9 +19,11 @@
 </template>
 
 <script setup>
-import {ref} from "vue"
+import {onMounted, ref} from "vue"
+import router from "../../router";
+import {useRoute} from "vue-router";
 
-let current = ref("blog")
+let current = ref()
 let menu = ref([{
   key: "blog",
   label: "博客文章",
@@ -39,9 +42,26 @@ let menu = ref([{
   image: "../../src/assets/images/news.svg",
 }])
 
+function init() {
+  initData()
+}
+
+function initData() {
+  current.value = useRoute().name.split(".")[1]
+}
+
 function select(item) {
   current.value = item.key
+  router.push({name: "home." + item.key})
 }
+
+router.afterEach(function (route) {
+  current.value = route.name.split(".")[1]
+})
+
+onMounted(function () {
+  init()
+})
 
 </script>
 
@@ -87,7 +107,7 @@ function select(item) {
   }
 
   .aside {
-    width: 272px;
+    width: 262px;
     padding: 0 3px;
     margin: 0 8px;
   }
