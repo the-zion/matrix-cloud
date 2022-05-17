@@ -14,15 +14,18 @@
             placeholder="题目/标签/作者/内容"
             suffix-icon="Search"
         />
-        <el-button round type="primary" icon="EditPen">博客撰写</el-button>
+        <el-button round type="primary" icon="EditPen" @click="write">博客撰写</el-button>
       </el-space>
     </el-row>
-    <matrix-list :mode="1" shape="card" :gap="10" :tag="true" :pageBackground="true"></matrix-list>
+    <matrix-list :mode="1" shape="card" :gap="10" :tag="true" :pageBackground="true"
+                 @current-page="pageChange"></matrix-list>
   </el-container>
 </template>
 
 <script setup>
 import {ref} from "vue"
+import {scrollToTop} from "../../../utils/scroll";
+import router from "../../../router";
 
 let input = ref()
 let current = ref("hot")
@@ -41,6 +44,14 @@ let menu = ref([
     label: "浏览最多"
   }
 ])
+
+function write() {
+  router.push({"name": "write.blog"})
+}
+
+function pageChange() {
+  scrollToTop()
+}
 </script>
 
 <style scoped lang="scss">
