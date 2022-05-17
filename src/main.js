@@ -6,11 +6,13 @@ import PageMainComponents from './pages/main/index.ts'
 import PageUserComponents from './pages/user/index.ts'
 import PageSetComponents from './pages/center/index.ts'
 import PageHomeComponents from './pages/home/index.ts'
+import PageWriteComponents from './pages/write/index.ts'
 import router from './router/index'
 import store from "./store/index"
 import * as ElIconModules from '@element-plus/icons-vue'
 import './assets/icon/iconfont.css'
 import 'element-plus/dist/index.css'
+import '@wangeditor/editor/dist/css/style.css'
 
 
 const app = createApp(App).use(store)
@@ -19,6 +21,7 @@ const app = createApp(App).use(store)
     .use(PageUserComponents)
     .use(PageSetComponents)
     .use(PageHomeComponents)
+    .use(PageWriteComponents)
     .use(ElementPlus)
     .use(router)
 
