@@ -6,7 +6,6 @@
         <el-image class="main-matrix-logo" @click="backToHome"
                   src="../../src/assets/images/matrix.svg"
                   fit="contain"
-                  lazy
         ></el-image>
         <el-menu-item class="main-menu-item" :index="item.state" v-for="(item) in menuList"
                       @click="menuSelect(item.state)">
@@ -116,27 +115,6 @@ router.afterEach(function (route) {
 
 </script>
 <style lang="scss">
-
-body {
-  margin: unset;
-  overflow-y: scroll;
-  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
-  'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
-
-  .dropdown {
-    border-radius: 0.5rem;
-
-    .el-popper__arrow {
-      display: none;
-    }
-  }
-
-  .matrix-message-box {
-    vertical-align: unset;
-    border-radius: 8px;
-  }
-
-}
 
 .main-container {
   background-color: rgb(247 248 250);
