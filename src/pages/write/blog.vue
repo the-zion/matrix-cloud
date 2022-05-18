@@ -141,6 +141,10 @@ onMounted(() => {
 .blog-container {
   flex-direction: column;
 
+  ::v-deep(.send-class) {
+    border-radius: 8px;
+  }
+
   .head {
     width: 100%;
 
