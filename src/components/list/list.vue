@@ -3,18 +3,43 @@
     <el-empty v-show="data.length === 0" class="empty" description=" "
               :image-size="250" image="../../src/assets/images/no_data.svg"
     />
-    <el-space class="tag" v-show="props.tag">
-      <el-tag
-          style="cursor: pointer"
-          v-for="item in tags"
-          :key="item.label"
-          :effect="item.select?'dark':'light'"
-          round
-          @click="selectTag(item)"
+    <el-row v-show="props.tag" class="tag-block" align="middle" justify="space-between">
+      <el-space class="tags">
+        <el-tag
+            style="cursor: pointer"
+            v-for="item in tags"
+            :key="item.label"
+            :effect="item.select?'dark':'light'"
+            round
+            @click="selectTag(item)"
+        >
+          {{ item.label }}
+        </el-tag>
+      </el-space>
+      <el-space :size="3" class="tag-filter" @click="tagFilter = true">
+        <el-icon>
+          <Filter/>
+        </el-icon>
+        <span>筛选器</span>
+      </el-space>
+      <el-dialog
+          v-model="tagFilter"
+          destroy-on-close
+          :width="480"
+          custom-class="tag-filter-dialog"
+          @close="tagFilter = false"
+
       >
-        {{ item.label }}
-      </el-tag>
-    </el-space>
+        <matrix-tag v-model:selectedTags="selectedTags"></matrix-tag>
+        <template #footer>
+          <span>
+            <el-button @click="tagFilter = false" round>取消</el-button>
+            <el-button @click="filterByTags" round type="primary"
+            >确定</el-button>
+          </span>
+        </template>
+      </el-dialog>
+    </el-row>
     <el-space class="data" fill :size="props.gap || 0">
       <el-row v-for="(item,index) in data" class="each" :class="props.shape" :key="index">
         <matrix-blog v-if="props.mode === 1" :data="data[index]"></matrix-blog>
@@ -72,6 +97,7 @@ const props = defineProps({
 
 let data = ref([])
 let currentPage = ref(1)
+let tagFilter = ref(false)
 let dataType = ""
 let tags = ref([{
   label: "go",
@@ -89,6 +115,7 @@ let tags = ref([{
   label: "docker",
   select: false
 }])
+let selectedTags = ref([])
 
 function init() {
   initData()
@@ -187,6 +214,10 @@ function selectTag(each) {
   each.select = !each.select
 }
 
+function filterByTags() {
+
+}
+
 watch(currentPage, () => {
   emits("current-page", "")
 })
@@ -204,9 +235,35 @@ onMounted(() => {
     width: 100%;
   }
 
-  .tag {
+  .tag-block {
     width: 100%;
     margin-bottom: 14px;
+
+    .tags {
+      width: calc(100% - 65px);
+    }
+
+    .tag-filter {
+      font-size: 14px;
+      color: var(--el-text-color-secondary);
+      cursor: pointer;
+    }
+
+    .tag-filter:hover {
+      color: var(--el-color-primary);
+    }
+
+    ::v-deep(.tag-filter-dialog) {
+      border-radius: 8px;
+
+      .el-dialog__header {
+        display: none;
+      }
+
+      .el-dialog__body {
+        padding: 20px 20px 0 20px
+      }
+    }
   }
 
   .data {
