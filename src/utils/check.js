@@ -1,4 +1,4 @@
-export function validateAccount(rule, value, callback, test, test1, test2) {
+export function validateAccount(rule, value, callback) {
     if (!(checkPhone("+86" + value) || checkEmail(value))) {
         value || callback(new Error("账号不能为空"))
         callback(new Error("手机/邮箱 格式错误"))
