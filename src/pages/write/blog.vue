@@ -17,7 +17,7 @@
           </el-space>
         </el-space>
         <el-space :size="15">
-          <el-button icon="Tickets">草稿</el-button>
+          <el-button icon="Tickets" @click="draft = true">草稿</el-button>
           <el-button type="primary" icon="Promotion" @click="sendVisible = true">发布</el-button>
         </el-space>
       </el-row>
@@ -30,6 +30,13 @@
       />
     </el-row>
     <el-row class="body" id="body">
+      <el-drawer
+          v-model="draft"
+          title="我的草稿"
+          direction="rtl"
+      >
+        <matrix-draft></matrix-draft>
+      </el-drawer>
       <el-input placeholder="请输入标题" class="title" v-model="title"/>
       <Editor
           class="editor"
@@ -50,27 +57,37 @@ import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 import router from "../../router";
 import {scrollTo} from "../../utils/scroll";
 import {success, info, warning, error} from "../../utils/message";
+import {customCheckVideoFn, customParseVideoSrc} from "./video";
 
 const editorRef = shallowRef()
 const valueHtml = ref('')
 const mode = ref('default')
 const toolbarConfig = {
   excludeKeys: [
-    "fullScreen",
-    'group-video'
+    'fullScreen',
+    'insertImage',
+    'uploadVideo'
   ]
 }
 const editorConfig = {
   placeholder: '请输入内容...',
   scroll: false,
-  maxLength: 5000
+  maxLength: 5000,
+  MENU_CONF: {
+    insertVideo: {
+      checkVideo: customCheckVideoFn,
+      parseVideoSrc: customParseVideoSrc
+    }
+  }
 }
 
 let title = ref()
 let sendVisible = ref(false)
 let time = ref("20:00")
+let draft = ref(false)
 let resizeObserver = null
 let oldHeight = null
+
 
 function backToHome() {
   router.push({name: "home"})
@@ -182,13 +199,33 @@ onMounted(() => {
   .body {
     width: 700px;
     margin: auto;
-    //height: 1000px;
+
+    ::v-deep(.el-overlay) {
+      top: 91px;
+      background: unset;
+
+      .el-drawer {
+        box-shadow: unset;
+        width: 280px !important;
+        border-left: 1px solid var(--el-border-color);
+
+        .el-drawer__header {
+          margin-bottom: unset;
+          padding: 10px 15px;
+          border-bottom: 1px solid var(--el-border-color);
+        }
+
+        .el-drawer__body {
+          padding: unset;
+        }
+      }
+    }
+
 
     .title {
       margin: 36px 0 22px;
 
       ::v-deep(.el-input__wrapper) {
-        //padding: unset;
         box-shadow: unset;
         font-size: 28px;
         font-weight: 500;
