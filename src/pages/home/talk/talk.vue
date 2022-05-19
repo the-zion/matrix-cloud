@@ -1,5 +1,7 @@
 <template>
   <el-container class="talk">
+    <matrix-home-create v-model:visible="visible" :width="740" top="0vh" :showClose="false"
+                        mode="talk"></matrix-home-create>
     <el-row class="head" justify="space-between">
       <el-space class="menu" :size="32">
         <el-row class="each" :class="{'menu-select':current === item.key}" v-for="item in menu"
@@ -14,7 +16,7 @@
             placeholder="题目/标签/作者/内容"
             suffix-icon="Search"
         />
-        <el-button round type="primary" icon="EditPen">讨论发起</el-button>
+        <el-button round type="primary" icon="EditPen" @click="visible = true">讨论发起</el-button>
       </el-space>
     </el-row>
     <matrix-list :mode="3" shape="card" :gap="10" :tag="true" :pageBackground="true"
@@ -28,6 +30,7 @@ import {scrollToTop} from "../../../utils/scroll";
 
 let input = ref()
 let current = ref("hot")
+let visible = ref(false)
 let menu = ref([
   {
     key: "hot",
@@ -53,6 +56,20 @@ function pageChange() {
 .talk {
   width: 100%;
   flex-direction: column;
+
+  ::v-deep(.create-dialog) {
+    margin: auto;
+    height: 100%;
+
+    .el-dialog__header {
+      display: none;
+    }
+
+    .el-dialog__body {
+      padding: unset;
+      height: 100%;
+    }
+  }
 
   .head {
     width: 100%;
