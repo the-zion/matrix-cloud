@@ -41,7 +41,7 @@
             v-for="tag in form.tags"
             :key="tag"
             closable
-            :disable-transitions="false"
+            :disable-transitions="true"
             @close="tagClose(tag)"
         >
           {{ tag }}
