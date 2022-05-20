@@ -1,6 +1,6 @@
 <template>
-  <el-container class="card">
-    <el-row class="block" justify="space-between">
+  <el-container class="card-container">
+    <el-row class="area" justify="space-between">
       <el-row>
         <el-avatar shape="square" :size="80" :src="'../src/assets/images/boy.png'"/>
         <el-row class="profile" justify="space-between">
@@ -26,13 +26,13 @@
 </template>
 <script>
 export default {
-  name: "MatrixUserCard"
+  name: "Card"
 }
 </script>
 
 <script setup>
 import {ref, onMounted} from "vue"
-import {echartsInit} from "../../../../utils/echarts";
+import {echartsInit} from "../../../utils/echarts";
 
 let username = ref("刘小圆sama")
 let introduce = ref("海纳百川，有容乃大")
@@ -102,12 +102,12 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-.card {
+.card-container {
   width: 100%;
   padding: 0.5rem 0;
   margin-bottom: 1.5rem;
 
-  .block {
+  .area {
     width: 100%;
 
     .profile {

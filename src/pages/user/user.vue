@@ -2,16 +2,16 @@
   <el-container class="user-container" direction="vertical">
     <el-backtop></el-backtop>
     <el-header class="user-header">
-      <matrix-user-card></matrix-user-card>
+      <card></card>
     </el-header>
     <el-container>
       <el-aside class="shadow-radius">
-        <matrix-user-profile></matrix-user-profile>
+        <profile></profile>
       </el-aside>
       <el-main class="user-main">
         <el-space fill class="space" direction="vertical" :size="15">
           <el-row class="shadow-radius">
-            <matrix-user-calendar></matrix-user-calendar>
+            <calendar></calendar>
           </el-row>
           <el-row class="shadow-radius">
             <el-main class="main">
@@ -24,10 +24,10 @@
                 </el-row>
               </el-row>
               <el-row class="body">
-                <matrix-user-blog v-if="current === 'blog'"></matrix-user-blog>
-                <matrix-user-column v-if="current === 'column'"></matrix-user-column>
-                <matrix-user-talk v-if="current === 'talk'"></matrix-user-talk>
-                <matrix-user-collect v-if="current === 'collect'"></matrix-user-collect>
+                <blog v-if="current === 'blog'"></blog>
+                <column v-if="current === 'column'"></column>
+                <talk v-if="current === 'talk'"></talk>
+                <collect v-if="current === 'collect'"></collect>
               </el-row>
             </el-main>
           </el-row>
@@ -39,6 +39,13 @@
 
 <script setup>
 import {ref} from "vue";
+import Card from "./component/card.vue"
+import Profile from "./component/profile.vue"
+import Calendar from "./component/calendar.vue"
+import Blog from "./component/blog.vue"
+import Talk from "./component/talk.vue"
+import Column from "./component/column.vue"
+import Collect from "./component/collect.vue"
 
 let current = ref("blog")
 let menus = ref([{

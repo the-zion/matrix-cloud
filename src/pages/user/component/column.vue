@@ -1,5 +1,5 @@
 <template>
-  <el-container class="column">
+  <el-container class="column-container">
     <el-row class="filter" justify="space-between">
       <el-select v-model="select" placeholder="Select" class="select">
         <el-option
@@ -20,13 +20,13 @@
 </template>
 <script>
 export default {
-  name: "MatrixUserColumn"
+  name: "Column"
 }
 </script>
 
 <script setup>
 import {ref} from "vue";
-import {scrollTo} from "../../../../utils/scroll";
+import {scrollTo} from "../../../utils/scroll";
 
 let select = ref("new")
 let search = ref()
@@ -47,7 +47,7 @@ function pageChange() {
 
 </script>
 <style scoped lang="scss">
-.column {
+.column-container {
   width: 100%;
   flex-direction: column;
 

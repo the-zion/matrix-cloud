@@ -1,5 +1,5 @@
 <template>
-  <el-container class="talk">
+  <el-container class="talk-container">
     <el-row class="filter" justify="space-between">
       <el-select v-model="select" placeholder="Select" class="select">
         <el-option
@@ -20,13 +20,13 @@
 </template>
 <script>
 export default {
-  name: "MatrixUserTalk"
+  name: "Talk"
 }
 </script>
 
 <script setup>
 import {ref} from "vue";
-import {scrollTo} from "../../../../utils/scroll";
+import {scrollTo} from "../../../utils/scroll";
 
 let select = ref("new")
 let search = ref()
@@ -43,7 +43,7 @@ function pageChange() {
 }
 </script>
 <style scoped lang="scss">
-.talk {
+.talk-container {
   width: 100%;
   flex-direction: column;
 

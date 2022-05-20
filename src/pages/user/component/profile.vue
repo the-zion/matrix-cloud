@@ -1,5 +1,5 @@
 <template>
-  <el-container class="profile">
+  <el-container class="profile-container">
     <el-space fill direction="vertical" class="space">
       <el-row class="info">
         <el-dialog
@@ -9,15 +9,15 @@
             :before-close="followDialogClose"
             destroy-on-close
         >
-          <matrix-user-follow></matrix-user-follow>
+          <user-follow></user-follow>
         </el-dialog>
         <el-row justify="center" class="follow" align="middle" @click="follow">
-          <el-row class="block" justify="center">
+          <el-row class="area" justify="center">
             <el-row class="word">关注了</el-row>
             <el-row class="word c">{{ data.follow }}</el-row>
           </el-row>
           <el-divider class="follow-divider" direction="vertical" border-style="double"/>
-          <el-row class="block" justify="center">
+          <el-row class="area" justify="center">
             <el-row class="word">关注者</el-row>
             <el-row class="word number">{{ data.follower }}</el-row>
           </el-row>
@@ -117,12 +117,13 @@
 
 <script>
 export default {
-  name: "MatrixUserProfile"
+  name: "Profile"
 }
 </script>
 
 <script setup>
 import {ref, onMounted} from "vue";
+import UserFollow from "./follow.vue"
 
 let data = ref({})
 let achievement = ref({})
@@ -170,7 +171,7 @@ onMounted(function () {
 </script>
 
 <style scoped lang="scss">
-.profile {
+.profile-container {
   min-height: 100px;
   padding: 1rem;
 
@@ -209,7 +210,7 @@ onMounted(function () {
         margin-bottom: 0.875rem;
         cursor: pointer;
 
-        .block {
+        .area {
           width: 42px;
           margin: 0 1.55rem;
 

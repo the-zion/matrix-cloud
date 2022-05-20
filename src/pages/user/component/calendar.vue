@@ -1,6 +1,6 @@
 <template>
-  <el-container class="calendar">
-    <el-row class="block">
+  <el-container class="calendar-container">
+    <el-row class="area">
       <el-row class="title" justify="space-between">
         <el-space alignment="center" class="static">
           <span class="word">{{ time }}</span>
@@ -24,13 +24,13 @@
 
 <script>
 export default {
-  name: "MatrixUserCalendar"
+  name: "Calendar"
 }
 </script>
 
 <script setup>
 import {ref, onMounted} from "vue"
-import {echartsInit} from "../../../../utils/echarts"
+import {echartsInit} from "../../../utils/echarts"
 
 let date = new Date()
 let year = date.getFullYear()
@@ -128,11 +128,11 @@ onMounted(() => {
 
 </script>
 <style scoped lang="scss">
-.calendar {
+.calendar-container {
   min-height: 100px;
   padding: 1rem;
 
-  .block {
+  .area {
     width: 100%;
 
     .title {

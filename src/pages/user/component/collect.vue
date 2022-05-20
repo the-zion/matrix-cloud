@@ -1,5 +1,5 @@
 <template>
-  <el-container class="blog">
+  <el-container class="collect-container">
     <el-row class="filter" justify="space-between">
       <el-select v-model="select" placeholder="Select" class="select">
         <el-option
@@ -8,37 +8,28 @@
             :value="item.key"
         />
       </el-select>
-      <el-input
-          class="search"
-          v-model="search"
-          placeholder="搜索：内容/标签"
-          prefix-icon="Search"
-      />
     </el-row>
-    <matrix-list :mode="1" @current-page="pageChange"></matrix-list>
+    <matrix-list v-if="select === 'blog'" :mode="1" @current-page="pageChange"></matrix-list>
+    <matrix-list v-if="select === 'column'" :mode="2" @current-page="pageChange"></matrix-list>
   </el-container>
 </template>
 <script>
 export default {
-  name: "MatrixUserBlog"
+  name: "Collect"
 }
 </script>
 
 <script setup>
 import {ref} from "vue";
-import {scrollTo} from "../../../../utils/scroll";
+import {scrollTo} from "../../../utils/scroll";
 
-let select = ref("new")
-let search = ref()
+let select = ref("blog")
 const options = ref([{
-  key: "new",
-  label: "最新发表"
+  key: "blog",
+  label: "博客"
 }, {
-  key: "hot",
-  label: "最多点赞"
-}, {
-  key: "collect",
-  label: "最多收藏"
+  key: "column",
+  label: "专栏"
 }])
 
 function pageChange() {
@@ -47,7 +38,7 @@ function pageChange() {
 
 </script>
 <style scoped lang="scss">
-.blog {
+.collect-container {
   width: 100%;
   flex-direction: column;
 
