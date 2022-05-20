@@ -21,14 +21,14 @@
 </template>
 <script>
 export default {
-  name: "MatrixLoginAccount"
+  name: "Account"
 }
 </script>
 
 <script setup>
 import {ref} from "vue";
-import {success, error} from "../../../../../utils/message";
-import {validateAccount, validatePassword} from "../../../../../utils/check"
+import {success, error} from "../../../utils/message";
+import {validateAccount, validatePassword} from "../../../utils/check"
 
 const emits = defineEmits(["update:mode", "close"])
 

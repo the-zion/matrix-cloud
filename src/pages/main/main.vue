@@ -1,5 +1,6 @@
 <template>
   <el-container class="main-container">
+    <Login v-model:visible="loginVisible" class="loginDialog"></Login>
     <el-header class="main-header" height="50px">
       <el-menu class="main-menu" @select="menuActive" :default-active="activeMenu"
                :active-text-color="activeColor">
@@ -15,7 +16,6 @@
         </el-menu-item>
         <div style="flex-grow: 1"></div>
         <el-row class="main-login-word" v-show="!userLogin" @click="login">登录</el-row>
-        <matrix-login v-model:visible="loginVisible" class="loginDialog"></matrix-login>
         <el-row align="middle" v-show="!userLogin">
           <el-badge :value="messageValue" :max="99" class="main-menu-icon" :hidden=messageCount(messageValue)>
             <el-icon :size="20" @click="add">
@@ -26,7 +26,7 @@
                        popper-class="dropdown">
             <el-avatar class="main-user-image" :size="30" icon="UserFilled"></el-avatar>
             <template #dropdown>
-              <matrix-center></matrix-center>
+              <dropdown></dropdown>
             </template>
           </el-dropdown>
         </el-row>
@@ -50,6 +50,8 @@
 import router from "../../router"
 import {ref, onMounted} from "vue";
 import {useRoute} from "vue-router";
+import Login from './component/login.vue'
+import Dropdown from './component/dropdown.vue'
 
 let activeMenu = ref()
 let userLogin = ref(false)
@@ -150,18 +152,6 @@ router.afterEach(function (route) {
         font-size: 13px;
         cursor: pointer;
         color: var(--el-text-color-regular);
-      }
-
-      .loginDialog {
-        border-radius: 20px;
-
-        .el-dialog__header {
-          display: none;
-        }
-
-        .el-dialog__body {
-          padding: unset;
-        }
       }
 
       .main-menu-icon {

@@ -57,14 +57,14 @@
 
 <script>
 export default {
-  name: "MatrixLoginForget"
+  name: "Forget"
 }
 </script>
 
 <script setup>
 import {ref} from "vue";
-import {success, error} from "../../../../../utils/message";
-import {validatePhone, validateCode, validateEmail, validatePassword, checkPhone, checkEmail} from "../../../../../utils/check"
+import {success, error} from "../../../utils/message";
+import {validatePhone, validateCode, validateEmail, validatePassword, checkPhone, checkEmail} from "../../../utils/check"
 
 const emit = defineEmits(["update:mode"])
 
