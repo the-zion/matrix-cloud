@@ -1,11 +1,7 @@
 <template>
-  <el-container class="talk-container">
+  <el-container class="form-container">
     <el-row class="header" justify="space-between">
       <el-input class="title-input" v-model="title" placeholder="此处输入标题..."></el-input>
-      <el-space>
-        <el-button @click="close">取消</el-button>
-        <el-button type="primary" @click="send">发起讨论</el-button>
-      </el-space>
     </el-row>
     <el-row class="tag-block" justify="space-between">
       <el-space wrap>
@@ -55,21 +51,28 @@
 
 <script>
 export default {
-  name: "MatrixWriteTalk"
+  name: "Form",
 }
 </script>
 
 <script setup>
 import {onBeforeUnmount, ref, shallowRef} from 'vue'
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
-import {error, info, success, warning} from "../../utils/message";
-import {customParseVideoSrc, customCheckVideoFn} from "./video";
+import {error, info, success, warning} from "../../../utils/message";
+import {customParseVideoSrc, customCheckVideoFn} from "../../../utils/video";
 
 let title = ref("")
 let tags = ref([])
 let radio = ref(1)
 
-const emits = defineEmits(["close"])
+const props = defineProps({
+  verify: Boolean
+})
+
+defineExpose({
+  title, tags, radio
+})
+
 const editorRef = shallowRef()
 const valueHtml = ref('')
 const mode = ref('default')
@@ -134,17 +137,6 @@ function customAlert(s, t) {
   }
 }
 
-function close() {
-  emits("close", "")
-}
-
-function send() {
-  if (tags.value.length === 0) {
-    error("标签不能为空")
-    return null
-  }
-}
-
 onBeforeUnmount(() => {
   const editor = editorRef.value
   if (editor == null) return
@@ -153,7 +145,7 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped lang="scss">
-.talk-container {
+.form-container {
   width: 100%;
   height: 100%;
   flex-direction: column;
@@ -203,7 +195,7 @@ onBeforeUnmount(() => {
   }
 
   .editor {
-    height: calc(100% - 150px) !important;
+    height: calc(100% - 160px) !important;
     width: 100%;
   }
 }

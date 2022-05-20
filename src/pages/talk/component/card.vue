@@ -36,7 +36,7 @@
 
 <script>
 export default {
-  name: "MatrixTalk"
+  name: "MatrixTalkCard"
 }
 </script>
 
