@@ -1,6 +1,6 @@
 <template>
-  <el-container class="column">
-    <matrix-home-create v-model:visible="visible" :width="740" top="0vh" :showClose="false" mode="column"></matrix-home-create>
+  <el-container class="talk">
+    <matrix-talk-create v-model:visible="visible"></matrix-talk-create>
     <el-row class="head" justify="space-between">
       <el-space class="menu" :size="32">
         <el-row class="each" :class="{'menu-select':current === item.key}" v-for="item in menu"
@@ -15,21 +15,21 @@
             placeholder="题目/标签/作者/内容"
             suffix-icon="Search"
         />
-        <el-button round type="primary" icon="Plus" @click="visible = true">专栏创建</el-button>
+        <el-button round type="primary" icon="EditPen" @click="visible = true">讨论发起</el-button>
       </el-space>
     </el-row>
-    <matrix-list :mode="2" shape="card" :gap="10" :tag="true" :pageBackground="true"
+    <matrix-list :mode="3" shape="card" :gap="10" :tag="true" :pageBackground="true"
                  @current-page="pageChange"></matrix-list>
   </el-container>
 </template>
 
 <script setup>
 import {ref} from "vue"
-import {scrollToTop} from "../../../utils/scroll";
+import {scrollToTop} from "../../utils/scroll";
 
 let input = ref()
-let visible = ref(false)
 let current = ref("hot")
+let visible = ref(false)
 let menu = ref([
   {
     key: "hot",
@@ -52,21 +52,9 @@ function pageChange() {
 </script>
 
 <style scoped lang="scss">
-.column {
+.talk {
   width: 100%;
   flex-direction: column;
-
-  ::v-deep(.create-dialog){
-    margin: auto;
-    height: 100%;
-    .el-dialog__header{
-      display: none;
-    }
-    .el-dialog__body{
-      padding: 15px;
-      height: 100%;
-    }
-  }
 
   .head {
     width: 100%;

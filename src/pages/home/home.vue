@@ -13,7 +13,7 @@
       </router-view>
     </el-main>
     <el-aside class="aside">
-      <matrix-home-aside></matrix-home-aside>
+      <leader-board></leader-board>
     </el-aside>
   </el-container>
 </template>
@@ -22,6 +22,7 @@
 import {onMounted, ref} from "vue"
 import router from "../../router";
 import {useRoute} from "vue-router";
+import LeaderBoard from "./component/leaderboard.vue"
 
 let current = ref()
 let menu = ref([{
