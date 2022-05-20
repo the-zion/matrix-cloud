@@ -21,7 +21,7 @@
 
 <script>
 export default {
-  name: "MatrixWriteSend"
+  name: "Send"
 }
 </script>
 

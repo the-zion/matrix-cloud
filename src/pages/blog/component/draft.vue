@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  name: "MatrixDraft"
+  name: "Draft"
 }
 </script>
 

@@ -1,6 +1,6 @@
 <template>
   <el-container class="blog-container">
-    <matrix-write-send v-model:visible="sendVisible" title="发布文章" mode="blog"></matrix-write-send>
+    <send v-model:visible="sendVisible" title="发布文章" mode="blog"></send>
     <el-row class="head">
       <el-row class="base" align="middle" justify="space-between">
         <el-space :size="20">
@@ -35,7 +35,7 @@
           title="我的草稿"
           direction="rtl"
       >
-        <matrix-draft></matrix-draft>
+        <draft></draft>
       </el-drawer>
       <el-input placeholder="请输入标题" class="title" v-model="title"/>
       <Editor
@@ -57,7 +57,9 @@ import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 import router from "../../router";
 import {scrollTo} from "../../utils/scroll";
 import {success, info, warning, error} from "../../utils/message";
-import {customCheckVideoFn, customParseVideoSrc} from "./video";
+import {customCheckVideoFn, customParseVideoSrc} from "../../utils/video";
+import Send from './component/send.vue'
+import Draft from './component/draft.vue'
 
 const editorRef = shallowRef()
 const valueHtml = ref('')

@@ -6,7 +6,7 @@
           <template #reference>
             <el-avatar @click="GotoUserPage(1)" class="avatar" :size="24" :src="props.data.avatar"/>
           </template>
-          <matrix-card></matrix-card>
+          <matrix-user-mini-card></matrix-user-mini-card>
         </el-popover>
         <el-row class="title">{{ props.data.title }}</el-row>
       </el-space>
@@ -54,13 +54,15 @@
 
 <script>
 export default {
-  name: "MatrixBlog"
+  name: "MatrixBlogCard"
 }
 </script>
 
+
 <script setup>
 import {ref} from "vue";
-import {GotoUserPage} from "../../utils/globalFunc";
+
+import {GotoUserPage} from "../../../utils/globalFunc";
 
 const props = defineProps({
   data: Object,
