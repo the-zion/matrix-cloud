@@ -1,28 +1,30 @@
 import App from './App.vue'
 import {createApp} from 'vue'
-import ElementPlus from 'element-plus'
 import Components from './components/index.ts'
-import PageMainComponents from './pages/main/index.ts'
-import PageUserComponents from './pages/user/index.ts'
+import BlogComponents from './pages/blog/index.ts'
+import TalkComponents from './pages/talk/index.ts'
+import ColumnComponents from './pages/column/index.ts'
+import TagComponents from './pages/tag/index.ts'
+import UserComponent from './pages/user/index.ts'
 import PageSetComponents from './pages/center/index.ts'
-import PageHomeComponents from './pages/home/index.ts'
-import PageWriteComponents from './pages/write/index.ts'
 import router from './router/index'
 import store from "./store/index"
 import * as ElIconModules from '@element-plus/icons-vue'
 import './assets/icon/iconfont.css'
 import 'element-plus/dist/index.css'
 import '@wangeditor/editor/dist/css/style.css'
+import "~/styles/index.scss";
+import 'uno.css'
 
 
 const app = createApp(App).use(store)
     .use(Components)
-    .use(PageMainComponents)
-    .use(PageUserComponents)
+    .use(BlogComponents)
+    .use(TalkComponents)
+    .use(ColumnComponents)
+    .use(TagComponents)
+    .use(UserComponent)
     .use(PageSetComponents)
-    .use(PageHomeComponents)
-    .use(PageWriteComponents)
-    .use(ElementPlus)
     .use(router)
 
 
