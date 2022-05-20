@@ -8,12 +8,11 @@ const Blog1 = () => import('../pages/blog1/blog.vue')
 const Message = () => import('../pages/message/message.vue')
 const About = () => import('../pages/about/about.vue')
 const User = () => import('../pages/user/user.vue')
-const write = () => import('../pages/write/write.vue')
-const WriteBlog = () => import('../pages/write/blog.vue')
+const write = () => import('../pages/blog/write.vue')
 const Home = () => import('../pages/home/home.vue')
-const HomeBlog = () => import("../pages/home/blog/blog.vue")
-const HomeColumn = () => import("../pages/home/column/column.vue")
-const HomeTalk = () => import("../pages/home/talk/talk.vue")
+const HomeBlog = () => import("../pages/home/blog.vue")
+const HomeColumn = () => import("../pages/home/column.vue")
+const HomeTalk = () => import("../pages/home/talk.vue")
 const Center = () => import("../pages/center/center.vue")
 const CenterBlog = () => import("../pages/center/blog/blog.vue")
 const CenterColumn = () => import("../pages/center/column/column.vue")
@@ -107,15 +106,9 @@ const routes = [
 
     },
     {
-        path: '/write',
+        path: '/write/blog',
         name: 'write',
-        redirect: {name: 'write.blog'},
         component: write,
-        children: [{
-            path: 'blog',
-            name: "write.blog",
-            component: WriteBlog
-        }]
     },
 ]
 
