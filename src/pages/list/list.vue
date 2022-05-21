@@ -3,53 +3,11 @@
     <el-empty v-show="data.length === 0" class="empty" description=" "
               :image-size="250" image="../../src/assets/images/no_data.svg"
     />
-    <el-row v-show="props.tag" class="tag-block" align="middle" justify="space-between">
-      <el-space class="tags">
-        <el-tag
-            style="cursor: pointer"
-            v-for="item in tags"
-            :key="item.label"
-            :effect="item.select?'dark':'light'"
-            round
-            @click="selectTag(item)"
-        >
-          {{ item.label }}
-        </el-tag>
-      </el-space>
-      <el-space :size="3" class="tag-filter" @click="tagFilter = true">
-        <el-icon>
-          <Filter/>
-        </el-icon>
-        <span>筛选器</span>
-      </el-space>
-      <el-dialog
-          v-model="tagFilter"
-          destroy-on-close
-          :width="480"
-          custom-class="tag-filter-dialog"
-          @close="tagFilter = false"
-
-      >
-        <matrix-tag v-model:selectedTags="selectedTags"></matrix-tag>
-        <template #footer>
-          <span>
-            <el-button @click="tagFilter = false" round>取消</el-button>
-            <el-button @click="filterByTags" round type="primary"
-            >确定</el-button>
-          </span>
-        </template>
-      </el-dialog>
-    </el-row>
     <el-space class="data" fill :size="props.gap || 0">
-      <el-row v-for="(item,index) in data" class="each" :class="props.shape" :key="index">
-        <matrix-blog v-if="props.mode === 1" :data="data[index]"></matrix-blog>
-        <matrix-column v-if="props.mode === 2" :data="data[index]"></matrix-column>
-        <matrix-talk v-if="props.mode === 3" :data="data[index]"></matrix-talk>
+      <el-row v-for="(item,index) in data" class="each" :class="props.shape" :key="item.id">
+        <component :is="props.component" :data="data[index]"></component>
         <el-space class="operation" size="large">
-          <div v-for="op in props.operation">
-            <el-icon v-show="op === 'edit'" class="icon" @click="doEdit">
-              <edit/>
-            </el-icon>
+          <div v-for="(op, index) in props.operation" :key="index">
             <el-icon v-show="op === 'delete'" class="icon" @click="doDelete(item)">
               <delete/>
             </el-icon>
@@ -60,7 +18,7 @@
     </el-space>
     <el-row class="foot" justify="center" v-show="data.length !== 0">
       <el-pagination
-          :background="pageBackground"
+          :background="props.pageBackground"
           v-model:current-page="currentPage"
           :page-size="20"
           :pager-count="11"
@@ -81,41 +39,26 @@ export default {
 import {ref, watch, onMounted} from "vue";
 import {confirm} from "../../utils/globalFunc";
 import {success} from "../../utils/message";
+import {scrollTo} from "../../utils/scroll";
 
 const emits = defineEmits(["current-page"])
 const props = defineProps({
-  mode: Number,
+  component: String,
   gap: Number,
   shape: String,
-  tag: Boolean,
-  pageBackground: Boolean,
   operation: {
     type: Array,
     default: []
-  }
+  },
+  "page-background": Boolean,
+  "scroll-to": {
+    type: Number,
+    default: 0
+  },
 })
 
 let data = ref([])
 let currentPage = ref(1)
-let tagFilter = ref(false)
-let dataType = ""
-let tags = ref([{
-  label: "go",
-  select: false
-}, {
-  label: "k8s",
-  select: false
-}, {
-  label: "云原生",
-  select: false
-}, {
-  label: "python",
-  select: false
-}, {
-  label: "docker",
-  select: false
-}])
-let selectedTags = ref([])
 
 function init() {
   initData()
@@ -123,24 +66,15 @@ function init() {
 }
 
 function initData() {
-  switch (props.mode) {
-    case 1:
-      dataType = "博客"
-      break
-    case 2:
-      dataType = "专栏"
-      break
-    case 3:
-      dataType = "讨论"
-      break
-  }
 }
 
 function getData() {
-  switch (props.mode) {
-    case 1:
+  data.value = []
+  switch (props.component) {
+    case "MatrixBlogCard":
       for (let i = 0; i <= 9; i++) {
         data.value.push({
+          id: i,
           title: "迭代法实现二叉树的前序、中序和后序遍历" + i,
           avatar: "../../src/assets/images/boy.png",
           image: "../../src/assets/images/img.png",
@@ -155,9 +89,10 @@ function getData() {
         })
       }
       break
-    case 2:
+    case "MatrixColumnCard":
       for (let i = 0; i <= 9; i++) {
         data.value.push({
+          id: i,
           title: "数组和字符串",
           avatar: "../../src/assets/images/boy.png",
           image: "../../src/assets/images/column.png",
@@ -172,9 +107,10 @@ function getData() {
         })
       }
       break
-    case 3:
+    case "MatrixTalkCard":
       for (let i = 0; i <= 9; i++) {
         data.value.push({
+          id: i,
           title: "Shopee 送命题：进程切换为什么比线程切换慢" + i,
           avatar: "../../src/assets/images/boy.png",
           // image: "../src/assets/images/img.png",
@@ -192,34 +128,26 @@ function getData() {
   }
 }
 
-function doEdit() {
-
-}
-
 function doDelete(item) {
-  confirm("删除", "确定删除" + dataType + "：\"" + item.title + "\" 吗？").then(function () {
+  confirm("删除", "确定删除" + "：\"" + item.title + "\" 吗？").then(function () {
     success("删除成功")
   }).catch(() => {
   })
 }
 
 function doCollect(item) {
-  confirm("取消收藏", "确定取消收藏" + dataType + "：\"" + item.title + "\" 吗？").then(function () {
+  confirm("取消收藏", "确定取消收藏" + "：\"" + item.title + "\" 吗？").then(function () {
     success("取消成功")
   }).catch(() => {
   })
 }
 
-function selectTag(each) {
-  each.select = !each.select
-}
-
-function filterByTags() {
-
-}
+defineExpose({
+  getData
+})
 
 watch(currentPage, () => {
-  emits("current-page", "")
+  scrollTo(props.scrollTo)
 })
 
 onMounted(() => {
@@ -233,37 +161,6 @@ onMounted(() => {
 
   .empty {
     width: 100%;
-  }
-
-  .tag-block {
-    width: 100%;
-    margin-bottom: 14px;
-
-    .tags {
-      width: calc(100% - 65px);
-    }
-
-    .tag-filter {
-      font-size: 14px;
-      color: var(--el-text-color-secondary);
-      cursor: pointer;
-    }
-
-    .tag-filter:hover {
-      color: var(--el-color-primary);
-    }
-
-    ::v-deep(.tag-filter-dialog) {
-      border-radius: 8px;
-
-      .el-dialog__header {
-        display: none;
-      }
-
-      .el-dialog__body {
-        padding: 20px 20px 0 20px
-      }
-    }
   }
 
   .data {
