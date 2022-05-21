@@ -127,13 +127,13 @@
 
 <script>
 export default {
-  name: "MatrixCenterProfileEdit"
+  name: "ProfileEdit"
 }
 </script>
 
 <script setup>
 import {ref} from "vue"
-import {info, error} from "../../../../utils/message";
+import {info, error} from "../../../utils/message";
 
 
 const emits = defineEmits(["update:visible"])
