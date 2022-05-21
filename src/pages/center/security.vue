@@ -1,6 +1,6 @@
 <template>
-  <el-container class="security">
-    <matrix-center-security-edit v-model:visible="visible" v-bind:mode="mode"></matrix-center-security-edit>
+  <el-container class="security-container">
+    <security-edit v-model:visible="visible" v-bind:mode="mode"></security-edit>
     <el-row class="title" align="middle">账号信息</el-row>
     <el-row v-for="item in accountMeta" class="each">
       <el-row class="account" align="middle">
@@ -38,6 +38,7 @@
 
 <script setup>
 import {ref} from "vue"
+import SecurityEdit from "./component/security-edit.vue"
 
 let visible = ref(false)
 let mode = ref()
@@ -114,7 +115,7 @@ function connectGithub() {
 </script>
 
 <style scoped lang="scss">
-.security {
+.security-container {
   width: 740px;
   box-shadow: var(--el-box-shadow-lighter);
   background-color: var(--el-color-white);

@@ -1,6 +1,6 @@
 <template>
-  <el-container class="profile">
-    <matrix-center-profile-edit v-model:visible="visible"></matrix-center-profile-edit>
+  <el-container class="profile-container">
+    <profile-edit v-model:visible="visible"></profile-edit>
     <el-row class="title-block" justify="space-between">
       <el-space>
         <el-icon :size="20" color="var(--el-color-primary)">
@@ -17,7 +17,7 @@
         <span class="divide"></span>
         <span class="word">基本信息</span>
       </el-space>
-      <el-row class="block" justify="space-between" align="top">
+      <el-row class="area" justify="space-between" align="top">
         <el-space class="info" wrap :size="15" :spacer="spacer" alignment="start">
           <el-space v-for="item in infoMeta.slice(0,3)" :size="12" class="each" alignment="start">
             <span class="label">{{ item.label }}</span>
@@ -52,7 +52,7 @@
         <span class="divide"></span>
         <span class="word">标签与技能</span>
       </el-space>
-      <el-row class="block" justify="space-between" align="top">
+      <el-row class="area" justify="space-between" align="top">
         <el-space class="info" v-for="item in webMeta">
           <el-space :size="12" class="each" alignment="start">
             <el-icon class="iconfont" :class="item.icon+' '+item.class"></el-icon>
@@ -73,7 +73,8 @@
 <script setup>
 import {h, ref} from "vue"
 import {ElDivider} from 'element-plus'
-import {error} from "../../../utils/message";
+import {error} from "../../utils/message";
+import ProfileEdit from "./component/profile-edit.vue"
 
 const spacer = h(ElDivider, {direction: 'vertical'})
 let visible = ref(false)
@@ -148,7 +149,7 @@ function beforeAvatarUpload(rawFile){
 
 <style scoped lang="scss">
 
-.profile {
+.profile-container {
   width: 740px;
   padding: 16px 0;
   box-shadow: var(--el-box-shadow-lighter);
@@ -222,7 +223,7 @@ function beforeAvatarUpload(rawFile){
       }
     }
 
-    .block {
+    .area {
       width: 100%;
       position: relative;
       margin-left: 19px;
