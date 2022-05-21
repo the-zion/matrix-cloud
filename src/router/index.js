@@ -4,7 +4,7 @@ import {
 } from 'vue-router'
 
 const Main = () => import('../pages/main/main.vue')
-const Blog1 = () => import('../pages/blog1/blog.vue')
+const Blog = () => import('../pages/blog/blog.vue')
 const Message = () => import('../pages/message/message.vue')
 const About = () => import('../pages/about/about.vue')
 const User = () => import('../pages/user/user.vue')
@@ -14,12 +14,12 @@ const HomeBlog = () => import("../pages/home/blog.vue")
 const HomeColumn = () => import("../pages/home/column.vue")
 const HomeTalk = () => import("../pages/home/talk.vue")
 const Center = () => import("../pages/center/center.vue")
-const CenterBlog = () => import("../pages/center/blog/blog.vue")
-const CenterColumn = () => import("../pages/center/column/column.vue")
-const CenterTalk = () => import("../pages/center/talk/talk.vue")
-const CenterCollect = () => import("../pages/center/collect/collect.vue")
-const CenterProfile = () => import("../pages/center/profile/profile.vue")
-const CenterSecurity = () => import("../pages/center/security/security.vue")
+const CenterBlog = () => import("../pages/center/blog.vue")
+const CenterColumn = () => import("../pages/center/column.vue")
+const CenterTalk = () => import("../pages/center/talk.vue")
+const CenterCollect = () => import("../pages/center/collect.vue")
+const CenterProfile = () => import("../pages/center/profile.vue")
+const CenterSecurity = () => import("../pages/center/security.vue")
 
 
 const routes = [
@@ -54,9 +54,9 @@ const routes = [
                 }]
             },
             {
-                path: 'blog1',
-                name: 'blog1',
-                component: Blog1
+                path: 'blog',
+                name: 'blog',
+                component: Blog
             },
             {
                 path: 'message',
