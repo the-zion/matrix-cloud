@@ -1,7 +1,7 @@
 <template>
-  <el-container class="collect">
+  <el-container class="collect-container">
     <el-space class="bar" size="large">
-      <el-space v-for="item in bar" class="each" :class="{'select':item.select}" @click="filterSelect(item)">
+      <el-space v-for="item in bar" class="each" :class="{'select':current === item.key}" @click="filterSelect(item)">
         <el-icon>
           <component :is="item.icon"></component>
         </el-icon>
@@ -9,45 +9,36 @@
       </el-space>
     </el-space>
     <el-row class="body">
-      <matrix-list v-if="current === 'blog'" :operation="['star']" :mode="1" @current-page="pageChange"></matrix-list>
-      <matrix-list v-if="current === 'column'" :operation="['star']" :mode="2" @current-page="pageChange"></matrix-list>
+      <matrix-list v-if="current === 'blog'" :operation="['star']" component="MatrixBlogCard"></matrix-list>
+      <matrix-list v-if="current === 'column'" :operation="['star']" component="MatrixColumnCard"></matrix-list>
     </el-row>
   </el-container>
 </template>
 
 <script setup>
 import {ref} from "vue";
-import {scrollTo} from "../../../utils/scroll";
 
 let current = ref("blog")
 let bar = ref([{
   key: "blog",
   label: "博客",
   icon: "document",
-  select: true
 }, {
   key: "column",
   label: "专栏",
   icon: "files",
-  select: false
 }])
 
 function filterSelect(each) {
-  bar.value.forEach(function (item) {
-    item.select = each.key === item.key
-  })
   current.value = each.key
-}
-
-function pageChange() {
-  scrollTo()
 }
 
 </script>
 
 <style scoped lang="scss">
-.collect {
+.collect-container {
   width: 100%;
+  min-width: 848px;
   flex-direction: column;
 
   .bar {

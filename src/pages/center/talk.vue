@@ -1,21 +1,25 @@
 <template>
-  <el-container class="talk">
-    <el-space class="bar" size="large">
-      <el-space v-for="item in bar" class="each" :class="{'select':item.select}" @click="filterSelect(item)">
-        <el-icon class="iconfont" :class="item.icon"></el-icon>
-        <span class="label">{{ item.label }}</span>
+  <el-container class="talk-container">
+    <matrix-talk-create v-model:visible="visible"></matrix-talk-create>
+    <el-row class="bar" justify="space-between">
+      <el-space size="large">
+        <el-space v-for="item in bar" class="each" :class="{'select':item.select}" @click="filterSelect(item)">
+          <el-icon class="iconfont" :class="item.icon"></el-icon>
+          <span class="label">{{ item.label }}</span>
+        </el-space>
       </el-space>
-    </el-space>
+      <el-button round type="primary" icon="EditPen" @click="visible = true">讨论发起</el-button>
+    </el-row>
     <el-row class="body">
-      <matrix-list :mode="3" :operation="['edit', 'delete']" @current-page="pageChange"></matrix-list>
+      <matrix-list component="MatrixTalkCard" :operation="['delete']"></matrix-list>
     </el-row>
   </el-container>
 </template>
 
 <script setup>
 import {ref} from "vue";
-import {scrollTo} from "../../../utils/scroll";
 
+let visible = ref(false)
 let bar = ref([{
   key: "new",
   label: "最新发表",
@@ -44,20 +48,18 @@ function filterSelect(each) {
   })
 }
 
-function pageChange() {
-  scrollTo()
-}
-
 </script>
 
 <style scoped lang="scss">
-.talk {
+.talk-container {
   width: 100%;
+  min-width: 848px;
   flex-direction: column;
 
   .bar {
     width: 100%;
     margin-bottom: 20px;
+    padding: 0 10px;
 
     .each {
       padding: 6px 12px;
