@@ -9,7 +9,7 @@
         destroy-on-close
         @closed="closed"
     >
-      <form ref="formRef" :verify="props.verify"/>
+      <Form ref="formRef" :verify="props.verify"/>
       <template #footer>
         <el-button @click="close">取消</el-button>
         <el-button type="primary" @click="send">发起讨论</el-button>
