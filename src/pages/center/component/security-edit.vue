@@ -3,10 +3,10 @@
              @open="open" @closed="closed" destroy-on-close>
     <el-row class="title" justify="center">{{ title }}</el-row>
     <el-row class="description" justify="center">{{ description }}</el-row>
-    <matrix-identity-verification v-if="step === 'one'" @open="subOpen"></matrix-identity-verification>
-    <matrix-security-email v-if="step === 'two' && mode === 'email'" @open="subOpen"></matrix-security-email>
-    <matrix-security-phone v-if="step === 'two' && mode === 'phone'" @open="subOpen"></matrix-security-phone>
-    <matrix-security-password v-if="step === 'two' && mode === 'password'" @open="subOpen"></matrix-security-password>
+    <identity-verification v-if="step === 'one'" @open="subOpen"></identity-verification>
+    <Email v-if="step === 'two' && mode === 'email'" @open="subOpen"></Email>
+    <Phone v-if="step === 'two' && mode === 'phone'" @open="subOpen"></Phone>
+    <Password v-if="step === 'two' && mode === 'password'" @open="subOpen"></Password>
     <template #footer>
           <span class="dialog-footer">
             <el-button @click="close">取消</el-button>
@@ -21,13 +21,17 @@
 
 <script>
 export default {
-  name: "MatrixCenterSecurityEdit"
+  name: "SecurityEdit"
 }
 </script>
 
 <script setup>
 import {ref} from "vue"
-import {success, error} from "../../../../utils/message";
+import {success, error} from "../../../utils/message";
+import IdentityVerification from "./identity.vue"
+import Email from "./email.vue"
+import Phone from "./phone.vue"
+import Password from "./password.vue"
 
 const emits = defineEmits(["update:visible"])
 const props = defineProps({
