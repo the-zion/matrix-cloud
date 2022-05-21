@@ -8,7 +8,7 @@
       top="2vh"
       custom-class="send-class"
   >
-    <matrix-send-blog v-if="props.mode === 'blog'" @open="sendBlogOpen"></matrix-send-blog>
+    <Form v-if="props.mode === 'blog'" @open="sendBlogOpen"></Form>
     <template #footer>
           <span>
             <el-button @click="close" round>取消</el-button>
@@ -28,6 +28,7 @@ export default {
 <script setup>
 
 import {error} from "../../../utils/message";
+import Form from "./form.vue"
 
 const emits = defineEmits(["update:visible"])
 const props = defineProps({
