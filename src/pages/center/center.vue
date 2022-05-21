@@ -3,7 +3,7 @@
     <el-backtop></el-backtop>
     <el-aside class="aside">
       <el-affix :offset="0">
-        <matrix-center-navigation></matrix-center-navigation>
+        <Navigation></Navigation>
       </el-affix>
     </el-aside>
     <el-main>
@@ -15,6 +15,7 @@
 </template>
 
 <script setup>
+import Navigation from "./component/navigation.vue"
 </script>
 
 <style scoped lang="scss">
