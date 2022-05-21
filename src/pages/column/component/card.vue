@@ -78,7 +78,7 @@ let data = ref({
     width: 90px;
     border-radius: 6px;
     margin-right: 16px;
-    box-shadow: var(--el-box-shadow-light);
+    box-shadow: var(--el-box-shadow-lighter);
   }
 
   .container {
