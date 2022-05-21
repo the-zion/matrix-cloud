@@ -16,7 +16,7 @@
           <el-row class="shadow-radius">
             <el-main class="main">
               <el-row class="bar">
-                <el-row class="menu" :class="{'select':menu.select}" v-for="menu in menus" @click="menuSelect(menu)">
+                <el-row class="menu" :class="{'select':current === menu.name}" v-for="menu in menus" @click="current = menu.name">
                   <el-space>
                     <el-row class="iconfont icon" :class="menu.icon"></el-row>
                     <el-row class="word">{{ menu.label }}</el-row>
@@ -52,31 +52,20 @@ let menus = ref([{
       name: "blog",
       label: "博客",
       icon: "icon-read",
-      select: true,
     }, {
       name: "column",
       label: "专栏",
       icon: "icon-folder",
-      select: false
     }, {
       name: "talk",
       label: "讨论发起",
       icon: "icon-message",
-      select: false
     }, {
       name: "collect",
       label: "收藏",
       icon: "icon-star",
-      select: false
     }]
 )
-
-function menuSelect(menu) {
-  menus.value.forEach(function (item) {
-    item.select = menu.name === item.name
-  })
-  current.value = menu.name
-}
 
 </script>
 
