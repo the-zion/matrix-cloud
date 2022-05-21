@@ -1,5 +1,5 @@
 <template>
-  <el-container class="phone">
+  <el-container class="phone-container">
     <el-form :model="form" ref="formRef" class="form" :rules="rules">
       <el-form-item class="form-item" prop="phone">
         <el-input v-model="form.phone" :maxlength="50" placeholder="请输入手机号"/>
@@ -25,7 +25,7 @@ export default {
 <script setup>
 import {ref, onMounted} from "vue";
 
-import {validatePhone, validateCode} from "../../../../utils/check";
+import {validatePhone, validateCode} from "../../../utils/check";
 
 const emits = defineEmits(["open"])
 const rules = ref({
@@ -67,7 +67,7 @@ onMounted(function () {
 </script>
 
 <style scoped lang="scss">
-.phone {
+.phone-container {
   width: 100%;
 
   .form {

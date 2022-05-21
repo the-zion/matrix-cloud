@@ -1,5 +1,5 @@
 <template>
-  <el-container class="password">
+  <el-container class="password-container">
     <el-form :model="form" ref="formRef" class="form" :rules="rules">
       <el-form-item class="form-item" prop="password">
         <el-input v-model="form.password" :maxlength="50" placeholder="请输入密码"/>
@@ -13,14 +13,14 @@
 
 <script>
 export default {
-  name: "MatrixSecurityPassword"
+  name: "Password"
 }
 </script>
 
 <script setup>
 import {ref, onMounted} from "vue";
 
-import {validatePassword} from "../../../../utils/check";
+import {validatePassword} from "../../../utils/check";
 
 const emits = defineEmits(["open"])
 const rules = ref({
@@ -49,7 +49,7 @@ onMounted(function () {
 </script>
 
 <style scoped lang="scss">
-.password {
+.password-container {
   width: 100%;
 
   .form {

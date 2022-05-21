@@ -1,5 +1,5 @@
 <template>
-  <el-container class="navigation">
+  <el-container class="navigation-container">
     <el-space class="avatar-block">
       <el-avatar class="avatar" shape="square" :size="60" :src="'../../src/assets/images/boy.png'"></el-avatar>
       <el-space fill>
@@ -36,8 +36,8 @@ export default {
 <script setup>
 import {ref} from "vue";
 import {useRoute} from "vue-router";
-import {scrollToTop} from "../../../../utils/scroll";
-import router from "../../../../router";
+import {scrollToTop} from "../../../utils/scroll";
+import router from "../../../router";
 
 let nickname = ref("刘小圆sama")
 let name = ref("neo")
@@ -83,7 +83,7 @@ function menuSelect(each) {
 </script>
 
 <style scoped lang=scss>
-.navigation {
+.navigation-container {
   width: 100%;
   flex-direction: column;
 

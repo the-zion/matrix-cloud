@@ -1,5 +1,5 @@
 <template>
-  <el-container class="email">
+  <el-container class="email-container">
     <el-form :model="form" ref="formRef" class="form" :rules="rules">
       <el-form-item class="form-item" prop="email">
         <el-input v-model="form.email" :maxlength="50" placeholder="请输入邮箱账号"/>
@@ -18,14 +18,14 @@
 
 <script>
 export default {
-  name: "MatrixSecurityEmail"
+  name: "Email"
 }
 </script>
 
 <script setup>
 import {ref, onMounted} from "vue";
 
-import {validateEmail, validateCode} from "../../../../utils/check";
+import {validateEmail, validateCode} from "../../../utils/check";
 
 const emits = defineEmits(["open"])
 const rules = ref({
@@ -67,7 +67,7 @@ onMounted(function () {
 </script>
 
 <style scoped lang="scss">
-.email {
+.email-container {
   width: 100%;
 
   .form {

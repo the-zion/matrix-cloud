@@ -1,5 +1,5 @@
 <template>
-  <el-container class="identity">
+  <el-container class="identity-container">
     <el-form :model="form" ref="formRef" class="form" :rules="rules">
       <el-form-item class="form-item" prop="mode">
         <el-select class="select" v-model="form.mode" placeholder="请选择验证方式" @change="selectChange">
@@ -36,13 +36,13 @@
 
 <script>
 export default {
-  name: "MatrixIdentityVerification"
+  name: "IdentityVerification"
 }
 </script>
 
 <script setup>
 import {onMounted, ref} from "vue"
-import {validateAccount, validatePassword, validateCode} from "../../../../utils/check";
+import {validateAccount, validatePassword, validateCode} from "../../../utils/check";
 
 const emits = defineEmits(["open"])
 const rules = ref({
@@ -116,7 +116,7 @@ onMounted(function () {
 </script>
 
 <style scoped lang="scss">
-.identity {
+.identity-container {
   width: 100%;
 
   .form {
