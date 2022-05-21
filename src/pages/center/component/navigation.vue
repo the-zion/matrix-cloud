@@ -8,7 +8,7 @@
       </el-space>
     </el-space>
     <el-row class="navigation-block">
-      <el-space v-for="item in menu.slice(0,4)" class="each" :class="{'select': currentMenu === item.key}"
+      <el-space v-for="item in menu.slice(0,4)" :key="item.key" class="each" :class="{'select': currentMenu === item.key}"
                 @click="menuSelect(item)">
         <el-icon color="var(--el-text-color-regular)" :class="{'select': currentMenu === item.key}">
           <component :is="item.icon"></component>
@@ -16,7 +16,7 @@
         <span class="label" :class="{'select': currentMenu === item.key}">{{ item.label }}</span>
       </el-space>
       <el-divider class="divider"/>
-      <el-space v-for="item in menu.slice(4,)" class="each" :class="{'select': currentMenu === item.key}"
+      <el-space v-for="item in menu.slice(4,)" :key="item.key" class="each" :class="{'select': currentMenu === item.key}"
                 @click="menuSelect(item)">
         <el-icon color="var(--el-text-color-regular)" :class="{'select': currentMenu === item.key}">
           <component :is="item.icon"></component>

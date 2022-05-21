@@ -13,7 +13,10 @@
       <el-space class="info">
         <el-row class="name">{{ props.data.name }}</el-row>
         <el-row class="time">{{ "发布于 " + props.data.time }}</el-row>
-        <el-tag round v-show="props.data.tags" type="info" v-for="tag in props.data.tags.split(';')">{{ tag }}</el-tag>
+        <el-tag round v-show="props.data.tags" type="info" v-for="tag in props.data.tags.split(';')" :key="tag">{{
+            tag
+          }}
+        </el-tag>
       </el-space>
       <el-space class="body">
         <el-image v-show="props.data.image" class="image" fit="cover" :src="props.data.image" lazy></el-image>

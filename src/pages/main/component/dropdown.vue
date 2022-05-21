@@ -8,7 +8,7 @@
       </el-space>
     </el-space>
     <el-space class="menu" direction="vertical" alignment="start" fill :size="10">
-      <el-space v-for="item in menu" class="each" @click="item.func">
+      <el-space v-for="item in menu" :key="item.label" class="each" @click="item.func">
         <el-icon :size="18" color="var(--el-text-color-regular)">
           <component :is="item.icon"></component>
         </el-icon>

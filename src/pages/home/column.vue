@@ -3,7 +3,7 @@
     <matrix-column-create v-model:visible="visible"></matrix-column-create>
     <el-row class="head" justify="space-between">
       <el-space class="menu" :size="32">
-        <el-row class="each" :class="{'menu-select':current === item.key}" v-for="item in menu"
+        <el-row class="each" :class="{'menu-select':current === item.key}" v-for="item in menu" :key="item.key"
                 @click="current = item.key" align="middle">
           {{ item.label }}
         </el-row>

@@ -16,7 +16,7 @@
           <el-row class="shadow-radius">
             <el-main class="main">
               <el-row class="bar">
-                <el-row class="menu" :class="{'select':current === menu.name}" v-for="menu in menus" @click="current = menu.name">
+                <el-row class="menu" :class="{'select':current === menu.name}" v-for="menu in menus" :key="menu.name" @click="current = menu.name">
                   <el-space>
                     <el-row class="iconfont icon" :class="menu.icon"></el-row>
                     <el-row class="word">{{ menu.label }}</el-row>

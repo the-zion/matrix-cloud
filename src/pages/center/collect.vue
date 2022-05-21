@@ -1,7 +1,7 @@
 <template>
   <el-container class="collect-container">
     <el-space class="bar" size="large">
-      <el-space v-for="item in bar" class="each" :class="{'select':current === item.key}" @click="filterSelect(item)">
+      <el-space v-for="item in bar" :key="item.key" class="each" :class="{'select':current === item.key}" @click="filterSelect(item)">
         <el-icon>
           <component :is="item.icon"></component>
         </el-icon>

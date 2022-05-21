@@ -1,7 +1,7 @@
 <template>
   <el-container class="leaderboard">
     <el-row class="head" justify="space-around">
-      <el-space v-for="item in options" direction="vertical" class="each" :size="3">
+      <el-space v-for="item in options" :key="item.label" direction="vertical" class="each" :size="3">
         <el-icon class="iconfont" :class="item.icon" :size="20"></el-icon>
         <span>{{ item.label }}</span>
       </el-space>
@@ -9,7 +9,7 @@
     <el-affix>
       <el-row class="body">
         <el-row class="title">必读榜</el-row>
-        <el-row v-for="(item, index) in leaderboard" class="each">
+        <el-row v-for="(item, index) in leaderboard" :key="item.id" class="each">
           <el-icon :size="10" class="icon iconfont"
                    :class="'icon-number-'+item.number + (index < 3?' gold':'')"></el-icon>
           <el-space class="info" direction="vertical" fill :size="0" alignment="start">

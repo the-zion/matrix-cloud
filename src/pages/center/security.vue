@@ -2,7 +2,7 @@
   <el-container class="security-container">
     <security-edit v-model:visible="visible" v-bind:mode="mode"></security-edit>
     <el-row class="title" align="middle">账号信息</el-row>
-    <el-row v-for="item in accountMeta" class="each">
+    <el-row v-for="item in accountMeta" :key="item.key" class="each">
       <el-row class="account" align="middle">
         <el-row class="label" align="middle">{{ item.label }}</el-row>
         <el-row class="word" align="middle" :class="{'unset':accountMeta[item.key] === ''}">{{
@@ -18,7 +18,7 @@
       </el-space>
     </el-row>
     <el-row class="title" align="middle">关联第三方账号</el-row>
-    <el-row v-for="item in connectMeta" class="each">
+    <el-row v-for="item in connectMeta" :key="item.key" class="each">
       <el-row class="account" align="middle">
         <el-icon class="iconfont icon" :color="item.color" :class="item.icon"></el-icon>
         <el-row class="label" align="middle">{{ item.label }}</el-row>

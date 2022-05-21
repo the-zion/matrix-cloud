@@ -3,7 +3,7 @@
     <matrix-talk-create v-model:visible="visible"></matrix-talk-create>
     <el-row class="bar" justify="space-between">
       <el-space size="large">
-        <el-space v-for="item in bar" class="each" :class="{'select':item.select}" @click="filterSelect(item)">
+        <el-space v-for="item in bar" :key="item.key" class="each" :class="{'select':item.select}" @click="filterSelect(item)">
           <el-icon class="iconfont" :class="item.icon"></el-icon>
           <span class="label">{{ item.label }}</span>
         </el-space>

@@ -52,7 +52,7 @@
       <el-row class="column-block">
         <el-row class="head">我的专栏</el-row>
         <el-radio-group v-model="form.column" class="group">
-          <el-radio :label="item.id" v-for="item in columns" class="radio" size="small">{{ item.label }}</el-radio>
+          <el-radio :label="item.id" v-for="item in columns" :key="item.id" class="radio" size="small">{{ item.label }}</el-radio>
         </el-radio-group>
       </el-row>
     </el-form-item>

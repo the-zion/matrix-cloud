@@ -2,7 +2,7 @@
   <el-container class="blog-container">
     <el-row class="bar" justify="space-between">
       <el-space size="large">
-        <el-space v-for="item in bar" class="each" :class="{'select':current === item.key}" @click="filterSelect(item)">
+        <el-space v-for="item in bar" :key="item.key" class="each" :class="{'select':current === item.key}" @click="filterSelect(item)">
           <el-icon class="iconfont" :class="item.icon"></el-icon>
           <span class="label">{{ item.label }}</span>
         </el-space>

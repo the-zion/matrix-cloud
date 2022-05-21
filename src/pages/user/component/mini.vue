@@ -10,7 +10,7 @@
       </el-space>
     </el-row>
     <el-row class="achievement">
-      <el-row class="area" v-for="(item, index) in achMeta" justify="center" align="middle">
+      <el-row class="area" v-for="(item, index) in achMeta" :key="item.key" justify="center" align="middle">
         <el-space class="each" direction="vertical" alignment="center" :size="1">
           <span class="label">{{ item.label }}</span>
           <span

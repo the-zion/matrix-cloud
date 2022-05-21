@@ -8,7 +8,7 @@
                   src="../../src/assets/images/matrix.svg"
                   fit="contain"
         ></el-image>
-        <el-menu-item class="main-menu-item" :index="item.state" v-for="(item) in menuList"
+        <el-menu-item class="main-menu-item" :index="item.state" v-for="item in menuList" :key="item.key"
                       @click="menuSelect(item.state)">
           <template #title>
             <span>{{ item.name }}</span>

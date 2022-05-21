@@ -3,7 +3,7 @@
     <el-backtop></el-backtop>
     <el-main class="main">
       <el-row class="menu" justify="space-between">
-        <el-row v-for="item in menu" class="menu-item" @click="select(item)">
+        <el-row v-for="item in menu" :key="item.key" class="menu-item" @click="select(item)">
           <span class="label" :class="{'select':current === item.key}">{{ item.label }}</span>
           <el-image fit="fill" class="image" :src="item.image"></el-image>
         </el-row>

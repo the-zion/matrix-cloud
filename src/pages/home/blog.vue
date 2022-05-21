@@ -3,7 +3,7 @@
     <el-row class="head" justify="space-between">
       <el-space class="menu" :size="32">
         <el-row class="each" :class="{'menu-select':current === item.key}" v-for="item in menu"
-                @click="current = item.key" align="middle">
+                @click="current = item.key" align="middle" :key="item.key">
           {{ item.label }}
         </el-row>
       </el-space>

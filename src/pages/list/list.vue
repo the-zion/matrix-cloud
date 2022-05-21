@@ -7,7 +7,7 @@
       <el-row v-for="(item,index) in data" class="each" :class="props.shape" :key="item.id">
         <component :is="props.component" :data="data[index]"></component>
         <el-space class="operation" size="large">
-          <div v-for="(op, index) in props.operation" :key="index">
+          <div v-for="op in props.operation" :key="op">
             <el-icon v-show="op === 'delete'" class="icon" @click="doDelete(item)">
               <delete/>
             </el-icon>
@@ -45,6 +45,7 @@ const emits = defineEmits(["current-page"])
 const props = defineProps({
   component: String,
   gap: Number,
+  state: String,
   shape: String,
   operation: {
     type: Array,

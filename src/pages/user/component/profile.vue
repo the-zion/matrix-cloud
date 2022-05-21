@@ -103,6 +103,7 @@
         <el-space wrap class="space">
           <el-tag
               v-for="item in skills"
+              :key="item"
               type="info"
               effect="light"
               round

@@ -5,12 +5,12 @@
               placeholder="Enter键添加自定义标签"></el-input>
     <el-row class="body">
       <el-row class="aside">
-        <span v-for="(item, index) in tags" class="each" :class="{'select':index === current}"
+        <span v-for="(item, index) in tags" :key="item.label" class="each" :class="{'select':index === current}"
               @click="select(index)">{{ item.label }}</span>
       </el-row>
       <el-row class="main">
         <el-space wrap size="large">
-          <el-tag style="cursor: pointer" type="info" :label="item" v-for="item in tags[current].children"
+          <el-tag style="cursor: pointer" type="info" :label="item" v-for="item in tags[current].children" :key="item"
                   @click="tagSelect(item)">{{
               item
             }}
@@ -21,7 +21,7 @@
     <el-row class="foot" justify="space-between" align="middle">
       <span></span>
       <el-space class="tags">
-        <el-tag closable @close="tagClose(item)" v-for="item in props.selectedTags ">{{ item }}</el-tag>
+        <el-tag closable @close="tagClose(item)" v-for="item in props.selectedTags " :key="item">{{ item }}</el-tag>
       </el-space>
       <span class="tip">{{ "还可选择" + (5 - props.selectedTags.length) + "个标签" }}</span>
     </el-row>

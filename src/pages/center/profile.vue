@@ -19,13 +19,13 @@
       </el-space>
       <el-row class="area" justify="space-between" align="top">
         <el-space class="info" wrap :size="15" :spacer="spacer" alignment="start">
-          <el-space v-for="item in infoMeta.slice(0,3)" :size="12" class="each" alignment="start">
+          <el-space v-for="item in infoMeta.slice(0,3)" :key="item.key" :size="12" class="each" alignment="start">
             <span class="label">{{ item.label }}</span>
             <span class="word">{{ data[item.key] }}</span>
           </el-space>
         </el-space>
         <el-space class="info" wrap :size="15" :spacer="spacer" alignment="start">
-          <el-space v-for="item in infoMeta.slice(3,)" :size="12" class="each" alignment="start">
+          <el-space v-for="item in infoMeta.slice(3,)" :key="item.key" :size="12" class="each" alignment="start">
             <span class="label">{{ item.label }}</span>
             <span class="word">{{ data[item.key] }}</span>
           </el-space>
@@ -53,7 +53,7 @@
         <span class="word">标签与技能</span>
       </el-space>
       <el-row class="area" justify="space-between" align="top">
-        <el-space class="info" v-for="item in webMeta">
+        <el-space class="info" v-for="item in webMeta" :key="item.key">
           <el-space :size="12" class="each" alignment="start">
             <el-icon class="iconfont" :class="item.icon+' '+item.class"></el-icon>
             <span class="word">{{ data[item.key] }}</span>
@@ -62,7 +62,7 @@
         <el-space class="info" wrap style="margin-top: 12px">
           <el-space class="each" :size="12" wrap alignment="start">
             <span class="label">{{ "标签" }}</span>
-            <el-tag type="info" v-for="item in data['tags'].split(';')">{{ item }}</el-tag>
+            <el-tag type="info" v-for="item in data['tags'].split(';')" :key="item">{{ item }}</el-tag>
           </el-space>
         </el-space>
       </el-row>

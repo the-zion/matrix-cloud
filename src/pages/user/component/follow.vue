@@ -1,13 +1,13 @@
 <template>
   <el-row class="follow">
     <el-space class="bar" spacer="|">
-        <span v-for="item in bar" class="each" :class="{'select': item.select}"
+        <span v-for="item in bar" :key="item.key" class="each" :class="{'select': item.select}"
               @click="select(item)">{{ item.label + " " + data[item.key] || 0 }}</span>
     </el-space>
     <el-row class="body">
       <el-scrollbar class="scroll" max-height="100%" ref="scroll">
         <el-row class="space" id="scroll">
-          <el-row v-for="item in list" class="each" justify="space-between" align="middle">
+          <el-row v-for="item in list" :key="item.id" class="each" justify="space-between" align="middle">
             <el-space class="information">
               <el-avatar :src="item.image" shape="square" :size="64"></el-avatar>
               <el-space class="info" direction="vertical" alignment="start">
@@ -75,6 +75,7 @@ function getData() {
 function getList() {
   for (let i = 0; i <= 9; i++) {
     list.value.push({
+      id: i,
       name: "刘小圆sama",
       introduce: "海纳百川，有容乃大",
       image: '../src/assets/images/boy.png'

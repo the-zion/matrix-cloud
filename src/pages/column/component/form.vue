@@ -67,7 +67,7 @@
       <el-table-column property="tags" label="标签" width="370px">
         <template #default="scope">
           <el-space class="tags-cell">
-            <el-tag v-for="item in scope.row.tags.split(';')" type="info"
+            <el-tag v-for="item in scope.row.tags.split(';')" type="info" :key="item"
                     disable-transitions>
               {{ item }}
             </el-tag>

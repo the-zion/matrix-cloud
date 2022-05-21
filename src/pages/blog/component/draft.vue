@@ -1,6 +1,6 @@
 <template>
   <el-row class="draft">
-    <el-space v-for="item in draft" class="each" :size="15">
+    <el-space v-for="item in draft" :key="item.id" class="each" :size="15">
       <el-image :src="item.image" v-show="item.image" class="image" fit="cover"></el-image>
       <el-space fill>
         <span class="title">{{ item.title || "暂无标题" }}</span>
@@ -20,6 +20,7 @@ export default {
 import {ref} from "vue"
 
 let draft = ref([{
+  id: 1,
   image: "../../src/assets/images/column.png",
   title: "",
   time: "2022-05-19"
@@ -30,7 +31,7 @@ let draft = ref([{
 .draft {
   width: 100%;
 
-  .each:hover{
+  .each:hover {
     background-color: var(--el-fill-color-light);
   }
 
@@ -51,7 +52,7 @@ let draft = ref([{
       color: var(--el-text-color-primary);
     }
 
-    .time{
+    .time {
       font-size: 12px;
       line-height: 16px;
       color: var(--el-text-color-placeholder);

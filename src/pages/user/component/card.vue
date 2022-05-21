@@ -11,11 +11,12 @@
           <el-space>
             <el-tag
                 v-for="item in tags"
+                :key="item"
                 type="info"
                 effect="light"
                 round
             >
-              {{ item.label }}
+              {{ item }}
             </el-tag>
           </el-space>
         </el-row>
@@ -39,14 +40,7 @@ let introduce = ref("海纳百川，有容乃大")
 let echarts = echartsInit()
 let chart = null
 let tags = ref([
-  {
-    "key": 1,
-    "label": "go"
-  },
-  {
-    "key": 2,
-    "label": "IT互联网"
-  }
+  "go", "IT互联网"
 ])
 
 let cartoonOptions = {

@@ -4,6 +4,7 @@
       <el-select v-model="select" placeholder="Select" class="select">
         <el-option
             v-for="item in options"
+            :key="item.key"
             :label="item.label"
             :value="item.key"
         />
