@@ -1,12 +1,11 @@
 import App from './App.vue'
 import {createApp} from 'vue'
-import Components from './components/index.ts'
+import ListComponent from './pages/list/index.ts'
 import BlogComponents from './pages/blog/index.ts'
 import TalkComponents from './pages/talk/index.ts'
 import ColumnComponents from './pages/column/index.ts'
 import TagComponents from './pages/tag/index.ts'
 import UserComponent from './pages/user/index.ts'
-import PageSetComponents from './pages/center/index.ts'
 import router from './router/index'
 import store from "./store/index"
 import * as ElIconModules from '@element-plus/icons-vue'
@@ -18,13 +17,12 @@ import 'uno.css'
 
 
 const app = createApp(App).use(store)
-    .use(Components)
+    .use(ListComponent)
     .use(BlogComponents)
     .use(TalkComponents)
     .use(ColumnComponents)
     .use(TagComponents)
     .use(UserComponent)
-    .use(PageSetComponents)
     .use(router)
 
 
