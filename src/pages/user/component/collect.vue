@@ -1,16 +1,16 @@
 <template>
   <el-container class="collect-container">
     <el-row class="filter" justify="space-between">
-      <el-select v-model="select" placeholder="Select" class="select">
+      <el-select v-model="select" placeholder="Select" class="select" @change="selectChange">
         <el-option
             v-for="item in options"
+            :key="item.key"
             :label="item.label"
-            :value="item.key"
+            :value="item.component"
         />
       </el-select>
     </el-row>
-    <matrix-list v-if="select === 'blog'" :mode="1" @current-page="pageChange"></matrix-list>
-    <matrix-list v-if="select === 'column'" :mode="2" @current-page="pageChange"></matrix-list>
+    <matrix-list ref="listRef" :component="component" :scroll-to="427"></matrix-list>
   </el-container>
 </template>
 <script>
@@ -21,19 +21,25 @@ export default {
 
 <script setup>
 import {ref} from "vue";
-import {scrollTo} from "../../../utils/scroll";
 
-let select = ref("blog")
+let select = ref("博客")
+let component = ref("MatrixBlogCard")
+let listRef = ref()
 const options = ref([{
   key: "blog",
-  label: "博客"
+  label: "博客",
+  component: "MatrixBlogCard"
 }, {
   key: "column",
-  label: "专栏"
+  label: "专栏",
+  component: "MatrixColumnCard"
 }])
 
-function pageChange() {
-  scrollTo(427)
+function selectChange(value) {
+  component.value = value
+  setTimeout(function (){
+    listRef.value.getData()
+  },10)
 }
 
 </script>

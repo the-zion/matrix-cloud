@@ -15,7 +15,7 @@
           prefix-icon="Search"
       />
     </el-row>
-    <matrix-list :mode="1" @current-page="pageChange"></matrix-list>
+    <matrix-list component="MatrixBlogCard" :scroll-to="427"></matrix-list>
   </el-container>
 </template>
 <script>
@@ -26,7 +26,6 @@ export default {
 
 <script setup>
 import {ref} from "vue";
-import {scrollTo} from "../../../utils/scroll";
 
 let select = ref("new")
 let search = ref()
@@ -41,9 +40,6 @@ const options = ref([{
   label: "最多收藏"
 }])
 
-function pageChange() {
-  scrollTo(427)
-}
 
 </script>
 <style scoped lang="scss">

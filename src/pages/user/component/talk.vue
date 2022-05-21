@@ -15,7 +15,7 @@
           prefix-icon="Search"
       />
     </el-row>
-    <matrix-list :mode="3" @current-page="pageChange"></matrix-list>
+    <matrix-list component="MatrixTalkCard" :scroll-to="427"></matrix-list>
   </el-container>
 </template>
 <script>
@@ -26,7 +26,6 @@ export default {
 
 <script setup>
 import {ref} from "vue";
-import {scrollTo} from "../../../utils/scroll";
 
 let select = ref("new")
 let search = ref()
@@ -38,9 +37,6 @@ const options = ref([{
   label: "最多点赞"
 }])
 
-function pageChange() {
-  scrollTo(427)
-}
 </script>
 <style scoped lang="scss">
 .talk-container {
