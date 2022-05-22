@@ -1,6 +1,6 @@
 import {App} from 'vue'
 
-import MatrixTalkCard from './component/card.vue'
+import MatrixTalkCard from './component/talk-card.vue'
 import MatrixTalkCreate from './component/create.vue'
 
 export default {
