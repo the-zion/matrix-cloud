@@ -1,10 +1,10 @@
 <template>
-  <el-row class="blog">
+  <el-row class="blog-card">
     <el-space class="main" fill>
       <el-space class="head">
         <el-popover placement="top-start" :show-arrow="false" :width="312" trigger="hover" popper-class="popover">
           <template #reference>
-            <el-avatar @click="GotoUserPage(1)" class="avatar" :size="24" :src="props.data.avatar"/>
+            <el-avatar @click="goToPage('user', 1)" class="avatar" :size="24" :src="props.data.avatar"/>
           </template>
           <matrix-user-mini-card></matrix-user-mini-card>
         </el-popover>
@@ -65,7 +65,7 @@ export default {
 <script setup>
 import {ref} from "vue";
 
-import {GotoUserPage} from "../../../utils/globalFunc";
+import {goToPage} from "../../../utils/globalFunc";
 
 const props = defineProps({
   data: Object,
@@ -88,7 +88,7 @@ let data = ref({
 </script>
 
 <style scoped lang="scss">
-.blog {
+.blog-card {
   width: 100%;
   padding: 16px;
 
