@@ -23,7 +23,6 @@
       </el-row>
       <Toolbar
           class="toolbar"
-          style="border-bottom: 1px solid #ccc"
           :editor="editorRef"
           :defaultConfig="toolbarConfig"
           :mode="mode"
@@ -191,6 +190,7 @@ onMounted(() => {
 
     .toolbar {
       width: 100%;
+      border-bottom: 1px solid var(--el-border-color);
 
       ::v-deep(.w-e-toolbar) {
         justify-content: space-between;
