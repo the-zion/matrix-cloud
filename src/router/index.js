@@ -5,6 +5,7 @@ import {
 
 const Main = () => import('../pages/main/main.vue')
 const Blog = () => import('../pages/blog/blog.vue')
+const Talk = () => import('../pages/talk/talk.vue')
 const Message = () => import('../pages/message/message.vue')
 const About = () => import('../pages/about/about.vue')
 const User = () => import('../pages/user/user.vue')
@@ -57,6 +58,11 @@ const routes = [
                 path: 'blog',
                 name: 'blog',
                 component: Blog
+            },
+            {
+                path: 'talk',
+                name: 'talk',
+                component: Talk
             },
             {
                 path: 'message',
