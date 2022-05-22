@@ -1,7 +1,7 @@
 <template>
   <el-row class="card">
     <el-row class="head">
-      <el-avatar @click="GotoUserPage(1)" class="avatar" shape="square" :size="60" :src="image"/>
+      <el-avatar @click="goToPage('user', 1)" class="avatar" shape="square" :size="60" :src="image"/>
       <el-space class="info" direction="vertical" alignment="start" :size="0" fill>
         <el-space>
           <span class="nickname">{{ nickname }}</span>
@@ -36,7 +36,7 @@ export default {
 
 <script setup>
 import {ref} from "vue"
-import {GotoUserPage} from "../../../utils/globalFunc";
+import {goToPage} from "../../../utils/globalFunc";
 
 let nickname = ref("刘小圆sama")
 let introduce = ref("本文的目的是为了总结出一个通用的，改动较少的非递归模板，可以分别适用于二叉树的前序、中序和后续遍历，方便记忆。前序遍历前序遍历的遍历顺序为：根 -> 左 -> 右。只要有左子树，就把左子树入栈，同时把值加入答案数组，然后依次弹出栈顶元素，移动到它的右子树，重复操作。「代码块」中序遍历中序遍历的遍")
