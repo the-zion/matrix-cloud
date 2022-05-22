@@ -4,7 +4,7 @@
               :image-size="250" image="../../src/assets/images/no_data.svg"
     />
     <el-space class="data" fill :size="props.gap || 0">
-      <el-row v-for="(item,index) in data" class="each" :class="props.shape" :key="item.id">
+      <el-row v-for="(item,index) in data" class="each" :class="props.shape" :key="item.id" @click="goToPage(props.state)">
         <component :is="props.component" :data="data[index]"></component>
         <el-space class="operation" size="large">
           <div v-for="op in props.operation" :key="op">
@@ -37,6 +37,7 @@ export default {
 
 <script setup>
 import {ref, watch, onMounted} from "vue";
+import {goToPage} from "../../utils/globalFunc";
 import {confirm} from "../../utils/globalFunc";
 import {success} from "../../utils/message";
 import {scrollTo} from "../../utils/scroll";
