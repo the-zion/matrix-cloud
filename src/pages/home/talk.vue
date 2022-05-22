@@ -55,7 +55,7 @@
         </template>
       </el-dialog>
     </el-row>
-    <matrix-list component="MatrixTalkCard" shape="card" :gap="10" :page-background="true"></matrix-list>
+    <matrix-list component="MatrixTalkCard" state="talk" shape="card" :gap="10" :page-background="true"></matrix-list>
   </el-container>
 </template>
 
