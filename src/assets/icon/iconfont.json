@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "10258930",
+      "name": "reply",
+      "font_class": "reply",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "4936460",
+      "name": "fire",
+      "font_class": "fire",
+      "unicode": "e898",
+      "unicode_decimal": 59544
+    },
+    {
       "icon_id": "307024",
       "name": "微淘数字 4",
       "font_class": "number-4",
