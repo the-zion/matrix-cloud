@@ -96,7 +96,7 @@ const toolbarConfig = {
 }
 const editorConfig = {
   placeholder: '请输入内容...',
-  maxLength: 1000,
+  maxLength: 2000,
   MENU_CONF: {
     insertVideo: {
       checkVideo: customCheckVideoFn,
