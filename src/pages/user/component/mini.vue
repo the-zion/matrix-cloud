@@ -81,6 +81,7 @@ let achievement = ref({
     .avatar {
       margin-right: 12px;
       border-radius: 6px;
+      cursor: pointer;
     }
 
     .info {
