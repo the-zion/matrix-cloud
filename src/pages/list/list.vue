@@ -1,10 +1,11 @@
 <template>
-  <el-row class="list">
+  <el-row class="list" id="list">
     <el-empty v-show="data.length === 0" class="empty" description=" "
               :image-size="250" image="../../src/assets/images/no_data.svg"
     />
     <el-space class="data" fill :size="props.gap || 0">
-      <el-row v-for="(item,index) in data" class="each" :class="props.shape" :key="item.id" @click="goToPage(props.state)">
+      <el-row v-for="(item,index) in data" class="each" :class="props.shape" :key="item.id"
+              @click="goToPage(props.state, item.id)">
         <component :is="props.component" :data="data[index]"></component>
         <el-space class="operation" size="large">
           <div v-for="op in props.operation" :key="op">
@@ -53,10 +54,6 @@ const props = defineProps({
     default: []
   },
   "page-background": Boolean,
-  "scroll-to": {
-    type: Number,
-    default: 0
-  },
 })
 
 let data = ref([])
@@ -149,7 +146,7 @@ defineExpose({
 })
 
 watch(currentPage, () => {
-  scrollTo(props.scrollTo)
+  scrollTo("list")
 })
 
 onMounted(() => {
