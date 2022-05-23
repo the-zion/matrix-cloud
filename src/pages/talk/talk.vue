@@ -1,11 +1,13 @@
 <template>
   <el-container class="talk-container">
-    <el-main class="talk-main">
+    <el-backtop></el-backtop>
+    <Reply v-model:visible="visible" :name="data.name"></Reply>
+    <el-row class="talk-main">
       <el-row class="talk-block">
         <el-row class="header">
           <el-row class="title-area" justify="space-between">
             <el-row class="title" align="top">
-              <el-avatar :size="32" :src="data.image" class="avatar"></el-avatar>
+              <el-avatar :size="32" :src="data.image" class="avatar" @click="goToPage('user', 1)"></el-avatar>
               <el-row class="label" align="middle">{{ data.title }}</el-row>
             </el-row>
             <el-button type="primary" icon="Plus">关注TA</el-button>
@@ -44,20 +46,27 @@
                 <span class="num">收藏</span>
               </el-space>
             </el-space>
-            <el-button icon="EditPen" type="primary" @click="">回复评论</el-button>
+            <el-button icon="EditPen" type="primary" @click="visible = true">回复评论</el-button>
           </el-row>
         </el-affix>
       </el-row>
       <Comment></Comment>
-    </el-main>
-    <el-aside class="talk-aside"></el-aside>
+    </el-row>
+    <el-affix>
+      <el-row class="talk-aside">
+        <Aside :data="data"></Aside>
+      </el-row>
+    </el-affix>
   </el-container>
 </template>
 
 <script setup>
-import {ref, onBeforeUnmount, shallowRef, onMounted} from "vue";
+import {ref, onBeforeUnmount, shallowRef, onMounted} from "vue"
 import {Editor} from '@wangeditor/editor-for-vue'
-import Comment from "./component/comment.vue";
+import Comment from "./component/comment.vue"
+import Reply from "./component/reply.vue"
+import Aside from "./component/aside.vue"
+import {goToPage} from "../../utils/globalFunc"
 
 const editorRef = shallowRef()
 const valueHtml = ref('<p>hello</p>')
@@ -67,6 +76,8 @@ const editorConfig = {
   readOnly: true
 }
 
+let visible = ref(false)
+
 let data = ref({
   cover: "../../../../src/assets/images/cover.jpg",
   image: "../../../../src/assets/images/boy.png",
@@ -74,8 +85,10 @@ let data = ref({
   name: "刘小圆sama",
   time: "发布于 2022-05-21",
   view: 2000,
+  collect: 2000,
+  comment: 2000,
   agree: 2000,
-  tags: ["Go", "kubernetes", "云原生"]
+  tags: ["Go", "kubernetes", "云原生","Go", "kubernetes", "云原生"]
 })
 
 function handleCreated(editor) {
@@ -95,11 +108,11 @@ onBeforeUnmount(function () {
   width: fit-content;
 
   .talk-main {
-    padding: 5px;
     width: 734px;
 
     .talk-block {
       padding: 16px;
+      margin-bottom: 10px;
       background-color: var(--el-color-white);
       box-shadow: var(--el-box-shadow-lighter);
       border-radius: 8px;
@@ -115,6 +128,7 @@ onBeforeUnmount(function () {
 
             .avatar {
               margin-right: 15px;
+              cursor: pointer;
             }
 
             .label {
@@ -184,6 +198,7 @@ onBeforeUnmount(function () {
   .talk-aside {
     width: 256px;
     margin-left: 10px;
+    height: fit-content;
   }
 }
 </style>
