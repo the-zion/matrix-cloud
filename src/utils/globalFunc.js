@@ -15,6 +15,9 @@ export function confirm(title, message, type) {
 }
 
 export function goToPage(state, id) {
+    if (!state) {
+        return null
+    }
     const params = {id: id};
     const {href} = router.resolve({
         name: state,
