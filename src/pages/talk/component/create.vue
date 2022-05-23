@@ -9,7 +9,7 @@
         destroy-on-close
         @closed="closed"
     >
-      <Form ref="formRef" :verify="props.verify"/>
+      <create-form ref="formRef" :verify="props.verify"/>
       <template #footer>
         <el-button @click="close">取消</el-button>
         <el-button type="primary" @click="send">发起讨论</el-button>
@@ -26,7 +26,7 @@ export default {
 
 <script setup>
 import {onMounted, ref} from "vue"
-import Form from './form.vue'
+import CreateForm from './create-form.vue'
 import {error} from "../../../utils/message";
 
 const emits = defineEmits(["update:visible"])
