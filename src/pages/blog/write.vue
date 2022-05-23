@@ -28,7 +28,7 @@
           :mode="mode"
       />
     </el-row>
-    <el-row class="body" id="body">
+    <el-row class="area" id="area">
       <el-drawer
           v-model="draft"
           title="我的草稿"
@@ -46,6 +46,7 @@
           @onMaxLength="onMaxLength"
           @customAlert="customAlert"
       />
+      <span class="bottom" id="bottom"></span>
     </el-row>
   </el-container>
 </template>
@@ -87,7 +88,6 @@ let sendVisible = ref(false)
 let time = ref("20:00")
 let draft = ref(false)
 let resizeObserver = null
-let oldHeight = null
 
 
 function backToHome() {
@@ -141,15 +141,10 @@ onBeforeUnmount(() => {
 
 onMounted(() => {
   resizeObserver = new ResizeObserver(throttle(function (res) {
-    if (!oldHeight) {
-      oldHeight = res[0].contentRect.height
-    }
-    let newHeight = res[0].contentRect.height
-    scrollTo(window.scrollY + newHeight - oldHeight + 50)
-    oldHeight = newHeight
+    scrollTo("bottom")
   }, 100))
 
-  resizeObserver.observe(document.getElementById("body"));
+  resizeObserver.observe(document.getElementById("area"));
 })
 
 
@@ -198,7 +193,7 @@ onMounted(() => {
     }
   }
 
-  .body {
+  .area {
     width: 700px;
     margin: auto;
 
@@ -247,6 +242,10 @@ onMounted(() => {
         position: absolute;
         top: 0;
       }
+    }
+
+    .bottom {
+      width: 100%;
     }
   }
 }
