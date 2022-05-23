@@ -60,13 +60,12 @@ function getData() {
 }
 
 watch(currentPage, function () {
-  let e = document.getElementById('sub-comment-' + props.id)
-  let l = e.offsetTop + e.offsetParent.offsetTop + e.offsetParent.offsetParent.offsetTop +
-      e.offsetParent.offsetParent.offsetParent.offsetTop +
-      e.offsetParent.offsetParent.offsetParent.offsetParent.offsetTop +
-      e.offsetParent.offsetParent.offsetParent.offsetParent.offsetParent.offsetTop
-  // console.log('comment-card-' + props.id)
-  scrollTo(l)
+  // let e = document.getElementById('sub-comment-' + props.id)
+  // let l = e.offsetTop + e.offsetParent.offsetTop + e.offsetParent.offsetParent.offsetTop +
+  //     e.offsetParent.offsetParent.offsetParent.offsetTop +
+  //     e.offsetParent.offsetParent.offsetParent.offsetParent.offsetTop +
+  //     e.offsetParent.offsetParent.offsetParent.offsetParent.offsetParent.offsetTop
+  scrollTo('sub-comment-' + props.id)
 })
 
 onMounted(function () {

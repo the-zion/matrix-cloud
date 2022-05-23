@@ -26,7 +26,6 @@
           v-model:current-page="currentPage"
           :page-size="20"
           :pager-count="11"
-          small
           layout="prev, pager, next"
           :total="1000"
       />
@@ -64,7 +63,7 @@ let options = ref([
 let comments = ref([])
 
 watch(currentPage, () => {
-  console.log(111)
+  scrollTo("blog-comment")
 })
 
 function init() {
