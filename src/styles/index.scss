@@ -1,12 +1,11 @@
-:root{
+:root {
   --el-overlay-color-lighter: rgba(0, 0, 0, 0.2) !important;
 }
 
 body {
   margin: unset;
   overflow: auto;
-  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
-  'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
 
   .dropdown {
@@ -26,6 +25,14 @@ body {
   .popover {
     padding: 16px 0 !important;
     border-radius: 10px !important;
+  }
+
+  .symbol-icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
   }
 
 }
