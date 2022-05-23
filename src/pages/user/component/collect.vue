@@ -10,7 +10,7 @@
         />
       </el-select>
     </el-row>
-    <matrix-list ref="listRef" :component="component" :scroll-to="427"></matrix-list>
+    <matrix-list ref="listRef" :component="component"></matrix-list>
   </el-container>
 </template>
 <script>

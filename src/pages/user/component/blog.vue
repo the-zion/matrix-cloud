@@ -16,7 +16,7 @@
           prefix-icon="Search"
       />
     </el-row>
-    <matrix-list component="MatrixBlogCard" :scroll-to="427"></matrix-list>
+    <matrix-list component="MatrixBlogCard"></matrix-list>
   </el-container>
 </template>
 <script>
