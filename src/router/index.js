@@ -6,6 +6,7 @@ import {
 const Main = () => import('../pages/main/main.vue')
 const Blog = () => import('../pages/blog/blog.vue')
 const Talk = () => import('../pages/talk/talk.vue')
+const Column = () => import('../pages/column/column.vue')
 const Message = () => import('../pages/message/message.vue')
 const About = () => import('../pages/about/about.vue')
 const User = () => import('../pages/user/user.vue')
@@ -63,6 +64,11 @@ const routes = [
                 path: 'talk',
                 name: 'talk',
                 component: Talk
+            },
+            {
+                path: 'column',
+                name: "column",
+                component: Column,
             },
             {
                 path: 'message',
