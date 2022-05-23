@@ -1,5 +1,6 @@
 <template>
   <el-container class="blog-container">
+    <el-backtop></el-backtop>
     <el-image fit="cover" class="cover" :src="data.cover"></el-image>
     <el-row class="header">
       <el-row class="title-area" justify="space-between">
@@ -97,8 +98,7 @@ function affixChange(value) {
 }
 
 function comment(){
-  let e = document.getElementById("blog-comment")
-  scrollTo(e.offsetTop)
+  scrollTo("blog-comment")
 }
 
 onMounted(function () {
