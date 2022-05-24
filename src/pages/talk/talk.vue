@@ -1,7 +1,6 @@
 <template>
   <el-container class="talk-container">
     <el-backtop></el-backtop>
-    <Reply v-model:visible="visible" :name="data.name"></Reply>
     <el-row class="talk-main">
       <el-row class="talk-block">
         <el-row class="header">
@@ -32,7 +31,7 @@
               @onCreated="handleCreated"
           />
         </el-row>
-        <el-affix position="bottom" :offset="16" class="affix">
+        <el-affix position="bottom" :offset="16" class="affix" @change="affixChange">
           <el-row class="footer" justify="space-between">
             <el-space>
               <el-space :size="5" class="icon-block">
@@ -46,11 +45,32 @@
                 <span class="num">收藏</span>
               </el-space>
             </el-space>
-            <el-button icon="EditPen" type="primary" @click="visible = true">回复评论</el-button>
+            <el-row class="reply" @click="comment">
+              <el-icon class="icon" :size="20" color="var(--el-text-color-placeholder)">
+                <EditPen/>
+              </el-icon>
+              <span class="word">添加回复</span>
+            </el-row>
           </el-row>
         </el-affix>
+        <el-row class="reply-block" v-if="visible" id="reply-block">
+          <matrix-reply></matrix-reply>
+        </el-row>
       </el-row>
-      <Comment></Comment>
+      <el-row class="statistic-block" justify="space-between" align="middle">
+        <span class="word">{{ "共" + data.comment + "个回复" }}</span>
+        <el-select class="select" v-model="select">
+          <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+          />
+        </el-select>
+      </el-row>
+      <el-row class="comment-block">
+        <matrix-comment shape="card"></matrix-comment>
+      </el-row>
     </el-row>
     <el-affix>
       <el-row class="talk-aside">
@@ -63,10 +83,9 @@
 <script setup>
 import {ref, onBeforeUnmount, shallowRef, onMounted} from "vue"
 import {Editor} from '@wangeditor/editor-for-vue'
-import Comment from "./component/comment.vue"
-import Reply from "./component/reply.vue"
 import Aside from "./component/aside.vue"
 import {goToPage} from "../../utils/globalFunc"
+import {scrollTo} from "../../utils/scroll";
 
 const editorRef = shallowRef()
 const valueHtml = ref('<p>hello</p>')
@@ -76,7 +95,9 @@ const editorConfig = {
   readOnly: true
 }
 
+let affix = ref(false)
 let visible = ref(false)
+let select = ref("hot")
 
 let data = ref({
   cover: "../../../../src/assets/images/cover.jpg",
@@ -88,11 +109,34 @@ let data = ref({
   collect: 2000,
   comment: 2000,
   agree: 2000,
-  tags: ["Go", "kubernetes", "云原生","Go", "kubernetes", "云原生"]
+  tags: ["Go", "kubernetes", "云原生", "Go", "kubernetes", "云原生"]
 })
+let options = ref([
+  {
+    label: "最热",
+    value: "hot"
+  },
+  {
+    label: "最新",
+    value: "new"
+  }
+])
 
 function handleCreated(editor) {
   editorRef.value = editor
+}
+
+function affixChange(value) {
+  affix.value = value
+}
+
+function comment() {
+  visible.value = !visible.value
+  if (affix.value) {
+    setTimeout(function () {
+      scrollTo("reply-block")
+    }, 50)
+  }
 }
 
 onBeforeUnmount(function () {
@@ -191,7 +235,51 @@ onBeforeUnmount(function () {
             }
           }
         }
+
+        .reply {
+          .icon {
+            margin-right: 5px;
+          }
+
+          .word {
+            font-size: 14px;
+            color: var(--el-text-color-secondary);
+            cursor: pointer;
+          }
+        }
       }
+
+      .reply-block {
+        width: 100%;
+        padding: 16px 0;
+      }
+    }
+
+    .statistic-block {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: var(--el-box-shadow-lighter);
+      background-color: var(--el-color-white);
+      margin-bottom: 10px;
+      padding: 10px 15px;
+
+      .word {
+        font-size: 12px;
+        color: var(--el-text-color-disabled)
+      }
+
+      .select {
+        width: 75px;
+
+        ::v-deep(.el-input__wrapper) {
+          box-shadow: unset !important;
+          height: 20px;
+        }
+      }
+    }
+
+    .comment-block {
+      width: 100%;
     }
   }
 
