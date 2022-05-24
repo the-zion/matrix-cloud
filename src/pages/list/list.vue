@@ -167,7 +167,7 @@ onMounted(() => {
 
     .each {
       position: relative;
-      border-bottom: 1px solid var(--el-border-color);
+      border-bottom: 1px solid var(--el-border-color-lighter);
       background-color: var(--el-color-white);
       cursor: pointer;
 
@@ -196,7 +196,8 @@ onMounted(() => {
 
     .card {
       border-radius: 8px;
-      box-shadow: var(--el-box-shadow-lighter);
+      border-bottom: unset;
+      box-shadow: 0 1px 2px rgba(0, 10, 32, 0.1), 0 2px 8px rgba(0, 10, 32, 0.05);
     }
   }
 
