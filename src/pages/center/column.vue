@@ -11,7 +11,7 @@
       <el-button round type="primary" icon="Plus" @click="visible = true">专栏创建</el-button>
     </el-row>
     <el-row class="body">
-      <matrix-list component="MatrixColumnCard" :operation="['delete']"></matrix-list>
+      <matrix-column-list  :operation="['delete']"></matrix-column-list>>
     </el-row>
   </el-container>
 </template>

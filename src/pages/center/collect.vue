@@ -1,7 +1,8 @@
 <template>
   <el-container class="collect-container">
     <el-space class="bar" size="large">
-      <el-space v-for="item in bar" :key="item.key" class="each" :class="{'select':current === item.key}" @click="filterSelect(item)">
+      <el-space v-for="item in bar" :key="item.key" class="each" :class="{'select':current === item.key}"
+                @click="filterSelect(item)">
         <el-icon>
           <component :is="item.icon"></component>
         </el-icon>
@@ -9,8 +10,7 @@
       </el-space>
     </el-space>
     <el-row class="body">
-      <matrix-list v-if="current === 'blog'" :operation="['star']" component="MatrixBlogCard"></matrix-list>
-      <matrix-list v-if="current === 'column'" :operation="['star']" component="MatrixColumnCard"></matrix-list>
+      <component :is="'matrix-' + current + '-list'" :operation="['star']"></component>
     </el-row>
   </el-container>
 </template>
@@ -27,6 +27,10 @@ let bar = ref([{
   key: "column",
   label: "专栏",
   icon: "files",
+}, {
+  key: "talk",
+  label: "专栏",
+  icon: "chat-dot-round",
 }])
 
 function filterSelect(each) {

@@ -11,7 +11,7 @@
       <el-button round type="primary" icon="EditPen" @click="visible = true">讨论发起</el-button>
     </el-row>
     <el-row class="body">
-      <matrix-list component="MatrixTalkCard" :operation="['delete']"></matrix-list>
+      <matrix-talk-list :operation="['delete']"></matrix-talk-list>
     </el-row>
   </el-container>
 </template>
