@@ -16,7 +16,8 @@
           <el-row class="shadow-radius">
             <el-main class="main">
               <el-row class="bar">
-                <el-row class="menu" :class="{'select':current === menu.name}" v-for="menu in menus" :key="menu.name" @click="current = menu.name">
+                <el-row class="menu" :class="{'select':current === menu.name}" v-for="menu in menus" :key="menu.name"
+                        @click="current = menu.name">
                   <el-space>
                     <el-row class="iconfont icon" :class="menu.icon"></el-row>
                     <el-row class="word">{{ menu.label }}</el-row>
@@ -24,10 +25,7 @@
                 </el-row>
               </el-row>
               <el-row class="body">
-                <blog v-if="current === 'blog'"></blog>
-                <column v-if="current === 'column'"></column>
-                <talk v-if="current === 'talk'"></talk>
-                <collect v-if="current === 'collect'"></collect>
+                <component :is="'matrix-' + current + '-list'"></component>
               </el-row>
             </el-main>
           </el-row>
@@ -42,12 +40,10 @@ import {ref} from "vue";
 import Card from "./component/card.vue"
 import Profile from "./component/profile.vue"
 import Calendar from "./component/calendar.vue"
-import Blog from "./component/blog.vue"
-import Talk from "./component/talk.vue"
-import Column from "./component/column.vue"
-import Collect from "./component/collect.vue"
 
 let current = ref("blog")
+let select = ref("new")
+
 let menus = ref([{
       name: "blog",
       label: "博客",
@@ -60,10 +56,6 @@ let menus = ref([{
       name: "talk",
       label: "讨论发起",
       icon: "icon-message",
-    }, {
-      name: "collect",
-      label: "收藏",
-      icon: "icon-star",
     }]
 )
 
@@ -124,6 +116,7 @@ let menus = ref([{
         .body {
           width: 100%;
           margin-top: 1rem;
+          border-top: 1px solid var(--el-border-color-lighter);
         }
       }
     }
