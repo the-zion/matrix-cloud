@@ -3,7 +3,6 @@
     <el-row class="reply-editor">
       <Editor
           class="editor"
-          style="width: 100%;"
           v-model="valueHtml"
           :defaultConfig="editorConfig"
           :mode="mode"
@@ -24,7 +23,7 @@
 
 <script>
 export default {
-  name: "Reply"
+  name: "MatrixReply"
 }
 </script>
 
@@ -88,6 +87,8 @@ onBeforeUnmount(() => {
     width: 100%;
     min-height: 50px;
     max-height: 200px;
+    background-color: var(--el-color-white);
+
 
     .editor {
       width: 100%;
@@ -97,6 +98,7 @@ onBeforeUnmount(() => {
   .reply-toolbar {
     width: 100%;
     border-top: 1px solid var(--el-border-color);
+    background-color: var(--el-color-white);
 
     .toolbar {
       width: calc(100% - 150px);
