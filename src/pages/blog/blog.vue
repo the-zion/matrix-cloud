@@ -47,14 +47,32 @@
       <span class="label">相关标签</span>
       <el-tag type="info" v-for="item in data.tags" round>{{ item }}</el-tag>
     </el-space>
-    <Common></Common>
+    <el-row class="reply-block" id="reply-block">
+      <el-row class="reply-header" justify="space-between">
+        <el-space>
+          <span class="num">{{ count }}</span>
+          <span class="word">条评论</span>
+        </el-space>
+        <el-select class="select" v-model="select">
+          <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+          />
+        </el-select>
+      </el-row>
+      <matrix-reply></matrix-reply>
+    </el-row>
+    <el-row class="comment-block">
+      <matrix-comment></matrix-comment>
+    </el-row>
   </el-container>
 </template>
 
 <script setup>
 import {ref, onBeforeUnmount, shallowRef, onMounted} from "vue";
 import {Editor} from '@wangeditor/editor-for-vue'
-import Common from './component/comment.vue'
 import {scrollTo} from "../../utils/scroll";
 
 const editorRef = shallowRef()
@@ -78,6 +96,18 @@ let data = ref({
   tags: ["Go", "kubernetes", "云原生"]
 })
 let visible = ref(false)
+let count = ref(153)
+let select = ref("hot")
+let options = ref([
+  {
+    label: "最热",
+    value: "hot"
+  },
+  {
+    label: "最新",
+    value: "new"
+  }
+])
 
 function init() {
   background()
@@ -97,8 +127,8 @@ function affixChange(value) {
   visible.value = value
 }
 
-function comment(){
-  scrollTo("blog-comment")
+function comment() {
+  scrollTo("reply-block")
 }
 
 onMounted(function () {
@@ -198,13 +228,44 @@ onBeforeUnmount(function () {
   .tags-block {
     width: 100%;
     margin-top: 20px;
-    margin-bottom: 30px !important;
 
     .label {
       font-size: 13px;
       margin-right: 5px;
       color: var(--el-text-color-disabled);
     }
+  }
+
+  .reply-block {
+    width: 100%;
+    margin-top: 30px;
+
+    .reply-header {
+      width: 100%;
+      margin-bottom: 5px;
+
+      .num {
+        font-size: 20px;
+      }
+
+      .word {
+        color: var(--el-text-color-regular);
+        font-size: 13px;
+      }
+
+      .select {
+        width: 75px;
+
+        ::v-deep(.el-input__wrapper) {
+          box-shadow: unset !important;
+        }
+      }
+    }
+  }
+
+  .comment-block {
+    width: 100%;
+    margin-top: 30px;
   }
 }
 </style>
