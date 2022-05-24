@@ -10,7 +10,9 @@ const Column = () => import('../pages/column/column.vue')
 const Message = () => import('../pages/message/message.vue')
 const About = () => import('../pages/about/about.vue')
 const User = () => import('../pages/user/user.vue')
-const write = () => import('../pages/blog/write.vue')
+const write = () => import('../pages/write/write.vue')
+const BlogWrite = () => import('../pages/blog/write.vue')
+const ColumnWrite = () => import('../pages/column/write.vue')
 const Home = () => import('../pages/home/home.vue')
 const HomeBlog = () => import("../pages/home/blog.vue")
 const HomeColumn = () => import("../pages/home/column.vue")
@@ -118,9 +120,19 @@ const routes = [
 
     },
     {
-        path: '/write/blog',
+        path: '/write',
         name: 'write',
         component: write,
+        redirect: {name: "blog.write"},
+        children: [{
+            path: 'blog',
+            name: 'blog.write',
+            component: BlogWrite
+        }, {
+            path: 'column',
+            name: "column.write",
+            component: ColumnWrite
+        }]
     },
 ]
 
