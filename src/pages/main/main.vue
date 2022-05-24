@@ -119,7 +119,6 @@ router.afterEach(function (route) {
 <style lang="scss">
 
 .main-container {
-  background-color: rgb(247 248 250);
 
   .main-header {
     display: flex;
