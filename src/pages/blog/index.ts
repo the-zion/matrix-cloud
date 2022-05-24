@@ -1,8 +1,8 @@
 import {App} from 'vue'
-import MatrixBlogCard from './component/blog-card.vue'
+import MatrixBlogList from './component/list.vue'
 
 export default {
     install(app: App) {
-        app.component(MatrixBlogCard.name, MatrixBlogCard)
+        app.component(MatrixBlogList.name, MatrixBlogList)
     }
 }
