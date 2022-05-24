@@ -87,6 +87,7 @@ let title = ref()
 let sendVisible = ref(false)
 let time = ref("20:00")
 let draft = ref(false)
+let body = null
 let resizeObserver = null
 
 
@@ -137,6 +138,7 @@ onBeforeUnmount(() => {
   const editor = editorRef.value
   if (editor == null) return
   editor.destroy()
+  body.style.backgroundColor = "rgb(247 248 250)"
 })
 
 onMounted(() => {
@@ -145,6 +147,8 @@ onMounted(() => {
   }, 100))
 
   resizeObserver.observe(document.getElementById("area"));
+  body = document.body
+  body.style.backgroundColor = "var(--el-color-white)"
 })
 
 
@@ -153,6 +157,7 @@ onMounted(() => {
 <style scoped lang="scss">
 .blog-container {
   flex-direction: column;
+  //background-color: var(--el-color-white);
 
   ::v-deep(.send-class) {
     border-radius: 8px;
