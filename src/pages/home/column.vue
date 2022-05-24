@@ -1,6 +1,5 @@
 <template>
   <el-container class="column">
-    <matrix-column-create v-model:visible="visible"></matrix-column-create>
     <el-row class="head" justify="space-between">
       <el-space class="menu" :size="32">
         <el-row class="each" :class="{'menu-select':current === item.key}" v-for="item in menu" :key="item.key"
@@ -15,7 +14,7 @@
             placeholder="题目/标签/作者/内容"
             suffix-icon="Search"
         />
-        <el-button round type="primary" icon="Plus" @click="visible = true">专栏创建</el-button>
+        <el-button round type="primary" icon="Plus" @click="create">专栏创建</el-button>
       </el-space>
     </el-row>
     <el-row class="tag-block" align="middle" justify="space-between">
@@ -55,15 +54,15 @@
         </template>
       </el-dialog>
     </el-row>
-    <matrix-list component="MatrixColumnCard" state="column" shape="card" :gap="10" :page-background="true"></matrix-list>
+    <matrix-column-list shape="card" :gap="10" :page-background="true"></matrix-column-list>
   </el-container>
 </template>
 
 <script setup>
 import {ref} from "vue"
+import {goToPage} from "../../utils/globalFunc";
 
 let input = ref()
-let visible = ref(false)
 let current = ref("hot")
 let menu = ref([
   {
@@ -106,6 +105,10 @@ function selectTag(each) {
 
 function filterByTags() {
 
+}
+
+function create() {
+  goToPage("column.write")
 }
 
 </script>

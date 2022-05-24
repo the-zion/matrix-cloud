@@ -54,7 +54,7 @@
         </template>
       </el-dialog>
     </el-row>
-    <matrix-list component="MatrixBlogCard" state="blog" shape="card" :gap="10" :page-background="true"></matrix-list>
+    <matrix-blog-list shape="card" :gap="10" :page-background="true"></matrix-blog-list>
   </el-container>
 </template>
 
@@ -108,7 +108,7 @@ function filterByTags() {
 }
 
 function write() {
-  router.push({"name": "write"})
+  router.push({"name": "blog.write"})
 }
 
 </script>
