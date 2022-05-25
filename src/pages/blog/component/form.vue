@@ -1,76 +1,62 @@
 <template>
-  <el-form class="form" v-model="form">
-    <el-form-item prop="cover" label="封面摘要" class="form-item">
-      <el-radio-group v-model="radio" class="radio-group">
-        <el-radio :label="1">有封面</el-radio>
-        <el-radio :label="2">无封面</el-radio>
-      </el-radio-group>
-      <el-row class="cover-block">
-        <el-upload
-            v-if="radio === 1"
-            class="uploader"
-            :show-file-list="false"
-            :on-success="uploadSuccess"
-            :before-upload="beforeUpload"
-        >
-          <img v-if="form.imageUrl" :src="form.imageUrl" class="cover"/>
-          <el-icon v-else :size="28" class="uploader-icon" :color="'var(--el-text-color-secondary)'">
-            <Plus/>
-          </el-icon>
-        </el-upload>
-        <el-input
-            class="textarea"
-            v-model="form.textarea"
-            maxlength="256"
-            resize="none"
-            placeholder="摘要（选填）：会在卡片、列表等场景外露，帮助读者快速了解内容，如不填写则默认抓取正文前256字符"
-            show-word-limit
-            type="textarea"
-        />
-      </el-row>
-    </el-form-item>
-    <el-form-item prop="tag" label="文章标签" class="form-item">
-      <el-space wrap size="large">
-        <el-popover placement="bottom-start" :width="432" trigger="hover" :show-arrow="false">
+  <el-row class="column-form">
+    <el-form ref="formRef" v-model="form" label-position="top" class="form">
+      <el-form-item label="文章标签" class="form-item">
+        <el-popover placement="bottom-start" :width="432" trigger="click" :show-arrow="false">
           <template #reference>
-            <el-button icon="Plus" size="small">添加</el-button>
+            <el-select
+                class="select"
+                size="large"
+                v-model="form.tags"
+                popper-class="tags-dropdown-select"
+                multiple
+                placeholder="请选择标签"
+            >
+            </el-select>
           </template>
           <matrix-tag v-model:selectedTags="form.tags"></matrix-tag>
         </el-popover>
-        <el-tag
-            v-for="tag in form.tags"
-            :key="tag"
-            closable
-            :disable-transitions="true"
-            @close="tagClose(tag)"
-        >
-          {{ tag }}
-        </el-tag>
-      </el-space>
-    </el-form-item>
-    <el-form-item prop="column" label="专栏分类" class="form-item">
-      <el-row class="column-block">
-        <el-row class="head">我的专栏</el-row>
-        <el-radio-group v-model="form.column" class="group">
-          <el-radio :label="item.id" v-for="item in columns" :key="item.id" class="radio" size="small">{{ item.label }}</el-radio>
+      </el-form-item>
+      <el-form-item prop="column" label="所属专栏" class="form-item">
+        <el-radio-group v-model="form.column">
+          <el-radio class="radio" v-for="item in columnRadio" :label="item.id">{{ item.label }}</el-radio>
         </el-radio-group>
-      </el-row>
-    </el-form-item>
-    <el-form-item prop="type" label="文章类型" class="form-item">
-      <el-radio-group v-model="form.type">
-        <el-radio :label="1">原创</el-radio>
-        <el-radio :label="2">转载</el-radio>
-        <el-radio :label="3">翻译</el-radio>
-      </el-radio-group>
-    </el-form-item>
-    <el-form-item prop="auth" label="发布方式" class="form-item">
-      <el-radio-group v-model="form.auth">
-        <el-radio :label="1">公开</el-radio>
-        <el-radio :label="2">私密</el-radio>
-        <el-radio :label="3">关注者可见</el-radio>
-      </el-radio-group>
-    </el-form-item>
-  </el-form>
+      </el-form-item>
+      <el-form-item prop="cover" label="文章封面" class="form-item">
+        <el-upload
+            class="cover-uploader"
+            :show-file-list="false"
+            :on-success="handleCoverSuccess"
+            :before-upload="beforeCoverUpload"
+        >
+          <el-image fit="cover" v-if="form.cover" :src="form.cover" class="avatar"/>
+          <el-space v-else class="cover-uploader-icon" direction="vertical" :size="2">
+            <el-icon>
+              <Upload/>
+            </el-icon>
+            <span class="word">上传图片</span>
+            <span class="word">JPG/PNG格式图片,大小200KB以内</span>
+          </el-space>
+        </el-upload>
+      </el-form-item>
+      <el-form-item prop="url" label="文章摘要" class="form-item">
+        <el-input placeholder="摘要（选填）：会在卡片、列表等场景外露，帮助读者快速了解内容，如不填写则默认抓取正文前256字符"
+                  maxlength="200" show-word-limit
+                  v-model="form.url" type="textarea" resize="none" :rows="5"></el-input>
+      </el-form-item>
+      <el-form-item prop="auth" label="创建方式" class="form-item">
+        <el-radio-group v-model="form.auth">
+          <el-radio class="radio" v-for="item in authRadio" :label="item.id">{{ item.label }}</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item prop="source" label="文章来源" class="form-item">
+        <el-radio-group v-model="form.source">
+          <el-radio class="radio" v-for="item in sourceRadio" :label="item.id">{{ item.label }}</el-radio>
+        </el-radio-group>
+      </el-form-item>
+    </el-form>
+    <el-button class="button" type="primary" size="large" @click="createColumn">发布</el-button>
+  </el-row>
 </template>
 
 <script>
@@ -80,126 +66,121 @@ export default {
 </script>
 
 <script setup>
-import {onMounted, ref} from "vue"
-
-const emits = defineEmits(["open"])
+import {ref} from "vue"
+import {error} from "../../../utils/message";
 
 let form = ref({
-  imageUrl: "",
-  textarea: "",
+  source: 1,
+  auth: 1,
   tags: [],
-  type: 1,
-  auth: 1
+  column: ""
 })
-let radio = ref(1)
-let columns = ref([{
+let formRef = ref()
+let authRadio = [{
   id: 1,
-  label: "云原生"
+  label: "公开"
 }, {
   id: 2,
-  label: "Mysql"
+  label: "私密"
+}, {
+  id: 3,
+  label: "关注者可见"
+}]
+let sourceRadio = [{
+  id: 1,
+  label: "原创"
+}, {
+  id: 2,
+  label: "转载"
+}]
+
+let columnRadio = ref([{
+  id: 1,
+  label: "深入浅出Docker"
 }])
 
-function uploadSuccess() {
+function handleCoverSuccess() {
 
 }
 
-function beforeUpload() {
+function beforeCoverUpload() {
 
 }
 
-function tagClose(tag) {
-  form.value.tags.splice(form.value.tags.indexOf(tag), 1)
+function checkForm() {
+  if (form.value.tags.length === 0) {
+    error("请选择标签")
+    return false
+  }
+
+  if (form.value.source === 2 && form.value.url === '') {
+    error("请填写转载网址")
+    return false
+  }
+  return true
 }
 
-function validateTag(rule, value, callback) {
-  value.length === 0 && callback(new Error("标签不能为空"))
-  callback()
+function createColumn() {
+  if (!checkForm()) {
+    return null
+  }
 }
 
 
-onMounted(function () {
-  emits("open", form)
-})
 </script>
 
 <style scoped lang="scss">
-.form {
+.column-form {
   width: 100%;
 
-  .form-item {
-    margin-bottom: 30px;
+  .form {
     width: 100%;
 
-    .radio-group {
+    .form-item {
       width: 100%;
-    }
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--el-border-color-light);
 
-    .cover-block {
-      margin: 16px 0;
-      width: 100%;
+      .select {
+        width: 100%;
+      }
 
-      .uploader {
-        margin-right: 24px;
+      .radio {
+        font-weight: 400;
+      }
 
-        .cover {
-          width: 178px;
-          height: 178px;
-          display: block;
-        }
-
+      .cover-uploader {
         ::v-deep(.el-upload) {
-          border: 1px dashed var(--el-border-color);
           border-radius: 6px;
           cursor: pointer;
           position: relative;
           overflow: hidden;
           transition: var(--el-transition-duration-fast);
+          background-color: var(--el-color-white);
         }
 
-        .uploader-icon {
-          width: 160px;
-          height: 90px;
+        .cover-uploader-icon {
+          font-size: 28px;
+          color: #8c939d;
+          width: 240px;
+          height: 148px;
           text-align: center;
-        }
-      }
+          justify-content: center;
 
-      .textarea {
-        width: 368px;
-        height: 90px;
-
-        ::v-deep(.el-textarea__inner) {
-          height: 100%;
-        }
-      }
-    }
-
-    .column-block {
-      width: 475px;
-      height: 160px;
-      padding: 0 16px;
-      border: 1px solid var(--el-border-color-light);
-      border-radius: 4px;
-      flex-direction: column;
-
-      .head {
-        width: 100%;
-        height: 33px;
-        border-bottom: 1px solid var(--el-border-color-light);
-        margin-bottom: 6px;
-      }
-
-      .group {
-        width: 100%;
-        height: calc(100% - 40px);
-        overflow: auto;
-        align-items: flex-start;
-
-        .radio {
-          height: 37px;
+          .word {
+            width: 170px;
+            font-size: 12px;
+            line-height: 20px;
+            color: #999;
+            margin-bottom: 6px;
+          }
         }
       }
     }
+  }
+
+  .button {
+    width: 100%;
   }
 }
 </style>
