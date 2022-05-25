@@ -1,6 +1,5 @@
 <template>
   <el-container class="talk">
-    <matrix-talk-create v-model:visible="visible"></matrix-talk-create>
     <el-row class="head" justify="space-between">
       <el-space class="menu" :size="32">
         <el-row class="each" :class="{'menu-select':current === item.key}" v-for="item in menu" :key="item.key"
@@ -10,12 +9,13 @@
       </el-space>
       <el-space class="operate">
         <el-input
+            @keyup="keyup"
             class="input"
             v-model="input"
-            placeholder="题目/标签/作者/内容"
+            placeholder="搜索"
             suffix-icon="Search"
         />
-        <el-button round type="primary" icon="EditPen" @click="visible = true">讨论发起</el-button>
+        <el-button round type="primary" icon="EditPen" @click="router.push({'name':'talk.write'})">讨论发起</el-button>
       </el-space>
     </el-row>
     <el-row class="tag-block" align="middle" justify="space-between">
@@ -61,6 +61,7 @@
 
 <script setup>
 import {ref} from "vue"
+import router from "../../router"
 
 let input = ref()
 let current = ref("hot")
@@ -106,6 +107,13 @@ function selectTag(each) {
 
 function filterByTags() {
 
+}
+
+function keyup(event) {
+  if (event.keyCode !== 13) {
+    return
+  }
+  router.push({"name": "search", query: {type: "talk", query: input.value}})
 }
 
 </script>
