@@ -8,11 +8,13 @@ const Blog = () => import('../pages/blog/blog.vue')
 const Talk = () => import('../pages/talk/talk.vue')
 const Column = () => import('../pages/column/column.vue')
 const Message = () => import('../pages/message/message.vue')
+const Search = () => import('../pages/search/search.vue')
 const About = () => import('../pages/about/about.vue')
 const User = () => import('../pages/user/user.vue')
 const write = () => import('../pages/write/write.vue')
 const BlogWrite = () => import('../pages/blog/write.vue')
 const ColumnWrite = () => import('../pages/column/write.vue')
+const TalkWrite = () => import('../pages/talk/write.vue')
 const Home = () => import('../pages/home/home.vue')
 const HomeBlog = () => import("../pages/home/blog.vue")
 const HomeColumn = () => import("../pages/home/column.vue")
@@ -78,6 +80,11 @@ const routes = [
                 component: Message
             },
             {
+                path: 'search',
+                name: 'search',
+                component: Search
+            },
+            {
                 path: 'about',
                 name: 'about',
                 component: About
@@ -132,6 +139,10 @@ const routes = [
             path: 'column',
             name: "column.write",
             component: ColumnWrite
+        }, {
+            path: "talk",
+            name: "talk.write",
+            component: TalkWrite
         }]
     },
 ]
