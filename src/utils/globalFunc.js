@@ -25,3 +25,7 @@ export function goToPage(state, id) {
     });
     window.open(href, "_blank");
 }
+
+export function backToHome() {
+    router.push({name: "home"})
+}
