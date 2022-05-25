@@ -1,6 +1,5 @@
 import App from './App.vue'
 import {createApp} from 'vue'
-import ListComponent from './pages/list/index.ts'
 import ReplyComponent from './pages/reply/index.ts'
 import CommentComponent from './pages/comment/index.ts'
 import BlogComponents from './pages/blog/index.ts'
@@ -19,7 +18,6 @@ import 'uno.css'
 
 
 const app = createApp(App).use(store)
-    .use(ListComponent)
     .use(ReplyComponent)
     .use(CommentComponent)
     .use(BlogComponents)
