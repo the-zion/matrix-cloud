@@ -9,12 +9,13 @@
       </el-space>
       <el-space class="operate">
         <el-input
+            @keyup="keyup"
             class="input"
             v-model="input"
-            placeholder="题目/标签/作者/内容"
+            placeholder="搜索"
             suffix-icon="Search"
         />
-        <el-button round type="primary" icon="EditPen" @click="write">博客撰写</el-button>
+        <el-button round type="primary" icon="EditPen" @click="router.push({'name': 'blog.write'})">博客撰写</el-button>
       </el-space>
     </el-row>
     <el-row class="tag-block" align="middle" justify="space-between">
@@ -107,8 +108,11 @@ function filterByTags() {
 
 }
 
-function write() {
-  router.push({"name": "blog.write"})
+function keyup(event) {
+  if (event.keyCode !== 13) {
+    return
+  }
+  router.push({"name": "search", query: {type: "blog", query: input.value}})
 }
 
 </script>
