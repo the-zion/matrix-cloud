@@ -121,6 +121,8 @@ router.afterEach(function (route) {
 .main-container {
 
   .main-header {
+    position: relative;
+    z-index: 1;
     display: flex;
     justify-content: center;
     border-bottom: 1px solid var(--el-border-color-lighter);
