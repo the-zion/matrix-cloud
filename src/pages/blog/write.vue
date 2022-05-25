@@ -1,6 +1,18 @@
 <template>
   <el-container class="blog-container">
-    <send v-model:visible="sendVisible" title="发布文章" mode="blog"></send>
+    <el-drawer
+        v-model="drawer"
+        custom-class="drawer"
+        direction="rtl"
+        @closed="drawer = false"
+        destroy-on-close
+    >
+      <template #title>
+        <!--        todo 2.2.0版本以上换成header-->
+        <el-row class="title">发布文章</el-row>
+      </template>
+      <Form></Form>
+    </el-drawer>
     <el-row class="head">
       <el-row class="base" align="middle" justify="space-between">
         <el-space :size="20">
@@ -18,7 +30,7 @@
         </el-space>
         <el-space :size="15">
           <el-button icon="Tickets" @click="draft = true">草稿</el-button>
-          <el-button type="primary" icon="Promotion" @click="sendVisible = true">发布</el-button>
+          <el-button type="primary" icon="Promotion" @click="drawer = true">发布</el-button>
         </el-space>
       </el-row>
       <Toolbar
@@ -58,8 +70,8 @@ import router from "../../router";
 import {scrollTo} from "../../utils/scroll";
 import {success, info, warning, error} from "../../utils/message";
 import {customCheckVideoFn, customParseVideoSrc} from "../../utils/video";
-import Send from './component/send.vue'
 import Draft from './component/draft.vue'
+import Form from './component/form.vue'
 
 const editorRef = shallowRef()
 const valueHtml = ref('')
@@ -75,6 +87,7 @@ const editorConfig = {
   placeholder: '请输入内容...',
   scroll: false,
   maxLength: 5000,
+  autoFocus: false,
   MENU_CONF: {
     insertVideo: {
       checkVideo: customCheckVideoFn,
@@ -84,9 +97,9 @@ const editorConfig = {
 }
 
 let title = ref()
-let sendVisible = ref(false)
 let time = ref("20:00")
 let draft = ref(false)
+let drawer = ref(false)
 let body = null
 let resizeObserver = null
 
@@ -157,10 +170,24 @@ onMounted(() => {
 <style scoped lang="scss">
 .blog-container {
   flex-direction: column;
-  //background-color: var(--el-color-white);
 
-  ::v-deep(.send-class) {
-    border-radius: 8px;
+  ::v-deep(.el-overlay) {
+    background-color: unset;
+
+    .drawer {
+      background-color: var(--el-fill-color-lighter);
+      box-shadow: var(--el-box-shadow-lighter);
+
+      .el-drawer__header {
+        margin-bottom: unset;
+      }
+
+      .title {
+        font-size: 18px;
+        font-weight: 400;
+        color: var(--el-text-color-primary);
+      }
+    }
   }
 
   .head {
