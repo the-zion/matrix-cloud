@@ -11,7 +11,7 @@
     "@wangeditor/editor-for-vue": "^5.1.11",
     "axios": "^0.25.0",
     "echarts": "^5.3.2",
-    "element-plus": "^2.2.1",
+    "element-plus": "^2.2.0",
     "lodash": "^4.17.21",
     "unocss": "^0.34.0",
     "vue": "^3.2.25",
