@@ -9,12 +9,13 @@
       </el-space>
       <el-space class="operate">
         <el-input
+            @keyup="keyup"
             class="input"
             v-model="input"
-            placeholder="题目/标签/作者/内容"
+            placeholder="搜索"
             suffix-icon="Search"
         />
-        <el-button round type="primary" icon="Plus" @click="create">专栏创建</el-button>
+        <el-button round type="primary" icon="Plus" @click="router.push({'name': 'column.write'})">专栏创建</el-button>
       </el-space>
     </el-row>
     <el-row class="tag-block" align="middle" justify="space-between">
@@ -60,7 +61,7 @@
 
 <script setup>
 import {ref} from "vue"
-import {goToPage} from "../../utils/globalFunc";
+import router from "../../router";
 
 let input = ref()
 let current = ref("hot")
@@ -107,8 +108,11 @@ function filterByTags() {
 
 }
 
-function create() {
-  goToPage("column.write")
+function keyup(event) {
+  if (event.keyCode !== 13) {
+    return
+  }
+  router.push({"name": "search", query: {type: "column", query: input.value}})
 }
 
 </script>
