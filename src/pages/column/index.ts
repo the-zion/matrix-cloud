@@ -1,9 +1,10 @@
-import {App} from 'vue'
-
-import MatrixColumnList from './component/list.vue'
+import {App, defineAsyncComponent} from 'vue'
+const MatrixColumnList = defineAsyncComponent(() =>
+    import('./component/list.vue')
+)
 
 export default {
     install(app: App) {
-        app.component(MatrixColumnList.name, MatrixColumnList)
+        app.component("matrix-column-list", MatrixColumnList)
     }
 }

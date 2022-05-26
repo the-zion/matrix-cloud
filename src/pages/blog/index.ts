@@ -1,8 +1,10 @@
-import {App} from 'vue'
-import MatrixBlogList from './component/list.vue'
+import {App, defineAsyncComponent} from 'vue'
 
+const MatrixBlogList = defineAsyncComponent(() =>
+    import('./component/list.vue')
+)
 export default {
     install(app: App) {
-        app.component(MatrixBlogList.name, MatrixBlogList)
+        app.component("matrix-blog-list", MatrixBlogList)
     }
 }
