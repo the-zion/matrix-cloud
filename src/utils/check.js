@@ -1,5 +1,5 @@
 export function validateAccount(rule, value, callback) {
-    if (!(checkPhone("+86" + value) || checkEmail(value))) {
+    if (!(checkPhone(value) || checkEmail(value))) {
         value || callback(new Error("账号不能为空"))
         callback(new Error("手机/邮箱 格式错误"))
     }
@@ -9,13 +9,13 @@ export function validateAccount(rule, value, callback) {
 export function validatePassword(rule, value, callback) {
     if (!checkPassword(value)) {
         value || callback(new Error("密码不能为空"))
-        callback(new Error("密码需同时包含字母和数字，至少 8 个字符"))
+        callback(new Error("至少1个大写字母，1个小写字母和1个数字，长度 8-20"))
     }
     callback()
 }
 
 export function validatePhone(rule, value, callback) {
-    if (!checkPhone("+86" + value)) {
+    if (!checkPhone(value)) {
         value || callback(new Error("手机号不能为空"))
         callback(new Error("手机号格式错误"))
     }
@@ -39,7 +39,7 @@ export function validateEmail(rule, value, callback) {
 }
 
 export function checkPhone(value) {
-    return value.match("^\\+[1-9]?[0-9]{7,14}$")
+    return value.match("^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$")
 }
 
 export function checkCode(value) {
@@ -47,9 +47,9 @@ export function checkCode(value) {
 }
 
 export function checkEmail(value) {
-    return value.match("^[a-z0-9]+([._\\\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$")
+    return value.match("\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*")
 }
 
 export function checkPassword(value) {
-    return value.match("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,20}$")
+    return value.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[\\s\\S]{8,16}$")
 }

@@ -1,28 +1,15 @@
-import {createStore} from 'vuex'
+import {defineStore} from "pinia"
 
-const store = createStore({
-    state() {
-        return {
-            count: 666
-        }
+export const store = defineStore("main",{
+    state: ()=>{
+        return {}
     },
-    getters: {
-        double(state) {
-            return state.count * 2
-        }
+
+    getters:{
+
     },
-    mutations: {
-        add(state) {
-            state.count++
-        }
-    },
-    actions: {
-        asyncAdd({commit}) {
-            setTimeout(() => {
-                commit('add')
-            }, 1000)
-        }
+
+    actions:{
+
     }
 })
-
-export default store
