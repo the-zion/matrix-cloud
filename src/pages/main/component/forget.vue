@@ -64,7 +64,15 @@ export default {
 <script setup>
 import {ref} from "vue";
 import {success, error} from "../../../utils/message";
-import {validatePhone, validateCode, validateEmail, validatePassword, checkPhone, checkEmail} from "../../../utils/check"
+import {
+  validatePhone,
+  validateCode,
+  validateEmail,
+  validatePassword,
+  checkPhone,
+  checkEmail
+} from "../../../utils/check"
+import {post} from "../../../utils/axios";
 
 const emit = defineEmits(["update:mode"])
 
@@ -101,6 +109,7 @@ const rules1 = ref({
   code: [{validator: validateCode, trigger: 'blur'}],
   email: [{validator: validateEmail, trigger: 'blur'}]
 })
+
 const rules2 = ref({
   password: [{validator: validatePassword, trigger: 'blur'}],
   repeat: [{validator: validateRepeat, trigger: 'blur'}],
@@ -126,18 +135,26 @@ function selectChange() {
 }
 
 function sendCode() {
-  if (interval.value || !(form1.value.select === 'phone' ? checkPhone("+86" + form1.value.phone) : checkEmail(form1.value.email))) {
+  if (interval.value || !(form1.value.select === 'phone' ? checkPhone(form1.value.phone) : checkEmail(form1.value.email))) {
     interval.value || error(form1.value.select === 'phone' ? "手机号有误，请检查" : "邮箱有误，请检查")
     return null
   }
   codeSending.value = true
-  setTimeout(function () {
+  let params = {
+    template: "2"
+  }
+  params[form1.value.select] = form1.value[form1.value.select]
+  post("/v1/user/code/" + form1.value.select, params).then(function () {
+    success("验证码已发送")
     countDown()
-  }, 500)
+  }).catch(function () {
+    error("验证码发送失败")
+    codeSending.value = false
+  })
 }
 
 function countDown() {
-  let countdown = 300
+  let countdown = 120
   codeSending.value = false
   width.value = 90
   text.value = countdown
@@ -159,12 +176,8 @@ function nextStep(formRef) {
     if (!valid) {
       error("账号或验证码有误，请检查")
     } else {
-      loading.value = true
-      setTimeout(function () {
-        loading.value = false
-        cancelInterval()
-        step.value = "step2"
-      }, 500)
+      cancelInterval()
+      step.value = "step2"
       return true
     }
   })
@@ -179,10 +192,34 @@ function passwordReset(formRef) {
     if (!valid) {
       error("密码输入有误，请检查")
     } else {
-      success("密码重置成功，请重新登录")
-      mode("account")
+      toReset()
       return true
     }
+  })
+}
+
+function toReset() {
+  loading.value = true
+  post("/v1/user/login/password/reset", {
+    account: form1.value.select === "phone" ? form1.value.phone : form1.value.email,
+    code: form1.value.code,
+    password: form2.value.password,
+    mode: form1.value.select
+  }).then(function (reply) {
+    success("密码重置成功，请重新登录")
+    mode("account")
+  }).catch(function (err) {
+    let msg = "密码重置失败"
+    let response = err.response
+    if (response) {
+      switch (response.data.reason) {
+        case "VERIFY_CODE_FAILED":
+          msg = "密码重置失败：验证码错误"
+          break
+      }
+    }
+    error(msg)
+    loading.value = false
   })
 }
 

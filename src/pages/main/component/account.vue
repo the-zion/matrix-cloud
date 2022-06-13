@@ -29,6 +29,7 @@ export default {
 import {ref} from "vue";
 import {success, error} from "../../../utils/message";
 import {validateAccount, validatePassword} from "../../../utils/check"
+import {post} from "../../../utils/axios";
 
 const emits = defineEmits(["update:mode", "close"])
 
@@ -51,18 +52,39 @@ function login(formRef) {
   }
   formRef.validate((valid) => {
     if (!valid) {
-      error("账号或密码有误，请检查")
+      error("账号或密码输入有误，请检查")
     } else {
-      loading.value = true
-      setTimeout(function () {
-        success("登录成功")
-        loading.value = false
-        closeDialog()
-      }, 500)
+      toLogin()
       return true
     }
   })
 }
+
+function toLogin() {
+  loading.value = true
+  post("/v1/user/login/password", {
+    account: form.value.account,
+    password: form.value.password,
+    mode: form.value.account.includes("@") ? "email" : "phone"
+  }).then(function (reply) {
+    localStorage.setItem("matrix-token", reply.data.token)
+    success("登录成功")
+    closeDialog()
+  }).catch(function (err) {
+    let msg = "登录失败"
+    let response = err.response
+    if (response) {
+      switch (response.data.reason) {
+        case "VERIFY_PASSWORD_FAILED":
+          msg = "登录失败：密码验证失败"
+          break
+      }
+    }
+    error(msg)
+    loading.value = false
+  })
+}
+
 
 function closeDialog() {
   emits("close", "")

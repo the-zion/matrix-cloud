@@ -3,14 +3,14 @@
     <el-row class="title">验证码登录</el-row>
     <el-form :model="form" class="form" :rules="rules" ref="formRef" status-icon>
       <el-form-item prop="phone">
-        <el-input class="inputPhone" v-model="form.phone" type="text" placeholder="输入手机号">
+        <el-input class="inputPhone" v-model="form.phone" type="text" :maxlength="50" show-word-limit placeholder="输入手机号">
           <template #prepend>
             <el-row>+86</el-row>
           </template>
         </el-input>
       </el-form-item>
       <el-form-item prop="code">
-        <el-input class="inputCode" v-model="form.code" type="text" placeholder="验证码">
+        <el-input class="inputCode" v-model="form.code" type="text" :maxlength="6" show-word-limit placeholder="验证码">
           <template #append>
             <el-row v-show="!codeSending" :style="{width: width + 'px'}" style="cursor:pointer;" @click="sendCode">
               {{ text + (interval ? ' 秒后可重发' : '') }}
@@ -39,15 +39,18 @@ export default {
 </script>
 
 <script setup>
-import {ref} from "vue";
-import {success, error} from "../../../utils/message";
+import {ref} from "vue"
+import {success, error} from "../../../utils/message"
 import {validatePhone, validateCode, checkPhone} from "../../../utils/check"
+import {post} from "../../../utils/axios"
+
 
 const emits = defineEmits(["update:mode", "close"])
 
 let width = ref(68)
 let text = ref("获取验证码")
 let codeSending = ref(false)
+
 let interval = ref(null)
 let loading = ref(false)
 let form = ref({
@@ -62,18 +65,22 @@ const rules = ref({
 })
 
 function sendCode() {
-  if (interval.value || !checkPhone("+86" + form.value.phone)) {
+  if (interval.value || !checkPhone(form.value.phone)) {
     interval.value || error("手机号有误，请检查")
     return null
   }
   codeSending.value = true
-  setTimeout(function () {
+  post("/v1/user/code/phone", {phone: form.value.phone, template: "1"}).then(function () {
+    success("验证码已发送")
     countDown()
-  }, 500)
+  }).catch(function () {
+    error("验证码发送失败")
+    codeSending.value = false
+  })
 }
 
 function countDown() {
-  let countdown = 300
+  let countdown = 120
   codeSending.value = false
   width.value = 90
   text.value = countdown
@@ -110,14 +117,30 @@ function login(formRef) {
     if (!valid) {
       error("手机号或验证码有误，请检查")
     } else {
-      loading.value = true
-      setTimeout(function () {
-        loading.value = false
-        success("登录成功")
-        closeDialog()
-      }, 500)
+      loginByCode()
       return true
     }
+  })
+}
+
+function loginByCode() {
+  loading.value = true
+  post("/v1/user/login/code", {phone: form.value.phone, code: form.value.code}).then(function (reply) {
+    localStorage.setItem("matrix-token", reply.data.token)
+    success("登录成功")
+    closeDialog()
+  }).catch(function (err) {
+    let msg = "登录失败"
+    let response = err.response
+    if (response) {
+      switch (response.data.reason) {
+        case "VERIFY_CODE_FAILED":
+          msg = "登录失败：验证码错误"
+          break
+      }
+    }
+    error(msg)
+    loading.value = false
   })
 }
 
@@ -128,6 +151,7 @@ function closeDialog() {
 </script>
 
 <style scoped lang="scss">
+
 .code {
   width: 100%;
 
