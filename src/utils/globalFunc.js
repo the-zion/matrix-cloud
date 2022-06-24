@@ -1,5 +1,9 @@
 import {ElMessageBox} from 'element-plus'
 import router from "../router";
+import {warning} from "./message";
+import {userMainStore} from "../store";
+
+const userStore = userMainStore()
 
 export function confirm(title, message, type) {
     return ElMessageBox.confirm(
@@ -28,4 +32,10 @@ export function goToPage(state, id) {
 
 export function backToHome() {
     router.push({name: "home"})
+}
+
+export function loginTimeOut(){
+    warning("登录已过期，请重新登录")
+    localStorage.removeItem("matrix-token")
+    userStore.$reset()
 }
