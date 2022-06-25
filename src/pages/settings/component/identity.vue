@@ -1,31 +1,16 @@
 <template>
   <el-container class="identity-container">
     <el-form :model="form" ref="formRef" class="form" :rules="rules">
-      <el-form-item class="form-item" prop="mode">
-        <el-select class="select" v-model="form.mode" placeholder="请选择验证方式" @change="selectChange">
-          <el-option
-              v-for="item in options"
-              :label="item.label"
-              :value="item.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item v-if="form.mode === 'phone'" class="form-item" prop="phone">
+      <el-form-item v-if="props.mode === 'phone'" class="form-item" prop="phone">
         <el-input v-model="form.phone" disabled :maxlength="20" placeholder="请输入手机号"/>
       </el-form-item>
-      <el-form-item v-if="form.mode === 'email'" class="form-item" prop="email">
+      <el-form-item v-if="props.mode === 'email'" class="form-item" prop="email">
         <el-input v-model="form.email" disabled :maxlength="50" placeholder="请输入邮箱账号"/>
-      </el-form-item>
-      <el-form-item v-if="form.mode === 'account'" class="form-item" prop="account">
-        <el-input v-model="form.account" :maxlength="50" placeholder="请输入 手机号/邮箱账号"/>
-      </el-form-item>
-      <el-form-item v-if="form.mode === 'account'" class="form-item" prop="password">
-        <el-input v-model="form.password" :maxlength="50" placeholder="请输入密码"/>
       </el-form-item>
       <el-form-item v-if="form.mode !== 'account'" class="form-item" prop="code">
         <el-row class="code" justify="space-between">
           <el-input class="code-input" v-model="form.code" :maxlength="6" placeholder="请输入验证码"/>
-          <el-button class="button" :disabled="countdown !== 61" :loading="codeSending" @click="sendCode">
+          <el-button class="button" :disabled="countdown !== 121" :loading="codeSending" @click="sendCode">
             {{ codeSending ? "发送中" : buttonText }}
           </el-button>
         </el-row>
@@ -43,6 +28,8 @@ export default {
 <script setup>
 import {onMounted, ref} from "vue"
 import {validateAccount, validatePassword, validateCode} from "../../../utils/check";
+import {post} from "../../../utils/axios";
+import {error, success} from "../../../utils/message";
 
 const emits = defineEmits(["open"])
 const rules = ref({
@@ -50,60 +37,66 @@ const rules = ref({
   password: [{validator: validatePassword, trigger: 'blur'}],
   code: [{validator: validateCode, trigger: 'blur'}]
 })
-
-let form = ref({mode: "phone", phone: "", email: "", account: "", code: ""})
-let data = ref({
-  phone: "+86 19907740758",
-  email: "945212191@qq.com"
+const props = defineProps({
+  data: Object,
+  mode: String
 })
+
+let form = ref({phone: "", email: "", code: ""})
 let formRef = ref()
 let buttonText = ref("获取验证码")
 let codeSending = ref(false)
-let countdown = ref(61)
-let options = ref([
-  {
-    value: "phone",
-    label: "手机号验证"
-  },
-  {
-    value: "email",
-    label: "邮箱验证"
-  },
-  {
-    value: "account",
-    label: "账号密码验证"
-  }
-])
+let countdown = ref(121)
 
 function init() {
   initData()
+  sendCode()
 }
 
 function initData() {
-  form.value.phone = data.value["phone"]
-}
-
-function selectChange(key) {
-  form.value[key] = data.value[key]
+  form.value.phone = props.data["phone"]
+  form.value.email = props.data["email"]
 }
 
 function sendCode() {
   codeSending.value = true
-  countdown.value = 60
-  setTimeout(function () {
+  countdown.value = 120
+  if (props.mode === "phone") {
+    sendPhoneCode()
+  } else {
+    sendEmailCode()
+  }
+}
+
+function sendPhoneCode() {
+  post("/v1/user/code/phone", {phone: form.value.phone, template: "3"}).then(function () {
+    success("验证码已发送")
     countDown()
-  }, 500)
+  }).catch(function () {
+    error("验证码发送失败")
+    codeSending.value = false
+  })
+}
+
+function sendEmailCode() {
+  post("/v1/user/code/email", {email: form.value.email, template: "3"}).then(function () {
+    success("验证码已发送")
+    countDown()
+  }).catch(function () {
+    error("验证码发送失败")
+    codeSending.value = false
+  })
 }
 
 function countDown() {
   codeSending.value = false
-  buttonText.value = "60s后获取"
+  buttonText.value = "120s后获取"
   let interval = setInterval(() => {
     countdown.value--
     buttonText.value = countdown.value + "s后获取"
     if (countdown.value === 0) {
       buttonText.value = "获取验证码"
-      countdown.value = 61
+      countdown.value = 121
       clearInterval(interval)
     }
   }, 1000)
