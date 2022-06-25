@@ -2,7 +2,6 @@ import axios from "axios"
 import {baseMainStore} from "../store";
 
 const baseStore = baseMainStore()
-console.log(123)
 export function post(url, params) {
     let token = localStorage.getItem("matrix-token")
     const instance = axios.create({
