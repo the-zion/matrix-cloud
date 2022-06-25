@@ -19,13 +19,13 @@ const Home = () => import('../pages/home/home.vue')
 const HomeBlog = () => import("../pages/home/blog.vue")
 const HomeColumn = () => import("../pages/home/column.vue")
 const HomeTalk = () => import("../pages/home/talk.vue")
-const Center = () => import("../pages/center/center.vue")
-const CenterBlog = () => import("../pages/center/blog.vue")
-const CenterColumn = () => import("../pages/center/column.vue")
-const CenterTalk = () => import("../pages/center/talk.vue")
-const CenterCollect = () => import("../pages/center/collect.vue")
-const CenterProfile = () => import("../pages/center/profile.vue")
-const CenterSecurity = () => import("../pages/center/security.vue")
+const Settings = () => import("../pages/settings/settings.vue")
+// const CenterBlog = () => import("../pages/center/blog.vue")
+// const CenterColumn = () => import("../pages/center/column.vue")
+// const CenterTalk = () => import("../pages/center/talk.vue")
+// const CenterCollect = () => import("../pages/center/collect.vue")
+const SettingsProfile = () => import("../pages/settings/profile.vue")
+const SettingsAccount = () => import("../pages/settings/account.vue")
 
 
 const routes = [
@@ -95,36 +95,20 @@ const routes = [
                 component: User
             },
             {
-                path: 'center',
-                name: 'center',
-                component: Center,
+                path: 'settings',
+                name: 'settings',
+                component: Settings,
+                redirect: {name: 'settings.profile'},
                 children: [{
-                    path: 'blog',
-                    name: 'center.user',
-                    component: CenterBlog
-                }, {
-                    path: 'column',
-                    name: 'center.column',
-                    component: CenterColumn
-                }, {
-                    path: 'talk',
-                    name: 'center.talk',
-                    component: CenterTalk
-                }, {
-                    path: 'collect',
-                    name: 'center.collect',
-                    component: CenterCollect
-                }, {
                     path: 'profile',
-                    name: 'center.profile',
-                    component: CenterProfile
+                    name: 'settings.profile',
+                    component: SettingsProfile
                 }, {
-                    path: 'security',
-                    name: 'center.security',
-                    component: CenterSecurity
+                    path: 'account',
+                    name: 'settings.account',
+                    component: SettingsAccount
                 }]
             }]
-
     },
     {
         path: '/write',
