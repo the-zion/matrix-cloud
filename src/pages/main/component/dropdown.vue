@@ -43,7 +43,7 @@ let menu = ref([
   {
     label: "账户设置",
     icon: "setting",
-    func: userProfile
+    func: userSettings
   },
   {
     label: "退出登录",
@@ -69,8 +69,8 @@ function userCenter() {
   router.push({name: "center.user", query: {menu: 'blog'}})
 }
 
-function userProfile() {
-  router.push({name: "center.profile", query: {menu: 'profile'}})
+function userSettings() {
+  router.push({name: "settings.profile", query: {menu: 'profile'}})
 }
 
 function signOut() {
