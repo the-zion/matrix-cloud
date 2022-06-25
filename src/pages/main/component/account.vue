@@ -30,7 +30,9 @@ import {ref} from "vue";
 import {success, error} from "../../../utils/message";
 import {validateAccount, validatePassword} from "../../../utils/check"
 import {post} from "../../../utils/axios";
+import {userMainStore} from "../../../store";
 
+const userStore = userMainStore()
 const emits = defineEmits(["update:mode", "close"])
 
 let loading = ref(false)
@@ -69,6 +71,7 @@ function toLogin() {
   }).then(function (reply) {
     localStorage.setItem("matrix-token", reply.data.token)
     success("登录成功")
+    userStore.getUserProfile()
     closeDialog()
   }).catch(function (err) {
     let msg = "登录失败"
