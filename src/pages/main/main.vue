@@ -52,6 +52,9 @@ import {ref, onMounted} from "vue";
 import {useRoute} from "vue-router";
 import Login from './component/login.vue'
 import Dropdown from './component/dropdown.vue'
+import {userMainStore} from "../../store";
+
+const userStore = userMainStore()
 
 let activeMenu = ref()
 let userLogin = ref(false)
@@ -72,10 +75,15 @@ let menuList = ref([{
 
 function init() {
   initData()
+  getData()
 }
 
 function initData() {
   activeMenu.value = useRoute().name.split(".")[0]
+}
+
+function getData(){
+  userStore.getUserProfile()
 }
 
 function backToHome() {
