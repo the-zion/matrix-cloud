@@ -26,6 +26,8 @@ export default {
 import {ref, onMounted} from "vue";
 
 import {validateEmail, validateCode} from "../../../utils/check";
+import {post} from "../../../utils/axios";
+import {error, success} from "../../../utils/message";
 
 const emits = defineEmits(["open"])
 const rules = ref({
@@ -42,9 +44,13 @@ let countdown = ref(61)
 function sendCode() {
   codeSending.value = true
   countdown.value = 60
-  setTimeout(function () {
+  post("/v1/user/code/email", {email: form.value.email, template: "3"}).then(function () {
+    success("验证码已发送")
     countDown()
-  }, 500)
+  }).catch(function () {
+    error("验证码发送失败")
+    codeSending.value = false
+  })
 }
 
 function countDown() {
