@@ -43,8 +43,9 @@ import {ref} from "vue"
 import {success, error} from "../../../utils/message"
 import {validatePhone, validateCode, checkPhone} from "../../../utils/check"
 import {post} from "../../../utils/axios"
+import {userMainStore} from "../../../store";
 
-
+const userStore = userMainStore()
 const emits = defineEmits(["update:mode", "close"])
 
 let width = ref(68)
@@ -128,6 +129,7 @@ function loginByCode() {
   post("/v1/user/login/code", {phone: form.value.phone, code: form.value.code}).then(function (reply) {
     localStorage.setItem("matrix-token", reply.data.token)
     success("登录成功")
+    userStore.getUserProfile()
     closeDialog()
   }).catch(function (err) {
     let msg = "登录失败"
