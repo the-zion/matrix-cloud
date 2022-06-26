@@ -1,11 +1,14 @@
 <template>
   <el-container class="password-container">
     <el-form :model="form" ref="formRef" class="form" :rules="rules">
+      <el-form-item class="form-item" prop="oldpassword" v-if="props.mode === 'change'">
+        <el-input v-model="form.oldpassword" :maxlength="50" type="password" show-password placeholder="请输入旧密码"/>
+      </el-form-item>
       <el-form-item class="form-item" prop="password">
-        <el-input v-model="form.password" :maxlength="50" placeholder="请输入密码"/>
+        <el-input v-model="form.password" :maxlength="50" type="password" show-password placeholder="请输入密码"/>
       </el-form-item>
       <el-form-item class="form-item" prop="repeat">
-        <el-input v-model="form.repeat" :maxlength="50" placeholder="请重复输入密码"/>
+        <el-input v-model="form.repeat" :maxlength="50" type="password" show-password placeholder="请重复输入密码"/>
       </el-form-item>
     </el-form>
   </el-container>
@@ -23,12 +26,16 @@ import {ref, onMounted} from "vue";
 import {validatePassword} from "../../../utils/check";
 
 const emits = defineEmits(["open"])
+const props = defineProps({
+  mode: String,
+})
 const rules = ref({
+  oldpassword: [{validator: validatePassword, trigger: 'blur'}],
   password: [{validator: validatePassword, trigger: 'blur'}],
   repeat: [{validator: validateRepeat, trigger: 'blur'}]
 })
 
-let form = ref({password: "", repeat: ""})
+let form = ref({oldpassword: "", password: "", repeat: ""})
 let formRef = ref()
 
 function validateRepeat(rule, value, callback) {
