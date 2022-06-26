@@ -3,16 +3,11 @@
              @open="open" @closed="closed" destroy-on-close>
     <el-row class="title" justify="center">{{ title }}</el-row>
     <el-row class="description" justify="center">{{ description }}</el-row>
-    <identity-verification v-if="step === 'one'" @open="subOpen"></identity-verification>
-    <Email v-if="step === 'two' && mode === 'email'" @open="subOpen"></Email>
-    <Phone v-if="step === 'two' && mode === 'phone'" @open="subOpen"></Phone>
-    <Password v-if="step === 'two' && mode === 'password'" @open="subOpen"></Password>
+    <Password @open="subOpen" v-bind:mode="props.mode"></Password>
     <template #footer>
           <span class="dialog-footer">
             <el-button @click="close">取消</el-button>
-            <el-button v-show="step === 'one'" type="primary" @click="nextStep"
-            >下一步</el-button>
-            <el-button v-show="step === 'two'" type="primary" @click="save"
+            <el-button type="primary" @click="save" :loading="loading"
             >保存</el-button>
           </span>
     </template>
@@ -21,27 +16,26 @@
 
 <script>
 export default {
-  name: "SecurityEdit"
+  name: "PasswordEdit"
 }
 </script>
 
 <script setup>
 import {ref} from "vue"
 import {success, error} from "../../../utils/message";
-import IdentityVerification from "./identity.vue"
-import Email from "./email.vue"
-import Phone from "./phone.vue"
 import Password from "./password.vue"
+import {post} from "../../../utils/axios";
+import {loginTimeOut} from "../../../utils/globalFunc";
 
 const emits = defineEmits(["update:visible"])
 const props = defineProps({
   visible: Boolean,
-  mode: String
+  mode: String,
 })
 
 let title = ref("")
 let description = ref("")
-let step = ref("")
+let loading = ref()
 let mode = ref("")
 let form = null
 let formRef = null
@@ -51,26 +45,13 @@ function open() {
 }
 
 function initData() {
+  loading.value = false
+  title.value = "密码设置"
   mode.value = props.mode
-  step.value = "one"
-  title.value = "身份验证"
-  description.value = "为了保护你的帐号安全，请验证身份，验证成功后进行下一步操作"
-}
-
-function titleSet() {
-  switch (mode.value) {
-    case "email":
-      title.value = "邮箱设置"
-      description.value = "请输入邮箱账号与验证码完成邮箱设置"
-      break
-    case "phone":
-      title.value = "手机号设置"
-      description.value = "请输入手机号与验证码完成手机号设置"
-      break
-    case "password":
-      title.value = "密码设置"
-      description.value = "请输入新密码以完成密码设置"
-      break
+  if (mode.value === "change") {
+    description.value = "为了保护你的帐号安全，请输入旧密码，以便于后续验证"
+  } else {
+    description.value = "请输入新密码以完成密码设置"
   }
 }
 
@@ -87,7 +68,7 @@ function subOpen(f, r) {
   formRef = r
 }
 
-function nextStep() {
+function save() {
   if (!formRef) {
     error("未知错误")
     return
@@ -96,25 +77,35 @@ function nextStep() {
     if (!valid) {
       error("提交的信息有误，请检查")
     } else {
-      step.value = "two"
-      titleSet()
+      setPassword()
       return true
     }
   })
 }
 
-function save(){
-  if (!formRef) {
-    error("未知错误")
-    return
-  }
-  formRef.validate((valid) => {
-    if (!valid) {
-      error("提交的信息有误，请检查")
-    } else {
-      close()
-      return true
+function setPassword() {
+  loading.value = true
+  post(mode.value === "set" ? "/v1/set/user/password" : "/v1/change/user/password", {
+    oldpassword: form.oldpassword,
+    password: form.password
+  }).then(function () {
+    success("密码设置成功")
+    close()
+  }).catch(function (err) {
+    let msg = "密码设置失败"
+    let response = err.response
+    if (response) {
+      switch (response.data.reason) {
+        case "TOKEN_EXPIRED":
+          loginTimeOut()
+          return
+        case "VERIFY_PASSWORD_FAILED":
+          msg = "旧密码验证错误"
+          break
+      }
     }
+    error(msg)
+    loading.value = false
   })
 }
 </script>
