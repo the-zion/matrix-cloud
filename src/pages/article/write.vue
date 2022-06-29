@@ -20,15 +20,14 @@
                     :src="'../../src/assets/images/matrix.svg'"
                     fit="contain"
           ></el-image>
-          <span class="title">{{ title || "无标题" }}</span>
+        </el-space>
+        <el-space :size="18">
           <el-space>
             <el-icon :color="'var(--el-text-color-placeholder)'">
               <Clock/>
             </el-icon>
-            <span class="time">{{ "最近保存：" + time }}</span>
+            <span class="time">{{ time }}</span>
           </el-space>
-        </el-space>
-        <el-space :size="15">
           <el-button icon="Tickets" @click="draft = true">草稿</el-button>
           <el-button type="primary" icon="Promotion" @click="drawer = true">发布</el-button>
         </el-space>
@@ -45,6 +44,7 @@
           v-model="draft"
           title="我的草稿"
           direction="rtl"
+          destroy-on-close
       >
         <draft></draft>
       </el-drawer>
@@ -57,6 +57,7 @@
           @onCreated="handleCreated"
           @onMaxLength="onMaxLength"
           @customAlert="customAlert"
+          @onChange="editChange"
       />
       <span class="bottom" id="bottom"></span>
     </el-row>
@@ -70,9 +71,20 @@ import router from "../../router";
 import {scrollTo} from "../../utils/scroll";
 import {success, info, warning, error} from "../../utils/message";
 import {customCheckVideoFn, customParseVideoSrc} from "../../utils/video";
+import {get, post} from "../../utils/axios"
+import {initCos} from "../../utils/cos";
 import Draft from './component/draft.vue'
 import Form from './component/form.vue'
+import {loginTimeOut} from "../../utils/globalFunc";
+import {userMainStore, baseMainStore} from "../../store";
+import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 
+
+const cos = initCos()
+const userStore = userMainStore()
+const baseStore = baseMainStore()
+const {uuid} = storeToRefs(userStore)
+const {article} = storeToRefs(baseStore)
 const editorRef = shallowRef()
 const valueHtml = ref('')
 const mode = ref('default')
@@ -80,7 +92,12 @@ const toolbarConfig = {
   excludeKeys: [
     'fullScreen',
     'insertImage',
-    'uploadVideo'
+    'uploadVideo',
+    "bgColor",
+    "fontSize",
+    "fontFamily",
+    "lineHeight",
+    "|",
   ]
 }
 const editorConfig = {
@@ -92,16 +109,28 @@ const editorConfig = {
     insertVideo: {
       checkVideo: customCheckVideoFn,
       parseVideoSrc: customParseVideoSrc
+    },
+    uploadImage: {
+      maxFileSize: 5 * 1024 * 1024,
+      allowedFileTypes: ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'],
+      customUpload: imageUpload
     }
   }
 }
 
 let title = ref()
-let time = ref("20:00")
+let draftId = ref()
+let time = ref("文章将自动保存至草稿箱")
 let draft = ref(false)
 let drawer = ref(false)
 let body = null
 let resizeObserver = null
+let draftMarked = false
+let uploadBox = {}
+let uploadParams = {
+  Bucket: baseStore.article.bucket,
+  Region: baseStore.article.region,
+}
 
 
 function backToHome() {
@@ -136,6 +165,59 @@ function onMaxLength(editor) {
   editor.alert('最多不超过5000个字', 'info')
 }
 
+function editChange(editor) {
+  uploadBox["title"] = title.value
+  uploadBox["html"] = editor.getHtml()
+  editSave(function () {
+    time.value = "最近保存：" + new Date().toLocaleString()
+  })
+  draftMark()
+}
+
+function draftMark() {
+  if (!draftId.value || !uuid.value || draftMarked) {
+    return
+  }
+  post("/v1/article/draft/mark", {id: draftId.value}).then(function () {
+    draftMarked = true
+  })
+}
+
+function imageUpload(file, insertFn) {
+  if (!draftId.value || !uuid.value) {
+    time.value = "文章自动保存失败"
+    return
+  }
+  let imageId = +new Date();
+  let filetype = file.type.split("/")[1]
+  uploadParams["Key"] = baseStore.article.key  + draftId.value + "/" + imageId + "." + filetype
+  uploadParams["Headers"] = {
+    'x-cos-meta-uuid': uuid.value,
+  }
+  uploadParams["Body"] = file
+  cos.uploadFile(uploadParams, function (err) {
+    if (err) {
+      error("图片上传失败，请稍后再试")
+      return
+    }
+    insertFn(baseStore.article.baseUrl + draftId.value + "/" + imageId + "." + filetype)
+  })
+}
+
+function editSave(fn) {
+  if (!draftId.value || !uuid.value) {
+    time.value = "文章自动保存失败"
+    return
+  }
+  time.value = "文章保存中......"
+  uploadParams["Key"] = baseStore.article.key + draftId.value + "/" + uuid.value
+  uploadParams["Headers"] = {
+    'x-cos-meta-uuid': uuid.value,
+  }
+  uploadParams["Body"] = JSON.stringify(uploadBox)
+  cos.uploadFile(uploadParams, fn)
+}
+
 function throttle(callback, delay) {
   let pre = 0
   return function (res) {
@@ -154,17 +236,56 @@ onBeforeUnmount(() => {
   body.style.backgroundColor = "rgb(247 248 250)"
 })
 
+function init() {
+  getBaseInform()
+  getLastDraft()
+}
+
+function getBaseInform() {
+  userStore.getUserProfile()
+}
+
+function getLastDraft() {
+  get("/v1/get/last/article/draft").then(function (reply) {
+    if (reply.data.status === 3) {
+      CreateDraft()
+    } else {
+      draftId.value = reply.data.id
+    }
+  }).catch(function (err) {
+    let response = err.response
+    if (response) {
+      switch (response.data.reason) {
+        case "TOKEN_EXPIRED":
+          loginTimeOut()
+          return
+        case "RECORD_NOT_FOUND":
+          CreateDraft()
+          return
+      }
+    }
+    error("稿件创建失败，请稍后再试")
+  })
+}
+
+function CreateDraft() {
+  post("/v1/create/article/draft", {}).then(function (reply) {
+    draftId.value = reply.data.id
+  }).catch(function () {
+    error("稿件创建失败，请稍后再试")
+  })
+}
+
 onMounted(() => {
   resizeObserver = new ResizeObserver(throttle(function (res) {
     scrollTo("bottom")
   }, 100))
-
   resizeObserver.observe(document.getElementById("area"));
   body = document.body
   body.style.backgroundColor = "var(--el-color-white)"
+
+  init()
 })
-
-
 </script>
 
 <style scoped lang="scss">
@@ -192,12 +313,12 @@ onMounted(() => {
 
   .head {
     width: 100%;
+    border-bottom: 1px solid var(--el-border-color-lighter);
 
     .base {
-      width: 100%;
+      width: 1000px;
       height: 50px;
-      padding: 0 40px;
-      border-bottom: 1px solid var(--el-border-color);
+      margin: auto;
 
       .logo {
         width: 95px;
@@ -216,11 +337,11 @@ onMounted(() => {
     }
 
     .toolbar {
-      width: 100%;
-      border-bottom: 1px solid var(--el-border-color);
+      width: 1000px;
+      margin: auto;
 
       ::v-deep(.w-e-toolbar) {
-        justify-content: space-between;
+        justify-content: center;
       }
     }
   }
