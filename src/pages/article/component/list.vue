@@ -85,7 +85,7 @@
 
 <script>
 export default {
-  name: "MatrixBlogList"
+  name: "MatrixArticleList"
 }
 </script>
 
