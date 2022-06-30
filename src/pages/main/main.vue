@@ -15,8 +15,27 @@
           </template>
         </el-menu-item>
         <div style="flex-grow: 1"></div>
-        <el-row class="main-login-word" v-show="!userLogin" @click="login">登录</el-row>
-        <el-row align="middle" v-show="!userLogin">
+        <el-dropdown split-button type="primary" trigger="click">
+          创作中心
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="writeArticle">
+                <el-icon>
+                  <EditPen/>
+                </el-icon>
+                <span>写文章</span>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <el-icon>
+                  <ChatDotRound/>
+                </el-icon>
+                <span>发讨论</span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+        <!--        <el-row class="main-login-word" v-show="!uuid" @click="login">登录</el-row>-->
+        <el-row align="middle" v-show="uuid">
           <el-badge :value="messageValue" :max="99" class="main-menu-icon" :hidden=messageCount(messageValue)>
             <el-icon :size="20" @click="add">
               <message/>
@@ -53,8 +72,10 @@ import {useRoute} from "vue-router";
 import Login from './component/login.vue'
 import Dropdown from './component/dropdown.vue'
 import {userMainStore} from "../../store";
+import {storeToRefs} from "pinia/dist/pinia";
 
 const userStore = userMainStore()
+const {uuid} = storeToRefs(userStore)
 
 let activeMenu = ref()
 let userLogin = ref(false)
@@ -82,7 +103,7 @@ function initData() {
   activeMenu.value = useRoute().name.split(".")[0]
 }
 
-function getData(){
+function getData() {
   userStore.getUserProfile()
 }
 
@@ -112,6 +133,14 @@ function login() {
 
 function dropdownClick(item) {
   router.push({name: item})
+}
+
+function writeArticle() {
+  const {href} = router.resolve({
+    name: "article.write",
+    query: {mode: 'create'}
+  });
+  window.open(href, "_blank");
 }
 
 onMounted(function () {
@@ -165,7 +194,7 @@ router.afterEach(function (route) {
 
       .main-menu-icon {
         color: #909399;
-        margin: 0 15px;
+        margin: 0 20px 0 50px;
         cursor: pointer;
         display: flex;
 
