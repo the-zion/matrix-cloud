@@ -26,6 +26,11 @@ export default {
 <script setup>
 import {ref, onMounted} from "vue";
 import router from "../../../router";
+import {userMainStore} from "../../../store";
+import {storeToRefs} from "pinia/dist/pinia";
+
+const userStore = userMainStore()
+const {uuid} = storeToRefs(userStore)
 
 let name = ref("")
 let introduce = ref("")
@@ -59,10 +64,11 @@ function init() {
 function initData() {
   name.value = "刘小圆sama"
   introduce.value = "海纳百川，有容纳大"
+
 }
 
 function userPage() {
-  router.push({name: "user", query: {id: 1}})
+  router.push({name: "user", query: {id: uuid.value, menu: 'article'}})
 }
 
 function userCenter() {
