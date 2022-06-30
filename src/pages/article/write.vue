@@ -11,7 +11,7 @@
         <!--        todo 2.2.0版本以上换成header-->
         <el-row class="title">发布文章</el-row>
       </template>
-      <Form></Form>
+      <Form :title="title" :editor="editorRef" :id="draftId"></Form>
     </el-drawer>
     <el-row class="head">
       <el-row class="base" align="middle" justify="space-between">
@@ -46,10 +46,11 @@
           direction="rtl"
           destroy-on-close
       >
-        <draft></draft>
+        <draft @draftSelect="draftSelect"></draft>
       </el-drawer>
       <el-input placeholder="请输入标题" class="title" v-model="title"/>
       <Editor
+          v-loading="loading"
           class="editor"
           v-model="valueHtml"
           :defaultConfig="editorConfig"
@@ -65,7 +66,7 @@
 </template>
 
 <script setup>
-import {onBeforeUnmount, ref, shallowRef, onMounted} from 'vue'
+import {onBeforeUnmount, ref, shallowRef, onMounted, onBeforeMount} from 'vue'
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 import router from "../../router";
 import {scrollTo} from "../../utils/scroll";
@@ -118,11 +119,12 @@ const editorConfig = {
   }
 }
 
-let title = ref()
+let title = ref("")
 let draftId = ref()
 let time = ref("文章将自动保存至草稿箱")
 let draft = ref(false)
 let drawer = ref(false)
+let loading = ref(false)
 let body = null
 let resizeObserver = null
 let draftMarked = false
@@ -165,17 +167,28 @@ function onMaxLength(editor) {
   editor.alert('最多不超过5000个字', 'info')
 }
 
+function draftSelect(id) {
+  draftId.value = id
+  getData()
+}
+
 function editChange(editor) {
   uploadBox["title"] = title.value
   uploadBox["html"] = editor.getHtml()
+  uploadBox["update"] = new Date().toLocaleString()
   editSave(function () {
-    time.value = "最近保存：" + new Date().toLocaleString()
+    time.value = "最近保存：" + uploadBox["update"]
   })
   draftMark()
 }
 
 function draftMark() {
-  if (!draftId.value || !uuid.value || draftMarked) {
+  if (!uuid.value) {
+    warning("账号未登录，请先登录")
+    return
+  }
+
+  if (!draftId.value || draftMarked) {
     return
   }
   post("/v1/article/draft/mark", {id: draftId.value}).then(function () {
@@ -184,13 +197,18 @@ function draftMark() {
 }
 
 function imageUpload(file, insertFn) {
-  if (!draftId.value || !uuid.value) {
+  if (!uuid.value) {
+    warning("账号未登录，请先登录")
+    return
+  }
+
+  if (!draftId.value) {
     time.value = "文章自动保存失败"
     return
   }
   let imageId = +new Date();
   let filetype = file.type.split("/")[1]
-  uploadParams["Key"] = baseStore.article.key  + draftId.value + "/" + imageId + "." + filetype
+  uploadParams["Key"] = baseStore.article.key + draftId.value + "/" + imageId + "." + filetype
   uploadParams["Headers"] = {
     'x-cos-meta-uuid': uuid.value,
   }
@@ -205,7 +223,12 @@ function imageUpload(file, insertFn) {
 }
 
 function editSave(fn) {
-  if (!draftId.value || !uuid.value) {
+  if (!uuid.value) {
+    warning("账号未登录，请先登录")
+    return
+  }
+
+  if (!draftId.value) {
     time.value = "文章自动保存失败"
     return
   }
@@ -237,17 +260,12 @@ onBeforeUnmount(() => {
 })
 
 function init() {
-  getBaseInform()
   getLastDraft()
-}
-
-function getBaseInform() {
-  userStore.getUserProfile()
 }
 
 function getLastDraft() {
   get("/v1/get/last/article/draft").then(function (reply) {
-    if (reply.data.status === 3) {
+    if (reply.data.status !== 1) {
       CreateDraft()
     } else {
       draftId.value = reply.data.id
@@ -275,6 +293,37 @@ function CreateDraft() {
     error("稿件创建失败，请稍后再试")
   })
 }
+
+function getData() {
+  if (!uuid.value) {
+    warning("账号未登录，请先登录")
+    return
+  }
+
+  if (!draftId.value) {
+    error("稿件获取失败")
+    return
+  }
+
+  loading.value = true
+  let url = baseStore.article.baseUrl + draftId.value + "/" + uuid.value
+  get(url).then(function (reply) {
+    let data = reply.data
+    let editor = editorRef.value
+    if (editor == null) return
+    title.value = data.title
+    editor.setHtml(data.html)
+    uploadBox = data
+  }).catch(function () {
+    error("稿件获取失败")
+  }).then(function () {
+    loading.value = false
+  })
+}
+
+onBeforeMount(function () {
+  userStore.getUserProfile()
+})
 
 onMounted(() => {
   resizeObserver = new ResizeObserver(throttle(function (res) {
