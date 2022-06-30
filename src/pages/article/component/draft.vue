@@ -1,7 +1,8 @@
 <template>
   <el-row class="draft">
-    <el-space v-for="item in draft" :key="item.id" class="each" :size="15">
-      <el-image :src="item.image" v-show="item.image" class="image" fit="cover"></el-image>
+    <el-skeleton class="skeleton" v-show="loading" :rows="1" animated/>
+    <el-space v-show="!loading" v-for="item in draft" :key="item.id" class="each" :size="15" @click="draftSelect(item)">
+      <el-image :src="item.cover" v-show="item.cover" class="image" fit="cover"></el-image>
       <el-space fill>
         <span class="title">{{ item.title || "暂无标题" }}</span>
         <span class="time">{{ item.update ? ("最近编辑于 " + item.update) : "暂未编辑" }}</span>
@@ -18,18 +19,18 @@ export default {
 
 <script setup>
 import {onMounted, ref} from "vue"
-import * as COS from "cos-js-sdk-v5"
 import {get, post} from "../../../utils/axios"
-import {initCos} from "../../../utils/cos";
 import {userMainStore, baseMainStore} from "../../../store";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
+import {warning} from "../../../utils/message";
 
-const cos = new COS({})
 const userStore = userMainStore()
 const baseStore = baseMainStore()
 const {uuid} = storeToRefs(userStore)
 const {article} = storeToRefs(baseStore)
+const emits = defineEmits(["draftSelect"])
 let draft = ref()
+let loading = ref(false)
 
 function init() {
   getData()
@@ -37,8 +38,10 @@ function init() {
 
 function getData() {
   if (!uuid.value) {
+    warning("账号未登录，请先登录")
     return
   }
+  loading.value = true
   get("/v1/get/article/draft/list").then(function (reply) {
     draft.value = reply.data["draft"]
     getFromCos()
@@ -46,14 +49,26 @@ function getData() {
 }
 
 function getFromCos() {
-  draft.value.forEach(function (item, index) {
+  let request = draft.value.length
+  draft.value.forEach(function (item) {
     let url = baseStore.article.baseUrl + item.id + "/" + uuid.value
     get(url).then(function (reply) {
       let data = reply.data
       item.title = data.title
       item.update = data.update
+      item.cover = data.cover
+    }).catch(function () {
+    }).then(function () {
+      request -= 1
+      if (request === 0) {
+        loading.value = false
+      }
     })
   })
+}
+
+function draftSelect(item) {
+  emits("draftSelect", item.id)
 }
 
 onMounted(function () {
@@ -64,6 +79,11 @@ onMounted(function () {
 <style scoped lang="scss">
 .draft {
   width: 100%;
+
+  .skeleton {
+    width: 100%;
+    padding: 10px 15px;
+  }
 
   .each:hover {
     background-color: var(--el-fill-color-light);
