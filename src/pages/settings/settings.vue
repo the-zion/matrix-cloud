@@ -6,11 +6,11 @@
         <Navigation></Navigation>
       </el-affix>
     </el-aside>
-    <el-main>
+    <el-row class="main">
       <router-view v-slot="{ Component }">
         <component :is="Component"/>
       </router-view>
-    </el-main>
+    </el-row>
   </el-container>
 </template>
 
@@ -20,13 +20,20 @@ import Navigation from "./component/navigation.vue"
 
 <style scoped lang="scss">
 .center-container {
-  max-width: 1128px;
-  width: fit-content;
+  width: 1200px;
   margin: auto;
+  justify-content: space-between;
 
   .aside {
-    width: 240px;
+    width: 230px;
     height: fit-content;
+    border: 1px solid var(--el-border-color-lighter);
+  }
+
+  .main {
+
+    width: calc(100% - 254px);
+    border: 1px solid var(--el-border-color-lighter);
   }
 }
 </style>
