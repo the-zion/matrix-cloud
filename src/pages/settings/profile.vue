@@ -56,7 +56,7 @@
             :before-upload="beforeAvatarUpload"
         >
           <template #tip>
-            <el-progress v-show="uploading" style="margin-top: 5px" :percentage="percentage" :show-text="false"/>
+            <el-progress v-show="uploading" :duration="10" style="margin-top: 5px" :percentage="percentage" :show-text="false"/>
             <el-row justify="center" align="middle" style="margin-top: 5px">
               <span style="font-size: 14px">我的头像</span>
               <el-tooltip
@@ -170,7 +170,7 @@ function avatarUpload(UploadRequestOptions) {
     },
     Body: file,
     onProgress: function (progressData) {
-      percentage.value = progressData.percent
+      percentage.value = progressData.percent * 100
     }
   }, function (err, data) {
     if (err) {
@@ -178,12 +178,14 @@ function avatarUpload(UploadRequestOptions) {
       return
     }
     success("图片上传成功")
-    uploading.value = false
     let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = function () {
       tempAvatarUrl.value = reader.result;
     };
+    setTimeout(function (){
+      uploading.value = false
+    }, 1000)
   });
 }
 
