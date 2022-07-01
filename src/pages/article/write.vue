@@ -32,12 +32,16 @@
           <el-button type="primary" icon="Promotion" @click="drawer = true">发布</el-button>
         </el-space>
       </el-row>
-      <Toolbar
-          class="toolbar"
-          :editor="editorRef"
-          :defaultConfig="toolbarConfig"
-          :mode="mode"
-      />
+      <el-affix :offset="0" class="affix">
+        <el-row class="block">
+          <Toolbar
+              class="toolbar"
+              :editor="editorRef"
+              :defaultConfig="toolbarConfig"
+              :mode="mode"
+          />
+        </el-row>
+      </el-affix>
     </el-row>
     <el-row class="area" id="area">
       <el-drawer
@@ -112,8 +116,8 @@ const editorConfig = {
       parseVideoSrc: customParseVideoSrc
     },
     uploadImage: {
-      maxFileSize: 5 * 1024 * 1024,
-      allowedFileTypes: ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'],
+      maxFileSize: 2 * 1024 * 1024,
+      allowedFileTypes: ['image/png', 'image/jpeg', 'image/jpg'],
       customUpload: imageUpload
     }
   }
@@ -127,7 +131,9 @@ let drawer = ref(false)
 let loading = ref(false)
 let body = null
 let resizeObserver = null
+let areaHeight = null
 let draftMarked = false
+let editorReload = false
 let uploadBox = {}
 let uploadParams = {
   Bucket: baseStore.article.bucket,
@@ -169,6 +175,7 @@ function onMaxLength(editor) {
 
 function draftSelect(id) {
   draftId.value = id
+  editorReload = true
   getData()
 }
 
@@ -183,12 +190,7 @@ function editChange(editor) {
 }
 
 function draftMark() {
-  if (!uuid.value) {
-    warning("账号未登录，请先登录")
-    return
-  }
-
-  if (!draftId.value || draftMarked) {
+  if (!draftId.value || draftMarked || !uuid.value) {
     return
   }
   post("/v1/article/draft/mark", {id: draftId.value}).then(function () {
@@ -206,6 +208,7 @@ function imageUpload(file, insertFn) {
     time.value = "文章自动保存失败"
     return
   }
+
   let imageId = +new Date();
   let filetype = file.type.split("/")[1]
   uploadParams["Key"] = baseStore.article.key + draftId.value + "/" + imageId + "." + filetype
@@ -213,6 +216,9 @@ function imageUpload(file, insertFn) {
     'x-cos-meta-uuid': uuid.value,
   }
   uploadParams["Body"] = file
+  // uploadParams["onProgress"] = function (progressData) {
+  //   editor.showProgressBar(progressData.percent * 100)
+  // }
   cos.uploadFile(uploadParams, function (err) {
     if (err) {
       error("图片上传失败，请稍后再试")
@@ -327,12 +333,25 @@ onBeforeMount(function () {
 
 onMounted(() => {
   resizeObserver = new ResizeObserver(throttle(function (res) {
-    scrollTo("bottom")
+    let height = res[0].contentRect.height
+    if (areaHeight === null) {
+      areaHeight = height
+      return
+    }
+    if (editorReload) {
+      editorReload = false
+      areaHeight = height
+      return
+    }
+    window.scrollTo({
+      top: height - areaHeight + document.documentElement.scrollTop,
+      behavior: "smooth"
+    })
+    areaHeight = height
   }, 100))
   resizeObserver.observe(document.getElementById("area"));
   body = document.body
   body.style.backgroundColor = "var(--el-color-white)"
-
   init()
 })
 </script>
@@ -362,7 +381,6 @@ onMounted(() => {
 
   .head {
     width: 100%;
-    border-bottom: 1px solid var(--el-border-color-lighter);
 
     .base {
       width: 1000px;
@@ -385,12 +403,21 @@ onMounted(() => {
       }
     }
 
-    .toolbar {
-      width: 1000px;
-      margin: auto;
+    .affix {
+      width: 100%;
 
-      ::v-deep(.w-e-toolbar) {
-        justify-content: center;
+      .block {
+        width: 100%;
+        border-bottom: 1px solid var(--el-border-color-lighter);
+
+        .toolbar {
+          width: 1000px;
+          margin: auto;
+
+          ::v-deep(.w-e-toolbar) {
+            justify-content: center;
+          }
+        }
       }
     }
   }
