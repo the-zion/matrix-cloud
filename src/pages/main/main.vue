@@ -34,7 +34,7 @@
             </el-dropdown-menu>
           </template>
         </el-dropdown>
-        <!--        <el-row class="main-login-word" v-show="!uuid" @click="login">登录</el-row>-->
+                <el-row class="main-login-word" v-show="uuid" @click="login">登录</el-row>
         <el-row align="middle" v-show="uuid">
           <el-badge :value="messageValue" :max="99" class="main-menu-icon" :hidden=messageCount(messageValue)>
             <el-icon :size="20" @click="add">

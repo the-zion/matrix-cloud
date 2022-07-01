@@ -36,7 +36,7 @@
               <Upload/>
             </el-icon>
             <span class="word">上传图片</span>
-            <span class="word">JPG/PNG格式图片,大小5MB以内</span>
+            <span class="word">JPG/PNG格式图片,大小2MB以内</span>
           </el-space>
           <el-progress v-show="uploading" :duration="10" class="cover-process" :percentage="percentage"
                        :show-text="false"/>
@@ -284,8 +284,8 @@ function beforeCoverUpload(rawFile) {
   if (rawFile.type !== 'image/jpeg' && rawFile.type !== 'image/jpg' && rawFile.type !== 'image/png') {
     error('头像必须是 jpg/jpeg/png 格式的')
     return false
-  } else if (rawFile.size / 1024 / 1024 > 5) {
-    error('图片大小不超过 5MB')
+  } else if (rawFile.size / 1024 / 1024 > 2) {
+    error('图片大小不超过 2MB')
     return false
   }
   return true
@@ -325,7 +325,7 @@ function imageUpload(UploadRequestOptions) {
     reader.onload = function () {
       form.value.cover = reader.result;
     };
-    articleParams["cover"] = baseStore.article.baseUrl + draftId.value + "/cover.webp"
+    articleParams["cover"] = baseStore.article.baseUrl + draftId.value + "/cover." + filetype
     setTimeout(function () {
       uploading.value = false
     }, 1000)
