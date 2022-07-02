@@ -40,6 +40,8 @@
               :defaultConfig="toolbarConfig"
               :mode="mode"
           />
+          <el-progress v-show="uploading" :duration="10" class="process" :percentage="percentage"
+                       :show-text="false"/>
         </el-row>
       </el-affix>
     </el-row>
@@ -129,11 +131,13 @@ let time = ref("文章将自动保存至草稿箱")
 let draft = ref(false)
 let drawer = ref(false)
 let loading = ref(false)
+let uploading = ref(false)
+let percentage = ref(0)
 let body = null
 let resizeObserver = null
 let areaHeight = null
+let areaElement = null
 let draftMarked = false
-let editorReload = false
 let uploadBox = {}
 let uploadParams = {
   Bucket: baseStore.article.bucket,
@@ -175,7 +179,6 @@ function onMaxLength(editor) {
 
 function draftSelect(id) {
   draftId.value = id
-  editorReload = true
   getData()
 }
 
@@ -209,28 +212,34 @@ function imageUpload(file, insertFn) {
     return
   }
 
-  let imageId = +new Date();
+  let imageId = +new Date()
   let filetype = file.type.split("/")[1]
+  percentage.value = 0
+  uploading.value = true
   uploadParams["Key"] = baseStore.article.key + draftId.value + "/" + imageId + "." + filetype
   uploadParams["Headers"] = {
     'x-cos-meta-uuid': uuid.value,
+    'Pic-Operations':
+        '{"is_pic_info": 1, "rules": [{"fileid": ' + '"' + imageId + ".webp" + '", "rule": "imageMogr2/format/webp/interlace/0/quality/80"}]}',
   }
   uploadParams["Body"] = file
-  // uploadParams["onProgress"] = function (progressData) {
-  //   editor.showProgressBar(progressData.percent * 100)
-  // }
+  uploadParams["onProgress"] = function (progressData) {
+    percentage.value = progressData.percent * 100
+  }
   cos.uploadFile(uploadParams, function (err) {
+    uploading.value = false
     if (err) {
       error("图片上传失败，请稍后再试")
       return
     }
-    insertFn(baseStore.article.baseUrl + draftId.value + "/" + imageId + "." + filetype)
+    let url = baseStore.article.baseUrl + draftId.value + "/" + imageId + ".webp"
+    insertFn(url, "网络不佳或图片涉及敏感", url)
   })
 }
 
 function editSave(fn) {
   if (!uuid.value) {
-    warning("账号未登录，请先登录")
+    time.value = "账号未登录，请先登录"
     return
   }
 
@@ -312,6 +321,7 @@ function getData() {
   }
 
   loading.value = true
+  areaHeight = null
   let url = baseStore.article.baseUrl + draftId.value + "/" + uuid.value
   get(url).then(function (reply) {
     let data = reply.data
@@ -332,14 +342,10 @@ onBeforeMount(function () {
 })
 
 onMounted(() => {
+  areaElement = document.getElementById("area")
   resizeObserver = new ResizeObserver(throttle(function (res) {
     let height = res[0].contentRect.height
     if (areaHeight === null) {
-      areaHeight = height
-      return
-    }
-    if (editorReload) {
-      editorReload = false
       areaHeight = height
       return
     }
@@ -349,7 +355,7 @@ onMounted(() => {
     })
     areaHeight = height
   }, 100))
-  resizeObserver.observe(document.getElementById("area"));
+  resizeObserver.observe(areaElement)
   body = document.body
   body.style.backgroundColor = "var(--el-color-white)"
   init()
@@ -417,6 +423,10 @@ onMounted(() => {
           ::v-deep(.w-e-toolbar) {
             justify-content: center;
           }
+        }
+
+        .process {
+          width: 100%;
         }
       }
     }
