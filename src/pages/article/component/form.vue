@@ -179,7 +179,6 @@ function commitIntroduce() {
   uploadParams["Key"] = baseStore.article.key + draftId.value + "/" + uuid.value + "-introduce"
   uploadParams["Headers"] = {
     'x-cos-meta-uuid': uuid.value,
-    'x-cos-meta-type': "introduce"
   }
   uploadParams["Body"] = JSON.stringify(introduce)
   cos.uploadFile(uploadParams, function (err) {
@@ -195,7 +194,7 @@ function commitArticle() {
   uploadParams["Key"] = baseStore.article.key + draftId.value + "/" + uuid.value
   uploadParams["Headers"] = {
     'x-cos-meta-uuid': uuid.value,
-    'x-cos-meta-type': "complete"
+    'x-cos-meta-id': draftId + ""
   }
   uploadParams["Body"] = JSON.stringify(articleParams)
   cos.uploadFile(uploadParams, function (err) {
@@ -302,19 +301,22 @@ function imageUpload(UploadRequestOptions) {
     return
   }
 
-  uploading.value = true
   percentage.value = 0
+  uploading.value = true
   let file = UploadRequestOptions.file
   let filetype = UploadRequestOptions.file.type.split("/")[1]
   uploadParams["Key"] = baseStore.article.key + draftId.value + "/cover." + filetype
   uploadParams["Headers"] = {
     'x-cos-meta-uuid': uuid.value,
+    'Pic-Operations':
+        '{"is_pic_info": 1, "rules": [{"fileid": "cover.webp", "rule": "imageMogr2/format/webp/interlace/0/quality/80"}]}'
   }
   uploadParams["Body"] = file
   uploadParams["onProgress"] = function (progressData) {
     percentage.value = progressData.percent * 100
   }
   cos.uploadFile(uploadParams, function (err) {
+    uploading.value = false
     if (err) {
       error("封面上传失败，请稍后再试")
       return
@@ -325,10 +327,7 @@ function imageUpload(UploadRequestOptions) {
     reader.onload = function () {
       form.value.cover = reader.result;
     };
-    articleParams["cover"] = baseStore.article.baseUrl + draftId.value + "/cover." + filetype
-    setTimeout(function () {
-      uploading.value = false
-    }, 1000)
+    articleParams["cover"] = baseStore.article.baseUrl + draftId.value + "/cover.webp"
   })
 }
 
