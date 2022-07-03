@@ -194,7 +194,7 @@ function commitArticle() {
   uploadParams["Key"] = baseStore.article.key + draftId.value + "/" + uuid.value
   uploadParams["Headers"] = {
     'x-cos-meta-uuid': uuid.value,
-    'x-cos-meta-id': draftId + ""
+    'x-cos-meta-id': draftId.value + ""
   }
   uploadParams["Body"] = JSON.stringify(articleParams)
   cos.uploadFile(uploadParams, function (err) {
