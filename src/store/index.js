@@ -53,6 +53,9 @@ export const baseMainStore = defineStore("base", {
                 bucket: "creation-1309416642",
                 key: "article/",
                 baseUrl: "https://creation-1309416642.cos.ap-shanghai.myqcloud.com/article/"
+            },
+            images: {
+                baseUrl: "https://images-1309416642.cos.ap-shanghai.myqcloud.com"
             }
         }
     },
