@@ -1,34 +1,55 @@
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
 
 
 export function success(message) {
-    ElMessage({
+    ElNotification({
+        title: 'Success',
         message: message,
+        showClose: false,
         type: 'success',
-        grouping: true
     })
 }
 
 export function warning(message) {
-    ElMessage({
+    ElNotification({
+        title: 'Warning',
         message: message,
+        showClose: false,
         type: 'warning',
-        grouping: true
     })
 }
 
 export function error(message) {
-    ElMessage({
+    ElNotification({
+        title: 'Error',
         message: message,
+        showClose: false,
         type: 'error',
-        grouping: true
     })
 }
 
 export function info(message) {
-    ElMessage({
+    // ElMessage({
+    //     message: message,
+    //     type: 'info',
+    //     grouping: true
+    // })
+    ElNotification({
+        title: 'Info',
         message: message,
+        showClose: false,
         type: 'info',
-        grouping: true
     })
+}
+
+export function confirm(text) {
+    return ElMessageBox.confirm(
+        text,
+        'Warning',
+        {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+        }
+    )
 }
