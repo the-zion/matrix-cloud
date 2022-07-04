@@ -3,13 +3,15 @@ import {createApp} from 'vue'
 import {createPinia} from 'pinia'
 import ReplyComponent from './pages/reply/index.ts'
 import CommentComponent from './pages/comment/index.ts'
-import BlogComponents from './pages/blog/index.ts'
+import ArticleComponents from './pages/article/index.ts'
+import CollectComponents from './pages/collect/index.ts'
 import TalkComponents from './pages/talk/index.ts'
 import ColumnComponents from './pages/column/index.ts'
 import TagComponents from './pages/tag/index.ts'
 import UserComponent from './pages/user/index.ts'
 import router from './router/index'
 import * as ElIconModules from '@element-plus/icons-vue'
+import './assets/icon/iconfont.js'
 import './assets/icon/iconfont.css'
 import 'element-plus/dist/index.css'
 import '@wangeditor/editor/dist/css/style.css'
@@ -20,7 +22,8 @@ const pinia = createPinia()
 const app = createApp(App).use(pinia)
     .use(ReplyComponent)
     .use(CommentComponent)
-    .use(BlogComponents)
+    .use(ArticleComponents)
+    .use(CollectComponents)
     .use(TalkComponents)
     .use(ColumnComponents)
     .use(TagComponents)
