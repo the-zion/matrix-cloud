@@ -40,26 +40,27 @@ const routes = [
         path: '/main',
         name: 'main',
         component: Main,
-        redirect: {name: 'home.blog'},
+        redirect: to => {
+            return {name: 'home', query: {page: 'article'}}
+        },
         children: [
             {
                 path: 'home',
                 name: 'home',
                 component: Home,
-                redirect: {name: 'home.blog'},
-                children: [{
-                    path: 'blog',
-                    name: "home.blog",
-                    component: HomeBlog
-                }, {
-                    path: 'column',
-                    name: "home.column",
-                    component: HomeColumn
-                }, {
-                    path: 'talk',
-                    name: "home.talk",
-                    component: HomeTalk
-                }]
+                // children: [{
+                //     path: 'blog?page=article',
+                //     name: "home.blog",
+                //     component: HomeBlog
+                // }, {
+                //     path: 'column',
+                //     name: "home.column",
+                //     component: HomeColumn
+                // }, {
+                //     path: 'talk',
+                //     name: "home.talk",
+                //     component: HomeTalk
+                // }]
             },
             {
                 path: 'article',
