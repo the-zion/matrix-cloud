@@ -1,12 +1,14 @@
 import axios from "axios"
 import {baseMainStore} from "../store";
+import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 
 const baseStore = baseMainStore()
+const {endpoint} = storeToRefs(baseStore)
 
 export function post(url, params) {
     let token = localStorage.getItem("matrix-token")
     const instance = axios.create({
-        baseURL: baseStore.endpoint,
+        baseURL: endpoint.value,
         method: "post",
         headers: {
             'Cache-Control': 'no-cache'
@@ -21,7 +23,7 @@ export function post(url, params) {
 export function get(url) {
     let token = localStorage.getItem("matrix-token")
     const instance = axios.create({
-        baseURL: baseStore.endpoint,
+        baseURL: endpoint.value,
         method: "get",
         headers: {
             'Cache-Control': 'no-cache'
