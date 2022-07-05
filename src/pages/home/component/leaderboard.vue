@@ -1,11 +1,5 @@
 <template>
   <el-container class="leaderboard">
-    <el-row class="head" justify="space-around">
-      <el-space v-for="item in options" :key="item.label" direction="vertical" class="each" :size="3">
-        <el-icon class="iconfont" :class="item.icon" :size="20"></el-icon>
-        <span>{{ item.label }}</span>
-      </el-space>
-    </el-row>
     <el-affix>
       <el-row class="body">
         <el-row class="title">必读榜</el-row>
@@ -36,20 +30,6 @@ import {onMounted, ref} from "vue"
 
 let leaderboard = ref([])
 
-let options = [{
-  label: "博客",
-  icon: "icon-blog"
-}, {
-  label: "专栏",
-  icon: "icon-column"
-}, {
-  label: "讨论",
-  icon: "icon-talk"
-}, {
-  label: "收藏",
-  icon: "icon-star"
-}]
-
 function init() {
   getData()
 }
@@ -75,23 +55,11 @@ onMounted(function () {
   width: 100%;
   flex-direction: column;
 
-  .head {
-    width: 100%;
-    padding: 5px 0 10px;
-
-    .each {
-      cursor: pointer;
-      font-size: 12px;
-      color: var(--el-text-color-secondary)
-    }
-  }
-
   .body {
     width: 100%;
     padding: 16px 0;
-    border-radius: 8px;
     background-color: var(--el-color-white);
-    box-shadow: var(--el-box-shadow-lighter);
+    border: 1px solid var(--el-border-color-lighter);
 
     .title {
       font-size: 14px;
