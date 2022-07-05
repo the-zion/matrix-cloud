@@ -1,5 +1,5 @@
 <template>
-  <el-row class="draft">
+  <el-row class="draft" justify="center">
     <el-skeleton class="skeleton" v-show="loading" :rows="1" animated/>
     <el-space v-show="!loading" v-for="item in draft" :key="item.id" class="each" :size="15" @click="draftSelect(item)">
       <el-image :src="item.cover" v-show="item.cover" class="image" fit="cover"></el-image>
@@ -8,6 +8,9 @@
         <span class="time">{{ item.update ? ("最近编辑于 " + item.update) : "暂未编辑" }}</span>
       </el-space>
     </el-space>
+    <el-empty v-show="draft.length === 0" class="empty" description=" "
+              :image-size="150" image="../../src/assets/images/no_data.svg"
+    />
   </el-row>
 </template>
 
@@ -29,7 +32,7 @@ const baseStore = baseMainStore()
 const {uuid} = storeToRefs(userStore)
 const {article} = storeToRefs(baseStore)
 const emits = defineEmits(["draftSelect"])
-let draft = ref()
+let draft = ref([])
 let loading = ref(false)
 
 function init() {
@@ -44,6 +47,9 @@ function getData() {
   loading.value = true
   get("/v1/get/article/draft/list").then(function (reply) {
     draft.value = reply.data["draft"]
+    if(!draft.value.length){
+      loading.value = false
+    }
     getFromCos()
   })
 }
@@ -51,7 +57,7 @@ function getData() {
 function getFromCos() {
   let request = draft.value.length
   draft.value.forEach(function (item) {
-    let url = baseStore.article.baseUrl + item.id + "/" + uuid.value
+    let url = article.value.baseUrl + item.id + "/" + uuid.value
     get(url).then(function (reply) {
       let data = reply.data
       item.title = data.title
