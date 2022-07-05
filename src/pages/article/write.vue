@@ -75,7 +75,6 @@
 import {onBeforeUnmount, ref, shallowRef, onMounted, onBeforeMount} from 'vue'
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 import router from "../../router";
-import {scrollTo} from "../../utils/scroll";
 import {success, info, warning, error} from "../../utils/message";
 import {customCheckVideoFn, customParseVideoSrc} from "../../utils/video";
 import {get, post} from "../../utils/axios"
@@ -140,8 +139,8 @@ let areaElement = null
 let draftMarked = false
 let uploadBox = {}
 let uploadParams = {
-  Bucket: baseStore.article.bucket,
-  Region: baseStore.article.region,
+  Bucket: article.value.bucket,
+  Region: article.value.region,
 }
 
 
@@ -216,7 +215,7 @@ function imageUpload(file, insertFn) {
   let filetype = file.type.split("/")[1]
   percentage.value = 0
   uploading.value = true
-  uploadParams["Key"] = baseStore.article.key + draftId.value + "/" + imageId + "." + filetype
+  uploadParams["Key"] = article.value.key + draftId.value + "/" + imageId + "." + filetype
   uploadParams["Headers"] = {
     'x-cos-meta-uuid': uuid.value,
     'Pic-Operations':
@@ -232,7 +231,7 @@ function imageUpload(file, insertFn) {
       error("图片上传失败，请稍后再试")
       return
     }
-    let url = baseStore.article.baseUrl + draftId.value + "/" + imageId + ".webp"
+    let url = article.value.baseUrl + draftId.value + "/" + imageId + ".webp"
     insertFn(url, "网络不佳或图片涉及敏感", url)
   })
 }
@@ -248,7 +247,7 @@ function editSave(fn) {
     return
   }
   time.value = "文章保存中......"
-  uploadParams["Key"] = baseStore.article.key + draftId.value + "/" + uuid.value
+  uploadParams["Key"] = article.value.key + draftId.value + "/" + uuid.value
   uploadParams["Headers"] = {
     'x-cos-meta-uuid': uuid.value,
   }
@@ -322,7 +321,7 @@ function getData() {
 
   loading.value = true
   areaHeight = null
-  let url = baseStore.article.baseUrl + draftId.value + "/" + uuid.value
+  let url = article.value.baseUrl + draftId.value + "/" + uuid.value
   get(url).then(function (reply) {
     let data = reply.data
     let editor = editorRef.value
