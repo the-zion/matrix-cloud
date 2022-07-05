@@ -67,6 +67,7 @@ import LeaderBoard from "./component/leaderboard.vue"
 import "../../utils/axios"
 import {baseMainStore} from "../../store";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
+import {removeScrollToBottomListen} from "../../utils/scroll";
 
 const baseStore = baseMainStore()
 const {images} = storeToRefs(baseStore)
@@ -106,6 +107,7 @@ function initData() {
 function select(item) {
   page.value = item.key
   router.push({name: "home", query: {page: item.key}})
+  removeScrollToBottomListen()
 }
 
 // router.afterEach(function (route) {
@@ -213,6 +215,7 @@ onMounted(function () {
 
     .left-area {
       width: 710px;
+      height: fit-content;
       background-color: var(--el-color-white);
       border: 1px solid var(--el-border-color-lighter);
       flex-direction: column;
