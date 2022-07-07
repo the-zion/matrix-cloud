@@ -42,12 +42,12 @@
     <el-row class="main" justify="space-between">
       <el-row class="left-area">
         <el-row class="header" align="middle">
-          <span class="label" :class="{'select': mode === 'new'}" @click="mode = 'new'">最新</span>
+          <span class="label" :class="{'select': mode === 'new'}" @click="modeChange('new')">最新</span>
           <el-divider direction="vertical"></el-divider>
-          <span class="label" :class="{'select': mode === 'hot'}" @click="mode = 'hot'">最热</span>
+          <span class="label" :class="{'select': mode === 'hot'}" @click="modeChange('hot')">最热</span>
         </el-row>
         <el-row class="body">
-          <matrix-article-list v-if="page === 'article'"></matrix-article-list>
+          <matrix-article-list v-if="page === 'article'" ref="listRef"></matrix-article-list>
           <matrix-column-list v-if="page === 'column'"></matrix-column-list>
           <matrix-talk-list v-if="page === 'talk'"></matrix-talk-list>
         </el-row>
@@ -72,6 +72,7 @@ import {removeScrollToBottomListen} from "../../utils/scroll";
 const baseStore = baseMainStore()
 const {images} = storeToRefs(baseStore)
 
+let listRef = ref()
 let page = ref()
 let mode = ref("new")
 let currentTag = ref("全部")
@@ -110,12 +111,13 @@ function select(item) {
   removeScrollToBottomListen()
 }
 
-// router.afterEach(function (route) {
-//   current.value = route.name.split(".")[1]
-// })
-
 function filterByTags() {
 
+}
+
+function modeChange(m) {
+  mode.value = m
+  listRef.value.modeChange(m)
 }
 
 onMounted(function () {
