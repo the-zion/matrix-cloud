@@ -37,28 +37,28 @@
             <el-space :size="3">
               <el-icon class="iconfont icon-like icon"></el-icon>
               <span class="num">{{
-                  count[item.id].agree > 1000 ? (count[item.id].agree / 1000).toFixed(1) + "k" : count[item.id].agree
+                  count[item.id] && (count[item.id].agree > 1000 ? (count[item.id].agree / 1000).toFixed(1) + "k" : count[item.id].agree) || 0
                 }}</span>
             </el-space>
             <el-space :size="3">
               <el-icon class="iconfont icon-eye icon"></el-icon>
               <span
                   class="num">{{
-                  count[item.id].view > 1000 ? (count[item.id].view / 1000).toFixed(1) + "k" : count[item.id].view
+                  count[item.id] && (count[item.id].view > 1000 ? (count[item.id].view / 1000).toFixed(1) + "k" : count[item.id].view) || 0
                 }}</span>
             </el-space>
             <el-space :size="3">
               <el-icon class="iconfont icon-message icon"></el-icon>
               <span
                   class="num">{{
-                  count[item.id].comment > 1000 ? (count[item.id].comment / 1000).toFixed(1) + "k" : count[item.id].comment
+                  count[item.id] && (count[item.id].comment > 1000 ? (count[item.id].comment / 1000).toFixed(1) + "k" : count[item.id].comment) || 0
                 }}</span>
             </el-space>
             <el-space :size="3">
               <el-icon class="iconfont icon-star icon"></el-icon>
               <span
                   class="num">{{
-                  count[item.id].collect > 1000 ? (count[item.id].collect / 1000).toFixed(1) + "k" : count[item.id].collect
+                  count[item.id] && (count[item.id].collect > 1000 ? (count[item.id].collect / 1000).toFixed(1) + "k" : count[item.id].collect) || 0
                 }}</span>
             </el-space>
           </el-space>
@@ -106,11 +106,11 @@ const {avatar, article} = storeToRefs(baseStore)
 let data = ref([])
 let count = ref({})
 let introduce = ref({})
-let currentPage = ref(1)
+let currentPage = 1
 let loading = ref(false)
 let isBottom = false
 let request = 0
-
+let mode = "new"
 
 function init() {
   scrollToBottomListen(throttle(scrollToBottom, 1000))
@@ -121,7 +121,6 @@ function scrollToBottom() {
   getData()
 }
 
-
 function getData() {
   if (isBottom) {
     info("到最底部啦～")
@@ -129,7 +128,7 @@ function getData() {
   }
 
   loading.value = true
-  get("/v1/get/article/list?page=" + currentPage.value).then(function (reply) {
+  get((mode === "new" ? "/v1/get/article/list?page=" : "/v1/get/article/list/hot?page=") + currentPage).then(function (reply) {
     let list = reply.data.article
     let size = list.length
     if (size === 0) {
@@ -139,7 +138,7 @@ function getData() {
       return
     }
     request = size + 1
-    currentPage.value += 1
+    currentPage += 1
     getStatistic(list)
     getIntroduce(list)
   })
@@ -198,13 +197,24 @@ function doCollect(item) {
   })
 }
 
+function modeChange(m) {
+  mode = m
+  isBottom = false
+  currentPage = 1
+  count.value = {}
+  introduce.value = {}
+  data.value = []
+  getData()
+}
+
 defineExpose({
-  getData
+  modeChange
 })
 
 onMounted(() => {
   init()
 })
+
 </script>
 
 <style scoped lang="scss">
