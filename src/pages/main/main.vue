@@ -15,7 +15,7 @@
           </template>
         </el-menu-item>
         <div style="flex-grow: 1"></div>
-        <el-dropdown split-button type="primary" trigger="click">
+        <el-dropdown split-button type="primary" trigger="click" v-show="uuid">
           创作中心
           <template #dropdown>
             <el-dropdown-menu>
@@ -34,7 +34,7 @@
             </el-dropdown-menu>
           </template>
         </el-dropdown>
-        <el-row class="main-login-word" v-show="uuid" @click="login">登录</el-row>
+        <el-row class="main-login-word" v-show="!uuid" @click="login">登录</el-row>
         <el-row align="middle" v-show="!uuid">
           <el-badge :value="messageValue" :max="99" class="main-menu-icon" :hidden=messageCount(messageValue)>
             <el-icon :size="20" @click="add">
@@ -43,7 +43,8 @@
           </el-badge>
           <el-dropdown size="large" placement="bottom-end" @command="dropdownClick"
                        popper-class="dropdown">
-            <el-avatar class="main-user-image" :size="30" icon="UserFilled"></el-avatar>
+            <el-avatar class="main-user-image" :size="30" icon="UserFilled"
+                       :src="avatar.baseUrl + uuid + '.webp'"></el-avatar>
             <template #dropdown>
               <dropdown></dropdown>
             </template>
@@ -71,12 +72,13 @@ import {ref, onMounted} from "vue";
 import {useRoute} from "vue-router";
 import Login from './component/login.vue'
 import Dropdown from './component/dropdown.vue'
-import {userMainStore} from "../../store";
+import {userMainStore, baseMainStore} from "../../store";
 import {storeToRefs} from "pinia/dist/pinia";
 
 const userStore = userMainStore()
+const baseStore = baseMainStore()
 const {uuid} = storeToRefs(userStore)
-
+const {avatar} = storeToRefs(baseStore)
 let activeMenu = ref()
 let userLogin = ref(false)
 let messageValue = ref(0)
@@ -108,7 +110,7 @@ function getData() {
 }
 
 function backToHome() {
-  router.push({name: "home"})
+  router.push({name: "home", query: {page: "article"}})
 }
 
 function menuActive() {
