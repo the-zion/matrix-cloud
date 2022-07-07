@@ -1,19 +1,23 @@
 <template>
   <el-container class="leaderboard">
     <el-affix>
-      <el-row class="body">
+      <el-row class="body" justify="center">
         <el-row class="title">必读榜</el-row>
-        <el-row v-for="(item, index) in leaderboard" :key="item.id" class="each">
+        <el-row v-for="(item, index) in data" :key="item.id" class="each">
           <el-icon :size="10" class="icon iconfont"
-                   :class="'icon-number-'+item.number + (index < 3?' gold':'')"></el-icon>
+                   :class="'icon-number-'+(index+1) + (index < 3?' gold':'')"></el-icon>
           <el-space class="info" direction="vertical" fill :size="0" alignment="start">
             <el-space class="info-head" :size="4">
-              <el-avatar :src="item.image" :size="22"></el-avatar>
-              <span class="info-title">{{ item.title }}</span>
+              <el-avatar :src="avatar.baseUrl + item.uuid + '.webp'" :size="22"></el-avatar>
+              <span class="info-title">{{ introduce[item.id].title }}</span>
             </el-space>
-            <span class="text">{{ item.text }}</span>
+            <span class="text">{{ introduce[item.id].text }}</span>
           </el-space>
         </el-row>
+        <el-skeleton class="skeleton" v-show="loading" :rows="1" animated/>
+        <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
+                  :image-size="150" image="../../src/assets/images/no_data.svg"
+        />
       </el-row>
     </el-affix>
   </el-container>
@@ -27,22 +31,55 @@ export default {
 
 <script setup>
 import {onMounted, ref} from "vue"
+import {get} from "../../../utils/axios";
+import {baseMainStore} from "../../../store";
+import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 
-let leaderboard = ref([])
+const baseStore = baseMainStore()
+const {avatar, article} = storeToRefs(baseStore)
+
+let data = ref([])
+let loading = ref(false)
+let request = 0
+let list = null
+let introduce = ref({})
 
 function init() {
   getData()
 }
 
 function getData() {
-  for (let i = 1; i <= 9; i++) {
-    leaderboard.value.push({
-      number: i,
-      image: "../../src/assets/images/boy.png",
-      title: "二分查找从入门到入睡",
-      text: "你应该很难再看到比本文更加深入透彻的解析二分查找的文章了(吧?)"
-    })
-  }
+  loading.value = true
+  get("/v1/get/leaderboard").then(function (reply) {
+    list = reply.data['board']
+    request = list.length
+    getIntroduce(list)
+  })
+}
+
+function getIntroduce(list) {
+  list.forEach(function (each) {
+    switch (each.mode) {
+      case "article":
+        getArticleIntroduce(each)
+        break
+    }
+  })
+}
+
+function getArticleIntroduce(item) {
+  let url = article.value.baseUrl + item.id + "/" + item.uuid + "-introduce"
+  get(url).then(function (reply) {
+    introduce.value[item.id] = reply.data
+    request -= 1
+  }).catch(function () {
+    request -= 1
+  }).then(function () {
+    if (request === 0) {
+      data.value = data.value.concat(list)
+      loading.value = false
+    }
+  })
 }
 
 onMounted(function () {
@@ -121,6 +158,10 @@ onMounted(function () {
 
     .each:hover {
       background-color: var(--el-fill-color-light);
+    }
+
+    .skeleton{
+      padding: 6px 16px;
     }
   }
 }
