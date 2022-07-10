@@ -1,12 +1,14 @@
 <template>
   <el-container class="article-container" v-loading="loading">
     <el-backtop></el-backtop>
+    <collections-choose v-model:visible="collectionsVisible" v-model:judge="statisticJudge"
+                        @collected="collected"></collections-choose>
     <el-row class="main" v-show="!loading">
       <el-image fit="cover" class="cover" :src="data.cover"></el-image>
       <el-row class="header">
         <el-row class="title-area" justify="space-between">
           <el-row class="title" align="top">
-            <el-avatar :size="32" icon="UserFilled" :src="avatar.baseUrl + uuid + '.webp'"></el-avatar>
+            <el-avatar :size="32" icon="UserFilled" :src="avatar.baseUrl + authorUuid + '.webp'"></el-avatar>
             <el-row class="label" align="middle">{{ data.title }}</el-row>
           </el-row>
           <el-button type="primary" icon="Plus">关注TA</el-button>
@@ -24,7 +26,6 @@
       </el-row>
       <Editor
           class="editor"
-          v-model="valueHtml"
           :defaultConfig="editorConfig"
           :mode="mode"
           @onCreated="handleCreated"
@@ -33,12 +34,12 @@
         <el-row class="footer" justify="space-between">
           <el-space>
             <el-space :size="5" class="icon-block">
-              <div ref="iconAgree" @click="agreeClick" :class="{'agree-select':agreeSelect}"
+              <div ref="iconAgree" @click="agreeClick" :class="{'agree-select':statisticJudge['agree']}"
                    class="icon agree-transform">
-                <svg class="symbol-icon" aria-hidden="true" v-show="!agreeSelect">
+                <svg class="symbol-icon" aria-hidden="true" v-show="!statisticJudge['agree']">
                   <use :xlink:href="'#icon-like'"></use>
                 </svg>
-                <svg class="symbol-icon" aria-hidden="true" v-show="agreeSelect">
+                <svg class="symbol-icon" aria-hidden="true" v-show="statisticJudge['agree']">
                   <use :xlink:href="'#icon-like-fill'"></use>
                 </svg>
               </div>
@@ -56,7 +57,7 @@
                   <use :xlink:href="'#icon-star-fill'"></use>
                 </svg>
               </div>
-              <span class="num">{{collectSelect?'已收藏':'收藏'}}</span>
+              <span class="num">{{ collectSelect ? '已收藏' : '收藏' }}</span>
             </el-space>
           </el-space>
           <el-button icon="EditPen" type="primary" v-show="visible" @click="comment">评论</el-button>
@@ -91,31 +92,39 @@
 </template>
 
 <script setup>
-import {ref, computed, onBeforeUnmount, shallowRef, onMounted} from "vue";
+import {ref, onBeforeUnmount, shallowRef, onMounted} from "vue";
 import {Editor} from '@wangeditor/editor-for-vue'
 import {scrollTo} from "../../utils/scroll";
 import {useRoute} from "vue-router";
 import router from "../../router";
-import {get} from "../../utils/axios";
-import {baseMainStore} from "../../store";
+import {get, post} from "../../utils/axios";
+import {baseMainStore, userMainStore} from "../../store";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
-import {error} from "../../utils/message";
+import {error, warning} from "../../utils/message";
 import {animationAgree, animationCollect} from "../../utils/animation";
+import CollectionsChoose from "../collect/component/choose.vue";
 
 let e = null
 let agreeAnimation = null
 let collectAnimation = null
-let uuid = ref()
+let authorUuid = ref()
 let user = ref({})
-let data = ref({})
-let statistic = ref({})
+let data = ref({
+  "title": "暂无数据",
+  "username": "暂无数据",
+  "update": "0000-00-00"
+})
+let statistic = ref({
+  "agree": 0,
+  "view": 0,
+})
 let articleId = ref()
 let iconAgree = ref(null)
 let iconCollect = ref(null)
-let agreeSelect = ref(false)
 let collectSelect = ref(false)
 let loading = ref(false)
 let visible = ref(false)
+let collectionsVisible = ref(false)
 let agreeBounce = ref(1);
 let collectBounce = ref(1);
 let count = ref(153)
@@ -130,22 +139,27 @@ let options = ref([
     value: "new"
   }
 ])
+let statisticJudge = ref({
+  agree: false,
+  collect: false
+})
 
 const editorRef = shallowRef()
-const valueHtml = ref('<p>hello</p>')
 const mode = ref('default')
 const editorConfig = {
   scroll: false,
   readOnly: true
 }
+const userStore = userMainStore()
 const baseStore = baseMainStore()
+const {uuid} = storeToRefs(userStore)
 const {avatar, article} = storeToRefs(baseStore)
 
 function init() {
   animation()
   background()
   initData()
-  getData()
+  // getData()
 }
 
 function initData() {
@@ -163,8 +177,9 @@ function getData() {
 function getStatistic() {
   loading.value = true
   get("/v1/get/article/statistic?id=" + articleId.value).then(function (reply) {
-    uuid.value = reply.data.uuid
+    authorUuid.value = reply.data.uuid
     statistic.value = reply.data
+    setView()
     getUserInfo()
   }).catch(function () {
     articleNotExist()
@@ -172,7 +187,7 @@ function getStatistic() {
 }
 
 function getUserInfo() {
-  get("/v1/get/user/info?uuid=" + uuid.value).then(function (reply) {
+  get("/v1/get/user/info?uuid=" + authorUuid.value).then(function (reply) {
     user.value = reply.data
     getArticle()
   }).catch(function () {
@@ -181,12 +196,31 @@ function getUserInfo() {
 }
 
 function getArticle() {
-  let url = article.value.baseUrl + articleId.value + "/" + uuid.value
+  let url = article.value.baseUrl + articleId.value + "/" + authorUuid.value
   get(url).then(function (reply) {
     data.value = reply.data
     editorRef.value.setHtml(data.value["html"])
+    getStatisticJudge()
   }).then(function () {
     loading.value = false
+  })
+}
+
+function getStatisticJudge() {
+  if (!articleId.value || !uuid.value) {
+    return
+  }
+  post("/v1/article/statistic/judge", {
+    id: articleId.value
+  }).then(function (reply) {
+    statisticJudge.value = reply.data
+  })
+}
+
+function setView() {
+  post("/v1/set/article/view", {
+    id: articleId.value,
+    uuid: authorUuid.value
   })
 }
 
@@ -205,11 +239,28 @@ function animation() {
 }
 
 function agreeClick() {
+  if (!uuid.value) {
+    warning("账号未登录，请先登录")
+  }
+
+  if (!articleId.value || !authorUuid.value) {
+    return
+  }
+
   agreeAnimation.play()
-  agreeSelect.value = !agreeSelect.value
+  statisticJudge.value["agree"] = true
+  statistic.value["agree"] += 1
+  post("/v1/set/article/agree", {
+    id: articleId.value,
+    uuid: authorUuid.value,
+  })
 }
 
 function collectClick() {
+  collectionsVisible.value = true
+}
+
+function collected() {
   collectAnimation.play()
   collectSelect.value = !collectSelect.value
 }
@@ -226,9 +277,6 @@ function comment() {
   scrollTo("reply-block")
 }
 
-// onBeforeMount(function () {
-//   initData()
-// })
 onMounted(function () {
   init()
 })
@@ -248,6 +296,15 @@ onBeforeUnmount(function () {
   margin: auto;
   flex-direction: column;
   min-height: 500px;
+
+  ::v-deep(.collections-choose) {
+    border-radius: 4px;
+    margin-top: 10vh;
+
+    .el-dialog__body {
+      padding: 0px 20px
+    }
+  }
 
   .main {
     width: 100%;
