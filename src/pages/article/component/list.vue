@@ -3,7 +3,7 @@
     <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
               :image-size="250" image="../../src/assets/images/no_data.svg"
     />
-    <el-row class="data" fill :size="props.gap || 0">
+    <el-row class="data" fill :size="0">
       <el-row v-for="item in data" class="each" :key="item.id"
               @click="goToPage('article', item.id)">
         <el-row class="blog-card">
@@ -16,49 +16,49 @@
                 </template>
                 <matrix-user-mini-card></matrix-user-mini-card>
               </el-popover>
-              <el-row class="title">{{ introduce[item.id].title }}</el-row>
+              <el-row class="title">{{ item.title }}</el-row>
             </el-space>
             <el-space class="info">
               <!--              <el-row class="name">{{ item.name }}</el-row>-->
-              <el-row class="time">{{ "发布于 " + introduce[item.id].update }}</el-row>
-              <el-tag round v-show="introduce[item.id].tags" type="info"
-                      v-for="tag in introduce[item.id].tags.split(';')" :key="tag">{{
+              <el-row class="time">{{ "发布于 " + item.update }}</el-row>
+              <el-tag round v-show="item.tags" type="info"
+                      v-for="tag in item.tags.split(';')" :key="tag">{{
                   tag
                 }}
               </el-tag>
             </el-space>
             <el-space class="body" alignment="flex-start">
-              <el-image v-if="introduce[item.id].cover" class="image" fit="cover" :src="introduce[item.id].cover"
+              <el-image v-if="item.cover" class="image" fit="cover" :src="item.cover"
                         lazy></el-image>
-              <span class="content">{{ introduce[item.id].text }}</span>
+              <span class="content">{{ item.text }}</span>
             </el-space>
           </el-space>
           <el-space class="foot">
             <el-space :size="3">
               <el-icon class="iconfont icon-like icon"></el-icon>
               <span class="num">{{
-                  count[item.id] && (count[item.id].agree > 1000 ? (count[item.id].agree / 1000).toFixed(1) + "k" : count[item.id].agree) || 0
+                  item.agree > 1000 ? (item.agree / 1000).toFixed(1) + "k" : item.agree || 0
                 }}</span>
             </el-space>
             <el-space :size="3">
               <el-icon class="iconfont icon-eye icon"></el-icon>
               <span
                   class="num">{{
-                  count[item.id] && (count[item.id].view > 1000 ? (count[item.id].view / 1000).toFixed(1) + "k" : count[item.id].view) || 0
+                  item.view > 1000 ? (item.view / 1000).toFixed(1) + "k" : item.view || 0
                 }}</span>
             </el-space>
             <el-space :size="3">
               <el-icon class="iconfont icon-message icon"></el-icon>
               <span
                   class="num">{{
-                  count[item.id] && (count[item.id].comment > 1000 ? (count[item.id].comment / 1000).toFixed(1) + "k" : count[item.id].comment) || 0
+                  item.comment > 1000 ? (item.comment / 1000).toFixed(1) + "k" : item.comment || 0
                 }}</span>
             </el-space>
             <el-space :size="3">
               <el-icon class="iconfont icon-star icon"></el-icon>
               <span
                   class="num">{{
-                  count[item.id] && (count[item.id].collect > 1000 ? (count[item.id].collect / 1000).toFixed(1) + "k" : count[item.id].collect) || 0
+                  item.collect > 1000 ? (item.collect / 1000).toFixed(1) + "k" : item.collect || 0
                 }}</span>
             </el-space>
           </el-space>
@@ -89,7 +89,7 @@ import {throttle, scrollToBottomListen} from "../../../utils/scroll";
 import {goToPage} from "../../../utils/globalFunc";
 import {confirm} from "../../../utils/globalFunc";
 import {error, info, success} from "../../../utils/message";
-import {get} from "../../../utils/axios";
+import {axiosGetAll, get} from "../../../utils/axios";
 import {baseMainStore} from "../../../store";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 
@@ -104,6 +104,7 @@ const baseStore = baseMainStore()
 const {avatar, article} = storeToRefs(baseStore)
 
 let data = ref([])
+let list = ref([])
 let count = ref({})
 let introduce = ref({})
 let currentPage = 1
@@ -129,58 +130,63 @@ function getData() {
 
   loading.value = true
   get((mode === "new" ? "/v1/get/article/list?page=" : "/v1/get/article/list/hot?page=") + currentPage).then(function (reply) {
-    let list = reply.data.article
-    let size = list.length
+    list.value = reply.data.article
+    let size = reply.data.article.length
     if (size === 0) {
       isBottom = true
       info("到最底部啦～")
       loading.value = false
       return
     }
-    request = size + 1
+    request = 2
     currentPage += 1
-    getStatistic(list)
-    getIntroduce(list)
+    getStatistic()
+    getIntroduce()
   })
 }
 
-function getStatistic(list) {
+function getStatistic() {
   let ids = []
-  list.forEach(function (each) {
-    ids.push("ids=" + each.id)
+  list.value.forEach(function (each) {
+    ids.push("ids=" + each["id"])
   })
   get("/v1/get/article/list/statistic?" + ids.join("&")).then(function (reply) {
     reply.data.count.forEach(function (each) {
-      count.value[each.id] = each
+      // count.value[each.id] = each
+      list.value.forEach(function (item, index) {
+        each.id === item["id"] && (list.value[index] = Object.assign(item, each))
+      })
     })
-    request -= 1
   }).catch(function () {
-    request -= 1
   }).then(function () {
+    request -= 1
     if (request === 0) {
-      data.value = data.value.concat(list)
+      data.value = list.value
       loading.value = false
     }
   })
 }
 
 
-function getIntroduce(list) {
-  let request = list.length
-  list.forEach(function (item) {
-    let url = article.value.baseUrl + item.id + "/" + item.uuid + "-introduce"
-    get(url).then(function (reply) {
-      introduce.value[item.id] = reply.data
-      request -= 1
-    }).catch(function () {
-      request -= 1
-    }).then(function () {
-      if (request === 0) {
-        data.value = data.value.concat(list)
-        loading.value = false
-      }
-    })
+function getIntroduce() {
+  let endpoints = []
+  list.value.forEach(function (item) {
+    endpoints.push(article.value.baseUrl + item["id"] + "/" + item["uuid"] + "-introduce")
   })
+  axiosGetAll(endpoints, function (allData) {
+    allData.forEach(function (each, index) {
+      list.value[index] = Object.assign(list.value[index], each.data)
+    })
+  }, function () {
+  }, function () {
+    request -= 1
+    if (request === 0) {
+      data.value = list.value
+      loading.value = false
+      console.log(data.value)
+    }
+  })
+
 }
 
 function doDelete(item) {
