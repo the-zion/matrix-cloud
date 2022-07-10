@@ -81,7 +81,6 @@ import {get, post} from "../../utils/axios"
 import {initCos} from "../../utils/cos";
 import Draft from './component/draft.vue'
 import Form from './component/form.vue'
-import {loginTimeOut} from "../../utils/globalFunc";
 import {userMainStore, baseMainStore} from "../../store";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 
@@ -288,9 +287,6 @@ function getLastDraft() {
     let response = err.response
     if (response) {
       switch (response.data.reason) {
-        case "TOKEN_EXPIRED":
-          loginTimeOut()
-          return
         case "RECORD_NOT_FOUND":
           CreateDraft()
           return
@@ -335,10 +331,6 @@ function getData() {
     loading.value = false
   })
 }
-
-onBeforeMount(function () {
-  userStore.getUserProfile()
-})
 
 onMounted(() => {
   areaElement = document.getElementById("area")
