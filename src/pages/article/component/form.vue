@@ -42,7 +42,7 @@
                        :show-text="false"/>
         </el-upload>
       </el-form-item>
-      <el-form-item prop="url" label="文章摘要" class="form-item">
+      <el-form-item prop="text" label="文章摘要" class="form-item">
         <el-input placeholder="摘要（选填）：会在卡片、列表等场景外露，帮助读者快速了解内容，如不填写则默认抓取正文前256字符"
                   maxlength="200" show-word-limit
                   v-model="form.text" type="textarea" resize="none" :rows="5"></el-input>
@@ -75,7 +75,6 @@ import {initCos} from "../../../utils/cos";
 import {baseMainStore, userMainStore} from "../../../store";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {get, post} from "../../../utils/axios";
-import {loginTimeOut} from "../../../utils/globalFunc";
 import router from "../../../router";
 
 const props = defineProps({
@@ -99,8 +98,8 @@ let percentage = ref(0)
 let articleParams = {}
 let introduce = {}
 let uploadParams = {
-  Bucket: baseStore.article.bucket,
-  Region: baseStore.article.region,
+  Bucket: article.value.bucket,
+  Region: article.value.region,
 }
 
 let form = ref({
@@ -109,6 +108,7 @@ let form = ref({
   text: "",
   html: "",
   cover: "",
+  url: "",
   tags: [],
   column: 0
 })
@@ -176,7 +176,7 @@ function commit() {
 
 function commitIntroduce() {
   sending.value = true
-  uploadParams["Key"] = baseStore.article.key + draftId.value + "/" + uuid.value + "-introduce"
+  uploadParams["Key"] = article.value.key + draftId.value + "/" + uuid.value + "-introduce"
   uploadParams["Headers"] = {
     'x-cos-meta-uuid': uuid.value,
   }
@@ -191,7 +191,7 @@ function commitIntroduce() {
 }
 
 function commitArticle() {
-  uploadParams["Key"] = baseStore.article.key + draftId.value + "/" + uuid.value
+  uploadParams["Key"] = article.value.key + draftId.value + "/" + uuid.value
   uploadParams["Headers"] = {
     'x-cos-meta-uuid': uuid.value,
     'x-cos-meta-id': draftId.value + ""
@@ -210,14 +210,6 @@ function sendArticle() {
   post("/v1/send/article", {id: draftId.value}).then(function () {
     router.push({name: "result", query: {type: "success", title: '文章已提交审核', description: "审核通过即发布到社区中"}})
   }).catch(function (err) {
-    let response = err.response
-    if (response) {
-      switch (response.data.reason) {
-        case "TOKEN_EXPIRED":
-          loginTimeOut()
-          return
-      }
-    }
     error("文章发布失败")
   }).then(function () {
     sending.value = false
@@ -266,7 +258,7 @@ function getData() {
     return
   }
 
-  let url = baseStore.article.baseUrl + draftId.value + "/" + uuid.value
+  let url = article.value.baseUrl + draftId.value + "/" + uuid.value
   get(url).then(function (reply) {
     let data = reply.data
     form.value.cover = data["cover"]
@@ -305,7 +297,7 @@ function imageUpload(UploadRequestOptions) {
   uploading.value = true
   let file = UploadRequestOptions.file
   let filetype = UploadRequestOptions.file.type.split("/")[1]
-  uploadParams["Key"] = baseStore.article.key + draftId.value + "/cover." + filetype
+  uploadParams["Key"] = article.value.key + draftId.value + "/cover." + filetype
   uploadParams["Headers"] = {
     'x-cos-meta-uuid': uuid.value,
     'Pic-Operations':
@@ -327,7 +319,7 @@ function imageUpload(UploadRequestOptions) {
     reader.onload = function () {
       form.value.cover = reader.result;
     };
-    articleParams["cover"] = baseStore.article.baseUrl + draftId.value + "/cover.webp"
+    articleParams["cover"] = article.value.baseUrl + draftId.value + "/cover.webp"
   })
 }
 
