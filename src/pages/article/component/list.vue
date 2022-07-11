@@ -1,5 +1,5 @@
 <template>
-  <el-row class="blog-list" id="blog-list">
+  <el-row class="collect-list" id="collect-list">
     <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
               :image-size="250" image="../../src/assets/images/no_data.svg"
     />
@@ -19,7 +19,6 @@
               <el-row class="title">{{ item.title }}</el-row>
             </el-space>
             <el-space class="info">
-              <!--              <el-row class="name">{{ item.name }}</el-row>-->
               <el-row class="time">{{ "发布于 " + item.update }}</el-row>
               <el-tag round v-show="item.tags" type="info"
                       v-for="tag in item.tags.split(';')" :key="tag">{{
@@ -63,14 +62,6 @@
             </el-space>
           </el-space>
         </el-row>
-        <el-space class="operation" size="large">
-          <div v-for="op in props.operation" :key="op">
-            <el-icon v-show="op === 'delete'" class="icon" @click="doDelete(item)">
-              <delete/>
-            </el-icon>
-            <el-icon v-show="op === 'star'" class="iconfont icon-star-fill star" @click="doCollect(item)"></el-icon>
-          </div>
-        </el-space>
       </el-row>
     </el-row>
     <el-skeleton class="skeleton" v-show="loading" :rows="3" animated/>
@@ -84,22 +75,16 @@ export default {
 </script>
 
 <script setup>
-import {ref, watch, onMounted} from "vue";
+import {ref, onMounted} from "vue";
 import {throttle, scrollToBottomListen} from "../../../utils/scroll";
 import {goToPage} from "../../../utils/globalFunc";
 import {confirm} from "../../../utils/globalFunc";
-import {error, info, success} from "../../../utils/message";
+import {info, success} from "../../../utils/message";
 import {axiosGetAll, get} from "../../../utils/axios";
 import {baseMainStore} from "../../../store";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 
 const emits = defineEmits(["current-page"])
-const props = defineProps({
-  operation: {
-    type: Array,
-    default: []
-  },
-})
 const baseStore = baseMainStore()
 const {avatar, article} = storeToRefs(baseStore)
 
@@ -152,7 +137,6 @@ function getStatistic() {
   })
   get("/v1/get/article/list/statistic?" + ids.join("&")).then(function (reply) {
     reply.data.count.forEach(function (each) {
-      // count.value[each.id] = each
       list.value.forEach(function (item, index) {
         each.id === item["id"] && (list.value[index] = Object.assign(item, each))
       })
@@ -183,7 +167,6 @@ function getIntroduce() {
     if (request === 0) {
       data.value = list.value
       loading.value = false
-      console.log(data.value)
     }
   })
 
@@ -224,7 +207,7 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-.blog-list {
+.article-list {
   width: 100%;
 
   .empty {
@@ -320,28 +303,6 @@ onMounted(() => {
             font-size: 14px;
             color: var(--el-text-color-secondary)
           }
-        }
-      }
-
-      .operation {
-        position: absolute;
-        top: 16px;
-        right: 0;
-
-        .icon {
-          color: var(--el-text-color-placeholder);
-          font-size: 20px;
-          cursor: pointer;
-        }
-
-        .star {
-          color: #ffa116;
-          font-size: 20px;
-          cursor: pointer;
-        }
-
-        .icon:hover {
-          color: var(--el-color-primary);
         }
       }
     }
