@@ -59,7 +59,6 @@
     </el-space>
     <el-row class="foot" justify="center" v-show="data.length !== 0">
       <el-pagination
-          :background="props.pageBackground"
           v-model:current-page="currentPage"
           :page-size="20"
           :pager-count="11"
@@ -141,10 +140,6 @@ function doCollect(item) {
 
 defineExpose({
   getData
-})
-
-watch(currentPage, () => {
-  scrollTo("column-list")
 })
 
 onMounted(() => {
