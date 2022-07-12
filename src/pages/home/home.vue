@@ -62,7 +62,7 @@
 <script setup>
 import {onMounted, ref} from "vue"
 import router from "../../router";
-import {useRoute} from "vue-router";
+import {useRoute, onBeforeRouteLeave} from "vue-router";
 import LeaderBoard from "./component/leaderboard.vue"
 import "../../utils/axios"
 import {baseMainStore} from "../../store";
@@ -106,9 +106,9 @@ function initData() {
 }
 
 function select(item) {
+  removeScrollToBottomListen()
   page.value = item.key
   router.push({name: "home", query: {page: item.key}})
-  removeScrollToBottomListen()
 }
 
 function filterByTags() {
@@ -119,6 +119,10 @@ function modeChange(m) {
   mode.value = m
   listRef.value.modeChange(m)
 }
+
+onBeforeRouteLeave((to, from) => {
+  removeScrollToBottomListen()
+})
 
 onMounted(function () {
   init()
