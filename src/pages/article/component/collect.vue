@@ -63,12 +63,23 @@
             </el-space>
           </el-space>
         </el-row>
-        <el-space class="operation" size="large">
-          <el-icon class="iconfont icon-star-fill star" @click="doCollect(item)"></el-icon>
+        <el-space class="operation" v-if="props.userId === uuid">
+          <el-popconfirm title="取消收藏确认"
+                         confirm-button-text="确定"
+                         cancel-button-text="取消"
+                         @confirm="cancelConfirm(item)"
+          >
+            <template #reference>
+              <el-space :size="3" @click.stop="">
+                <el-icon class="iconfont icon-star icon"></el-icon>
+                <span class="word">取消收藏</span>
+              </el-space>
+            </template>
+          </el-popconfirm>
         </el-space>
       </el-row>
     </el-row>
-    <el-row class="foot" justify="center" v-if="data.length !== 0">
+    <el-row class="foot" justify="center" v-if="data.length !== 0 || currentPage > 1">
       <el-pagination
           v-model:current-page="currentPage"
           :page-size="10"
@@ -86,20 +97,125 @@ export default {
 </script>
 
 <script setup>
-import {ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {goToPage} from "../../../utils/globalFunc";
-import {baseMainStore} from "../../../store";
+import {baseMainStore, userMainStore} from "../../../store";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
+import {useRoute} from "vue-router";
+import {axiosGetAll, get, post} from "../../../utils/axios";
+import {scrollTo} from "../../../utils/scroll";
+import {error, success} from "../../../utils/message";
 
 const baseStore = baseMainStore()
 const {avatar, article} = storeToRefs(baseStore)
+const userStore = userMainStore()
+const {uuid} = storeToRefs(userStore)
+const props = defineProps({
+  userId: String
+})
 
 let data = ref([])
-let loading = ref(true)
+let list = ref([])
+let loading = ref(false)
 let currentPage = ref(1)
 let pageTotal = ref(1)
+let collectionsId = null
+let request = 0
 
+function init() {
+  initData()
+  getData()
+  getDataCount()
+}
 
+function initData() {
+  collectionsId = useRoute().query["id"]
+}
+
+function getData() {
+  if (!collectionsId) {
+    return
+  }
+  data.value = []
+  list.value = []
+  loading.value = true
+  get("/v1/get/collect/article?id=" + collectionsId + "&page=" + currentPage.value).then(function (reply) {
+    list.value = reply.data.article
+    request = 2
+    getStatistic()
+    getIntroduce()
+  })
+}
+
+function getDataCount() {
+  if (!collectionsId) {
+    return
+  }
+  get("/v1/get/collect/article/count?id=" + collectionsId).then(function (reply) {
+    pageTotal.value = reply.data.count
+  })
+}
+
+function getStatistic() {
+  let ids = []
+  list.value.forEach(function (each) {
+    ids.push("ids=" + each["id"])
+  })
+  get("/v1/get/article/list/statistic?" + ids.join("&")).then(function (reply) {
+    reply.data.count.forEach(function (each) {
+      list.value.forEach(function (item, index) {
+        each.id === item["id"] && (list.value[index] = Object.assign(item, each))
+      })
+    })
+  }).catch(function () {
+  }).then(function () {
+    request -= 1
+    if (request === 0) {
+      data.value = list.value
+      loading.value = false
+    }
+  })
+}
+
+function getIntroduce() {
+  let endpoints = []
+  list.value.forEach(function (item) {
+    endpoints.push(article.value.baseUrl + item["id"] + "/" + item["uuid"] + "-introduce")
+  })
+  axiosGetAll(endpoints, function (allData) {
+    allData.forEach(function (each, index) {
+      list.value[index] = Object.assign(list.value[index], each.data)
+    })
+  }, function () {
+  }, function () {
+    request -= 1
+    if (request === 0) {
+      data.value = list.value
+      loading.value = false
+    }
+  })
+}
+
+function cancelConfirm(item) {
+  post("/v1/cancel/article/collect", {
+    id: item.id,
+    uuid: item.uuid,
+  }).then(function () {
+    success("收藏已取消")
+    getData()
+  }).catch(function () {
+    error("取消收藏失败")
+  })
+}
+
+watch(currentPage, () => {
+  scrollTo("collect-list")
+  getData()
+})
+
+onMounted(function () {
+  init()
+})
 </script>
 
 <style scoped lang="scss">
@@ -208,24 +324,22 @@ let pageTotal = ref(1)
 
       .operation {
         position: absolute;
-        top: 16px;
-        right: 0;
+        bottom: 16px;
+        right: 16px;
+        color: var(--el-text-color-placeholder);
+        cursor: pointer;
 
         .icon {
-          color: var(--el-text-color-placeholder);
           font-size: 20px;
-          cursor: pointer;
         }
 
-        .star {
-          color: #ffa116;
-          font-size: 20px;
-          cursor: pointer;
+        .word {
+          font-size: 14px;
         }
+      }
 
-        .icon:hover {
-          color: var(--el-color-primary);
-        }
+      .operation:hover {
+        color: var(--el-color-primary);
       }
     }
 
