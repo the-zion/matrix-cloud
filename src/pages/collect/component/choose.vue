@@ -44,7 +44,7 @@ export default {
 </script>
 
 <script setup>
-import {ref} from "vue"
+import {ref,watch} from "vue"
 import {post} from "../../../utils/axios";
 import {error} from "../../../utils/message";
 import router from "../../../router";
@@ -119,18 +119,20 @@ function collect() {
   if (!props.id || !props.uuid || !selectId.value) {
     return
   }
+  collectLoading.value = true
   post("/v1/set/article/collect", {
     id: props.id,
     collections_id: selectId.value,
     uuid: props.uuid
   }).then(function () {
-    collectLoading.value = false
     judge["collect"] = true
     emits("judge", judge)
     emits("collected")
     cancel()
   }).catch(function () {
     error("收藏出错")
+  }).then(function (){
+    collectLoading.value = false
   })
 }
 
@@ -145,6 +147,10 @@ function create() {
   });
   window.open(href, "_blank");
 }
+
+watch(currentPage, () => {
+  getData()
+})
 </script>
 
 <style scoped lang="scss">
