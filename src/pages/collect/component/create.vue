@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="props.visible" custom-class="collectDialog" :width="520"
+  <el-dialog v-model="props.visible" custom-class="collections-create" :width="520"
              @open="open" @closed="closed" destroy-on-close>
     <el-row class="title" justify="center">{{ title }}</el-row>
     <el-form :model="form" ref="formRef" class="form" hide-required-asterisk>
@@ -8,14 +8,18 @@
           message: '该字段不能为空',
           trigger: 'blur',
         }]">
-        <el-input v-model="form.name" :maxlength="50" placeholder="请输入收藏集名称"/>
+        <el-input v-model="form.name" :maxlength="50" show-word-limit placeholder="请输入收藏集名称"/>
       </el-form-item>
-      <el-form-item class="form-item" label="描述" prop="introduce">
+      <el-form-item class="form-item" label="描述" prop="introduce" :rules="[{
+          required: true,
+          message: '该字段不能为空',
+          trigger: 'blur',
+        }]">
         <el-input v-model="form.introduce" :maxlength="100" type="textarea" :rows="8" resize="none" show-word-limit
                   placeholder="请输入收藏描述（限00字，选填）"/>
       </el-form-item>
-      <el-form-item class="form-item" prop="authority">
-        <el-radio-group v-model="form.authority" class="radio">
+      <el-form-item class="form-item" prop="auth">
+        <el-radio-group v-model="form.auth" class="radio">
           <el-radio :label="1">
             <span>公开</span>
             <span class="explain">公共可见此收藏集</span>
@@ -38,25 +42,32 @@
 
 <script>
 export default {
-  name: "CollectDialog"
+  name: "CollectionsCreate"
 }
 </script>
 
 <script setup>
 import {ref} from "vue"
-import {error} from "../../../utils/message";
+import {get, post} from "../../../utils/axios";
+import {error, success} from "../../../utils/message";
+import {userMainStore} from "../../../store";
+import {storeToRefs} from "pinia/dist/pinia";
 
-const emits = defineEmits(["update:visible"])
+const emits = defineEmits(["update:visible", "createAfter", "editAfter"])
 const props = defineProps({
   mode: String,
   visible: Boolean,
+  id: Number
 })
+const userStore = userMainStore()
+const {uuid} = storeToRefs(userStore)
 
 let mode = ref("")
 let loading = ref(false)
 let title = ref("")
 let form = ref({})
 let formRef = ref()
+let id = null
 
 
 function open() {
@@ -66,9 +77,10 @@ function open() {
 function initData() {
   mode.value = props.mode
   loading.value = false
+  id = props.id
   if (mode.value === 'create') {
     title.value = "新建收藏集"
-    form.value = {name: "", introduce: ""}
+    form.value = {name: "", introduce: "", auth: 1}
   } else {
     title.value = "编辑收藏集"
     getData()
@@ -76,7 +88,16 @@ function initData() {
 }
 
 function getData() {
+  if (!id || !uuid.value) {
+    return
+  }
 
+  get("/v1/get/collection?id=" + id + "&uuid=" + uuid.value).then(function (reply) {
+    if (!reply.data) {
+      return
+    }
+    form.value = reply.data
+  })
 }
 
 function commit(formRef) {
@@ -95,7 +116,50 @@ function commit(formRef) {
 }
 
 function toCommit() {
+  if (mode.value === 'create') {
+    createCollections()
+  } else {
+    editCollections()
+  }
+}
 
+function createCollections() {
+  loading.value = true
+  post("/v1/create/collections", {
+    name: form.value["name"],
+    introduce: form.value["introduce"],
+    auth: form.value["auth"],
+  }).then(function () {
+    success("收藏集创建成功")
+    emits("createAfter")
+    close()
+  }).catch(function () {
+    error("收藏集创建失败")
+  }).then(function () {
+    loading.value = false
+  })
+}
+
+function editCollections() {
+  if (!id) {
+    return
+  }
+
+  loading.value = true
+  post("/v1/edit/collections", {
+    id: id,
+    name: form.value["name"],
+    introduce: form.value["introduce"],
+    auth: form.value["auth"],
+  }).then(function () {
+    success("收藏集编辑成功")
+    emits("editAfter")
+    close()
+  }).catch(function () {
+    error("收藏集编辑失败")
+  }).then(function () {
+    loading.value = false
+  })
 }
 
 function close() {
@@ -108,7 +172,7 @@ function closed() {
 </script>
 
 <style scoped lang="scss">
-.collectDialog {
+.collections-create {
   .title {
     font-weight: 600;
     font-size: 20px;
