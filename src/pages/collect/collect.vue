@@ -8,19 +8,20 @@
       </el-image>
       <el-row class="block">
         <el-row class="body">
-          <el-row justify="start" class="title">Test</el-row>
-          <el-row justify="start" class="introduce">海纳百川，有容纳大</el-row>
+          <el-row justify="start" class="title">{{ collectionProfile["name"] }}</el-row>
+          <el-row justify="start" class="introduce">{{ collectionProfile["introduce"] }}</el-row>
           <el-row justify="space-between" class="user">
             <el-row class="card" align="middle">
               <el-avatar class="avatar" :size="32" icon="UserFilled"
-                         :src="''"></el-avatar>
+                         :src="avatar.baseUrl + userId + '.webp'"></el-avatar>
               <el-row class="info">
-                <el-row class="name">刘小圆sama</el-row>
-                <el-row class="word">更多收藏集 ></el-row>
+                <el-row class="name">{{ userProfile["username"] }}</el-row>
+                <el-row class="word" @click="moreCollect">更多收藏集 ></el-row>
               </el-row>
             </el-row>
           </el-row>
           <el-upload
+              v-if="userId === uuid"
               class="background-uploader"
               :show-file-list="false"
               :http-request="backgroundUpload"
@@ -45,7 +46,7 @@
         </el-row>
       </el-row>
     </el-row>
-    <el-progress v-show="uploading" :duration="10" style="margin-top: 5px" :percentage="percentage"
+    <el-progress v-show="uploading" :duration="10" :percentage="percentage"
                  :show-text="false"/>
     <el-row class="area">
       <el-row class="main">
@@ -55,7 +56,7 @@
           <span class="label" :class="{'select': page === 'talk'}" @click="pageChange('talk')">讨论</span>
         </el-row>
         <el-row class="body">
-          <article-collect-list v-if="page === 'article'"></article-collect-list>
+          <article-collect-list v-if="page === 'article'" :userId="userId"></article-collect-list>
         </el-row>
       </el-row>
     </el-row>
@@ -70,27 +71,64 @@ import {initCos} from "../../utils/cos";
 import {baseMainStore, userMainStore} from "../../store";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import ArticleCollectList from "../article/component/collect.vue";
+import {get} from "../../utils/axios";
+import router from "../../router";
 
 const cos = initCos()
 const userStore = userMainStore()
 const baseStore = baseMainStore()
 const {uuid} = storeToRefs(userStore)
-const {collect} = storeToRefs(baseStore)
+const {collect, avatar} = storeToRefs(baseStore)
 
-let collectionsId = null
+let collectionsId = ref()
+let userId = ref()
 let backgroundUrl = ref("")
 let uploading = ref(false)
 let percentage = ref(0)
 let page = ref("article")
+let collectionProfile = ref({
+  name: "暂无数据",
+  introduce: "暂无数据"
+})
+let userProfile = ref({
+  username: "暂无数据"
+})
 
 function init() {
   initData()
+  getData()
 }
 
 function initData() {
-  collectionsId = useRoute().query["id"]
-  backgroundUrl.value = collect.value.baseUrl + collectionsId + "/background.webp"
+  collectionsId.value = useRoute().query["id"]
+  backgroundUrl.value = collect.value.baseUrl + collectionsId.value + "/background.webp"
 }
+
+function getData() {
+  if (!collectionsId.value || !uuid.value) {
+    return
+  }
+  getCollection()
+}
+
+function getCollection() {
+  get("/v1/get/collection?id=" + collectionsId.value + "&uuid=" + uuid.value).then(function (reply) {
+    if (!reply.data) {
+      return
+    }
+    let data = reply.data
+    userId.value = data.uuid
+    collectionProfile.value = data
+    getUserInfo()
+  })
+}
+
+function getUserInfo() {
+  get("/v1/get/user/info?uuid=" + userId.value).then(function (reply) {
+    userProfile.value = reply.data
+  })
+}
+
 
 function backgroundUpload(UploadRequestOptions) {
   if (!uuid.value) {
@@ -98,7 +136,7 @@ function backgroundUpload(UploadRequestOptions) {
     return
   }
 
-  if (!collectionsId) {
+  if (!collectionsId.value) {
     error("背景上传失败")
     return
   }
@@ -110,7 +148,7 @@ function backgroundUpload(UploadRequestOptions) {
   cos.uploadFile({
     Bucket: collect.value.bucket,
     Region: collect.value.region,
-    Key: collect.value.key + collectionsId + "/background." + filetype,
+    Key: collect.value.key + collectionsId.value + "/background." + filetype,
     Headers: {
       'x-cos-meta-uuid': uuid.value,
       'Pic-Operations':
@@ -137,7 +175,7 @@ function backgroundUpload(UploadRequestOptions) {
 
 function beforeBackgroundUpload(rawFile) {
   if (rawFile.type !== 'image/jpeg' && rawFile.type !== 'image/jpg' && rawFile.type !== 'image/png') {
-    error('头像必须是 jpg/jpeg/png 格式的')
+    error('图片必须是 jpg/jpeg/png 格式的')
     return false
   } else if (rawFile.size / 1024 / 1024 > 2) {
     error('图片大小不超过 2MB')
@@ -148,6 +186,14 @@ function beforeBackgroundUpload(rawFile) {
 
 function pageChange(m) {
   page.value = m
+}
+
+function moreCollect() {
+  const {href} = router.resolve({
+    name: "user",
+    query: {id: userId.value, menu: 'collect'}
+  });
+  window.open(href, "_blank");
 }
 
 onMounted(function () {
@@ -232,6 +278,7 @@ onMounted(function () {
               line-height: 20px;
               color: var(--el-color-white);
               opacity: .8;
+              cursor: pointer;
             }
           }
         }
