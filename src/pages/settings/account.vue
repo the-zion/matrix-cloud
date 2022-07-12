@@ -34,8 +34,6 @@ import AccountUnbind from "./component/unbind.vue"
 import PasswordEdit from "./component/password-edit.vue"
 import {get} from "../../utils/axios";
 import {error, success} from "../../utils/message";
-import {loginTimeOut} from "../../utils/globalFunc";
-
 
 let bindVisible = ref(false)
 let unbindVisible = ref(false)
@@ -107,15 +105,7 @@ function init() {
 function getData() {
   get("/v1/get/user/account").then(function (reply) {
     data.value = reply.data
-  }).catch(function (err) {
-    let response = err.response
-    if (response) {
-      switch (response.data.reason) {
-        case "TOKEN_EXPIRED":
-          loginTimeOut()
-          return
-      }
-    }
+  }).catch(function () {
     error("账号信息获取失败")
   })
 }
