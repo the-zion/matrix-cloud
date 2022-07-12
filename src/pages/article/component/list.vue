@@ -1,5 +1,5 @@
 <template>
-  <el-row class="collect-list" id="collect-list">
+  <el-row class="article-list" id="article-list">
     <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
               :image-size="250" image="../../src/assets/images/no_data.svg"
     />
@@ -169,7 +169,6 @@ function getIntroduce() {
       loading.value = false
     }
   })
-
 }
 
 function doDelete(item) {
