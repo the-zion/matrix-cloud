@@ -9,7 +9,7 @@
                   fit="contain"
         ></el-image>
         <el-menu-item class="main-menu-item" :index="item.state" v-for="item in menuList" :key="item.key"
-                      @click="menuSelect(item.state)">
+                      @click="menuSelect(item.state, item.query)">
           <template #title>
             <span>{{ item.name }}</span>
           </template>
@@ -35,7 +35,7 @@
           </template>
         </el-dropdown>
         <el-row class="main-login-word" v-show="!uuid" @click="login">登录</el-row>
-        <el-row align="middle" v-show="!uuid">
+        <el-row align="middle" v-show="uuid">
           <el-badge :value="messageValue" :max="99" class="main-menu-icon" :hidden=messageCount(messageValue)>
             <el-icon :size="20" @click="add">
               <message/>
@@ -89,36 +89,33 @@ let menuList = ref([{
   key: "home",
   name: "学习与讨论",
   state: "home",
+  query: {page: 'article'},
 }, {
   id: 1,
   key: "about",
   name: "关于matrix",
   state: "about",
+  query: {},
 }])
 
 function init() {
   initData()
-  getData()
 }
 
 function initData() {
   activeMenu.value = useRoute().name.split(".")[0]
 }
 
-function getData() {
-  userStore.getUserProfile()
-}
-
 function backToHome() {
-  router.push({name: "home", query: {page: "article"}})
+  router.push({name: 'home', query: {page: 'article'}})
 }
 
 function menuActive() {
   activeColor.value = "#409eff"
 }
 
-function menuSelect(state) {
-  router.push({name: state})
+function menuSelect(state, query) {
+  router.push({name: state, query: query})
 }
 
 function messageCount(value) {
