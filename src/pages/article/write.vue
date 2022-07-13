@@ -1,5 +1,5 @@
 <template>
-  <el-container class="blog-container">
+  <el-container class="article-container">
     <el-drawer
         v-model="drawer"
         custom-class="drawer"
@@ -32,41 +32,43 @@
           <el-button type="primary" icon="Promotion" @click="drawer = true">发布</el-button>
         </el-space>
       </el-row>
-      <el-affix :offset="0" class="affix">
+      <el-affix :offset="0" class="affix" target=".article-container" @scroll="affixScroll" ref="affixRef">
         <el-row class="block">
           <Toolbar
               class="toolbar"
               :editor="editorRef"
               :defaultConfig="toolbarConfig"
-              :mode="mode"
+              mode="default"
           />
           <el-progress v-show="uploading" :duration="10" class="process" :percentage="percentage"
                        :show-text="false"/>
         </el-row>
       </el-affix>
     </el-row>
-    <el-row class="area" id="area">
-      <el-drawer
-          v-model="draft"
-          title="我的草稿"
-          direction="rtl"
-          destroy-on-close
-      >
-        <draft @draftSelect="draftSelect"></draft>
-      </el-drawer>
-      <el-input placeholder="请输入标题" class="title" v-model="title"/>
-      <Editor
-          v-loading="loading"
-          class="editor"
-          v-model="valueHtml"
-          :defaultConfig="editorConfig"
-          :mode="mode"
-          @onCreated="handleCreated"
-          @onMaxLength="onMaxLength"
-          @customAlert="customAlert"
-          @onChange="editChange"
-      />
-      <span class="bottom" id="bottom"></span>
+    <el-row class="main">
+      <el-row class="area" id="area">
+        <el-drawer
+            v-model="draft"
+            title="我的草稿"
+            direction="rtl"
+            destroy-on-close
+        >
+          <draft @draftSelect="draftSelect"></draft>
+        </el-drawer>
+        <el-input placeholder="请输入标题" class="title" v-model="title"/>
+        <Editor
+            v-loading="loading"
+            class="editor"
+            v-model="valueHtml"
+            :defaultConfig="editorConfig"
+            mode="default"
+            @onCreated="handleCreated"
+            @onMaxLength="onMaxLength"
+            @customAlert="customAlert"
+            @onChange="editChange"
+        />
+        <span class="bottom" id="bottom"></span>
+      </el-row>
     </el-row>
   </el-container>
 </template>
@@ -83,6 +85,7 @@ import Draft from './component/draft.vue'
 import Form from './component/form.vue'
 import {userMainStore, baseMainStore} from "../../store";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
+import {useRoute} from "vue-router";
 
 
 const cos = initCos()
@@ -92,7 +95,6 @@ const {uuid} = storeToRefs(userStore)
 const {article} = storeToRefs(baseStore)
 const editorRef = shallowRef()
 const valueHtml = ref('')
-const mode = ref('default')
 const toolbarConfig = {
   excludeKeys: [
     'fullScreen',
@@ -125,16 +127,15 @@ const editorConfig = {
 
 let title = ref("")
 let draftId = ref()
+let affixRef = ref()
 let time = ref("文章将自动保存至草稿箱")
+let mode = ref("create")
 let draft = ref(false)
 let drawer = ref(false)
 let loading = ref(false)
 let uploading = ref(false)
 let percentage = ref(0)
 let body = null
-let resizeObserver = null
-let areaHeight = null
-let areaElement = null
 let draftMarked = false
 let uploadBox = {}
 let uploadParams = {
@@ -144,7 +145,7 @@ let uploadParams = {
 
 
 function backToHome() {
-  router.push({name: "home"})
+  router.push({name: 'home', query: {page: 'article'}})
 }
 
 function handleCreated(editor) {
@@ -214,7 +215,7 @@ function imageUpload(file, insertFn) {
   let filetype = file.type.split("/")[1]
   percentage.value = 0
   uploading.value = true
-  uploadParams["Key"] = article.value.key + draftId.value + "/" + imageId + "." + filetype
+  uploadParams["Key"] = article.value.key + uuid.value + "/" + draftId.value + "/" + imageId + "." + filetype
   uploadParams["Headers"] = {
     'x-cos-meta-uuid': uuid.value,
     'Pic-Operations':
@@ -230,7 +231,7 @@ function imageUpload(file, insertFn) {
       error("图片上传失败，请稍后再试")
       return
     }
-    let url = article.value.baseUrl + draftId.value + "/" + imageId + ".webp"
+    let url = article.value.baseUrl + uuid.value + "/" + draftId.value + "/" + imageId + ".webp"
     insertFn(url, "网络不佳或图片涉及敏感", url)
   })
 }
@@ -246,23 +247,13 @@ function editSave(fn) {
     return
   }
   time.value = "文章保存中......"
-  uploadParams["Key"] = article.value.key + draftId.value + "/" + uuid.value
+  uploadBox["id"] = draftId.value
+  uploadParams["Key"] = article.value.key + uuid.value + "/" + draftId.value + "/content"
   uploadParams["Headers"] = {
     'x-cos-meta-uuid': uuid.value,
   }
   uploadParams["Body"] = JSON.stringify(uploadBox)
   cos.uploadFile(uploadParams, fn)
-}
-
-function throttle(callback, delay) {
-  let pre = 0
-  return function (res) {
-    const current = Date.now()
-    if (current - pre > delay) {
-      callback.call(this, res)
-      pre = current
-    }
-  }
 }
 
 onBeforeUnmount(() => {
@@ -273,7 +264,12 @@ onBeforeUnmount(() => {
 })
 
 function init() {
+  initData()
   getLastDraft()
+}
+
+function initData() {
+  mode.value = useRoute().query["mode"]
 }
 
 function getLastDraft() {
@@ -316,8 +312,7 @@ function getData() {
   }
 
   loading.value = true
-  areaHeight = null
-  let url = article.value.baseUrl + draftId.value + "/" + uuid.value
+  let url = article.value.baseUrl + uuid.value + "/" + draftId.value + "/content"
   get(url).then(function (reply) {
     let data = reply.data
     let editor = editorRef.value
@@ -332,21 +327,11 @@ function getData() {
   })
 }
 
+function affixScroll(scrollTop, fixed) {
+  console.log(affixRef.value.update())
+}
+
 onMounted(() => {
-  areaElement = document.getElementById("area")
-  resizeObserver = new ResizeObserver(throttle(function (res) {
-    let height = res[0].contentRect.height
-    if (areaHeight === null) {
-      areaHeight = height
-      return
-    }
-    window.scrollTo({
-      top: height - areaHeight + document.documentElement.scrollTop,
-      behavior: "smooth"
-    })
-    areaHeight = height
-  }, 100))
-  resizeObserver.observe(areaElement)
   body = document.body
   body.style.backgroundColor = "var(--el-color-white)"
   init()
@@ -354,7 +339,7 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-.blog-container {
+.article-container {
   flex-direction: column;
 
   ::v-deep(.el-overlay) {
@@ -423,59 +408,64 @@ onMounted(() => {
     }
   }
 
-  .area {
-    width: 700px;
-    margin: auto;
+  .main {
+    position: absolute;
+    top: 91px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow-y: auto;
 
-    ::v-deep(.el-overlay) {
-      top: 91px;
-      background: unset;
+    .area {
+      width: 700px;
+      margin: 0 auto;
+      height: fit-content;
 
-      .el-drawer {
-        box-shadow: unset;
-        width: 280px !important;
-        border-left: 1px solid var(--el-border-color);
+      ::v-deep(.el-overlay) {
+        top: 91px;
+        background: unset;
 
-        .el-drawer__header {
-          margin-bottom: unset;
-          padding: 10px 15px;
-          border-bottom: 1px solid var(--el-border-color);
+        .el-drawer {
+          box-shadow: unset;
+          width: 280px !important;
+          border-left: 1px solid var(--el-border-color);
+
+          .el-drawer__header {
+            margin-bottom: unset;
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--el-border-color);
+          }
+
+          .el-drawer__body {
+            padding: unset;
+          }
         }
+      }
 
-        .el-drawer__body {
-          padding: unset;
+
+      .title {
+        margin: 36px 0 22px;
+
+        ::v-deep(.el-input__wrapper) {
+          box-shadow: unset;
+          font-size: 28px;
+          font-weight: 500;
+          color: var(--el-text-color-primary);
         }
       }
-    }
 
-
-    .title {
-      margin: 36px 0 22px;
-
-      ::v-deep(.el-input__wrapper) {
-        box-shadow: unset;
-        font-size: 28px;
-        font-weight: 500;
-        color: var(--el-text-color-primary);
+      .title::-webkit-input-placeholder {
+        color: var(--el-text-color-placeholder);
       }
-    }
 
-    .title::-webkit-input-placeholder {
-      color: var(--el-text-color-placeholder);
-    }
-
-    .editor {
-      width: 100%;
-      min-height: 300px;
-
-      ::v-deep(.w-e-max-length-info) {
-        position: absolute;
-        top: 0;
+      .editor {
+        width: 100%;
+        min-height: 300px;
       }
-    }
 
-    .bottom {
-      width: 100%;
+      .bottom {
+        width: 100%;
+      }
     }
   }
 }
