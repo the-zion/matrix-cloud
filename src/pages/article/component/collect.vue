@@ -7,13 +7,13 @@
     <el-row class="data" fill :size="0">
       <el-row v-for="item in data" class="each" :key="item.id"
               @click="goToPage('article', item.id)">
-        <el-row class="blog-card">
+        <el-row class="article-card">
           <el-space class="main" fill>
             <el-space class="head">
               <el-popover placement="top-start" :show-arrow="false" :width="312" trigger="hover" popper-class="popover">
                 <template #reference>
                   <el-avatar @click="goToPage('user', 1)" class="avatar" :size="24"
-                             :src="avatar.baseUrl + item.uuid + '.webp'"/>
+                             :src="avatar.baseUrl + item.uuid + '/avatar.webp'"/>
                 </template>
                 <matrix-user-mini-card></matrix-user-mini-card>
               </el-popover>
@@ -22,7 +22,7 @@
             <el-space class="info">
               <el-row class="time">{{ "发布于 " + item.update }}</el-row>
               <el-tag round v-show="item.tags" type="info"
-                      v-for="tag in item.tags.split(';')" :key="tag">{{
+                      v-for="tag in (item.tags?item.tags.split(';'):[])" :key="tag">{{
                   tag
                 }}
               </el-tag>
@@ -67,7 +67,7 @@
           <el-popconfirm title="取消收藏确认"
                          confirm-button-text="确定"
                          cancel-button-text="取消"
-                         @confirm="cancelConfirm(item)"
+                         @confirm="cancelCollect(item)"
           >
             <template #reference>
               <el-space :size="3" @click.stop="">
@@ -106,9 +106,9 @@ import {axiosGetAll, get, post} from "../../../utils/axios";
 import {scrollTo} from "../../../utils/scroll";
 import {error, success} from "../../../utils/message";
 
+const userStore = userMainStore()
 const baseStore = baseMainStore()
 const {avatar, article} = storeToRefs(baseStore)
-const userStore = userMainStore()
 const {uuid} = storeToRefs(userStore)
 const props = defineProps({
   userId: String
@@ -180,11 +180,13 @@ function getStatistic() {
 function getIntroduce() {
   let endpoints = []
   list.value.forEach(function (item) {
-    endpoints.push(article.value.baseUrl + item["id"] + "/" + item["uuid"] + "-introduce")
+    endpoints.push(article.value.baseUrl + item["uuid"] + "/" + item["id"] + "/introduce")
   })
   axiosGetAll(endpoints, function (allData) {
     allData.forEach(function (each, index) {
-      list.value[index] = Object.assign(list.value[index], each.data)
+      list.value.forEach(function (item, index) {
+        each.data.id === item["id"] && (list.value[index] = Object.assign(item, each.data))
+      })
     })
   }, function () {
   }, function () {
@@ -196,7 +198,7 @@ function getIntroduce() {
   })
 }
 
-function cancelConfirm(item) {
+function cancelCollect(item) {
   post("/v1/cancel/article/collect", {
     id: item.id,
     uuid: item.uuid,
@@ -239,7 +241,7 @@ onMounted(function () {
       background-color: var(--el-color-white);
       cursor: pointer;
 
-      .blog-card {
+      .article-card {
         width: 100%;
         padding: 16px;
 
