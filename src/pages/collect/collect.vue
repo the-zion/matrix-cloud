@@ -13,7 +13,7 @@
           <el-row justify="space-between" class="user">
             <el-row class="card" align="middle">
               <el-avatar class="avatar" :size="32" icon="UserFilled"
-                         :src="avatar.baseUrl + userId + '.webp'"></el-avatar>
+                         :src="avatar.baseUrl + userId + '/avatar.webp'"></el-avatar>
               <el-row class="info">
                 <el-row class="name">{{ userProfile["username"] }}</el-row>
                 <el-row class="word" @click="moreCollect">更多收藏集 ></el-row>
@@ -101,7 +101,6 @@ function init() {
 
 function initData() {
   collectionsId.value = useRoute().query["id"]
-  backgroundUrl.value = collect.value.baseUrl + collectionsId.value + "/background.webp"
 }
 
 function getData() {
@@ -119,6 +118,7 @@ function getCollection() {
     let data = reply.data
     userId.value = data.uuid
     collectionProfile.value = data
+    backgroundUrl.value = collect.value.baseUrl + userId.value + "/" + collectionsId.value + "/background.webp"
     getUserInfo()
   })
 }
@@ -136,7 +136,7 @@ function backgroundUpload(UploadRequestOptions) {
     return
   }
 
-  if (!collectionsId.value) {
+  if (!collectionsId.value || !userId.value) {
     error("背景上传失败")
     return
   }
@@ -148,7 +148,7 @@ function backgroundUpload(UploadRequestOptions) {
   cos.uploadFile({
     Bucket: collect.value.bucket,
     Region: collect.value.region,
-    Key: collect.value.key + collectionsId.value + "/background." + filetype,
+    Key: collect.value.key + userId.value + "/" + collectionsId.value + "/background." + filetype,
     Headers: {
       'x-cos-meta-uuid': uuid.value,
       'Pic-Operations':
