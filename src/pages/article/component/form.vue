@@ -1,7 +1,11 @@
 <template>
   <el-row class="column-form">
     <el-form ref="formRef" v-model="form" label-position="top" class="form">
-      <el-form-item label="文章标签" class="form-item">
+      <el-form-item label="文章标签" class="form-item" :rules="[{
+          required: true,
+          message: '请选择标签',
+          trigger: 'blur',
+        }]">
         <el-popover placement="bottom-start" :width="432" trigger="click" :show-arrow="false">
           <template #reference>
             <el-select
@@ -56,6 +60,15 @@
         <el-radio-group v-model="form.source">
           <el-radio class="radio" v-for="item in sourceRadio" :label="item.id">{{ item.label }}</el-radio>
         </el-radio-group>
+      </el-form-item>
+      <el-form-item v-if="form.source === 2" prop="url" label="转载地址" class="form-item" :rules="[{
+          type: 'url',
+          message: '网址格式错误',
+          trigger: ['blur'],
+        }]">
+        <el-input v-model="form.url" type="text" :maxlength="100" show-word-limit
+                  placeholder="请输入文章转载地址" size="large">
+        </el-input>
       </el-form-item>
     </el-form>
     <el-button :loading="sending" class="button" type="primary" size="large" @click="commit">发布</el-button>
@@ -136,16 +149,29 @@ let columnRadio = ref([{
   label: "深入浅出Docker"
 }])
 
-function commitCheck() {
-  if (form.value.tags.length === 0) {
-    error("请选择标签")
-    return false
-  }
+function commitCheck(formRef) {
+  // if (form.value.tags.length === 0) {
+  //   error("请选择标签")
+  //   return false
+  // }
+  //
+  // if (form.value.source === 2 && form.value.url === '') {
+  //   error("请填写转载网址")
+  //   return false
+  // }
 
-  if (form.value.source === 2 && form.value.url === '') {
-    error("请填写转载网址")
-    return false
+  if (!formRef) {
+    error("未知错误")
+    return
   }
+  formRef.validate((valid) => {
+    if (!valid) {
+      error("信息输入有误，请检查")
+    } else {
+      toUpdate()
+      return true
+    }
+  })
 
   if (editor.value.getText().length === 0) {
     error("文章内容不能为空白")
@@ -171,12 +197,12 @@ function commit() {
 
   setArticleParams()
   setIntroduceParams()
-  commitIntroduce()
+  // commitIntroduce()
 }
 
 function commitIntroduce() {
   sending.value = true
-  uploadParams["Key"] = article.value.key + draftId.value + "/" + uuid.value + "-introduce"
+  uploadParams["Key"] = article.value.key + uuid.value + "/" + draftId.value + "/introduce"
   uploadParams["Headers"] = {
     'x-cos-meta-uuid': uuid.value,
   }
@@ -190,8 +216,9 @@ function commitIntroduce() {
   })
 }
 
+
 function commitArticle() {
-  uploadParams["Key"] = article.value.key + draftId.value + "/" + uuid.value
+  uploadParams["Key"] = article.value.key + uuid.value + "/" + draftId.value + "/content"
   uploadParams["Headers"] = {
     'x-cos-meta-uuid': uuid.value,
     'x-cos-meta-id': draftId.value + ""
@@ -223,6 +250,7 @@ function setArticleParams() {
   articleParams["tags"] = form.value["tags"].join(";")
   articleParams["auth"] = form.value["auth"]
   articleParams["source"] = form.value["source"]
+  articleParams["id"] = form.value["id"]
   if (form.value.text === "") {
     articleParams["text"] = editor.value.getText().slice(0, 256)
   } else {
@@ -231,6 +259,7 @@ function setArticleParams() {
 }
 
 function setIntroduceParams() {
+  introduce["id"] = articleParams["id"]
   introduce["title"] = articleParams["title"]
   introduce["text"] = articleParams["text"]
   introduce["update"] = articleParams["update"]
@@ -258,9 +287,10 @@ function getData() {
     return
   }
 
-  let url = article.value.baseUrl + draftId.value + "/" + uuid.value
+  let url = article.value.baseUrl + uuid.value + "/" + draftId.value + "/content"
   get(url).then(function (reply) {
     let data = reply.data
+    form.value.id = data["id"]
     form.value.cover = data["cover"]
     form.value.auth = data["auth"] || 1
     form.value.source = data["source"] || 1
@@ -297,7 +327,7 @@ function imageUpload(UploadRequestOptions) {
   uploading.value = true
   let file = UploadRequestOptions.file
   let filetype = UploadRequestOptions.file.type.split("/")[1]
-  uploadParams["Key"] = article.value.key + draftId.value + "/cover." + filetype
+  uploadParams["Key"] = article.value.key + uuid.value + "/" + draftId.value + "/cover." + filetype
   uploadParams["Headers"] = {
     'x-cos-meta-uuid': uuid.value,
     'Pic-Operations':
