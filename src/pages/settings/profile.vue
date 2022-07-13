@@ -43,7 +43,8 @@
                     placeholder="请输入个人介绍" size="large" :rows="5" resize="none">
           </el-input>
         </el-form-item>
-        <el-button :type="form.status === 1 && 'primary'" class="button" @click="update(formRef)" :disabled="form.status === 2"
+        <el-button :type="form.status === 1 && 'primary'" class="button" @click="update(formRef)"
+                   :disabled="form.status === 2"
         >{{ form.status === 1 ? "保存修改" : "审核中" }}
         </el-button>
       </el-form>
@@ -56,7 +57,8 @@
             :before-upload="beforeAvatarUpload"
         >
           <template #tip>
-            <el-progress v-show="uploading" :duration="10" style="margin-top: 5px" :percentage="percentage" :show-text="false"/>
+            <el-progress v-show="uploading" :duration="10" style="margin-top: 5px" :percentage="percentage"
+                         :show-text="false"/>
             <el-row justify="center" align="middle" style="margin-top: 5px">
               <span style="font-size: 14px">我的头像</span>
               <el-tooltip
@@ -71,7 +73,7 @@
               </el-tooltip>
             </el-row>
           </template>
-          <el-avatar :src="tempAvatarUrl || form.avatar || avatar.baseUrl + uuid + '.webp'" :size="90" shape="square">
+          <el-avatar :src="tempAvatarUrl || form.avatar || avatar.baseUrl + uuid + '/avatar.webp'" :size="90" shape="square">
             <el-icon :size="50">
               <UserFilled/>
             </el-icon>
@@ -95,7 +97,6 @@ import {error, success, warning} from "../../utils/message";
 import {get, post} from "../../utils/axios";
 import {initCos} from "../../utils/cos";
 import {storeToRefs} from "pinia"
-import {loginTimeOut} from "../../utils/globalFunc";
 import {userMainStore, baseMainStore} from "../../store";
 
 const cos = initCos()
@@ -127,15 +128,7 @@ function init() {
 function getData() {
   get("/v1/get/user/profile/update").then(function (reply) {
     form.value = reply.data
-  }).catch(function (err) {
-    let response = err.response
-    if (response) {
-      switch (response.data.reason) {
-        case "TOKEN_EXPIRED":
-          loginTimeOut()
-          return
-      }
-    }
+  }).catch(function () {
     error("资料获取失败")
   })
 }
@@ -162,9 +155,9 @@ function avatarUpload(UploadRequestOptions) {
   let file = UploadRequestOptions.file
   let filetype = UploadRequestOptions.file.type.split("/")[1]
   cos.uploadFile({
-    Bucket: baseStore.avatar.bucket,
-    Region: baseStore.avatar.region,
-    Key: baseStore.avatar.key + uuid.value + "." + filetype,
+    Bucket: avatar.value.bucket,
+    Region: avatar.value.region,
+    Key: avatar.value.key + uuid.value + "/avatar." + filetype,
     Headers: {
       'x-cos-meta-uuid': uuid.value,
     },
@@ -183,11 +176,12 @@ function avatarUpload(UploadRequestOptions) {
     reader.onload = function () {
       tempAvatarUrl.value = reader.result;
     };
-    setTimeout(function (){
+    setTimeout(function () {
       uploading.value = false
     }, 1000)
   });
 }
+
 
 function update(formRef) {
   if (!formRef) {
@@ -212,9 +206,6 @@ function toUpdate() {
     let response = err.response
     if (response) {
       switch (response.data.reason) {
-        case "TOKEN_EXPIRED":
-          loginTimeOut()
-          return
         case "USER_NAME_CONFLICT":
           error("用户名已存在")
           return
@@ -237,6 +228,7 @@ onMounted(function () {
   padding: 20px;
   background-color: var(--el-color-white);
   flex-direction: column;
+
 
   .title-block {
     padding-bottom: 20px;
