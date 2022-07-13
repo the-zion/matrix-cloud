@@ -8,7 +8,7 @@
                    :class="'icon-number-'+(index+1) + (index < 3?' gold':'')"></el-icon>
           <el-space class="info" direction="vertical" fill :size="0" alignment="start">
             <el-space class="info-head" :size="4">
-              <el-avatar :src="avatar.baseUrl + item.uuid + '.webp'" :size="22"></el-avatar>
+              <el-avatar :src="avatar.baseUrl + item.uuid + '/avatar.webp'" :size="22"></el-avatar>
               <span class="info-title">{{ introduce[item.id].title }}</span>
             </el-space>
             <span class="text">{{ introduce[item.id].text }}</span>
@@ -68,7 +68,7 @@ function getIntroduce(list) {
 }
 
 function getArticleIntroduce(item) {
-  let url = article.value.baseUrl + item.id + "/" + item.uuid + "-introduce"
+  let url = article.value.baseUrl + item.uuid + "/" + item.id + "/introduce"
   get(url).then(function (reply) {
     introduce.value[item.id] = reply.data
     request -= 1
