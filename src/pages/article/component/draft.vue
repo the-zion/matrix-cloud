@@ -57,7 +57,7 @@ function getData() {
 function getFromCos() {
   let request = draft.value.length
   draft.value.forEach(function (item) {
-    let url = article.value.baseUrl + item.id + "/" + uuid.value
+    let url = article.value.baseUrl + uuid.value + "/" + item["id"] + "/content"
     get(url).then(function (reply) {
       let data = reply.data
       item.title = data.title
