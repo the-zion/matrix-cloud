@@ -6,13 +6,13 @@
     <el-row class="data" fill :size="0">
       <el-row v-for="item in data" class="each" :key="item.id"
               @click="goToPage('article', item.id)">
-        <el-row class="blog-card">
+        <el-row class="article-card">
           <el-space class="main" fill>
             <el-space class="head">
               <el-popover placement="top-start" :show-arrow="false" :width="312" trigger="hover" popper-class="popover">
                 <template #reference>
                   <el-avatar @click="goToPage('user', 1)" class="avatar" :size="24"
-                             :src="avatar.baseUrl + item.uuid + '.webp'"/>
+                             :src="avatar.baseUrl + item.uuid + '/avatar.webp'"/>
                 </template>
                 <matrix-user-mini-card></matrix-user-mini-card>
               </el-popover>
@@ -21,7 +21,7 @@
             <el-space class="info">
               <el-row class="time">{{ "发布于 " + item.update }}</el-row>
               <el-tag round v-show="item.tags" type="info"
-                      v-for="tag in item.tags.split(';')" :key="tag">{{
+                      v-for="tag in (item.tags?item.tags.split(';'):[])" :key="tag">{{
                   tag
                 }}
               </el-tag>
@@ -78,8 +78,7 @@ export default {
 import {ref, onMounted} from "vue";
 import {throttle, scrollToBottomListen} from "../../../utils/scroll";
 import {goToPage} from "../../../utils/globalFunc";
-import {confirm} from "../../../utils/globalFunc";
-import {info, success} from "../../../utils/message";
+import {info} from "../../../utils/message";
 import {axiosGetAll, get} from "../../../utils/axios";
 import {baseMainStore} from "../../../store";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
@@ -155,11 +154,13 @@ function getStatistic() {
 function getIntroduce() {
   let endpoints = []
   list.value.forEach(function (item) {
-    endpoints.push(article.value.baseUrl + item["id"] + "/" + item["uuid"] + "-introduce")
+    endpoints.push(article.value.baseUrl + item["uuid"] + "/" + item["id"] + "/introduce")
   })
   axiosGetAll(endpoints, function (allData) {
-    allData.forEach(function (each, index) {
-      list.value[index] = Object.assign(list.value[index], each.data)
+    allData.forEach(function (each) {
+      list.value.forEach(function (item, index) {
+        each.data.id === item["id"] && (list.value[index] = Object.assign(item, each.data))
+      })
     })
   }, function () {
   }, function () {
@@ -168,20 +169,6 @@ function getIntroduce() {
       data.value = list.value
       loading.value = false
     }
-  })
-}
-
-function doDelete(item) {
-  confirm("删除", "确定删除" + "：\"" + item.title + "\" 吗？").then(function () {
-    success("删除成功")
-  }).catch(() => {
-  })
-}
-
-function doCollect(item) {
-  confirm("取消收藏", "确定取消收藏" + "：\"" + item.title + "\" 吗？").then(function () {
-    success("取消成功")
-  }).catch(() => {
   })
 }
 
@@ -222,7 +209,7 @@ onMounted(() => {
       background-color: var(--el-color-white);
       cursor: pointer;
 
-      .blog-card {
+      .article-card {
         width: 100%;
         padding: 16px;
 
