@@ -44,7 +44,7 @@
           <el-dropdown size="large" placement="bottom-end" @command="dropdownClick"
                        popper-class="dropdown">
             <el-avatar class="main-user-image" :size="30" icon="UserFilled"
-                       :src="avatar.baseUrl + uuid + '.webp'"></el-avatar>
+                       :src="avatar.baseUrl + uuid + '/avatar.webp'"></el-avatar>
             <template #dropdown>
               <dropdown></dropdown>
             </template>
