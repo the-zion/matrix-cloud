@@ -9,7 +9,7 @@
       <el-row class="header">
         <el-row class="title-area" justify="space-between">
           <el-row class="title" align="top">
-            <el-avatar :size="32" icon="UserFilled" :src="avatar.baseUrl + authorUuid + '.webp'"></el-avatar>
+            <el-avatar :size="32" icon="UserFilled" :src="avatar.baseUrl + authorUuid + '/avatar.webp'"></el-avatar>
             <el-row class="label" align="middle">{{ data.title }}</el-row>
           </el-row>
           <el-button type="primary" icon="Plus">关注TA</el-button>
@@ -201,7 +201,7 @@ function getUserInfo() {
 }
 
 function getArticle() {
-  let url = article.value.baseUrl + articleId.value + "/" + authorUuid.value
+  let url = article.value.baseUrl + authorUuid.value + "/" + articleId.value + "/content"
   get(url).then(function (reply) {
     data.value = reply.data
     editorRef.value.setHtml(data.value["html"])
