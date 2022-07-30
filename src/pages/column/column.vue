@@ -1,88 +1,366 @@
 <template>
-  <el-container class="column-container" data-background-content-before=":before">
-    <el-row class="column-main">
-      <el-row class="introduce-block">
-        <el-image class="cover" :src="data.cover"></el-image>
-        <el-row class="info" align="top">
-          <span class="title">{{ data.title }}</span>
-          <el-row class="introduce">
-            {{ data.introduce }}
-          </el-row>
-          <el-row class="footer">
-            <el-row class="left-area" justify="start" align="bottom">
-              <el-button class="button">开始阅读</el-button>
-            </el-row>
-            <el-row class="right-area" justify="end" align="bottom">
-              <span class="view">{{ data.view + "人阅读" }}</span>
-              <el-row class="agree-collect" justify="end">
-                <el-button class="button">
-                  <template #icon>
-                    <el-icon class="iconfont icon-like"></el-icon>
-                  </template>
-                  {{ data.agree > 1000 ? (data.agree / 1000).toFixed(1) + "k" : data.agree }}
+  <el-container class="column-container">
+    <el-backtop></el-backtop>
+    <collections-choose v-model:visible="collectionsVisible" v-model:judge="statisticJudge" :id="columnId"
+                        :uuid="authorUuid" :mode="'column'"
+                        @collected="collected"></collections-choose>
+    <includes-add v-model:visible="includesVisible" :id="columnId"></includes-add>
+    <el-main class="main">
+      <el-row class="column-block">
+        <el-row class="header">
+          <el-row class="column-card" align="middle">
+            <el-image class="image" fit="cover" :src="data.cover" lazy></el-image>
+            <el-row class="container" align="top">
+              <el-space class="main">
+                <el-avatar class="avatar" :size="32" icon="UserFilled"
+                           :src="avatar.baseUrl + authorUuid + '/avatar.webp'"
+                           @click="goToPage('user', {id:authorUuid,menu:'article'})"></el-avatar>
+                <el-row class="title">{{ data.name }}</el-row>
+                <el-space class="info">
+                  <el-tag round v-show="data.tags" type="info" v-for="tag in (data.tags?data.tags.split(';'):[])"
+                          :key="tag">{{
+                      tag
+                    }}
+                  </el-tag>
+                </el-space>
+              </el-space>
+              <el-row class="content">{{ data.introduce }}</el-row>
+              <el-row class="foot" justify="space-between">
+                <el-space>
+                  <el-space :size="5" class="icon-block">
+                    <div ref="iconAgree" @click="agreeClick" :class="{'agree-select':statisticClicked['agree']}"
+                         class="icon agree-transform">
+                      <svg class="symbol-icon" aria-hidden="true" v-show="!statisticClicked['agree']">
+                        <use :xlink:href="'#icon-like'"></use>
+                      </svg>
+                      <svg class="symbol-icon" aria-hidden="true" v-show="statisticClicked['agree']">
+                        <use :xlink:href="'#icon-like-fill'"></use>
+                      </svg>
+                    </div>
+                    <span class="num">{{
+                        statistic.agree > 1000 ? (statistic.agree / 1000).toFixed(1) + "k" : statistic.agree
+                      }}</span>
+                  </el-space>
+                  <el-space :size="5" class="icon-block">
+                    <el-icon class="iconfont icon-eye icon"></el-icon>
+                    <span class="num">{{
+                        statistic.view > 1000 ? (statistic.view / 1000).toFixed(1) + "k" : statistic.view
+                      }}</span>
+                  </el-space>
+                  <el-space :size="5" class="icon-block">
+                    <div ref="iconCollect" @click="collectClick" :class="{'collect-select':statisticClicked['collect']}"
+                         class="icon collect-transform">
+                      <svg class="symbol-icon" aria-hidden="true" v-show="!statisticClicked['collect']">
+                        <use :xlink:href="'#icon-star'"></use>
+                      </svg>
+                      <svg class="symbol-icon" aria-hidden="true" v-show="statisticClicked['collect']">
+                        <use :xlink:href="'#icon-star-fill'"></use>
+                      </svg>
+                    </div>
+                    <span class="num">{{ statisticClicked['collect'] ? '已收藏' : '收藏' }}</span>
+                  </el-space>
+                </el-space>
+                <el-button type="primary" v-if="authorUuid === uuid" @click="includesVisible = true">文章添加</el-button>
+                <el-button :type="subscribeJudge?'info':'primary'" :icon="subscribeJudge?'':'Plus'" v-else
+                           :loading="subscribeLoading"
+                           @click="subscribe()" :text="subscribeJudge" :bg="subscribeJudge">
+                  {{ subscribeJudge ? '取消订阅' : '订阅专栏' }}
                 </el-button>
-                <el-button class="button" icon="star">收藏</el-button>
               </el-row>
             </el-row>
           </el-row>
         </el-row>
-      </el-row>
-      <el-row class="detail-block">
-        <el-row class="header">
-          <span class="option" v-for="item in bar" :key="item.key"
-                :class="{'option-select': currentOption === item.key}" @click="currentOption = item.key">{{
-              item.label
-            }}</span>
-        </el-row>
-        <el-row class="main">
-          <component :is="currentOption === 'blog' ? 'matrix-blog-list':'matrix-comment'" shape="card" :gap="10"
-                     :page-background="true"></component>
+        <el-row class="body">
+          <el-row class="header">
+            <el-row class="word" align="middle">收录文章</el-row>
+          </el-row>
+          <article-column-list></article-column-list>
         </el-row>
       </el-row>
-    </el-row>
-    <el-row class="column-aside">
-      <Aside :data="data"></Aside>
-    </el-row>
+    </el-main>
   </el-container>
 </template>
 
 <script setup>
-import {ref, onMounted} from "vue"
-import Aside from "./component/aside.vue"
+import {goToPage} from "../../utils/globalFunc";
+import {useRoute} from "vue-router";
+import {error, success, warning} from "../../utils/message";
+import {storeToRefs} from "pinia/dist/pinia.esm-browser";
+import {ref, onMounted} from "vue";
+import {get, post} from "../../utils/axios";
+import {animationAgree, animationCollect} from "../../utils/animation";
+import {baseMainStore, userMainStore} from "../../store";
+import router from "../../router";
+import ArticleColumnList from "../article/component/column.vue";
+import IncludesAdd from "./component/add.vue";
+import CollectionsChoose from "../collect/component/choose.vue";
+
+
+const userStore = userMainStore()
+const baseStore = baseMainStore()
+const {uuid} = storeToRefs(userStore)
+const {avatar, column} = storeToRefs(baseStore)
+
+let columnId = ref()
+let authorUuid = ref()
+let backgroundImage = ref()
+let visible = ref(false)
+let includesVisible = ref(false)
+let iconAgree = ref(null)
+let iconCollect = ref(null)
+let loading = ref(false)
+let collectionsVisible = ref(false)
+let subscribeLoading = ref(false)
+let subscribeJudge = ref(false)
+let agreeBounce = ref(1);
+let collectBounce = ref(1);
+let agreeAnimation = null
+let collectAnimation = null
+let clickLock = false
 
 let data = ref({
-  cover: "../../src/assets/images/column.png",
-  title: "深入浅出设计模式",
-  introduce: "用生动的例子详解 23 种设计模式，结合具体代码实战，以及有趣的课后练习，助你彻底理解设计模式.",
-  view: "15735",
-  agree: "15735",
-  tags: ["go", "云原生", "kubernetes", "go", "云原生", "kubernetes"]
+  "name": "暂无数据",
+  "introduce": "暂无数据",
+  "update": "0000-00-00"
 })
-let backgroundImage = ref()
-let currentOption = ref("blog")
-let bar = ref([
-  {
-    key: "blog",
-    label: "文章",
-  },
-  {
-    key: "",
-    label: "评论"
-  }
-])
+
+let statistic = ref({
+  "agree": 0,
+  "view": 0,
+})
+let statisticJudge = ref({
+  agree: false,
+  collect: false
+})
+let statisticClicked = ref({
+  agree: false,
+  collect: false
+})
 
 function init() {
-  background()
+  animation()
+  initData()
+  getSubscribeJudge()
+  getData()
 }
 
-function background() {
-  backgroundImage.value = "url(" + data.value.cover + ")"
+function animation() {
+  agreeAnimation = animationAgree(iconAgree, agreeBounce)
+  collectAnimation = animationCollect(iconCollect, collectBounce)
+}
+
+function initData() {
+  let i = useRoute()
+  columnId.value = i.query["id"]
+  if (!columnId.value) {
+    columnNotExist()
+  }
+}
+
+function getSubscribeJudge() {
+  if (!columnId.value || !uuid.value) {
+    return
+  }
+  post("/v1/subscribe/column/judge", {id: columnId.value}).then(function (reply) {
+    subscribeJudge.value = reply.data.subscribe
+  })
+}
+
+function getData() {
+  getStatistic()
+}
+
+function getStatistic() {
+  loading.value = true
+  get("/v1/get/column/statistic?id=" + columnId.value).then(function (reply) {
+    authorUuid.value = reply.data.uuid
+    statistic.value = reply.data
+    setView()
+    getColumn()
+  }).catch(function () {
+    columnNotExist()
+  })
+}
+
+function setView() {
+  post("/v1/set/column/view", {
+    id: columnId.value,
+    uuid: authorUuid.value
+  })
+}
+
+function getColumn() {
+  let url = column.value.baseUrl + authorUuid.value + "/" + columnId.value + "/content"
+  get(url).then(function (reply) {
+    data.value = reply.data
+    getStatisticJudge()
+    background(data.value["cover"])
+  }).catch(function () {
+    columnNotExist()
+  }).then(function () {
+    loading.value = false
+  })
+}
+
+function getStatisticJudge() {
+  if (!columnId.value || !uuid.value) {
+    return
+  }
+  post("/v1/column/statistic/judge", {
+    id: columnId.value
+  }).then(function (reply) {
+    statisticJudge.value = reply.data
+    statisticClicked.value = reply.data
+  })
+}
+
+function background(cover) {
+  backgroundImage.value = "url(" + cover + ")"
+}
+
+function columnNotExist() {
+  router.push({name: "result", query: {type: "error", title: '获取专栏失败', description: "专栏不存在或已被删除"}})
+}
+
+function agreeClick() {
+  if (!uuid.value) {
+    warning("账号未登录，请先登录")
+  }
+
+  if (!columnId.value || !authorUuid.value || clickLock) {
+    return
+  }
+
+  clickLock = true
+  if (!statisticJudge.value["agree"]) {
+    agreeAdd()
+  } else {
+    agreeCancel()
+  }
+}
+
+function agreeAdd() {
+  agreeAnimation.play()
+  statisticClicked.value["agree"] = true
+  statistic.value["agree"] += 1
+  post("/v1/set/column/agree", {
+    id: columnId.value,
+    uuid: authorUuid.value,
+  }).then(function () {
+    statisticJudge.value["agree"] = true
+  }).catch(function () {
+    statisticClicked.value["agree"] = false
+    statistic.value["agree"] -= 1
+  }).then(function () {
+    clickLock = false
+  })
+}
+
+function agreeCancel() {
+  agreeAnimation.play()
+  statisticClicked.value["agree"] = false
+  statistic.value["agree"] -= 1
+  post("/v1/cancel/column/agree", {
+    id: columnId.value,
+    uuid: authorUuid.value,
+  }).then(function () {
+    statisticJudge.value["agree"] = false
+  }).catch(function () {
+    statisticClicked.value["agree"] = true
+    statistic.value["agree"] += 1
+  }).then(function () {
+    clickLock = false
+  })
+}
+
+function collectClick() {
+  if (!uuid.value) {
+    warning("账号未登录，请先登录")
+  }
+
+  if (!columnId.value || !authorUuid.value) {
+    return
+  }
+
+  if (!statisticJudge.value['collect']) {
+    collectAdd()
+  } else {
+    collectCancel()
+  }
+}
+
+function collectAdd() {
+  collectionsVisible.value = true
+}
+
+function collectCancel() {
+  clickLock = true
+  collectAnimation.play()
+  statisticClicked.value["collect"] = false
+  statistic.value["collect"] -= 1
+  post("/v1/cancel/column/collect", {
+    id: columnId.value,
+    uuid: authorUuid.value,
+  }).then(function () {
+    collectAnimation.play()
+  }).catch(function () {
+    statisticClicked.value["collect"] = true
+    statistic.value["collect"] += 1
+  }).then(function () {
+    clickLock = false
+  })
+}
+
+function collected() {
+  collectAnimation.play()
+  statisticClicked.value["collect"] = true
+  statistic.value["collect"] += 1
+}
+
+function subscribe() {
+  if (!uuid.value) {
+    warning("账号未登录，请先登录")
+    return
+  }
+
+  if (!columnId.value || !authorUuid.value) {
+    return
+  }
+
+  if (subscribeJudge.value) {
+    cancelSubscribe()
+  } else {
+    setSubscribe()
+  }
+}
+
+function setSubscribe() {
+  subscribeLoading.value = true
+  post("/v1/subscribe/column", {id: columnId.value, author: authorUuid.value}).then(function () {
+    success("已订阅")
+    subscribeJudge.value = true
+  }).catch(function () {
+    error("订阅出错，请稍后再试")
+  }).then(function () {
+    subscribeLoading.value = false
+  })
+}
+
+function cancelSubscribe() {
+  subscribeLoading.value = true
+  post("/v1/cancel/subscribe/column", {id: columnId.value}).then(function () {
+    success("已取消订阅")
+    subscribeJudge.value = false
+  }).catch(function () {
+    error("取消出错，请稍后再试")
+  }).then(function () {
+    subscribeLoading.value = false
+  })
 }
 
 onMounted(function () {
   init()
 })
-
 </script>
 
 <style scoped lang="scss">
@@ -100,119 +378,155 @@ onMounted(function () {
 }
 
 .column-container {
-  width: fit-content;
-  margin: 40px auto;
+  width: 100%;
 
-  .column-main {
-    width: 737px;
-    margin-right: 56px;
+  ::v-deep(.collections-choose) {
+    border-radius: 4px;
+    margin-top: 10vh;
 
-    .introduce-block {
-      width: 100%;
-      height: 200px;
-      margin-bottom: 54px;
-
-      .cover {
-        width: 150px;
-        height: 200px;
-        border-radius: 8px;
-        box-shadow: var(--el-box-shadow-lighter);
-        margin-right: 24px;
-      }
-
-      .info {
-        width: calc(100% - 174px);
-        height: 100%;
-
-        .title {
-          height: 32px;
-          width: 100%;
-          font-size: 22px;
-          line-height: 32px;
-          color: var(--el-text-color-primary);
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          font-weight: 500;
-        }
-
-        .introduce {
-          font-size: 14px;
-          flex: 1 1 auto;
-          line-height: 24px;
-          margin-top: 4px;
-          height: 100px;
-          -webkit-line-clamp: 4;
-          overflow: hidden;
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
-        }
-
-        .footer {
-          width: 100%;
-          height: calc(100% - 144px);
-
-          .button {
-            font-weight: 400;
-          }
-
-          .left-area {
-            width: 50%;
-          }
-
-          .right-area {
-            width: 50%;
-
-            .view {
-              width: 100%;
-              font-size: 12px;
-              line-height: 20px;
-              color: var(--el-text-color-primary);
-              font-weight: 500;
-              text-align: end;
-            }
-
-            .agree-collect {
-              width: 100%;
-              margin-top: 8px;
-            }
-          }
-        }
-      }
-    }
-
-    .detail-block {
-      width: 100%;
-
-      .header {
-        width: 100%;
-        height: 45px;
-        border-bottom: 1px solid var(--el-border-color);
-
-        .option {
-          font-size: 18px;
-          line-height: 28px;
-          color: var(--el-text-color-primary);
-          margin-right: 40px;
-          cursor: pointer;
-          margin-bottom: -1px;
-          font-weight: 500;
-        }
-
-        .option-select {
-          border-bottom: 2px solid var(--el-text-color-primary);
-        }
-      }
-
-      .main {
-        width: 100%;
-        margin-top: 20px;
-      }
+    .el-dialog__body {
+      padding: 0 20px
     }
   }
 
-  .column-aside {
-    width: 300px;
+  ::v-deep(.includes-add) {
+    border-radius: 4px;
+    margin-top: 10vh;
+
+    .el-dialog__body {
+      padding: 0 20px
+    }
+  }
+
+  .main {
+    width: 100%;
+
+    .column-block {
+      width: 800px;
+      margin: auto;
+
+      .header {
+        width: 100%;
+        height: 200px;
+        background-color: var(--el-color-white);
+
+        .column-card {
+          width: 100%;
+          padding: 16px;
+
+          .image {
+            height: 160px;
+            width: 230px;
+            border-radius: 6px;
+            margin-right: 16px;
+          }
+
+          .container {
+            width: calc(100% - 246px);
+            height: 100%;
+          }
+
+          .main {
+            width: 100%;
+            height: fit-content;
+
+            .avatar {
+              cursor: pointer;
+              margin-right: 10px;
+            }
+
+            .title {
+              font-size: 16px;
+              line-height: 24px;
+              font-weight: 500;
+              color: var(--el-text-color-secondary)
+            }
+
+            .title:hover {
+              color: var(--el-color-primary);
+            }
+
+            .info {
+              width: 100%;
+            }
+          }
+
+          .content {
+            margin-top: 8px;
+            width: 100%;
+            height: 85px;
+            font-size: 12px;
+            line-height: 20px;
+            color: var(--el-text-color-secondary);
+            word-break: break-word;
+            align-self: stretch;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 4;
+          }
+
+          .foot {
+            width: 100%;
+            margin-top: 8px;
+
+            .icon-block {
+              cursor: pointer;
+
+              .agree-select {
+                color: var(--el-color-primary) !important;
+              }
+
+              .collect-select {
+                color: #ffa500 !important;
+              }
+
+              .icon {
+                display: inline-flex;
+                position: relative;
+                height: 20px;
+                font-size: 20px;
+                color: var(--el-text-color-placeholder);
+              }
+
+              .agree-transform {
+                transform: scale3d(v-bind(agreeBounce), v-bind(agreeBounce), 1);
+              }
+
+              .collect-transform {
+                transform: scale3d(v-bind(collectBounce), v-bind(collectBounce), 1)
+              }
+
+              .num {
+                color: var(--el-text-color-secondary);
+              }
+            }
+          }
+        }
+      }
+
+      .body {
+        width: 100%;
+        margin-top: 24px;
+        background-color: var(--el-color-white);
+
+        .header {
+          width: 100%;
+          height: fit-content;
+          border-bottom: 1px solid var(--el-border-color-lighter);
+
+          .word {
+            color: var(--el-color-primary);
+            font-weight: 500;
+            height: 46px;
+            line-height: 44px;
+            font-size: 16px;
+            margin: 0 20px;
+            border-bottom: 2px solid var(--el-color-primary);
+          }
+        }
+      }
+    }
   }
 }
 </style>
