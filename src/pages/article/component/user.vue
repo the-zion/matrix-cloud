@@ -6,17 +6,12 @@
     <el-skeleton class="skeleton" v-show="loading" :rows="2" animated/>
     <el-row class="data" fill :size="0">
       <el-row v-for="item in data" class="each" :key="item.id"
-              @click="goToPage('article', item.id)">
+              @click="goToPage('article', {id:item.id})">
         <el-row class="article-card">
           <el-space class="main" fill>
             <el-space class="head">
-              <el-popover placement="top-start" :show-arrow="false" :width="312" trigger="hover" popper-class="popover">
-                <template #reference>
-                  <el-avatar @click="goToPage('user', 1)" class="avatar" :size="24"
-                             :src="avatar.baseUrl + item.uuid + '/avatar.webp'"/>
-                </template>
-                <matrix-user-mini-card></matrix-user-mini-card>
-              </el-popover>
+              <el-avatar class="avatar" :size="24" icon="UserFilled"
+                         :src="avatar.baseUrl + item.uuid + '/avatar.webp'"/>
               <el-row class="title">{{ item.title }}</el-row>
             </el-space>
             <el-space class="info">
@@ -114,6 +109,7 @@ import {axiosGetAll, get, post} from "../../../utils/axios";
 import {error, success} from "../../../utils/message";
 import {useRoute} from "vue-router";
 import {scrollTo} from "../../../utils/scroll";
+import router from "../../../router";
 
 const userStore = userMainStore()
 const baseStore = baseMainStore()
@@ -153,7 +149,14 @@ function getData() {
 }
 
 function getDataCount() {
-
+  if (!userId.value) {
+    return
+  }
+  if (userId.value === uuid.value) {
+    getUserArticleCount()
+  } else {
+    getUserArticleVisitorCount()
+  }
 }
 
 function getUserArticle() {
@@ -162,6 +165,12 @@ function getUserArticle() {
     request = 2
     getStatistic()
     getIntroduce()
+  })
+}
+
+function getUserArticleCount() {
+  post("/v1/get/article/count", {}).then(function (reply) {
+    pageTotal.value = reply.data.count
   })
 }
 
@@ -192,7 +201,7 @@ function getIntroduce() {
     endpoints.push(article.value.baseUrl + item["uuid"] + "/" + item["id"] + "/introduce")
   })
   axiosGetAll(endpoints, function (allData) {
-    allData.forEach(function (each, index) {
+    allData.forEach(function (each) {
       list.value.forEach(function (item, index) {
         each.data.id === item["id"] && (list.value[index] = Object.assign(item, each.data))
       })
@@ -207,6 +216,12 @@ function getIntroduce() {
   })
 }
 
+function getUserArticleVisitorCount() {
+  get("/v1/get/article/count/visitor?uuid=" + userId.value).then(function (reply) {
+    pageTotal.value = reply.data.count
+  })
+}
+
 function getUserArticleVisitor() {
   get("/v1/get/user/article/list/visitor?page=" + currentPage.value + "&uuid=" + userId.value).then(function (reply) {
     list.value = reply.data.article
@@ -217,18 +232,18 @@ function getUserArticleVisitor() {
 }
 
 function articleEdit(item) {
-
+  const {href} = router.resolve({name: "article.write", query: {mode: 'edit', id: item.id}});
+  window.open(href, "_blank");
 }
 
 function articleDelete(item) {
-  post("/v1/cancel/article/collect", {
+  post("/v1/delete/article", {
     id: item.id,
-    uuid: item.uuid,
   }).then(function () {
-    success("收藏已取消")
+    success("删除成功")
     getData()
   }).catch(function () {
-    error("取消收藏失败")
+    error("删除失败")
   })
 }
 
@@ -268,6 +283,7 @@ onMounted(function () {
       border-bottom: 1px solid var(--el-border-color-lighter);
       background-color: var(--el-color-white);
       cursor: pointer;
+      width: 100%;
 
       .article-card {
         width: 100%;
@@ -284,6 +300,7 @@ onMounted(function () {
             }
 
             .avatar {
+              font-size: 14px;
               border: 1px solid var(--el-border-color-lighter);
             }
 
@@ -317,7 +334,7 @@ onMounted(function () {
             max-height: 80px;
 
             .image {
-              height: 100%;
+              height: 80px;
               width: 120px;
               border-radius: 6px;
             }
@@ -380,10 +397,6 @@ onMounted(function () {
       .operation {
         display: inline-flex !important;
       }
-    }
-
-    .each:last-child {
-      border-bottom: unset;
     }
   }
 
