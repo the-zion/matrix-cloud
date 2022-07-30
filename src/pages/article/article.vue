@@ -2,26 +2,29 @@
   <el-container class="article-container" v-loading="loading">
     <el-backtop></el-backtop>
     <collections-choose v-model:visible="collectionsVisible" v-model:judge="statisticJudge" :id="articleId"
-                        :uuid="authorUuid"
+                        :uuid="authorUuid" :mode="'article'"
                         @collected="collected"></collections-choose>
     <el-row class="main" v-show="!loading">
-      <el-image fit="cover" class="cover" :src="data.cover"></el-image>
+      <el-image v-if="data.cover" fit="cover" class="cover" :src="data.cover"></el-image>
       <el-row class="header">
         <el-row class="title-area" justify="space-between">
           <el-row class="title" align="top">
-            <el-avatar :size="32" icon="UserFilled" :src="avatar.baseUrl + authorUuid + '/avatar.webp'"></el-avatar>
+            <el-avatar class="avatar" :size="32" icon="UserFilled" :src="avatar.baseUrl + authorUuid + '/avatar.webp'"
+                       @click="goToPage('user', {id:authorUuid,menu:'article'})"></el-avatar>
             <el-row class="label" align="middle">{{ data.title }}</el-row>
           </el-row>
-          <el-button type="primary" icon="Plus">关注TA</el-button>
         </el-row>
         <el-row class="info" align="middle">
-          <span class="name">{{ data.username }}</span>
+          <span class="name">{{ user.username }}</span>
           <el-space>
             <span class="word">{{ data.update }}</span>
             <span class="point"></span>
             <span class="word">{{
                 (statistic.view > 1000 ? (statistic.view / 1000).toFixed(1) + "k" : statistic.view) + "阅读"
               }}</span>
+            <span class="point"></span>
+            <span class="word" @click="reproduce(data.source, data.url)"
+                  :class="{'reproduce':data.source === 2}">{{ data.source === 1 ? "原创" : "转载" }}</span>
           </el-space>
         </el-row>
       </el-row>
@@ -93,16 +96,17 @@
 </template>
 
 <script setup>
-import {ref, onBeforeUnmount, shallowRef, onMounted} from "vue";
-import {Editor} from '@wangeditor/editor-for-vue'
 import {scrollTo} from "../../utils/scroll";
 import {useRoute} from "vue-router";
-import router from "../../router";
-import {get, post} from "../../utils/axios";
-import {baseMainStore, userMainStore} from "../../store";
+import {goToPage} from "../../utils/globalFunc";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {warning} from "../../utils/message";
+import {get, post} from "../../utils/axios";
 import {animationAgree, animationCollect} from "../../utils/animation";
+import {ref, onBeforeUnmount, shallowRef, onMounted} from "vue";
+import {Editor} from '@wangeditor/editor-for-vue'
+import {baseMainStore, userMainStore} from "../../store";
+import router from "../../router";
 import CollectionsChoose from "../collect/component/choose.vue";
 
 let e = null
@@ -206,6 +210,8 @@ function getArticle() {
     data.value = reply.data
     editorRef.value.setHtml(data.value["html"])
     getStatisticJudge()
+  }).catch(function () {
+    articleNotExist()
   }).then(function () {
     loading.value = false
   })
@@ -351,6 +357,13 @@ function comment() {
   scrollTo("reply-block")
 }
 
+function reproduce(source, url) {
+  if (!source || source === 1 || !url) {
+    return
+  }
+  window.open(url);
+}
+
 
 onMounted(function () {
   init()
@@ -377,7 +390,7 @@ onBeforeUnmount(function () {
     margin-top: 10vh;
 
     .el-dialog__body {
-      padding: 0px 20px
+      padding: 0 20px
     }
   }
 
@@ -404,7 +417,8 @@ onBeforeUnmount(function () {
           width: calc(100% - 120px);
 
           .avatar {
-            margin-right: 15px;
+            cursor: pointer;
+            margin-right: 10px;
           }
 
           .label {
@@ -430,6 +444,11 @@ onBeforeUnmount(function () {
         .word {
           font-size: 12px;
           color: var(--el-text-color-disabled)
+        }
+
+        .reproduce {
+          cursor: pointer;
+          color: var(--el-color-primary)
         }
 
         .point {
