@@ -8,7 +8,7 @@
     <el-skeleton class="skeleton" v-show="loading" :rows="2" animated/>
     <el-space class="data" fill :size="0">
       <el-row v-for="item in data" class="each" :key="item.id"
-              @click="goToPage('collect', item.id)">
+              @click="goToPage('collect', {id:item.id})">
         <el-row class="collect-card">
           <el-space class="main" fill>
             <el-space class="head">
@@ -19,7 +19,7 @@
             </el-space>
           </el-space>
         </el-row>
-        <el-space class="operation" size="large" :style="{'display':item['opShow'] || 'none'}">
+        <el-space class="operation" v-if="userId === uuid" size="large" :style="{'display':item['opShow'] || 'none'}">
           <el-space :size="3" @click.stop="collectionsEdit(item)" class="op">
             <el-icon>
               <EditPen/>
@@ -167,7 +167,6 @@ function collectionsEdit(item) {
 }
 
 function collectionsDelete(item) {
-  console.log(item.id)
   post("/v1/delete/collections", {
     id: item.id
   }).then(function () {
@@ -177,7 +176,7 @@ function collectionsDelete(item) {
     let response = err.response
     if (response) {
       switch (response.data.reason) {
-        case "COLLECTIONS_IS_NOT_EMPTY":
+        case "NOT_EMPTY":
           error("只允许删除空的收藏集")
           return
       }
