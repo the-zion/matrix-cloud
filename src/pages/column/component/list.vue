@@ -1,24 +1,25 @@
 <template>
   <el-row class="column-list" id="column-list">
-    <el-empty v-show="data.length === 0" class="empty" description=" "
+    <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
               :image-size="250" image="../../src/assets/images/no_data.svg"
     />
-    <el-space class="data" fill :size="props.gap || 0">
-      <el-row v-for="item in data" class="each" :class="props.shape" :key="item.id"
-              @click="goToPage('column', item.id)">
-        <el-row class="column-card" align="middle">
-          <el-image class="image" fit="cover" :src="item.image" lazy></el-image>
+    <el-space class="data" fill :size="0">
+      <el-row v-for="item in data" class="each" :key="item.id"
+              @click="goToPage('column', {id:item.id})">
+        <el-row class="column-card" align="top">
+          <el-image class="image" fit="cover" :src="item.cover" lazy></el-image>
           <el-row class="container" align="top">
             <el-space class="main">
-              <el-row class="title">{{ item.title }}</el-row>
+              <el-row class="title">{{ item.name }}</el-row>
               <el-space class="info">
-                <el-tag round v-show="item.tags" type="info" v-for="tag in item.tags.split(';')" :key="tag">{{
+                <el-tag round v-show="item.tags" type="info" v-for="tag in (item.tags?item.tags.split(';'):[])"
+                        :key="tag">{{
                     tag
                   }}
                 </el-tag>
               </el-space>
             </el-space>
-            <el-row class="content">{{ item.content }}</el-row>
+            <el-row class="content">{{ item.introduce }}</el-row>
             <el-space class="foot">
               <el-space :size="3">
                 <el-icon class="iconfont icon-like icon"></el-icon>
@@ -33,12 +34,6 @@
                   }}</span>
               </el-space>
               <el-space :size="3">
-                <el-icon class="iconfont icon-message icon"></el-icon>
-                <span class="num">{{
-                    item.comment > 1000 ? (item.comment / 1000).toFixed(1) + "k" : item.comment
-                  }}</span>
-              </el-space>
-              <el-space :size="3">
                 <el-icon class="iconfont icon-star icon"></el-icon>
                 <span class="num">{{
                     item.collect > 1000 ? (item.collect / 1000).toFixed(1) + "k" : item.collect
@@ -47,25 +42,9 @@
             </el-space>
           </el-row>
         </el-row>
-        <el-space class="operation" size="large">
-          <div v-for="op in props.operation" :key="op">
-            <el-icon v-show="op === 'delete'" class="icon" @click="doDelete(item)">
-              <delete/>
-            </el-icon>
-            <el-icon v-show="op === 'star'" class="iconfont icon-star-fill star" @click="doCollect(item)"></el-icon>
-          </div>
-        </el-space>
       </el-row>
     </el-space>
-    <el-row class="foot" justify="center" v-show="data.length !== 0">
-      <el-pagination
-          v-model:current-page="currentPage"
-          :page-size="20"
-          :pager-count="11"
-          layout="prev, pager, next"
-          :total="1000"
-      />
-    </el-row>
+    <el-skeleton class="skeleton" v-show="loading" :rows="3" animated/>
   </el-row>
 </template>
 
@@ -79,22 +58,23 @@ export default {
 import {ref, watch, onMounted} from "vue";
 import {goToPage} from "../../../utils/globalFunc";
 import {confirm} from "../../../utils/globalFunc";
-import {success} from "../../../utils/message";
-import {scrollTo} from "../../../utils/scroll";
+import {info, success} from "../../../utils/message";
+import {baseMainStore} from "../../../store";
+import {storeToRefs} from "pinia/dist/pinia.esm-browser";
+import {scrollToBottomListen, throttle} from "../../../utils/scroll";
+import {axiosGetAll, get} from "../../../utils/axios";
 
 const emits = defineEmits(["current-page"])
-const props = defineProps({
-  gap: Number,
-  shape: String,
-  operation: {
-    type: Array,
-    default: []
-  },
-  "page-background": Boolean,
-})
+const baseStore = baseMainStore()
+const {avatar, column} = storeToRefs(baseStore)
 
 let data = ref([])
-let currentPage = ref(1)
+let list = ref([])
+let currentPage = 1
+let loading = ref(false)
+let isBottom = false
+let request = 0
+let mode = "new"
 
 function init() {
   initData()
@@ -102,44 +82,88 @@ function init() {
 }
 
 function initData() {
+  scrollToBottomListen(throttle(scrollToBottom, 1000))
+}
+
+function scrollToBottom() {
+  getData()
 }
 
 function getData() {
-  for (let i = 0; i <= 9; i++) {
-    data.value.push({
-      id: i,
-      title: "数组和字符串",
-      avatar: "../../src/assets/images/boy.png",
-      image: "../../src/assets/images/column.png",
-      name: "刘小圆sama",
-      time: "2022-05-06",
-      content: "简介：数组是数据结构中的基本模块之一。因为字符串是由字符数组形成的，所以二者是相似的。大多数面试问题都属于这个范畴。",
-      tags: "go;云原生",
-      agree: 10000,
-      view: 12000,
-      comment: 1100,
-      collect: 500
-    })
+  if (isBottom) {
+    info("到最底部啦～")
+    return
   }
-  console.log(data.value)
-}
 
-function doDelete(item) {
-  confirm("删除", "确定删除" + "：\"" + item.title + "\" 吗？").then(function () {
-    success("删除成功")
-  }).catch(() => {
+  loading.value = true
+  get((mode === "new" ? "/v1/get/column/list?page=" : "/v1/get/column/list/hot?page=") + currentPage).then(function (reply) {
+    list.value = reply.data.column
+    let size = reply.data.column.length
+    if (size === 0) {
+      isBottom = true
+      info("到最底部啦～")
+      loading.value = false
+      return
+    }
+    request = 2
+    currentPage += 1
+    getStatistic()
+    getIntroduce()
   })
 }
 
-function doCollect(item) {
-  confirm("取消收藏", "确定取消收藏" + "：\"" + item.title + "\" 吗？").then(function () {
-    success("取消成功")
-  }).catch(() => {
+function getStatistic() {
+  let ids = []
+  list.value.forEach(function (each) {
+    ids.push("ids=" + each["id"])
   })
+  get("/v1/get/column/list/statistic?" + ids.join("&")).then(function (reply) {
+    reply.data.count.forEach(function (each) {
+      list.value.forEach(function (item, index) {
+        each.id === item["id"] && (list.value[index] = Object.assign(item, each))
+      })
+    })
+  }).catch(function () {
+  }).then(function () {
+    request -= 1
+    if (request === 0) {
+      data.value = data.value.concat(list.value)
+      loading.value = false
+    }
+  })
+}
+
+function getIntroduce() {
+  let endpoints = []
+  list.value.forEach(function (item) {
+    endpoints.push(column.value.baseUrl + item["uuid"] + "/" + item["id"] + "/introduce")
+  })
+  axiosGetAll(endpoints, function (allData) {
+    allData.forEach(function (each) {
+      list.value.forEach(function (item, index) {
+        each.data.id === item["id"] && (list.value[index] = Object.assign(item, each.data))
+      })
+    })
+  }, function () {
+  }, function () {
+    request -= 1
+    if (request === 0) {
+      data.value = data.value.concat(list.value)
+      loading.value = false
+    }
+  })
+}
+
+function modeChange(m) {
+  mode = m
+  isBottom = false
+  currentPage = 1
+  data.value = []
+  getData()
 }
 
 defineExpose({
-  getData
+  modeChange
 })
 
 onMounted(() => {
@@ -150,6 +174,10 @@ onMounted(() => {
 <style scoped lang="scss">
 .column-list {
   width: 100%;
+
+  .skeleton {
+    padding: 16px;
+  }
 
   .empty {
     width: 100%;
@@ -170,10 +198,9 @@ onMounted(() => {
 
         .image {
           height: 120px;
-          width: 90px;
+          width: 170px;
           border-radius: 6px;
           margin-right: 16px;
-          box-shadow: var(--el-box-shadow-lighter);
         }
 
         .container {
@@ -203,9 +230,8 @@ onMounted(() => {
 
         .content {
           margin-top: 8px;
-          width: 360px;
           height: 40px;
-          font-size: 12px;
+          font-size: 14px;
           line-height: 20px;
           color: var(--el-text-color-secondary);
           word-break: break-word;
@@ -253,12 +279,6 @@ onMounted(() => {
           color: var(--el-color-primary);
         }
       }
-    }
-
-    .card {
-      border-radius: 8px;
-      border-bottom: unset;
-      box-shadow: 0 1px 2px rgba(0, 10, 32, 0.1), 0 2px 8px rgba(0, 10, 32, 0.05);
     }
   }
 
