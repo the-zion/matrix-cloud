@@ -5,16 +5,19 @@
     />
     <el-row class="data" fill :size="0">
       <el-row v-for="item in data" class="each" :key="item.id"
-              @click="goToPage('article', item.id)">
+              @click="goToPage('article', {id:item.id})">
         <el-row class="article-card">
           <el-space class="main" fill>
             <el-space class="head">
-              <el-popover placement="top-start" :show-arrow="false" :width="312" trigger="hover" popper-class="popover">
+              <el-popover placement="top-start" :show-arrow="false" :width="312" trigger="hover"
+                          popper-class="popover" @before-enter="item['showUserCard'] = true"
+                          @after-leave="item['showUserCard'] = false">
                 <template #reference>
-                  <el-avatar @click="goToPage('user', 1)" class="avatar" :size="24"
+                  <el-avatar @click.stop="goToPage('user', {id:item.uuid,menu:'article'})" class="avatar"
+                             :size="24" icon="UserFilled"
                              :src="avatar.baseUrl + item.uuid + '/avatar.webp'"/>
                 </template>
-                <matrix-user-mini-card></matrix-user-mini-card>
+                <matrix-user-mini-card :uuid="item.uuid" v-if="item['showUserCard']"></matrix-user-mini-card>
               </el-popover>
               <el-row class="title">{{ item.title }}</el-row>
             </el-space>
@@ -89,8 +92,6 @@ const {avatar, article} = storeToRefs(baseStore)
 
 let data = ref([])
 let list = ref([])
-let count = ref({})
-let introduce = ref({})
 let currentPage = 1
 let loading = ref(false)
 let isBottom = false
@@ -98,8 +99,12 @@ let request = 0
 let mode = "new"
 
 function init() {
-  scrollToBottomListen(throttle(scrollToBottom, 1000))
+  initData()
   getData()
+}
+
+function initData() {
+  scrollToBottomListen(throttle(scrollToBottom, 1000))
 }
 
 function scrollToBottom() {
@@ -144,7 +149,7 @@ function getStatistic() {
   }).then(function () {
     request -= 1
     if (request === 0) {
-      data.value = list.value
+      data.value = data.value.concat(list.value)
       loading.value = false
     }
   })
@@ -166,7 +171,7 @@ function getIntroduce() {
   }, function () {
     request -= 1
     if (request === 0) {
-      data.value = list.value
+      data.value = data.value.concat(list.value)
       loading.value = false
     }
   })
@@ -176,8 +181,6 @@ function modeChange(m) {
   mode = m
   isBottom = false
   currentPage = 1
-  count.value = {}
-  introduce.value = {}
   data.value = []
   getData()
 }
@@ -208,6 +211,7 @@ onMounted(() => {
       border-bottom: 1px solid var(--el-border-color-lighter);
       background-color: var(--el-color-white);
       cursor: pointer;
+      width: 100%;
 
       .article-card {
         width: 100%;
@@ -224,6 +228,7 @@ onMounted(() => {
             }
 
             .avatar {
+              font-size: 14px;
               border: 1px solid var(--el-border-color-lighter);
             }
 
@@ -257,7 +262,7 @@ onMounted(() => {
             max-height: 80px;
 
             .image {
-              height: 100%;
+              height: 80px;
               width: 120px;
               border-radius: 6px;
             }
