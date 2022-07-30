@@ -6,16 +6,19 @@
     <el-skeleton class="skeleton" v-show="loading" :rows="2" animated/>
     <el-row class="data" fill :size="0">
       <el-row v-for="item in data" class="each" :key="item.id"
-              @click="goToPage('article', item.id)">
+              @click="goToPage('article', {id:item.id})">
         <el-row class="article-card">
           <el-space class="main" fill>
             <el-space class="head">
-              <el-popover placement="top-start" :show-arrow="false" :width="312" trigger="hover" popper-class="popover">
+              <el-popover placement="top-start" :show-arrow="false" :width="312" trigger="hover"
+                          popper-class="popover" @before-enter="item['showUserCard'] = true"
+                          @after-leave="item['showUserCard'] = false">
                 <template #reference>
-                  <el-avatar @click="goToPage('user', 1)" class="avatar" :size="24"
+                  <el-avatar @click.stop="goToPage('user', {id:item.uuid,menu:'article'})" class="avatar"
+                             :size="24" icon="UserFilled"
                              :src="avatar.baseUrl + item.uuid + '/avatar.webp'"/>
                 </template>
-                <matrix-user-mini-card></matrix-user-mini-card>
+                <matrix-user-mini-card :uuid="item.uuid" v-if="item['showUserCard']"></matrix-user-mini-card>
               </el-popover>
               <el-row class="title">{{ item.title }}</el-row>
             </el-space>
@@ -240,6 +243,7 @@ onMounted(function () {
       border-bottom: 1px solid var(--el-border-color-lighter);
       background-color: var(--el-color-white);
       cursor: pointer;
+      width: 100%;
 
       .article-card {
         width: 100%;
@@ -256,6 +260,7 @@ onMounted(function () {
             }
 
             .avatar {
+              font-size: 14px;
               border: 1px solid var(--el-border-color-lighter);
             }
 
@@ -289,7 +294,7 @@ onMounted(function () {
             max-height: 80px;
 
             .image {
-              height: 100%;
+              height: 80px;
               width: 120px;
               border-radius: 6px;
             }
