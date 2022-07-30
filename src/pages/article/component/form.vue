@@ -1,9 +1,9 @@
 <template>
   <el-row class="column-form">
-    <el-form ref="formRef" v-model="form" label-position="top" class="form">
-      <el-form-item label="文章标签" class="form-item" :rules="[{
+    <el-form :model="form" class="form" ref="formRef" label-position="top">
+      <el-form-item prop="tags" label="文章标签" class="form-item" :rules="[{
           required: true,
-          message: '请选择标签',
+          message: '该字段不能为空',
           trigger: 'blur',
         }]">
         <el-popover placement="bottom-start" :width="432" trigger="click" :show-arrow="false">
@@ -51,7 +51,7 @@
                   maxlength="200" show-word-limit
                   v-model="form.text" type="textarea" resize="none" :rows="5"></el-input>
       </el-form-item>
-      <el-form-item prop="auth" label="创建方式" class="form-item">
+      <el-form-item v-if="mode === 'create'" prop="auth" label="创建方式" class="form-item">
         <el-radio-group v-model="form.auth">
           <el-radio class="radio" v-for="item in authRadio" :label="item.id">{{ item.label }}</el-radio>
         </el-radio-group>
@@ -65,13 +65,18 @@
           type: 'url',
           message: '网址格式错误',
           trigger: ['blur'],
+        },{
+          required: true,
+          message: '该字段不能为空',
+          trigger: 'blur',
         }]">
         <el-input v-model="form.url" type="text" :maxlength="100" show-word-limit
                   placeholder="请输入文章转载地址" size="large">
         </el-input>
       </el-form-item>
     </el-form>
-    <el-button :loading="sending" class="button" type="primary" size="large" @click="commit">发布</el-button>
+    <el-button :loading="sending" class="button" type="primary" size="large" @click="commitCheck(formRef)">发布
+    </el-button>
   </el-row>
 </template>
 
@@ -91,6 +96,7 @@ import {get, post} from "../../../utils/axios";
 import router from "../../../router";
 
 const props = defineProps({
+  mode: String,
   title: String,
   id: Number,
   editor: Object
@@ -105,11 +111,14 @@ const {article} = storeToRefs(baseStore)
 let title = ref()
 let editor = ref()
 let draftId = ref()
+let mode = ref()
 let uploading = ref(false)
 let sending = ref(false)
 let percentage = ref(0)
 let articleParams = {}
 let introduce = {}
+let search = {}
+let date = ""
 let uploadParams = {
   Bucket: article.value.bucket,
   Region: article.value.region,
@@ -121,10 +130,10 @@ let form = ref({
   text: "",
   html: "",
   cover: "",
-  url: "",
   tags: [],
   column: 0
 })
+
 let formRef = ref()
 let authRadio = [{
   id: 1,
@@ -132,9 +141,6 @@ let authRadio = [{
 }, {
   id: 2,
   label: "私密"
-}, {
-  id: 3,
-  label: "关注者可见"
 }]
 let sourceRadio = [{
   id: 1,
@@ -150,41 +156,22 @@ let columnRadio = ref([{
 }])
 
 function commitCheck(formRef) {
-  // if (form.value.tags.length === 0) {
-  //   error("请选择标签")
-  //   return false
-  // }
-  //
-  // if (form.value.source === 2 && form.value.url === '') {
-  //   error("请填写转载网址")
-  //   return false
-  // }
-
   if (!formRef) {
     error("未知错误")
     return
   }
+
   formRef.validate((valid) => {
     if (!valid) {
       error("信息输入有误，请检查")
     } else {
-      toUpdate()
+      commit()
       return true
     }
   })
-
-  if (editor.value.getText().length === 0) {
-    error("文章内容不能为空白")
-    return false
-  }
-  return true
 }
 
 function commit() {
-  if (!commitCheck()) {
-    return null
-  }
-
   if (!uuid.value) {
     warning("账号未登录，请先登录")
     return
@@ -195,14 +182,20 @@ function commit() {
     return
   }
 
+  if (editor.value.getText().length === 0) {
+    error("文章内容不能为空白")
+    return
+  }
+
   setArticleParams()
   setIntroduceParams()
-  // commitIntroduce()
+  setSearchParams()
+  commitIntroduce()
 }
 
 function commitIntroduce() {
   sending.value = true
-  uploadParams["Key"] = article.value.key + uuid.value + "/" + draftId.value + "/introduce"
+  uploadParams["Key"] = article.value.key + uuid.value + "/" + draftId.value + "/introduce" + (mode.value === 'edit' ? "-edit" : "")
   uploadParams["Headers"] = {
     'x-cos-meta-uuid': uuid.value,
   }
@@ -212,16 +205,31 @@ function commitIntroduce() {
       error("文章发布失败")
       return
     }
+    commitSearch()
+  })
+}
+
+function commitSearch(){
+  uploadParams["Key"] = article.value.key + uuid.value + "/" + draftId.value + "/search"
+  uploadParams["Headers"] = {
+    'x-cos-meta-uuid': uuid.value,
+  }
+  uploadParams["Body"] = JSON.stringify(search)
+  cos.uploadFile(uploadParams, function (err) {
+    if (err) {
+      error("文章发布失败")
+      return
+    }
     commitArticle()
   })
 }
 
-
 function commitArticle() {
-  uploadParams["Key"] = article.value.key + uuid.value + "/" + draftId.value + "/content"
+  uploadParams["Key"] = article.value.key + uuid.value + "/" + draftId.value + "/content" + (mode.value === 'edit' ? "-edit" : "")
   uploadParams["Headers"] = {
     'x-cos-meta-uuid': uuid.value,
-    'x-cos-meta-id': draftId.value + ""
+    'x-cos-meta-id': draftId.value + "",
+    'x-cos-meta-auth': articleParams.auth
   }
   uploadParams["Body"] = JSON.stringify(articleParams)
   cos.uploadFile(uploadParams, function (err) {
@@ -229,7 +237,8 @@ function commitArticle() {
       error("文章发布失败")
       return
     }
-    sendArticle()
+    mode.value === 'create' && sendArticle()
+    mode.value === 'edit' && editArticle()
   })
 }
 
@@ -243,13 +252,25 @@ function sendArticle() {
   })
 }
 
+function editArticle() {
+  post("/v1/send/article/edit", {id: draftId.value}).then(function () {
+    router.push({name: "result", query: {type: "success", title: '文章已提交审核', description: "审核通过即发布到社区中"}})
+  }).catch(function (err) {
+    error("文章编辑失败")
+  }).then(function () {
+    sending.value = false
+  })
+}
+
 function setArticleParams() {
+  date = new Date()
   articleParams["title"] = title.value
   articleParams["html"] = editor.value.getHtml()
-  articleParams["update"] = new Date().toLocaleString()
+  articleParams["update"] = date.toLocaleString()
   articleParams["tags"] = form.value["tags"].join(";")
   articleParams["auth"] = form.value["auth"]
   articleParams["source"] = form.value["source"]
+  articleParams["url"] = form.value["url"]
   articleParams["id"] = form.value["id"]
   if (form.value.text === "") {
     articleParams["text"] = editor.value.getText().slice(0, 256)
@@ -267,6 +288,13 @@ function setIntroduceParams() {
   introduce["cover"] = articleParams["cover"]
 }
 
+function setSearchParams() {
+  search["title"] = articleParams["title"]
+  search["text"] = editor.value.getText()
+  search["update"] = date.toISOString()
+  search["tags"] = articleParams["tags"]
+}
+
 function init() {
   initData()
   getData()
@@ -276,6 +304,7 @@ function initData() {
   title.value = props.title
   editor.value = props.editor
   draftId.value = props.id
+  mode.value = props.mode
 }
 
 function getData() {
@@ -291,12 +320,13 @@ function getData() {
   get(url).then(function (reply) {
     let data = reply.data
     form.value.id = data["id"]
-    form.value.cover = data["cover"]
+    form.value.cover = data["cover"] || ""
     form.value.auth = data["auth"] || 1
     form.value.source = data["source"] || 1
-    form.value.text = data["text"]
-    form.value.tags = data["tags"].split(";")
-    articleParams["cover"] = data["cover"]
+    form.value.text = data["text"] || ""
+    form.value.url = data["url"] || ""
+    form.value.tags = data["tags"] ? data["tags"].split(";") : []
+    articleParams["cover"] = data["cover"] || ""
   }).catch(function () {
   })
 }
@@ -349,7 +379,7 @@ function imageUpload(UploadRequestOptions) {
     reader.onload = function () {
       form.value.cover = reader.result;
     };
-    articleParams["cover"] = article.value.baseUrl + draftId.value + "/cover.webp"
+    articleParams["cover"] = article.value.baseUrl + uuid.value + "/" + draftId.value + "/cover.webp"
   })
 }
 
