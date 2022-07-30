@@ -1,5 +1,6 @@
 <template>
   <el-container class="collect-container">
+    <el-backtop></el-backtop>
     <el-row class="header">
       <el-image :src="backgroundUrl" class="image" fit="cover">
         <template #error>
@@ -53,10 +54,14 @@
         <el-row class="menu" align="middle">
           <span class="label" :class="{'select': page === 'article'}" @click="pageChange('article')">文章</span>
           <el-divider direction="vertical"></el-divider>
+          <span class="label" :class="{'select': page === 'column'}" @click="pageChange('column')">专栏</span>
+          <el-divider direction="vertical"></el-divider>
           <span class="label" :class="{'select': page === 'talk'}" @click="pageChange('talk')">讨论</span>
         </el-row>
         <el-row class="body">
           <article-collect-list v-if="page === 'article'" :userId="userId"></article-collect-list>
+          <column-collect-list v-if="page === 'column'" :userId="userId"></column-collect-list>
+          <talk-collect-list v-if="page === 'talk'" :userId="userId"></talk-collect-list>
         </el-row>
       </el-row>
     </el-row>
@@ -64,15 +69,17 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from "vue"
-import {useRoute} from "vue-router";
-import {error, success, warning} from "../../utils/message";
-import {initCos} from "../../utils/cos";
-import {baseMainStore, userMainStore} from "../../store";
-import {storeToRefs} from "pinia/dist/pinia.esm-browser";
-import ArticleCollectList from "../article/component/collect.vue";
 import {get} from "../../utils/axios";
+import {useRoute} from "vue-router";
+import {initCos} from "../../utils/cos";
+import {storeToRefs} from "pinia/dist/pinia.esm-browser";
+import {onMounted, ref} from "vue"
+import {error, success, warning} from "../../utils/message";
+import {baseMainStore, userMainStore} from "../../store";
 import router from "../../router";
+import ArticleCollectList from "../article/component/collect.vue";
+import TalkCollectList from "../talk/component/collect.vue";
+import ColumnCollectList from "../column/component/collect.vue";
 
 const cos = initCos()
 const userStore = userMainStore()
@@ -288,7 +295,7 @@ onMounted(function () {
 
   .area {
     width: 100%;
-    margin-top: 20px;
+    margin: 20px 0;
 
     .main {
       width: 920px;
