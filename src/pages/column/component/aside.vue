@@ -8,7 +8,7 @@
       <el-row class="info" justify="space-between">
         <el-row class="author-block">
           <el-row class="author">
-            <el-avatar class="avatar" :size="40" :src="data.avatar" @click="goToPage('user', data.id)"></el-avatar>
+            <el-avatar class="avatar" icon="UserFilled" :size="40" :src="data.avatar" @click="goToPage('user', data.id)"></el-avatar>
             <el-row class="username">
               <span class="nickname">{{ data.nickname }}</span>
               <span class="name">{{ data.name }}</span>
