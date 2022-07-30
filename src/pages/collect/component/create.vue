@@ -16,7 +16,7 @@
           trigger: 'blur',
         }]">
         <el-input v-model="form.introduce" :maxlength="100" type="textarea" :rows="8" resize="none" show-word-limit
-                  placeholder="请输入收藏描述（限00字，选填）"/>
+                  placeholder="请输入收藏描述（限100字）"/>
       </el-form-item>
       <el-form-item class="form-item" prop="auth">
         <el-radio-group v-model="form.auth" class="radio">
