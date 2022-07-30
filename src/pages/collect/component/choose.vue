@@ -6,8 +6,8 @@
     <el-row class="table">
       <el-table :data="gridData" highlight-current-row @current-change="change" :row-style="{'cursor':'pointer'}"
                 v-show="!loading">
-        <el-table-column type="index" label="序号" width="60"/>
-        <el-table-column class="column" property="name" label="我的收藏集" min-width="1"/>
+        <el-table-column type="index" label="序号" width="60" :index="indexFormatter"/>
+        <el-table-column show-overflow-tooltip class="column" property="name" label="我的收藏集" min-width="1"/>
         <template #empty>
           <el-row align="middle">
             <span>暂无收藏集，马上去创建一个吧</span>
@@ -44,7 +44,7 @@ export default {
 </script>
 
 <script setup>
-import {ref,watch} from "vue"
+import {ref, watch} from "vue"
 import {post} from "../../../utils/axios";
 import {error} from "../../../utils/message";
 import router from "../../../router";
@@ -55,6 +55,7 @@ const emits = defineEmits(["update:visible", "update:judge", "collected"])
 const props = defineProps({
   visible: Boolean,
   judge: Object,
+  mode: String,
   id: Number,
   uuid: String,
 })
@@ -62,12 +63,18 @@ const userStore = userMainStore()
 const {uuid} = storeToRefs(userStore)
 
 let judge = null
+let mode = null
 let currentPage = ref(1)
 let pageTotal = ref(1)
 let gridData = ref([])
 let loading = ref(false)
 let collectLoading = ref(false)
 let selectId = ref()
+let collectUrl = {
+  article: "/v1/set/article/collect",
+  talk: "/v1/set/talk/collect",
+  column: "/v1/set/column/collect"
+}
 
 function open() {
   init()
@@ -87,6 +94,7 @@ function initData() {
   loading.value = false
   collectLoading.value = false
   judge = props.judge
+  mode = props.mode
 }
 
 function getData() {
@@ -120,7 +128,7 @@ function collect() {
     return
   }
   collectLoading.value = true
-  post("/v1/set/article/collect", {
+  post(collectUrl[mode], {
     id: props.id,
     collections_id: selectId.value,
     uuid: props.uuid
@@ -131,7 +139,7 @@ function collect() {
     cancel()
   }).catch(function () {
     error("收藏出错")
-  }).then(function (){
+  }).then(function () {
     collectLoading.value = false
   })
 }
@@ -146,6 +154,10 @@ function create() {
     query: {id: uuid.value, menu: 'collect'}
   });
   window.open(href, "_blank");
+}
+
+function indexFormatter(index) {
+  return (index + 1) + (currentPage.value - 1) * 10
 }
 
 watch(currentPage, () => {
