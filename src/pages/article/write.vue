@@ -11,7 +11,7 @@
         <!--        todo 2.2.0版本以上换成header-->
         <el-row class="title">发布文章</el-row>
       </template>
-      <Form :title="title" :editor="editorRef" :id="draftId"></Form>
+      <Form :title="title" :editor="editorRef" :id="draftId" :mode="mode"></Form>
     </el-drawer>
     <el-row class="head">
       <el-row class="base" align="middle" justify="space-between">
@@ -22,17 +22,17 @@
           ></el-image>
         </el-space>
         <el-space :size="18">
-          <el-space>
+          <el-space v-if="mode === 'create'">
             <el-icon :color="'var(--el-text-color-placeholder)'">
               <Clock/>
             </el-icon>
             <span class="time">{{ time }}</span>
           </el-space>
-          <el-button icon="Tickets" @click="draft = true">草稿</el-button>
+          <el-button v-if="mode === 'create'" icon="Tickets" @click="draft = true">草稿</el-button>
           <el-button type="primary" icon="Promotion" @click="drawer = true">发布</el-button>
         </el-space>
       </el-row>
-      <el-affix :offset="0" class="affix" target=".article-container" @scroll="affixScroll" ref="affixRef">
+      <el-affix :offset="0" class="affix" target=".article-container" ref="affixRef">
         <el-row class="block">
           <Toolbar
               class="toolbar"
@@ -74,9 +74,9 @@
 </template>
 
 <script setup>
-import {onBeforeUnmount, ref, shallowRef, onMounted, onBeforeMount} from 'vue'
+import {onBeforeUnmount, ref, shallowRef, onMounted} from 'vue'
+import {backToHome} from "../../utils/globalFunc";
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
-import router from "../../router";
 import {success, info, warning, error} from "../../utils/message";
 import {customCheckVideoFn, customParseVideoSrc} from "../../utils/video";
 import {get, post} from "../../utils/axios"
@@ -143,11 +143,6 @@ let uploadParams = {
   Region: article.value.region,
 }
 
-
-function backToHome() {
-  router.push({name: 'home', query: {page: 'article'}})
-}
-
 function handleCreated(editor) {
   editorRef.value = editor
 }
@@ -188,7 +183,7 @@ function editChange(editor) {
   editSave(function () {
     time.value = "最近保存：" + uploadBox["update"]
   })
-  draftMark()
+  mode.value === 'create' && draftMark()
 }
 
 function draftMark() {
@@ -248,7 +243,7 @@ function editSave(fn) {
   }
   time.value = "文章保存中......"
   uploadBox["id"] = draftId.value
-  uploadParams["Key"] = article.value.key + uuid.value + "/" + draftId.value + "/content"
+  uploadParams["Key"] = article.value.key + uuid.value + "/" + draftId.value + "/content" + (mode.value === "edit" ? "-edit" : "")
   uploadParams["Headers"] = {
     'x-cos-meta-uuid': uuid.value,
   }
@@ -265,11 +260,13 @@ onBeforeUnmount(() => {
 
 function init() {
   initData()
-  getLastDraft()
+  mode.value === 'create' && getLastDraft()
+  mode.value === 'edit' && getData()
 }
 
 function initData() {
   mode.value = useRoute().query["mode"]
+  draftId.value = parseInt(useRoute().query["id"])
 }
 
 function getLastDraft() {
@@ -325,10 +322,6 @@ function getData() {
   }).then(function () {
     loading.value = false
   })
-}
-
-function affixScroll(scrollTop, fixed) {
-  console.log(affixRef.value.update())
 }
 
 onMounted(() => {
