@@ -124,6 +124,8 @@ function getData() {
     request = 2
     getStatistic()
     getIntroduce()
+  }).catch(function (){
+    loading.value = false
   })
 }
 
