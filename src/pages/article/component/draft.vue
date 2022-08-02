@@ -51,6 +51,8 @@ function getData() {
       loading.value = false
     }
     getFromCos()
+  }).catch(function (){
+    loading.value = false
   })
 }
 
