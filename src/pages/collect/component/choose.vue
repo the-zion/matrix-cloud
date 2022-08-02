@@ -105,6 +105,7 @@ function getData() {
     gridData.value = reply.data.collections
     loading.value = false
   }).catch(function () {
+    loading.value = false
     error("获取收藏集失败")
   })
 }
