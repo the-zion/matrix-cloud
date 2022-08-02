@@ -165,6 +165,8 @@ function getUserArticle() {
     request = 2
     getStatistic()
     getIntroduce()
+  }).catch(function (){
+    loading.value = false
   })
 }
 
@@ -228,6 +230,8 @@ function getUserArticleVisitor() {
     request = 2
     getStatistic()
     getIntroduce()
+  }).catch(function (){
+    loading.value = false
   })
 }
 
