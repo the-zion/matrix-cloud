@@ -21,11 +21,6 @@
           <matrix-tag v-model:selectedTags="form.tags"></matrix-tag>
         </el-popover>
       </el-form-item>
-      <el-form-item prop="column" label="所属专栏" class="form-item">
-        <el-radio-group v-model="form.column">
-          <el-radio class="radio" v-for="item in columnRadio" :label="item.id">{{ item.label }}</el-radio>
-        </el-radio-group>
-      </el-form-item>
       <el-form-item prop="cover" label="文章封面" class="form-item">
         <el-upload
             class="cover-uploader"
@@ -48,7 +43,7 @@
       </el-form-item>
       <el-form-item prop="text" label="文章摘要" class="form-item">
         <el-input placeholder="摘要（选填）：会在卡片、列表等场景外露，帮助读者快速了解内容，如不填写则默认抓取正文前256字符"
-                  maxlength="200" show-word-limit
+                  maxlength="300" show-word-limit
                   v-model="form.text" type="textarea" resize="none" :rows="5"></el-input>
       </el-form-item>
       <el-form-item v-if="mode === 'create'" prop="auth" label="创建方式" class="form-item">
@@ -94,6 +89,7 @@ import {baseMainStore, userMainStore} from "../../../store";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {get, post} from "../../../utils/axios";
 import router from "../../../router";
+import {textEmojiRemove} from "../../../utils/globalFunc";
 
 const props = defineProps({
   mode: String,
@@ -150,11 +146,6 @@ let sourceRadio = [{
   label: "转载"
 }]
 
-let columnRadio = ref([{
-  id: 1,
-  label: "深入浅出Docker"
-}])
-
 function commitCheck(formRef) {
   if (!formRef) {
     error("未知错误")
@@ -209,7 +200,7 @@ function commitIntroduce() {
   })
 }
 
-function commitSearch(){
+function commitSearch() {
   uploadParams["Key"] = article.value.key + uuid.value + "/" + draftId.value + "/search"
   uploadParams["Headers"] = {
     'x-cos-meta-uuid': uuid.value,
@@ -266,7 +257,7 @@ function setArticleParams() {
   date = new Date()
   articleParams["title"] = title.value
   articleParams["html"] = editor.value.getHtml()
-  articleParams["update"] = date.toLocaleString()
+  articleParams["update"] = date.toLocaleDateString()
   articleParams["tags"] = form.value["tags"].join(";")
   articleParams["auth"] = form.value["auth"]
   articleParams["source"] = form.value["source"]
@@ -289,10 +280,12 @@ function setIntroduceParams() {
 }
 
 function setSearchParams() {
-  search["title"] = articleParams["title"]
-  search["text"] = editor.value.getText()
-  search["update"] = date.toISOString()
+  search["uuid"] = uuid.value
+  search["title"] = textEmojiRemove(articleParams["title"])
+  search["text"] = textEmojiRemove(editor.value.getText())
+  search["update"] = articleParams["update"]
   search["tags"] = articleParams["tags"]
+  search["cover"] = articleParams["cover"]
 }
 
 function init() {
