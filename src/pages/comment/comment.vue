@@ -5,7 +5,7 @@
         <el-space>
           <el-popover placement="top-start" :show-arrow="false" :width="312" trigger="hover" popper-class="popover">
             <template #reference>
-              <el-avatar class="avatar" @click="goToPage('user', 1)" :size="30" :src="item.avatar"/>
+              <el-avatar class="avatar" icon="UserFilled" @click="goToPage('user', 1)" :size="30" :src="item.avatar"/>
             </template>
             <matrix-user-mini-card></matrix-user-mini-card>
           </el-popover>
@@ -212,7 +212,7 @@ onMounted(function () {
     padding: 16px 16px 0;
     margin-bottom: 10px;
     border-radius: 8px;
-    box-shadow: var(--el-box-shadow-lighter);
+    border: 1px solid var(--el-border-color-lighter);
   }
 
   .footer {
