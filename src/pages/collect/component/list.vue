@@ -123,17 +123,20 @@ function getCollections() {
     page: currentPage.value
   }).then(function (reply) {
     data.value = reply.data.collections
-    loading.value = false
   }).catch(function () {
     error("获取收藏集失败")
+  }).then(function (){
+    loading.value =false
   })
 }
 
 function getCollectionsVisitor() {
   get("/v1/get/collections/visitor?uuid=" + userId.value + "&page=" + currentPage.value).then(function (reply) {
     data.value = reply.data.collections
-    loading.value = false
   }).catch(function () {
+    error("获取收藏集失败")
+  }).then(function (){
+    loading.value = false
   })
 }
 
