@@ -156,6 +156,8 @@ function getUserColumn() {
     request = 2
     getStatistic()
     getIntroduce()
+  }).catch(function (){
+    loading.value = false
   })
 }
 
@@ -165,6 +167,8 @@ function getUserColumnVisitor() {
     request = 2
     getStatistic()
     getIntroduce()
+  }).catch(function (){
+    loading.value = false
   })
 }
 
