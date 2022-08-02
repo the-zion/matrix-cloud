@@ -179,7 +179,7 @@ function draftSelect(id) {
 function editChange(editor) {
   uploadBox["title"] = title.value
   uploadBox["html"] = editor.getHtml()
-  uploadBox["update"] = new Date().toLocaleString()
+  uploadBox["update"] = new Date().toLocaleDateString()
   editSave(function () {
     time.value = "最近保存：" + uploadBox["update"]
   })
