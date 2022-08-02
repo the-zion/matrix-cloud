@@ -121,6 +121,7 @@ let formRef = ref()
 let uploading = ref(false)
 let percentage = ref(0)
 let columnParams = {}
+let searchParams = {}
 let uploadParams = {
   Bucket: column.value.bucket,
   Region: column.value.region,
@@ -273,17 +274,28 @@ function commit() {
   }
 
   setColumnParams()
+  setSearchParams()
   commitIntroduce()
 }
 
 function setColumnParams() {
   columnParams["name"] = form.value.name
-  columnParams["update"] = new Date().toLocaleString()
+  columnParams["update"] = new Date().toLocaleDateString()
   columnParams["tags"] = form.value["tags"].join(";")
   columnParams["auth"] = form.value["auth"]
   columnParams["introduce"] = form.value["introduce"]
   columnParams["cover"] = form.value["cover"]
   columnParams["id"] = form.value["id"]
+}
+
+function setSearchParams() {
+  searchParams["name"] = form.value.name
+  searchParams["update"] = new Date().toLocaleDateString()
+  searchParams["tags"] = form.value["tags"].join(";")
+  searchParams["introduce"] = form.value["introduce"]
+  searchParams["cover"] = form.value["cover"]
+  searchParams["id"] = form.value["id"]
+  searchParams["uuid"] = uuid.value
 }
 
 function commitIntroduce() {
@@ -295,7 +307,25 @@ function commitIntroduce() {
   uploadParams["Body"] = JSON.stringify(columnParams)
   cos.uploadFile(uploadParams, function (err) {
     if (err) {
-      error("文章发布失败")
+      error("专栏发布失败")
+      sending.value = false
+      return
+    }
+    commitSearch()
+  })
+}
+
+function commitSearch() {
+  sending.value = true
+  uploadParams["Key"] = column.value.key + uuid.value + "/" + draftId.value + "/search"
+  uploadParams["Headers"] = {
+    'x-cos-meta-uuid': uuid.value,
+  }
+  uploadParams["Body"] = JSON.stringify(searchParams)
+  cos.uploadFile(uploadParams, function (err) {
+    if (err) {
+      error("专栏发布失败")
+      sending.value = false
       return
     }
     commitColumn()
@@ -303,7 +333,6 @@ function commitIntroduce() {
 }
 
 function commitColumn() {
-  sending.value = true
   uploadParams["Key"] = column.value.key + uuid.value + "/" + draftId.value + "/content" + (mode.value === 'edit' ? "-edit" : "")
   uploadParams["Headers"] = {
     'x-cos-meta-uuid': uuid.value,
@@ -313,7 +342,8 @@ function commitColumn() {
   uploadParams["Body"] = JSON.stringify(columnParams)
   cos.uploadFile(uploadParams, function (err) {
     if (err) {
-      error("文章发布失败")
+      error("专栏发布失败")
+      sending.value = false
       return
     }
     mode.value === 'create' && sendColumn()
