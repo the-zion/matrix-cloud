@@ -3,7 +3,7 @@
     <el-row v-for="item in data" class="each" :key="item.id">
       <el-row class="header" justify="space-between" align="middle">
         <el-space>
-          <el-avatar :size="30" :src="item.image"></el-avatar>
+          <el-avatar icon="UserFilled" :size="30" :src="item.image"></el-avatar>
           <span class="name">{{ item.name }}</span>
         </el-space>
         <span class="time">{{ item.time }}</span>
