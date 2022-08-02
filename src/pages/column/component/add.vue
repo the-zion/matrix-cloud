@@ -120,6 +120,8 @@ function getData() {
     getIntroduce()
   }).catch(function () {
     error("文章获取失败")
+  }).catch(function (){
+    loading.value = false
   })
 }
 
