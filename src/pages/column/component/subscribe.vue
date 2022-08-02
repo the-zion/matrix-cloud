@@ -133,6 +133,8 @@ function getUserSubscribe() {
     getStatistic()
     getIntroduce()
     getUserSubscribes()
+  }).catch(function (){
+    loading.value = false
   })
 }
 
