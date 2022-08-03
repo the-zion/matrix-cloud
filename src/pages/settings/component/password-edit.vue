@@ -25,7 +25,6 @@ import {ref} from "vue"
 import {success, error} from "../../../utils/message";
 import Password from "./password.vue"
 import {post} from "../../../utils/axios";
-import {loginTimeOut} from "../../../utils/globalFunc";
 
 const emits = defineEmits(["update:visible"])
 const props = defineProps({
@@ -96,9 +95,6 @@ function setPassword() {
     let response = err.response
     if (response) {
       switch (response.data.reason) {
-        case "TOKEN_EXPIRED":
-          loginTimeOut()
-          return
         case "VERIFY_PASSWORD_FAILED":
           msg = "旧密码验证错误"
           break
