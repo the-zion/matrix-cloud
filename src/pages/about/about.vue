@@ -1,53 +1,62 @@
 <template>
-  <el-tag
-      v-for="tag in dynamicTags"
-      :key="tag"
-      class="mx-1"
-      closable
-      :disable-transitions="false"
-      @close="handleClose(tag)"
-  >
-    {{ tag }}
-  </el-tag>
-  <el-input
-      v-if="inputVisible"
-      ref="InputRef"
-      v-model="inputValue"
-      class="ml-1 w-20"
-      size="small"
-      @keyup.enter="handleInputConfirm"
-      @blur="handleInputConfirm"
-  />
-  <el-button v-else class="button-new-tag ml-1" size="small" @click="showInput">
-    + New Tag
-  </el-button>
+  <el-upload action="#" list-type="picture-card" :auto-upload="false" ref="formRef">
+    <el-icon><Plus /></el-icon>
+
+    <template #file="{ file }">
+      <div>
+        <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+        <span class="el-upload-list__item-actions">
+          <span
+              class="el-upload-list__item-preview"
+              @click="handlePictureCardPreview(file)"
+          >
+            <el-icon><zoom-in /></el-icon>
+          </span>
+          <span
+              v-if="!disabled"
+              class="el-upload-list__item-delete"
+              @click="handleDownload(file)"
+          >
+            <el-icon><Download /></el-icon>
+          </span>
+          <span
+              v-if="!disabled"
+              class="el-upload-list__item-delete"
+              @click="handleRemove(file)"
+          >
+            <el-icon><Delete /></el-icon>
+          </span>
+        </span>
+      </div>
+    </template>
+  </el-upload>
+
+  <el-dialog v-model="dialogVisible">
+    <img w-full :src="dialogImageUrl" alt="Preview Image" />
+  </el-dialog>
 </template>
-
 <script lang="ts" setup>
-import { nextTick, ref } from 'vue'
-import type { ElInput } from 'element-plus'
+import { ref } from 'vue'
+import { Delete, Download, Plus, ZoomIn } from '@element-plus/icons-vue'
 
-const inputValue = ref('')
-const dynamicTags = ref(['Tag 1', 'Tag 2', 'Tag 3'])
-const inputVisible = ref(false)
-const InputRef = ref<InstanceType<typeof ElInput>>()
+import type { UploadFile } from 'element-plus'
 
-const handleClose = (tag: string) => {
-  dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1)
+const formRef = ref()
+const dialogImageUrl = ref('')
+const dialogVisible = ref(false)
+const disabled = ref(false)
+
+const handleRemove = (file: UploadFile) => {
+  console.log(file)
 }
 
-const showInput = () => {
-  inputVisible.value = true
-  nextTick(() => {
-    InputRef.value!.input!.focus()
-  })
+const handlePictureCardPreview = (file: UploadFile) => {
+  dialogImageUrl.value = file.url!
+  dialogVisible.value = true
 }
 
-const handleInputConfirm = () => {
-  if (inputValue.value) {
-    dynamicTags.value.push(inputValue.value)
-  }
-  inputVisible.value = false
-  inputValue.value = ''
+const handleDownload = (file: UploadFile) => {
+  console.log(file)
+  console.log(formRef)
 }
 </script>
