@@ -23,7 +23,6 @@ export default {
 import {ref} from "vue";
 import {post} from "../../../utils/axios";
 import {confirm, error, success} from "../../../utils/message";
-import {loginTimeOut} from "../../../utils/globalFunc";
 import IdentityVerification from "./identity.vue"
 
 let mode = ref("")
@@ -83,9 +82,6 @@ function unbindPhone() {
     let response = err.response
     if (response) {
       switch (response.data.reason) {
-        case "TOKEN_EXPIRED":
-          loginTimeOut()
-          return
         case "UNIQUE_ACCOUNT":
           msg = "解绑失败：唯一可登录账号不能解绑"
           break
@@ -109,9 +105,6 @@ function unbindEmail() {
     let response = err.response
     if (response) {
       switch (response.data.reason) {
-        case "TOKEN_EXPIRED":
-          loginTimeOut()
-          return
         case "UNIQUE_ACCOUNT":
           msg = "解绑失败：唯一可登录账号不能解绑"
           break
