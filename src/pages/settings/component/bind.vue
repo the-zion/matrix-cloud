@@ -26,7 +26,6 @@ import Email from "./email.vue"
 import Phone from "./phone.vue"
 import {post} from "../../../utils/axios";
 import {error, success} from "../../../utils/message";
-import {loginTimeOut} from "../../../utils/globalFunc";
 
 let mode = ref("")
 let title = ref("")
@@ -83,9 +82,6 @@ function setPhone() {
     let response = err.response
     if (response) {
       switch (response.data.reason) {
-        case "TOKEN_EXPIRED":
-          loginTimeOut()
-          return
         case "PHONE_CONFLICT":
           msg = "该账号已存在"
           break
@@ -109,9 +105,6 @@ function setEmail() {
     let response = err.response
     if (response) {
       switch (response.data.reason) {
-        case "TOKEN_EXPIRED":
-          loginTimeOut()
-          return
         case "EMAIL_CONFLICT":
           msg = "该账号已存在"
           break
