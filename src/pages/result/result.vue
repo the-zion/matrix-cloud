@@ -23,7 +23,7 @@
 <script setup>
 import {onMounted, ref} from "vue"
 import {useRoute} from "vue-router";
-import router from "../../router";
+import {backToHome} from "../../utils/globalFunc";
 
 let type = ref("success")
 let title = ref("")
@@ -37,10 +37,6 @@ function initData() {
   type.value = useRoute().query["type"]
   title.value = useRoute().query["title"]
   description.value = useRoute().query["description"]
-}
-
-function backToHome() {
-  router.push({name: "home"})
 }
 
 onMounted(function () {
