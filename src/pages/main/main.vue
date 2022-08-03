@@ -15,6 +15,9 @@
           </template>
         </el-menu-item>
         <div style="flex-grow: 1"></div>
+        <el-input v-if="activeMenu !== 'search'" :maxlength="100" v-model="search" class="search" placeholder="搜索"
+                  suffix-icon="search"
+                  @change="searchChange"></el-input>
         <el-dropdown split-button type="primary" trigger="click" v-show="uuid">
           创作中心
           <template #dropdown>
@@ -25,7 +28,7 @@
                 </el-icon>
                 <span>写文章</span>
               </el-dropdown-item>
-              <el-dropdown-item>
+              <el-dropdown-item @click="writeTalk">
                 <el-icon>
                   <ChatDotRound/>
                 </el-icon>
@@ -67,23 +70,26 @@
 </template>
 
 <script setup>
-import router from "../../router"
-import {ref, onMounted} from "vue";
+import {goToPage} from "../../utils/globalFunc";
+import {backToHome} from "../../utils/globalFunc";
 import {useRoute} from "vue-router";
-import Login from './component/login.vue'
-import Dropdown from './component/dropdown.vue'
-import {userMainStore, baseMainStore} from "../../store";
+import {ref, onMounted} from "vue";
 import {storeToRefs} from "pinia/dist/pinia";
+import Login from './component/login.vue';
+import Dropdown from './component/dropdown.vue';
+import router from "../../router";
+import {userMainStore, baseMainStore} from "../../store";
+import {info} from "../../utils/message";
 
 const userStore = userMainStore()
 const baseStore = baseMainStore()
 const {uuid} = storeToRefs(userStore)
 const {avatar} = storeToRefs(baseStore)
 let activeMenu = ref()
-let userLogin = ref(false)
 let messageValue = ref(0)
 let loginVisible = ref(false)
 let activeColor = ref()
+let search = ref()
 let menuList = ref([{
   id: 0,
   key: "home",
@@ -104,10 +110,6 @@ function init() {
 
 function initData() {
   activeMenu.value = useRoute().name.split(".")[0]
-}
-
-function backToHome() {
-  router.push({name: 'home', query: {page: 'article'}})
 }
 
 function menuActive() {
@@ -142,14 +144,26 @@ function writeArticle() {
   window.open(href, "_blank");
 }
 
+function writeTalk() {
+  const {href} = router.resolve({
+    name: "talk.write",
+    query: {mode: 'create'}
+  });
+  window.open(href, "_blank");
+}
+
+function searchChange(s) {
+  goToPage("search", {search: s})
+}
+
 onMounted(function () {
   init()
 })
 
 router.afterEach(function (route) {
   activeMenu.value = route.name.split(".")[0]
+  console.log(activeMenu.value)
 })
-
 
 </script>
 <style lang="scss">
@@ -175,6 +189,11 @@ router.afterEach(function (route) {
       .main-menu-item {
         font-size: 13px;
         height: 100%;
+      }
+
+      .search {
+        width: 200px;
+        margin: 0 50px;
       }
 
 
