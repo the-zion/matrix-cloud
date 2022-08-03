@@ -23,6 +23,7 @@ import Navigation from "./component/navigation.vue"
   width: 1200px;
   margin: auto;
   justify-content: space-between;
+  padding: 20px 0;
 
   .aside {
     width: 230px;
