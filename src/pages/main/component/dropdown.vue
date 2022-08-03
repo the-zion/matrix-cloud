@@ -64,7 +64,6 @@ function init() {
 function initData() {
   name.value = "刘小圆sama"
   introduce.value = "海纳百川，有容纳大"
-
 }
 
 function userPage() {
@@ -80,7 +79,8 @@ function userSettings() {
 }
 
 function signOut() {
-
+  localStorage.removeItem("matrix-token")
+  userStore.$reset()
 }
 
 onMounted(function () {
