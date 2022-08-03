@@ -3,15 +3,15 @@
     <el-affix>
       <el-row class="body" justify="center">
         <el-row class="title">必读榜</el-row>
-        <el-row v-for="(item, index) in data" :key="item.id" class="each">
+        <el-row v-for="(item, index) in data" :key="item.id" class="each" @click="goToPage(item.mode, {id:item.id})">
           <el-icon :size="10" class="icon iconfont"
                    :class="'icon-number-'+(index+1) + (index < 3?' gold':'')"></el-icon>
           <el-space class="info" direction="vertical" fill :size="0" alignment="start">
             <el-space class="info-head" :size="4">
-              <el-avatar :src="avatar.baseUrl + item.uuid + '/avatar.webp'" :size="22"></el-avatar>
-              <span class="info-title">{{ introduce[item.id].title }}</span>
+              <el-avatar icon="UserFilled" :src="avatar.baseUrl + item.uuid + '/avatar.webp'" :size="22"></el-avatar>
+              <span class="info-title">{{ introduce[index].title || introduce[index].name }}</span>
             </el-space>
-            <span class="text">{{ introduce[item.id].text }}</span>
+            <span class="text">{{ introduce[index].text || introduce[index].introduce }}</span>
           </el-space>
         </el-row>
         <el-skeleton class="skeleton" v-show="loading" :rows="1" animated/>
@@ -31,12 +31,13 @@ export default {
 
 <script setup>
 import {onMounted, ref} from "vue"
+import {goToPage} from "../../../utils/globalFunc";
 import {get} from "../../../utils/axios";
 import {baseMainStore} from "../../../store";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 
 const baseStore = baseMainStore()
-const {avatar, article} = storeToRefs(baseStore)
+const {avatar, article, talk, column} = storeToRefs(baseStore)
 
 let data = ref([])
 let loading = ref(false)
@@ -54,23 +55,61 @@ function getData() {
     list = reply.data['board']
     request = list.length
     getIntroduce(list)
+  }).catch(function (){
+    loading.value = false
   })
 }
 
 function getIntroduce(list) {
-  list.forEach(function (each) {
+  list.forEach(function (each, index) {
     switch (each.mode) {
       case "article":
-        getArticleIntroduce(each)
+        getArticleIntroduce(each, index)
+        break
+      case "talk":
+        getTalkIntroduce(each, index)
+        break
+      case "column":
+        getColumnIntroduce(each, index)
         break
     }
   })
 }
 
-function getArticleIntroduce(item) {
+function getArticleIntroduce(item, index) {
   let url = article.value.baseUrl + item.uuid + "/" + item.id + "/introduce"
   get(url).then(function (reply) {
-    introduce.value[item.id] = reply.data
+    introduce.value[index] = reply.data
+    request -= 1
+  }).catch(function () {
+    request -= 1
+  }).then(function () {
+    if (request === 0) {
+      data.value = data.value.concat(list)
+      loading.value = false
+    }
+  })
+}
+
+function getTalkIntroduce(item, index) {
+  let url = talk.value.baseUrl + item.uuid + "/" + item.id + "/introduce"
+  get(url).then(function (reply) {
+    introduce.value[index] = reply.data
+    request -= 1
+  }).catch(function () {
+    request -= 1
+  }).then(function () {
+    if (request === 0) {
+      data.value = data.value.concat(list)
+      loading.value = false
+    }
+  })
+}
+
+function getColumnIntroduce(item, index) {
+  let url = column.value.baseUrl + item.uuid + "/" + item.id + "/introduce"
+  get(url).then(function (reply) {
+    introduce.value[index] = reply.data
     request -= 1
   }).catch(function () {
     request -= 1
@@ -160,7 +199,7 @@ onMounted(function () {
       background-color: var(--el-fill-color-light);
     }
 
-    .skeleton{
+    .skeleton {
       padding: 6px 16px;
     }
   }
