@@ -5,19 +5,19 @@
         <el-row justify="space-between" class="info">
           <span class="label">收藏次数</span>
           <span class="num">{{
-              props.data.collect > 1000 ? (props.data.collect / 1000).toFixed(1) + "k" : props.data.collect
+              props.statistic.collect > 1000 ? (props.statistic.collect / 1000).toFixed(1) + "k" : props.statistic.collect
             }}</span>
         </el-row>
         <el-row justify="space-between" class="info">
           <span class="label">参与人数</span>
           <span class="num">{{
-              props.data.comment > 1000 ? (props.data.comment / 1000).toFixed(1) + "k" : props.data.comment
+              props.statistic.comment > 1000 ? (props.statistic.comment / 1000).toFixed(1) + "k" : props.statistic.comment
             }}</span>
         </el-row>
         <el-row justify="space-between" class="info">
           <span class="label">浏览次数</span>
           <span class="num">{{
-              props.data.view > 1000 ? (props.data.view / 1000).toFixed(1) + "k" : props.data.view
+              props.statistic.view > 1000 ? (props.statistic.view / 1000).toFixed(1) + "k" : props.statistic.view
             }}</span>
         </el-row>
       </el-row>
@@ -25,7 +25,9 @@
       <el-row class="tags-block">
         <el-row class="title">相关标签</el-row>
         <el-space class="tags" wrap>
-          <el-tag v-for="item in props.data.tags" :key="item" type="info" round>{{ item }}</el-tag>
+          <el-tag v-if="props.info.tags" v-for="item in (props.info?props.info.tags.split(';'):[])" :key="item"
+                  type="info" round>{{ item }}
+          </el-tag>
         </el-space>
       </el-row>
     </el-row>
@@ -41,7 +43,7 @@
       <el-row class="each" v-for="item in data" :key="item.id">
         <el-popover placement="top-start" :show-arrow="false" :width="312" trigger="hover" popper-class="popover">
           <template #reference>
-            <el-avatar class="avatar" @click="goToPage('user', 1)" :size="22" :src="item.avatar"/>
+            <el-avatar icon="UserFilled" class="avatar" @click="goToPage('user', 1)" :size="22" :src="item.avatar"/>
           </template>
           <matrix-user-mini-card></matrix-user-mini-card>
         </el-popover>
@@ -62,17 +64,27 @@ import {onMounted, ref} from "vue"
 import {goToPage} from "../../../utils/globalFunc";
 
 const props = defineProps({
-  data: {
+  info: {
+    type: Object,
+    default: {}
+  },
+  statistic: {
     type: Object,
     default: {}
   }
 })
 
+let info = ref({})
+let statistic = ref({})
 let data = ref([])
 
 
 function init() {
+  initData()
   getData()
+}
+
+function initData() {
 }
 
 function getData() {
@@ -97,8 +109,8 @@ onMounted(function () {
 
   .info-area {
     padding: 20px 15px;
-    box-shadow: var(--el-box-shadow-lighter);
     background-color: var(--el-color-white);
+    border: 1px solid var(--el-border-color-lighter);
     border-radius: 8px;
     margin-bottom: 10px;
 
@@ -147,8 +159,8 @@ onMounted(function () {
 
   .talk-area {
     padding: 20px 15px;
-    box-shadow: var(--el-box-shadow-lighter);
     background-color: var(--el-color-white);
+    border: 1px solid var(--el-border-color-lighter);
     border-radius: 8px;
 
     .header {
