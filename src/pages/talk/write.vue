@@ -11,7 +11,7 @@
         <!--        todo 2.2.0版本以上换成header-->
         <el-row class="title">讨论发起</el-row>
       </template>
-      <Form></Form>
+      <Form :title="title" :editor="editorRef" :id="draftId" :mode="mode"></Form>
     </el-drawer>
     <el-row class="head">
       <el-row class="base" align="middle" justify="space-between">
@@ -21,28 +21,33 @@
                     fit="contain"
           ></el-image>
           <span class="title">讨论发起</span>
+          <span class="time">{{ time }}</span>
         </el-space>
         <el-space :size="15">
           <el-button type="primary" icon="Promotion" @click="drawer = true">发布</el-button>
         </el-space>
       </el-row>
     </el-row>
+    <el-progress v-show="uploading" :duration="10" class="process" :percentage="percentage"
+                 :show-text="false"/>
     <el-row class="area" id="area">
       <el-input placeholder="请输入标题" class="title" v-model="title"/>
       <Toolbar
           class="toolbar"
           :editor="editorRef"
           :defaultConfig="toolbarConfig"
-          :mode="mode"
+          mode="default"
       />
       <Editor
+          v-loading="loading"
           class="editor"
           v-model="valueHtml"
           :defaultConfig="editorConfig"
-          :mode="mode"
+          mode="default"
           @onCreated="handleCreated"
           @onMaxLength="onMaxLength"
           @customAlert="customAlert"
+          @onChange="editChange"
       />
       <span class="bottom" id="bottom"></span>
     </el-row>
@@ -51,17 +56,25 @@
 
 <script setup>
 import {onBeforeUnmount, ref, shallowRef, onMounted} from 'vue'
+import {backToHome} from "../../utils/globalFunc";
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
-import router from "../../router";
-import {scrollTo} from "../../utils/scroll";
 import {success, info, warning, error} from "../../utils/message";
 import {customCheckVideoFn, customParseVideoSrc} from "../../utils/video";
 import Form from './component/form.vue'
-import {SoldOut} from "@element-plus/icons-vue";
+import {useRoute} from "vue-router";
+import {get, post} from "../../utils/axios";
+import {baseMainStore, userMainStore} from "../../store";
+import {storeToRefs} from "pinia/dist/pinia.esm-browser";
+import {initCos} from "../../utils/cos";
 
+const cos = initCos()
+const userStore = userMainStore()
+const baseStore = baseMainStore()
+const {uuid} = storeToRefs(userStore)
+const {talk} = storeToRefs(baseStore)
 const editorRef = shallowRef()
 const valueHtml = ref('')
-const mode = ref('default')
+const mode = ref('create')
 const toolbarConfig = {
   excludeKeys: [
     "blockquote",
@@ -89,16 +102,26 @@ const editorConfig = {
     insertVideo: {
       checkVideo: customCheckVideoFn,
       parseVideoSrc: customParseVideoSrc
+    },
+    uploadImage: {
+      maxFileSize: 2 * 1024 * 1024,
+      allowedFileTypes: ['image/png', 'image/jpeg', 'image/jpg'],
+      customUpload: imageUpload
     }
   }
 }
 
 let title = ref()
 let drawer = ref(false)
-
-
-function backToHome() {
-  router.push({name: "home"})
+let draftId = ref()
+let time = ref("自动保存至草稿箱")
+let loading = ref(false)
+let uploading = ref(false)
+let percentage = ref(0)
+let uploadBox = {}
+let uploadParams = {
+  Bucket: talk.value.bucket,
+  Region: talk.value.region,
 }
 
 function handleCreated(editor) {
@@ -129,6 +152,137 @@ function onMaxLength(editor) {
   editor.alert('最多不超过2000个字', 'info')
 }
 
+function init() {
+  initData()
+  mode.value === 'create' && getLastDraft()
+  mode.value === 'edit' && getData()
+}
+
+function getLastDraft() {
+  get("/v1/get/last/talk/draft").then(function (reply) {
+    draftId.value = reply.data.id
+    getData()
+  }).catch(function (err) {
+    let response = err.response
+    if (response) {
+      switch (response.data.reason) {
+        case "RECORD_NOT_FOUND":
+          CreateDraft()
+          return
+      }
+    }
+    error("稿件创建失败，请稍后再试")
+  })
+}
+
+function CreateDraft() {
+  post("/v1/create/talk/draft", {}).then(function (reply) {
+    draftId.value = reply.data.id
+    let editor = editorRef.value
+    if (editor == null) return
+    editor.setHtml(" ")
+  }).catch(function () {
+    error("稿件创建失败，请稍后再试")
+  })
+}
+
+function editChange(editor) {
+  uploadBox["title"] = title.value
+  uploadBox["html"] = editor.getHtml()
+  uploadBox["update"] = new Date().toLocaleDateString()
+  editSave(function () {
+    time.value = "最近保存：" + uploadBox["update"]
+  })
+}
+
+function editSave(fn) {
+  if (!uuid.value) {
+    time.value = "账号未登录，请先登录"
+    return
+  }
+
+  if (!draftId.value) {
+    time.value = "自动保存失败"
+    return
+  }
+  time.value = "保存中......"
+  uploadBox["id"] = draftId.value
+  uploadParams["Key"] = talk.value.key + uuid.value + "/" + draftId.value + "/content" + (mode.value === "edit" ? "-edit" : "")
+  uploadParams["Headers"] = {
+    'x-cos-meta-uuid': uuid.value,
+  }
+  uploadParams["Body"] = JSON.stringify(uploadBox)
+  cos.uploadFile(uploadParams, fn)
+}
+
+function imageUpload(file, insertFn) {
+  if (!uuid.value) {
+    warning("账号未登录，请先登录")
+    return
+  }
+
+  if (!draftId.value) {
+    time.value = "自动保存失败"
+    return
+  }
+
+  let imageId = +new Date()
+  let filetype = file.type.split("/")[1]
+  percentage.value = 0
+  uploading.value = true
+  uploadParams["Key"] = talk.value.key + uuid.value + "/" + draftId.value + "/" + imageId + "." + filetype
+  uploadParams["Headers"] = {
+    'x-cos-meta-uuid': uuid.value,
+    'Pic-Operations':
+        '{"is_pic_info": 1, "rules": [{"fileid": ' + '"' + imageId + ".webp" + '", "rule": "imageMogr2/format/webp/interlace/0/quality/80"}]}',
+  }
+  uploadParams["Body"] = file
+  uploadParams["onProgress"] = function (progressData) {
+    percentage.value = progressData.percent * 100
+  }
+  cos.uploadFile(uploadParams, function (err) {
+    uploading.value = false
+    if (err) {
+      error("图片上传失败，请稍后再试")
+      return
+    }
+    let url = talk.value.baseUrl + uuid.value + "/" + draftId.value + "/" + imageId + ".webp"
+    insertFn(url, "网络不佳或图片涉及敏感", url)
+  })
+}
+
+function initData() {
+  mode.value = useRoute().query["mode"]
+  draftId.value = parseInt(useRoute().query["id"])
+}
+
+function getData() {
+  if (!uuid.value) {
+    warning("账号未登录，请先登录")
+    return
+  }
+
+  if (!draftId.value) {
+    error("草稿获取失败")
+    return
+  }
+
+  loading.value = true
+  let url = talk.value.baseUrl + uuid.value + "/" + draftId.value + "/content"
+  get(url).then(function (reply) {
+    let data = reply.data
+    let editor = editorRef.value
+    if (editor == null) return
+    title.value = data.title
+    editor.setHtml(data.html)
+    uploadBox = data
+  }).catch(function () {
+    error("草稿获取失败")
+  }).then(function () {
+    loading.value = false
+  })
+}
+
 onBeforeUnmount(() => {
   const editor = editorRef.value
   if (editor == null) return
@@ -136,9 +290,8 @@ onBeforeUnmount(() => {
 })
 
 onMounted(() => {
-
+  init()
 })
-
 
 </script>
 
