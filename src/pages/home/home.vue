@@ -1,55 +1,61 @@
 <template>
   <el-container class="home-container" v-if="page">
     <el-backtop></el-backtop>
-    <el-row class="tags" justify="center" align="middle">
-      <el-row class="area" justify="space-between" align="middle">
-        <el-space class="block" :size="20">
-          <span v-for="item in tags" class="label" :class="{'select': item === currentTag}" @click="currentTag = item">{{
-              item
-            }}</span>
-        </el-space>
-        <el-space :size="3" class="filter" @click="tagFilter = true">
-          <el-icon>
-            <Filter/>
-          </el-icon>
-          <span>筛选器</span>
-        </el-space>
-        <el-dialog
-            v-model="tagFilter"
-            destroy-on-close
-            :width="480"
-            custom-class="tag-filter-dialog"
-            @close="tagFilter = false"
+<!--    <el-row class="tags" justify="center" align="middle" v-if="page !== 'news'">-->
+<!--      <el-row class="area" justify="space-between" align="middle">-->
+<!--        <el-space class="block" :size="20">-->
+<!--          <span v-for="item in tags" class="label" :class="{'select': item === currentTag}" @click="currentTag = item">{{-->
+<!--              item-->
+<!--            }}</span>-->
+<!--        </el-space>-->
+<!--        <el-space :size="3" class="filter" @click="tagFilter = true">-->
+<!--          <el-icon>-->
+<!--            <Filter/>-->
+<!--          </el-icon>-->
+<!--          <span>筛选器</span>-->
+<!--        </el-space>-->
+<!--        <el-dialog-->
+<!--            v-model="tagFilter"-->
+<!--            destroy-on-close-->
+<!--            :width="480"-->
+<!--            custom-class="tag-filter-dialog"-->
+<!--            @close="tagFilter = false"-->
 
-        >
-          <matrix-tag v-model:selectedTags="selectedTags"></matrix-tag>
-          <template #footer>
-          <span>
-            <el-button @click="tagFilter = false" round>取消</el-button>
-            <el-button @click="filterByTags" round type="primary"
-            >确定</el-button>
-          </span>
-          </template>
-        </el-dialog>
-      </el-row>
-    </el-row>
+<!--        >-->
+<!--          <matrix-tag v-model:selectedTags="selectedTags"></matrix-tag>-->
+<!--          <template #footer>-->
+<!--          <span>-->
+<!--            <el-button @click="tagFilter = false" round>取消</el-button>-->
+<!--            <el-button @click="filterByTags" round type="primary"-->
+<!--            >确定</el-button>-->
+<!--          </span>-->
+<!--          </template>-->
+<!--        </el-dialog>-->
+<!--      </el-row>-->
+<!--    </el-row>-->
     <el-row class="menu" justify="space-between">
       <el-row v-for="item in menu" :key="item.key" class="menu-item" @click="select(item)">
         <span class="label" :class="{'select':page === item.key}">{{ item.label }}</span>
-        <el-image fit="fill" class="image" :src="item.image"></el-image>
+        <!--        <el-image fit="fill" class="image" :src="item.image"></el-image>-->
+        <video class="image" preload="auto" muted height="10" autoplay loop
+               :src="'../src/assets/images/'+item.key+'.mp4'"></video>
       </el-row>
     </el-row>
     <el-row class="main" justify="space-between">
       <el-row class="left-area">
-        <el-row class="header" align="middle">
+        <el-row class="header" align="middle" v-if="page !== 'news'">
           <span class="label" :class="{'select': mode === 'new'}" @click="modeChange('new')">最新</span>
           <el-divider direction="vertical"></el-divider>
           <span class="label" :class="{'select': mode === 'hot'}" @click="modeChange('hot')">最热</span>
         </el-row>
+        <el-row class="header" align="middle" v-if="page === 'news'">
+          <span class="label">技术头条</span>
+        </el-row>
         <el-row class="body">
           <matrix-article-list v-if="page === 'article'" ref="listRef"></matrix-article-list>
-          <matrix-column-list v-if="page === 'column'"></matrix-column-list>
-          <matrix-talk-list v-if="page === 'talk'"></matrix-talk-list>
+          <matrix-column-list v-if="page === 'column'" ref="listRef"></matrix-column-list>
+          <matrix-talk-list v-if="page === 'talk'" ref="listRef"></matrix-talk-list>
+          <matrix-news-list v-if="page === 'news'" ref="listRef"></matrix-news-list>
         </el-row>
       </el-row>
       <el-row class="aside">
@@ -78,8 +84,11 @@ let mode = ref("new")
 let currentTag = ref("全部")
 let tagFilter = ref(false)
 let selectedTags = ref([])
-let tags = ref(["全部", "go", "k8s", "云原生", "python", "docker"])
 let menu = ref([{
+  key: "news",
+  label: "技术头条",
+  image: images.value.baseUrl + "/news.svg",
+}, {
   key: "article",
   label: "博客文章",
   image: images.value.baseUrl + "/article.svg",
@@ -91,10 +100,6 @@ let menu = ref([{
   key: "talk",
   label: "讨论发起",
   image: images.value.baseUrl + "/talk.svg"
-}, {
-  key: "news",
-  label: "每日新闻",
-  image: images.value.baseUrl + "/news.svg",
 }])
 
 function init() {
@@ -103,10 +108,14 @@ function init() {
 
 function initData() {
   page.value = useRoute().query["page"]
+  if (page.value === 'news') {
+    mode.value = "technology"
+  }
 }
 
 function select(item) {
   removeScrollToBottomListen()
+  mode.value = item.key === "news" ? "technology" : "new"
   page.value = item.key
   router.push({name: "home", query: {page: item.key}})
 }
@@ -123,6 +132,7 @@ function modeChange(m) {
 onBeforeRouteLeave((to, from) => {
   removeScrollToBottomListen()
 })
+
 
 onMounted(function () {
   init()
@@ -196,6 +206,7 @@ onMounted(function () {
       padding: 12px 0 0 16px;
       flex-direction: column;
       cursor: pointer;
+      overflow: hidden;
 
       .label {
         font-size: 16px;
@@ -204,9 +215,17 @@ onMounted(function () {
         color: var(--el-text-color-regular);
       }
 
+      //.image {
+      //  width: calc(100% - 82px);
+      //  height: 100%;
+      //}
+
       .image {
-        width: calc(100% - 82px);
-        height: 100%;
+        width: 170px;
+        height: 180px;
+        position: relative;
+        bottom: 20px;
+        right: 0;
       }
 
       .select {
