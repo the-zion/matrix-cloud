@@ -1,7 +1,7 @@
 <template>
   <el-container class="article-container" v-loading="loading">
     <el-backtop></el-backtop>
-    <collections-choose v-model:visible="collectionsVisible" v-model:judge="statisticJudge" :id="articleId"
+    <collections-choose v-model:visible="collectionsVisible" :id="articleId"
                         :uuid="authorUuid" :mode="'article'"
                         @collected="collected"></collections-choose>
     <el-row class="main" v-show="!loading">
@@ -38,46 +38,48 @@
         <el-row class="footer" justify="space-between">
           <el-space>
             <el-space :size="5" class="icon-block">
-              <div ref="iconAgree" @click="agreeClick" :class="{'agree-select':statisticClicked['agree']}"
+              <div ref="iconAgree" @click="agreeClick" :class="{'agree-select':userArticleAgree[articleId]}"
                    class="icon agree-transform">
-                <svg class="symbol-icon" aria-hidden="true" v-show="!statisticClicked['agree']">
+                <svg class="symbol-icon" aria-hidden="true" v-show="!userArticleAgree[articleId]">
                   <use :xlink:href="'#icon-like'"></use>
                 </svg>
-                <svg class="symbol-icon" aria-hidden="true" v-show="statisticClicked['agree']">
+                <svg class="symbol-icon" aria-hidden="true" v-show="userArticleAgree[articleId]">
                   <use :xlink:href="'#icon-like-fill'"></use>
                 </svg>
               </div>
               <span class="num">{{
-                  statistic.agree > 1000 ? (statistic.agree / 1000).toFixed(1) + "k" : statistic.agree
+                  statistic.agree > 1000 ? (statistic.agree / 1000).toFixed(1) + "k" : statistic.agree || 0
                 }}</span>
             </el-space>
             <el-space :size="5" class="icon-block">
-              <div ref="iconCollect" @click="collectClick" :class="{'collect-select':statisticClicked['collect']}"
+              <div ref="iconCollect" @click="collectClick" :class="{'collect-select':userArticleCollect[articleId]}"
                    class="icon collect-transform">
-                <svg class="symbol-icon" aria-hidden="true" v-show="!statisticClicked['collect']">
+                <svg class="symbol-icon" aria-hidden="true" v-show="!userArticleCollect[articleId]">
                   <use :xlink:href="'#icon-star'"></use>
                 </svg>
-                <svg class="symbol-icon" aria-hidden="true" v-show="statisticClicked['collect']">
+                <svg class="symbol-icon" aria-hidden="true" v-show="userArticleCollect[articleId]">
                   <use :xlink:href="'#icon-star-fill'"></use>
                 </svg>
               </div>
-              <span class="num">{{ statisticClicked['collect'] ? '已收藏' : '收藏' }}</span>
+              <span class="num">{{ userArticleCollect[articleId] ? '已收藏' : '收藏' }}</span>
             </el-space>
           </el-space>
-          <el-button icon="EditPen" type="primary" v-show="visible" @click="comment">评论</el-button>
+          <el-button icon="EditPen" type="primary" v-show="visible" @click="commentClick">评论</el-button>
         </el-row>
       </el-affix>
       <el-space class="tags-block" wrap>
         <span class="label">相关标签</span>
         <el-tag type="info" v-if="data.tags" v-for="item in data.tags.split(';')" round>{{ item }}</el-tag>
       </el-space>
-      <el-row class="reply-block" id="reply-block">
+      <el-row class="reply-block" id="reply-block" v-if="data['auth'] !== 2">
         <el-row class="reply-header" justify="space-between">
           <el-space>
-            <span class="num">{{ count }}</span>
+            <span class="num">{{
+                statistic.comment > 1000 ? (statistic.comment / 1000).toFixed(1) + "k" : statistic.comment || 0
+              }}</span>
             <span class="word">条评论</span>
           </el-space>
-          <el-select class="select" v-model="select">
+          <el-select class="select" v-model="select" @change="selectChange">
             <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -86,24 +88,24 @@
             />
           </el-select>
         </el-row>
-        <matrix-reply></matrix-reply>
+        <matrix-reply :creationId="articleId" :creationType="1"></matrix-reply>
       </el-row>
-      <el-row class="comment-block">
-        <matrix-comment></matrix-comment>
+      <el-row class="comment-block" v-if="data['auth'] !== 2">
+        <matrix-comment :creationId="articleId" :creationType="1" ref="commentRef"></matrix-comment>
       </el-row>
     </el-row>
   </el-container>
 </template>
 
 <script setup>
-import {scrollTo} from "../../utils/scroll";
-import {useRoute} from "vue-router";
+import {removeScrollToBottomListen, scrollTo} from "../../utils/scroll";
+import {onBeforeRouteLeave, useRoute} from "vue-router";
 import {goToPage} from "../../utils/globalFunc";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {warning} from "../../utils/message";
 import {get, post} from "../../utils/axios";
 import {animationAgree, animationCollect} from "../../utils/animation";
-import {ref, onBeforeUnmount, shallowRef, onMounted} from "vue";
+import {ref, onBeforeUnmount, shallowRef, onBeforeMount, onMounted} from "vue";
 import {Editor} from '@wangeditor/editor-for-vue'
 import {baseMainStore, userMainStore} from "../../store";
 import router from "../../router";
@@ -123,8 +125,10 @@ let data = ref({
 let statistic = ref({
   "agree": 0,
   "view": 0,
+  "comment": 0
 })
 let articleId = ref()
+let commentRef = ref()
 let iconAgree = ref(null)
 let iconCollect = ref(null)
 let loading = ref(false)
@@ -132,7 +136,7 @@ let visible = ref(false)
 let collectionsVisible = ref(false)
 let agreeBounce = ref(1);
 let collectBounce = ref(1);
-let count = ref(153)
+let comment = ref(0)
 let select = ref("hot")
 let options = ref([
   {
@@ -144,14 +148,8 @@ let options = ref([
     value: "new"
   }
 ])
-let statisticJudge = ref({
-  agree: false,
-  collect: false
-})
-let statisticClicked = ref({
-  agree: false,
-  collect: false
-})
+let userArticleAgree = ref({})
+let userArticleCollect = ref({})
 
 const editorRef = shallowRef()
 const mode = ref('default')
@@ -166,7 +164,6 @@ const {avatar, article} = storeToRefs(baseStore)
 
 function init() {
   animation()
-  background()
   initData()
   getData()
 }
@@ -185,7 +182,7 @@ function getData() {
 
 function getStatistic() {
   loading.value = true
-  get("/v1/get/article/statistic?id=" + articleId.value).then(function (reply) {
+  get("/v1/get/article/statistic?id=" + articleId.value + "&uuid=" + (uuid.value || "")).then(function (reply) {
     authorUuid.value = reply.data.uuid
     statistic.value = reply.data
     setView()
@@ -196,7 +193,7 @@ function getStatistic() {
 }
 
 function getUserInfo() {
-  get("/v1/get/user/info?uuid=" + authorUuid.value).then(function (reply) {
+  get("/v1/get/user/info/visitor?uuid=" + authorUuid.value).then(function (reply) {
     user.value = reply.data
     getArticle()
   }).catch(function () {
@@ -209,7 +206,8 @@ function getArticle() {
   get(url).then(function (reply) {
     data.value = reply.data
     editorRef.value.setHtml(data.value["html"])
-    getStatisticJudge()
+    getUserArticleAgree()
+    getUserArticleCollect()
   }).catch(function () {
     articleNotExist()
   }).then(function () {
@@ -217,15 +215,21 @@ function getArticle() {
   })
 }
 
-function getStatisticJudge() {
+function getUserArticleAgree() {
   if (!articleId.value || !uuid.value) {
     return
   }
-  post("/v1/article/statistic/judge", {
-    id: articleId.value
-  }).then(function (reply) {
-    statisticJudge.value = reply.data
-    statisticClicked.value = reply.data
+  get("/v1/get/user/article/agree").then(function (reply) {
+    userArticleAgree.value = reply.data.agree
+  })
+}
+
+function getUserArticleCollect() {
+  if (!articleId.value || !uuid.value) {
+    return
+  }
+  get("/v1/get/user/article/collect").then(function (reply) {
+    userArticleCollect.value = reply.data.collect
   })
 }
 
@@ -260,7 +264,7 @@ function agreeClick() {
   }
 
   clickLock = true
-  if (!statisticJudge.value["agree"]) {
+  if (!userArticleAgree.value[articleId.value]) {
     agreeAdd()
   } else {
     agreeCancel()
@@ -268,34 +272,28 @@ function agreeClick() {
 }
 
 function agreeAdd() {
-  agreeAnimation.play()
-  statisticClicked.value["agree"] = true
-  statistic.value["agree"] += 1
   post("/v1/set/article/agree", {
     id: articleId.value,
     uuid: authorUuid.value,
   }).then(function () {
-    statisticJudge.value["agree"] = true
+    agreeAnimation.play()
+    userArticleAgree.value[articleId.value] = true
+    statistic.value["agree"] += 1
   }).catch(function () {
-    statisticClicked.value["agree"] = false
-    statistic.value["agree"] -= 1
   }).then(function () {
     clickLock = false
   })
 }
 
 function agreeCancel() {
-  agreeAnimation.play()
-  statisticClicked.value["agree"] = false
-  statistic.value["agree"] -= 1
   post("/v1/cancel/article/agree", {
     id: articleId.value,
     uuid: authorUuid.value,
   }).then(function () {
-    statisticJudge.value["agree"] = false
+    agreeAnimation.play()
+    userArticleAgree.value[articleId.value] = false
+    statistic.value["agree"] -= 1
   }).catch(function () {
-    statisticClicked.value["agree"] = true
-    statistic.value["agree"] += 1
   }).then(function () {
     clickLock = false
   })
@@ -310,7 +308,7 @@ function collectClick() {
     return
   }
 
-  if (!statisticJudge.value['collect']) {
+  if (!userArticleCollect.value[articleId.value]) {
     collectAdd()
   } else {
     collectCancel()
@@ -323,17 +321,13 @@ function collectAdd() {
 
 function collectCancel() {
   clickLock = true
-  collectAnimation.play()
-  statisticClicked.value["collect"] = false
-  statistic.value["collect"] -= 1
   post("/v1/cancel/article/collect", {
     id: articleId.value,
     uuid: authorUuid.value,
   }).then(function () {
     collectAnimation.play()
-  }).catch(function () {
-    statisticClicked.value["collect"] = true
-    statistic.value["collect"] += 1
+    userArticleCollect.value[articleId.value] = false
+    statistic.value["collect"] -= 1
   }).then(function () {
     clickLock = false
   })
@@ -341,7 +335,7 @@ function collectCancel() {
 
 function collected() {
   collectAnimation.play()
-  statisticClicked.value["collect"] = true
+  userArticleCollect.value[articleId.value] = true
   statistic.value["collect"] += 1
 }
 
@@ -353,7 +347,7 @@ function affixChange(value) {
   visible.value = value
 }
 
-function comment() {
+function commentClick() {
   scrollTo("reply-block")
 }
 
@@ -364,10 +358,19 @@ function reproduce(source, url) {
   window.open(url);
 }
 
+function selectChange(value) {
+  commentRef.value.modeChange(value)
+}
 
-onMounted(function () {
+onBeforeRouteLeave((to, from) => {
+  removeScrollToBottomListen()
+})
+
+onBeforeMount(function () {
   init()
 })
+
+onMounted(background)
 
 onBeforeUnmount(function () {
   e.style["background-color"] = "unset"
@@ -544,6 +547,7 @@ onBeforeUnmount(function () {
     .comment-block {
       width: 100%;
       margin-top: 30px;
+      margin-bottom: 200px;
     }
   }
 }
