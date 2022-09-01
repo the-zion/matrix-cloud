@@ -6,6 +6,48 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "14007852",
+      "name": "lv2",
+      "font_class": "level2",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "14007853",
+      "name": "lv3",
+      "font_class": "level3",
+      "unicode": "e61a",
+      "unicode_decimal": 58906
+    },
+    {
+      "icon_id": "14007854",
+      "name": "lv1",
+      "font_class": "level1",
+      "unicode": "e61b",
+      "unicode_decimal": 58907
+    },
+    {
+      "icon_id": "14007855",
+      "name": "lv4",
+      "font_class": "level4",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    },
+    {
+      "icon_id": "14007858",
+      "name": "lv5",
+      "font_class": "level5",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    },
+    {
+      "icon_id": "14007859",
+      "name": "lv6",
+      "font_class": "level6",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
       "icon_id": "11742186",
       "name": "内部推荐",
       "font_class": "tubiaozhizuomoban",
