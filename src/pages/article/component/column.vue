@@ -81,7 +81,7 @@ export default {
 import {goToPage} from "../../../utils/globalFunc";
 import {baseMainStore, userMainStore} from "../../../store";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
-import {onMounted, ref} from "vue";
+import {onBeforeMount, ref} from "vue";
 import {axiosGetAll, get} from "../../../utils/axios";
 import {useRoute} from "vue-router";
 
@@ -163,7 +163,7 @@ function getIntroduce() {
   })
 }
 
-onMounted(function () {
+onBeforeMount(function () {
   init()
 })
 </script>
