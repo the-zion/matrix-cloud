@@ -21,7 +21,7 @@ export default {
 </script>
 
 <script setup>
-import {onMounted, ref} from "vue"
+import {onBeforeMount, ref} from "vue"
 import {get, post} from "../../../utils/axios"
 import {userMainStore, baseMainStore} from "../../../store";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
@@ -79,7 +79,7 @@ function draftSelect(item) {
   emits("draftSelect", item.id)
 }
 
-onMounted(function () {
+onBeforeMount(function () {
   init()
 })
 </script>
