@@ -88,10 +88,10 @@
             />
           </el-select>
         </el-row>
-        <matrix-reply :creationId="articleId" :creationType="1"></matrix-reply>
+        <matrix-reply :creationId="articleId" :creationType="1" v-if="data['auth'] !== 2"></matrix-reply>
       </el-row>
       <el-row class="comment-block" v-if="data['auth'] !== 2">
-        <matrix-comment :creationId="articleId" :creationType="1" ref="commentRef"></matrix-comment>
+        <matrix-comment :creationId="articleId" :creationType="1" :creationAuthor="authorUuid" ref="commentRef"></matrix-comment>
       </el-row>
     </el-row>
   </el-container>
@@ -465,6 +465,7 @@ onBeforeUnmount(function () {
 
     .editor {
       min-height: 676px;
+      width: 100%
     }
 
     .footer {
