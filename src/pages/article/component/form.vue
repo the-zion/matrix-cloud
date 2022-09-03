@@ -82,7 +82,7 @@ export default {
 </script>
 
 <script setup>
-import {onMounted, ref} from "vue"
+import {onBeforeMount, ref} from "vue"
 import {error, success, warning} from "../../../utils/message";
 import {initCos} from "../../../utils/cos";
 import {baseMainStore, userMainStore} from "../../../store";
@@ -115,6 +115,7 @@ let articleParams = {}
 let introduce = {}
 let search = {}
 let date = ""
+let token = null
 let uploadParams = {
   Bucket: article.value.bucket,
   Region: article.value.region,
@@ -163,7 +164,7 @@ function commitCheck(formRef) {
 }
 
 function commit() {
-  if (!uuid.value) {
+  if (!uuid.value && !token) {
     warning("账号未登录，请先登录")
     return
   }
@@ -188,7 +189,7 @@ function commitIntroduce() {
   sending.value = true
   uploadParams["Key"] = article.value.key + uuid.value + "/" + draftId.value + "/introduce" + (mode.value === 'edit' ? "-edit" : "")
   uploadParams["Headers"] = {
-    'x-cos-meta-uuid': uuid.value,
+    'x-cos-meta-token': token,
   }
   uploadParams["Body"] = JSON.stringify(introduce)
   cos.uploadFile(uploadParams, function (err) {
@@ -203,7 +204,7 @@ function commitIntroduce() {
 function commitSearch() {
   uploadParams["Key"] = article.value.key + uuid.value + "/" + draftId.value + "/search"
   uploadParams["Headers"] = {
-    'x-cos-meta-uuid': uuid.value,
+    'x-cos-meta-token': token,
   }
   uploadParams["Body"] = JSON.stringify(search)
   cos.uploadFile(uploadParams, function (err) {
@@ -218,7 +219,7 @@ function commitSearch() {
 function commitArticle() {
   uploadParams["Key"] = article.value.key + uuid.value + "/" + draftId.value + "/content" + (mode.value === 'edit' ? "-edit" : "")
   uploadParams["Headers"] = {
-    'x-cos-meta-uuid': uuid.value,
+    'x-cos-meta-token': token,
     'x-cos-meta-id': draftId.value + "",
     'x-cos-meta-auth': articleParams.auth
   }
@@ -298,6 +299,7 @@ function initData() {
   editor.value = props.editor
   draftId.value = props.id
   mode.value = props.mode
+  token = localStorage.getItem("matrix-token")
 }
 
 function getData() {
@@ -352,7 +354,7 @@ function imageUpload(UploadRequestOptions) {
   let filetype = UploadRequestOptions.file.type.split("/")[1]
   uploadParams["Key"] = article.value.key + uuid.value + "/" + draftId.value + "/cover." + filetype
   uploadParams["Headers"] = {
-    'x-cos-meta-uuid': uuid.value,
+    'x-cos-meta-token': token,
     'Pic-Operations':
         '{"is_pic_info": 1, "rules": [{"fileid": "cover.webp", "rule": "imageMogr2/format/webp/interlace/0/quality/80"}]}'
   }
@@ -376,7 +378,7 @@ function imageUpload(UploadRequestOptions) {
   })
 }
 
-onMounted(function () {
+onBeforeMount(function () {
   init()
 })
 </script>
