@@ -3,8 +3,6 @@
     <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
               :image-size="250" image="../../src/assets/images/no_data.svg"
     />
-    <column-create v-model:visible="visible" v-bind:mode="'edit'" :id="columnId"></column-create>
-    <el-skeleton class="skeleton" v-show="loading" :rows="2" animated/>
     <el-space class="data" fill :size="0">
       <el-row v-for="item in data" class="each" :key="item.id"
               @click="goToPage('column', {id:item.id})">
@@ -47,14 +45,7 @@
         </el-row>
       </el-row>
     </el-space>
-    <el-row class="foot" justify="center" v-if="data.length !== 0 || currentPage > 1">
-      <el-pagination
-          v-model:current-page="currentPage"
-          :page-size="10"
-          layout="prev, pager, next"
-          :total="pageTotal"
-      />
-    </el-row>
+    <el-skeleton class="skeleton" v-show="loading" :rows="2" animated/>
   </el-row>
 </template>
 
@@ -65,12 +56,12 @@ export default {
 </script>
 
 <script setup>
-import {onMounted, ref, watch} from "vue"
+import {onBeforeMount, ref, watch} from "vue"
 import {goToPage} from "../../../utils/globalFunc";
 import {baseMainStore, userMainStore} from "../../../store";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {get} from "../../../utils/axios";
-import {scrollTo} from "../../../utils/scroll";
+import {scrollToBottomListen, throttle} from "../../../utils/scroll";
 
 const userStore = userMainStore()
 const baseStore = baseMainStore()
@@ -86,14 +77,14 @@ const props = defineProps({
 })
 
 let data = ref([])
-let list = ref([])
 let tags = ref([])
 let loading = ref(false)
-let currentPage = ref(1)
-let pageTotal = ref(1)
+let currentPage = 1
 let search = ""
 let time = "new"
 let request = null
+let getDataLock = false
+let isBottom = false
 
 function init() {
   initData()
@@ -104,49 +95,45 @@ function initData() {
   search = props.search
   time = props.time
   tags.value = props.tags
+  scrollToBottomListen(throttle(scrollToBottom, 1000))
+}
+
+function scrollToBottom() {
+  getData()
 }
 
 function getData() {
-  data.value = []
-  list.value = []
+  if (isBottom || getDataLock) {
+    return
+  }
+  getDataLock = true
   loading.value = true
-  getArticleSearch()
+  getColumnSearch()
 }
 
-function getArticleSearch() {
-  get("/v1/get/column/search?page=" + currentPage.value + "&search=" + search + "&time=" + time).then(function (reply) {
-    list.value = reply.data.list
-    pageTotal.value = reply.data.total
-    getStatistic()
-  }).catch(function () {
-    loading.value = false
-  })
-}
-
-function getStatistic() {
-  let ids = []
-  list.value.forEach(function (each) {
-    ids.push("ids=" + each["id"])
-  })
-  get("/v1/get/column/list/statistic?" + ids.join("&")).then(function (reply) {
-    reply.data.count.forEach(function (each) {
-      list.value.forEach(function (item, index) {
-        each.id === item["id"] && (list.value[index] = Object.assign(item, each))
-      })
-    })
+function getColumnSearch() {
+  get("/v1/get/column/search?page=" + currentPage + "&search=" + search + "&time=" + time).then(function (reply) {
+    data.value = data.value.concat(reply.data.list)
+    let size = reply.data.list.length
+    if (size === 0) {
+      isBottom = true
+      return
+    }
+    currentPage += 1
   }).catch(function () {
   }).then(function () {
-    data.value = list.value
     loading.value = false
+    getDataLock = false
   })
 }
 
 function searchChange(s, t, selectTags) {
   search = s
   time = t
-  currentPage.value = 1
+  currentPage = 1
   data.value = []
   tags.value = selectTags
+  isBottom = false
   getData()
 }
 
@@ -154,12 +141,7 @@ defineExpose({
   searchChange
 })
 
-watch(currentPage, () => {
-  scrollTo("search-list")
-  getData()
-})
-
-onMounted(function () {
+onBeforeMount(function () {
   init()
 })
 </script>
@@ -252,11 +234,6 @@ onMounted(function () {
         }
       }
     }
-  }
-
-  .foot {
-    margin-top: 1rem;
-    width: 100%;
   }
 }
 </style>
