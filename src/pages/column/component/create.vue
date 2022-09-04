@@ -126,6 +126,7 @@ let uploadParams = {
   Bucket: column.value.bucket,
   Region: column.value.region,
 }
+let token = null
 
 function open() {
   initData()
@@ -135,6 +136,7 @@ function initData() {
   mode.value = props.mode
   loading.value = false
   draftId.value = props.id
+  token = localStorage.getItem("matrix-token")
   if (mode.value === 'create') {
     title.value = "新建专栏"
     form.value = {name: "", introduce: "", tags: [], cover: "", auth: 1}
@@ -216,7 +218,7 @@ function imageUpload(UploadRequestOptions) {
   let filetype = UploadRequestOptions.file.type.split("/")[1]
   uploadParams["Key"] = column.value.key + uuid.value + "/" + draftId.value + "/cover." + filetype
   uploadParams["Headers"] = {
-    'x-cos-meta-uuid': uuid.value,
+    'x-cos-meta-token': token,
     'Pic-Operations':
         '{"is_pic_info": 1, "rules": [{"fileid": "cover.webp", "rule": "imageMogr2/format/webp/interlace/0/quality/80"}]}'
   }
@@ -263,7 +265,7 @@ function commitCheck(formRef) {
 }
 
 function commit() {
-  if (!uuid.value) {
+  if (!uuid.value && !token) {
     warning("账号未登录，请先登录")
     return
   }
@@ -302,7 +304,7 @@ function commitIntroduce() {
   sending.value = true
   uploadParams["Key"] = column.value.key + uuid.value + "/" + draftId.value + "/introduce" + (mode.value === 'edit' ? "-edit" : "")
   uploadParams["Headers"] = {
-    'x-cos-meta-uuid': uuid.value,
+    'x-cos-meta-token': token,
   }
   uploadParams["Body"] = JSON.stringify(columnParams)
   cos.uploadFile(uploadParams, function (err) {
@@ -319,7 +321,7 @@ function commitSearch() {
   sending.value = true
   uploadParams["Key"] = column.value.key + uuid.value + "/" + draftId.value + "/search"
   uploadParams["Headers"] = {
-    'x-cos-meta-uuid': uuid.value,
+    'x-cos-meta-token': token,
   }
   uploadParams["Body"] = JSON.stringify(searchParams)
   cos.uploadFile(uploadParams, function (err) {
@@ -335,7 +337,7 @@ function commitSearch() {
 function commitColumn() {
   uploadParams["Key"] = column.value.key + uuid.value + "/" + draftId.value + "/content" + (mode.value === 'edit' ? "-edit" : "")
   uploadParams["Headers"] = {
-    'x-cos-meta-uuid': uuid.value,
+    'x-cos-meta-token': token,
     'x-cos-meta-id': draftId.value + "",
     'x-cos-meta-auth': columnParams.auth
   }
