@@ -1,7 +1,7 @@
 <template>
   <el-container class="column-container">
     <el-backtop></el-backtop>
-    <collections-choose v-model:visible="collectionsVisible" v-model:judge="statisticJudge" :id="columnId"
+    <collections-choose v-model:visible="collectionsVisible" :id="columnId"
                         :uuid="authorUuid" :mode="'column'"
                         @collected="collected"></collections-choose>
     <includes-add v-model:visible="includesVisible" :id="columnId"></includes-add>
@@ -28,12 +28,12 @@
               <el-row class="foot" justify="space-between">
                 <el-space>
                   <el-space :size="5" class="icon-block">
-                    <div ref="iconAgree" @click="agreeClick" :class="{'agree-select':statisticClicked['agree']}"
+                    <div ref="iconAgree" @click="agreeClick" :class="{'agree-select':userColumnAgree[columnId]}"
                          class="icon agree-transform">
-                      <svg class="symbol-icon" aria-hidden="true" v-show="!statisticClicked['agree']">
+                      <svg class="symbol-icon" aria-hidden="true" v-show="!userColumnAgree[columnId]">
                         <use :xlink:href="'#icon-like'"></use>
                       </svg>
-                      <svg class="symbol-icon" aria-hidden="true" v-show="statisticClicked['agree']">
+                      <svg class="symbol-icon" aria-hidden="true" v-show="userColumnAgree[columnId]">
                         <use :xlink:href="'#icon-like-fill'"></use>
                       </svg>
                     </div>
@@ -48,23 +48,25 @@
                       }}</span>
                   </el-space>
                   <el-space :size="5" class="icon-block">
-                    <div ref="iconCollect" @click="collectClick" :class="{'collect-select':statisticClicked['collect']}"
+                    <div ref="iconCollect" @click="collectClick" :class="{'collect-select':userColumnCollect[columnId]}"
                          class="icon collect-transform">
-                      <svg class="symbol-icon" aria-hidden="true" v-show="!statisticClicked['collect']">
+                      <svg class="symbol-icon" aria-hidden="true" v-show="!userColumnCollect[columnId]">
                         <use :xlink:href="'#icon-star'"></use>
                       </svg>
-                      <svg class="symbol-icon" aria-hidden="true" v-show="statisticClicked['collect']">
+                      <svg class="symbol-icon" aria-hidden="true" v-show="userColumnCollect[columnId]">
                         <use :xlink:href="'#icon-star-fill'"></use>
                       </svg>
                     </div>
-                    <span class="num">{{ statisticClicked['collect'] ? '已收藏' : '收藏' }}</span>
+                    <span class="num">{{ userColumnCollect[columnId] ? '已收藏' : '收藏' }}</span>
                   </el-space>
                 </el-space>
                 <el-button type="primary" v-if="authorUuid === uuid" @click="includesVisible = true">文章添加</el-button>
-                <el-button :type="subscribeJudge?'info':'primary'" :icon="subscribeJudge?'':'Plus'" v-else
+                <el-button :type="userSubscribeColumn[columnId]?'info':'primary'"
+                           :icon="userSubscribeColumn[columnId]?'':'Plus'" v-else
                            :loading="subscribeLoading"
-                           @click="subscribe()" :text="subscribeJudge" :bg="subscribeJudge">
-                  {{ subscribeJudge ? '取消订阅' : '订阅专栏' }}
+                           @click="subscribe()" :text="userSubscribeColumn[columnId]"
+                           :bg="userSubscribeColumn[columnId]">
+                  {{ userSubscribeColumn[columnId] ? '取消订阅' : '订阅专栏' }}
                 </el-button>
               </el-row>
             </el-row>
@@ -86,7 +88,7 @@ import {goToPage} from "../../utils/globalFunc";
 import {useRoute} from "vue-router";
 import {error, success, warning} from "../../utils/message";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
-import {ref, onMounted} from "vue";
+import {ref, onBeforeMount} from "vue";
 import {get, post} from "../../utils/axios";
 import {animationAgree, animationCollect} from "../../utils/animation";
 import {baseMainStore, userMainStore} from "../../store";
@@ -111,7 +113,6 @@ let iconCollect = ref(null)
 let loading = ref(false)
 let collectionsVisible = ref(false)
 let subscribeLoading = ref(false)
-let subscribeJudge = ref(false)
 let agreeBounce = ref(1);
 let collectBounce = ref(1);
 let agreeAnimation = null
@@ -128,19 +129,14 @@ let statistic = ref({
   "agree": 0,
   "view": 0,
 })
-let statisticJudge = ref({
-  agree: false,
-  collect: false
-})
-let statisticClicked = ref({
-  agree: false,
-  collect: false
-})
+let userColumnAgree = ref({})
+let userColumnCollect = ref({})
+let userSubscribeColumn = ref({})
 
 function init() {
   animation()
   initData()
-  getSubscribeJudge()
+  getUserSubscribe()
   getData()
 }
 
@@ -157,12 +153,12 @@ function initData() {
   }
 }
 
-function getSubscribeJudge() {
+function getUserSubscribe() {
   if (!columnId.value || !uuid.value) {
     return
   }
-  post("/v1/subscribe/column/judge", {id: columnId.value}).then(function (reply) {
-    subscribeJudge.value = reply.data.subscribe
+  get("/v1/get/user/subscribe/column").then(function (reply) {
+    userSubscribeColumn.value = reply.data.subscribe
   })
 }
 
@@ -172,7 +168,7 @@ function getData() {
 
 function getStatistic() {
   loading.value = true
-  get("/v1/get/column/statistic?id=" + columnId.value).then(function (reply) {
+  get("/v1/get/column/statistic?id=" + columnId.value + "&uuid=" + (uuid.value || "")).then(function (reply) {
     authorUuid.value = reply.data.uuid
     statistic.value = reply.data
     setView()
@@ -193,7 +189,8 @@ function getColumn() {
   let url = column.value.baseUrl + authorUuid.value + "/" + columnId.value + "/content"
   get(url).then(function (reply) {
     data.value = reply.data
-    getStatisticJudge()
+    getUserArticleAgree()
+    getUserArticleCollect()
     background(data.value["cover"])
   }).catch(function () {
     columnNotExist()
@@ -202,15 +199,21 @@ function getColumn() {
   })
 }
 
-function getStatisticJudge() {
+function getUserArticleAgree() {
   if (!columnId.value || !uuid.value) {
     return
   }
-  post("/v1/column/statistic/judge", {
-    id: columnId.value
-  }).then(function (reply) {
-    statisticJudge.value = reply.data
-    statisticClicked.value = reply.data
+  get("/v1/get/user/column/agree").then(function (reply) {
+    userColumnAgree.value = reply.data.agree
+  })
+}
+
+function getUserArticleCollect() {
+  if (!columnId.value || !uuid.value) {
+    return
+  }
+  get("/v1/get/user/column/collect").then(function (reply) {
+    userColumnCollect.value = reply.data.collect
   })
 }
 
@@ -232,7 +235,7 @@ function agreeClick() {
   }
 
   clickLock = true
-  if (!statisticJudge.value["agree"]) {
+  if (!userColumnAgree.value[columnId.value]) {
     agreeAdd()
   } else {
     agreeCancel()
@@ -240,34 +243,28 @@ function agreeClick() {
 }
 
 function agreeAdd() {
-  agreeAnimation.play()
-  statisticClicked.value["agree"] = true
-  statistic.value["agree"] += 1
   post("/v1/set/column/agree", {
     id: columnId.value,
     uuid: authorUuid.value,
   }).then(function () {
-    statisticJudge.value["agree"] = true
+    agreeAnimation.play()
+    userColumnAgree.value[columnId.value] = true
+    statistic.value["agree"] += 1
   }).catch(function () {
-    statisticClicked.value["agree"] = false
-    statistic.value["agree"] -= 1
   }).then(function () {
     clickLock = false
   })
 }
 
 function agreeCancel() {
-  agreeAnimation.play()
-  statisticClicked.value["agree"] = false
-  statistic.value["agree"] -= 1
   post("/v1/cancel/column/agree", {
     id: columnId.value,
     uuid: authorUuid.value,
   }).then(function () {
-    statisticJudge.value["agree"] = false
+    agreeAnimation.play()
+    userColumnAgree.value[columnId.value] = false
+    statistic.value["agree"] -= 1
   }).catch(function () {
-    statisticClicked.value["agree"] = true
-    statistic.value["agree"] += 1
   }).then(function () {
     clickLock = false
   })
@@ -282,7 +279,7 @@ function collectClick() {
     return
   }
 
-  if (!statisticJudge.value['collect']) {
+  if (!userColumnCollect.value[columnId.value]) {
     collectAdd()
   } else {
     collectCancel()
@@ -295,17 +292,14 @@ function collectAdd() {
 
 function collectCancel() {
   clickLock = true
-  collectAnimation.play()
-  statisticClicked.value["collect"] = false
-  statistic.value["collect"] -= 1
   post("/v1/cancel/column/collect", {
     id: columnId.value,
     uuid: authorUuid.value,
   }).then(function () {
     collectAnimation.play()
+    userColumnCollect.value[columnId.value] = false
+    statistic.value["collect"] -= 1
   }).catch(function () {
-    statisticClicked.value["collect"] = true
-    statistic.value["collect"] += 1
   }).then(function () {
     clickLock = false
   })
@@ -313,7 +307,7 @@ function collectCancel() {
 
 function collected() {
   collectAnimation.play()
-  statisticClicked.value["collect"] = true
+  userColumnCollect.value[columnId.value] = true
   statistic.value["collect"] += 1
 }
 
@@ -327,7 +321,7 @@ function subscribe() {
     return
   }
 
-  if (subscribeJudge.value) {
+  if (userSubscribeColumn.value[columnId.value]) {
     cancelSubscribe()
   } else {
     setSubscribe()
@@ -336,9 +330,9 @@ function subscribe() {
 
 function setSubscribe() {
   subscribeLoading.value = true
-  post("/v1/subscribe/column", {id: columnId.value, author: authorUuid.value}).then(function () {
+  post("/v1/subscribe/column", {id: columnId.value}).then(function () {
     success("已订阅")
-    subscribeJudge.value = true
+    userSubscribeColumn.value[columnId.value] = true
   }).catch(function () {
     error("订阅出错，请稍后再试")
   }).then(function () {
@@ -350,7 +344,7 @@ function cancelSubscribe() {
   subscribeLoading.value = true
   post("/v1/cancel/subscribe/column", {id: columnId.value}).then(function () {
     success("已取消订阅")
-    subscribeJudge.value = false
+    userSubscribeColumn.value[columnId.value] = false
   }).catch(function () {
     error("取消出错，请稍后再试")
   }).then(function () {
@@ -358,7 +352,7 @@ function cancelSubscribe() {
   })
 }
 
-onMounted(function () {
+onBeforeMount(function () {
   init()
 })
 </script>
@@ -393,8 +387,19 @@ onMounted(function () {
     border-radius: 4px;
     margin-top: 10vh;
 
+    .el-dialog__header {
+      .header {
+        width: 100%;
+
+        .search {
+          width: 200px;
+          margin-right: 20px;
+        }
+      }
+    }
+
     .el-dialog__body {
-      padding: 0 20px
+      padding: 0 20px 80px 20px;
     }
   }
 
