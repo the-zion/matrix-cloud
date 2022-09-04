@@ -55,9 +55,8 @@ export default {
 </script>
 
 <script setup>
-import {ref, watch, onMounted} from "vue";
+import {ref, onBeforeMount} from "vue";
 import {goToPage} from "../../../utils/globalFunc";
-import {confirm} from "../../../utils/globalFunc";
 import {info, success} from "../../../utils/message";
 import {baseMainStore} from "../../../store";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
@@ -73,8 +72,8 @@ let list = ref([])
 let currentPage = 1
 let loading = ref(false)
 let isBottom = false
-let request = 0
 let mode = "new"
+let getDataLock = false
 
 function init() {
   initData()
@@ -95,7 +94,12 @@ function getData() {
     return
   }
 
+  if (getDataLock) {
+    return
+  }
+
   loading.value = true
+  getDataLock = true
   get((mode === "new" ? "/v1/get/column/list?page=" : "/v1/get/column/list/hot?page=") + currentPage).then(function (reply) {
     list.value = reply.data.column
     let size = reply.data.column.length
@@ -103,35 +107,14 @@ function getData() {
       isBottom = true
       info("到最底部啦～")
       loading.value = false
+      getDataLock = false
       return
     }
-    request = 2
     currentPage += 1
-    getStatistic()
     getIntroduce()
-  }).catch(function (){
-    loading.value = false
-  })
-}
-
-function getStatistic() {
-  let ids = []
-  list.value.forEach(function (each) {
-    ids.push("ids=" + each["id"])
-  })
-  get("/v1/get/column/list/statistic?" + ids.join("&")).then(function (reply) {
-    reply.data.count.forEach(function (each) {
-      list.value.forEach(function (item, index) {
-        each.id === item["id"] && (list.value[index] = Object.assign(item, each))
-      })
-    })
   }).catch(function () {
-  }).then(function () {
-    request -= 1
-    if (request === 0) {
-      data.value = data.value.concat(list.value)
-      loading.value = false
-    }
+    loading.value = false
+    getDataLock = false
   })
 }
 
@@ -148,11 +131,9 @@ function getIntroduce() {
     })
   }, function () {
   }, function () {
-    request -= 1
-    if (request === 0) {
-      data.value = data.value.concat(list.value)
-      loading.value = false
-    }
+    data.value = data.value.concat(list.value)
+    loading.value = false
+    getDataLock = false
   })
 }
 
@@ -168,7 +149,7 @@ defineExpose({
   modeChange
 })
 
-onMounted(() => {
+onBeforeMount(() => {
   init()
 })
 </script>
