@@ -1,11 +1,9 @@
 <template>
   <el-row class="collect-list" id="collect-list">
-    <collections-create v-model:visible="visible" v-bind:mode="'edit'" v-bind:id="collectionsId"
-                        @editAfter="editAfter"></collections-create>
+    <collections-create v-model:visible="visible" v-bind:mode="'edit'" v-bind:id="collectionsId"></collections-create>
     <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
               :image-size="250" image="../../src/assets/images/no_data.svg"
     />
-    <el-skeleton class="skeleton" v-show="loading" :rows="2" animated/>
     <el-space class="data" fill :size="0">
       <el-row v-for="item in data" class="each" :key="item.id"
               @click="goToPage('collect', {id:item.id})">
@@ -19,39 +17,9 @@
             </el-space>
           </el-space>
         </el-row>
-        <el-space class="operation" v-if="userId === uuid" size="large" :style="{'display':item['opShow'] || 'none'}">
-          <el-space :size="3" @click.stop="collectionsEdit(item)" class="op">
-            <el-icon>
-              <EditPen/>
-            </el-icon>
-            <span class="word">编辑</span>
-          </el-space>
-          <el-popconfirm title="确认删除该收藏集"
-                         confirm-button-text="确定"
-                         cancel-button-text="取消"
-                         @confirm="collectionsDelete(item)"
-                         @cancel="opCancel(item)"
-          >
-            <template #reference>
-              <el-space :size="3" @click.stop="item['opShow'] = 'inline-flex'" class="op">
-                <el-icon>
-                  <Delete/>
-                </el-icon>
-                <span class="word">删除</span>
-              </el-space>
-            </template>
-          </el-popconfirm>
-        </el-space>
       </el-row>
     </el-space>
-    <el-row class="foot" justify="center" v-if="data.length !== 0 || currentPage > 1">
-      <el-pagination
-          v-model:current-page="currentPage"
-          :page-size="10"
-          layout="prev, pager, next"
-          :total="pageTotal"
-      />
-    </el-row>
+    <el-skeleton class="skeleton" v-show="loading" :rows="2" animated/>
   </el-row>
 </template>
 
@@ -62,100 +30,85 @@ export default {
 </script>
 
 <script setup>
-import {ref, watch, onMounted} from "vue";
-import {goToPage, loginTimeOut} from "../../../utils/globalFunc";
-import {error, success} from "../../../utils/message";
-import {scrollTo} from "../../../utils/scroll";
+import {ref, onBeforeMount} from "vue";
+import {goToPage} from "../../../utils/globalFunc";
 import {useRoute} from "vue-router";
-import {userMainStore} from "../../../store";
+import {baseMainStore, userMainStore} from "../../../store";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
-import {post, get} from "../../../utils/axios";
+import {get, axiosGetAll} from "../../../utils/axios";
 import CollectionsCreate from "./create.vue";
+import {scrollToBottomListen, throttle} from "../../../utils/scroll";
 
-const emits = defineEmits(["current-page"])
+const baseStore = baseMainStore()
 const userStore = userMainStore()
 const {uuid} = storeToRefs(userStore)
+const {avatar, collections} = storeToRefs(baseStore)
+const emits = defineEmits(["row-delete"])
 
 let visible = ref(false)
 let data = ref([])
-let currentPage = ref(1)
-let pageTotal = ref(1)
+let list = ref([])
+let currentPage = 1
 let loading = ref(false)
 let userId = ref()
 let collectionsId = ref()
+let isBottom = ref(false)
+let getDataLock = false
 
 function init() {
   initData()
   getData()
-  getDataCount()
 }
 
 function initData() {
   userId.value = useRoute().query["id"]
+  scrollToBottomListen(throttle(scrollToBottom, 1000))
+}
+
+function scrollToBottom() {
+  getData()
 }
 
 function getData() {
-  if (!userId.value) {
+  if (!userId.value || isBottom.value || getDataLock) {
     return
   }
   loading.value = true
-  data.value = []
-  if (userId.value === uuid.value) {
-    getCollections()
-  } else {
-    getCollectionsVisitor()
-  }
-}
-
-function getDataCount() {
-  if (!userId.value) {
-    return
-  }
-  if (userId.value === uuid.value) {
-    getCollectionsCount()
-  } else {
-    getCollectionsVisitorCount()
-  }
-}
-
-function getCollections() {
-  post("/v1/get/collections", {
-    page: currentPage.value
-  }).then(function (reply) {
-    data.value = reply.data.collections
+  getDataLock = true
+  get("/v1/get/collections/list/visitor?uuid=" + userId.value + "&page=" + currentPage).then(function (reply) {
+    list.value = reply.data.collections
+    let size = reply.data.collections.length
+    if (size === 0) {
+      isBottom.value = true
+      loading.value = false
+      getDataLock = false
+      return
+    }
+    currentPage += 1
+    getContent()
   }).catch(function () {
-    error("获取收藏集失败")
-  }).then(function (){
-    loading.value =false
-  })
-}
-
-function getCollectionsVisitor() {
-  get("/v1/get/collections/visitor?uuid=" + userId.value + "&page=" + currentPage.value).then(function (reply) {
-    data.value = reply.data.collections
-  }).catch(function () {
-    error("获取收藏集失败")
-  }).then(function (){
     loading.value = false
+    getDataLock = false
   })
 }
 
-function getCollectionsCount() {
-  post("/v1/get/collections/count", {}).then(function (reply) {
-    pageTotal.value = reply.data.count
+function getContent() {
+  let endpoints = []
+  list.value.forEach(function (item) {
+    endpoints.push(collections.value.baseUrl + userId.value + "/" + item["id"] + "/content")
   })
-}
-
-function getCollectionsVisitorCount() {
-  get("/v1/get/collections/visitor/count?uuid=" + userId.value).then(function (reply) {
-    pageTotal.value = reply.data.count
+  axiosGetAll(endpoints, function (allData) {
+    allData.forEach(function (each) {
+      list.value.forEach(function (item, index) {
+        each.data.id === item["id"] && (list.value[index] = Object.assign(item, each.data))
+      })
+    })
+  }, function () {
+  }, function () {
+    data.value = data.value.concat(list.value)
+    loading.value = false
+    getDataLock = false
   })
-}
-
-function createAfter() {
-  currentPage.value = 1;
-  getData()
-  getDataCount()
 }
 
 function opCancel(item) {
@@ -164,44 +117,7 @@ function opCancel(item) {
   }, 400)
 }
 
-function collectionsEdit(item) {
-  visible.value = true
-  collectionsId.value = item.id
-}
-
-function collectionsDelete(item) {
-  post("/v1/delete/collections", {
-    id: item.id
-  }).then(function () {
-    success("收藏集已删除")
-    getData()
-  }).catch(function (err) {
-    let response = err.response
-    if (response) {
-      switch (response.data.reason) {
-        case "NOT_EMPTY":
-          error("只允许删除空的收藏集")
-          return
-      }
-    }
-    error("收藏级删除失败")
-  })
-}
-
-function editAfter() {
-  getData()
-}
-
-defineExpose({
-  createAfter
-})
-
-watch(currentPage, () => {
-  scrollTo("collect-list")
-  getData()
-})
-
-onMounted(() => {
+onBeforeMount(() => {
   init()
 })
 </script>
@@ -294,41 +210,7 @@ onMounted(() => {
           }
         }
       }
-
-      .operation {
-        position: absolute;
-        display: none;
-        top: 16px;
-        right: 0;
-        color: var(--el-text-color-placeholder);
-        cursor: pointer;
-
-        .op {
-          .icon {
-            font-size: 20px;
-          }
-
-          .word {
-            font-size: 14px;
-          }
-        }
-
-        .op:hover {
-          color: var(--el-color-primary);
-        }
-      }
     }
-
-    .each:hover {
-      .operation {
-        display: inline-flex !important;
-      }
-    }
-  }
-
-  .foot {
-    margin-top: 1rem;
-    width: 100%;
   }
 }
 </style>
