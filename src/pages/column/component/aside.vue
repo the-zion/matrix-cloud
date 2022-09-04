@@ -41,7 +41,7 @@ export default {
 </script>
 
 <script setup>
-import {onMounted, ref} from "vue"
+import {onBeforeMount, ref} from "vue"
 import {goToPage} from "../../../utils/globalFunc";
 
 const props = defineProps({
@@ -76,7 +76,7 @@ function getData() {
   }
 }
 
-onMounted(function () {
+onBeforeMount(function () {
   init()
 })
 </script>
