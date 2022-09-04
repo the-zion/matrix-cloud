@@ -3,7 +3,6 @@
     <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
               :image-size="250" image="../../src/assets/images/no_data.svg"
     />
-    <el-skeleton class="skeleton" v-show="loading" :rows="2" animated/>
     <el-space class="data" fill :size="0">
       <el-row v-for="item in data" class="each" :key="item.id"
               @click="goToPage('column', {id:item.id})">
@@ -44,24 +43,17 @@
           </el-row>
         </el-row>
         <el-space class="operation" size="large">
-          <el-button :type="item['subscribeJudge'] === 1?'info':'primary'"
-                     :icon="item['subscribeJudge'] === 1?'':'Plus'"
+          <el-button :type="userSubscribeColumn[item.id]?'info':'primary'"
+                     :icon="userSubscribeColumn[item.id]?'':'Plus'"
                      :loading="item['subscribeLoading']"
-                     @click.stop="subscribe(item)" :text="item['subscribeJudge'] === 1"
-                     :bg="item['subscribeJudge'] === 1">
-            {{ item['subscribeJudge'] === 1 ? '取消订阅' : '订阅' }}
+                     @click.stop="subscribe(item)" :text="userSubscribeColumn[item.id]"
+                     :bg="userSubscribeColumn[item.id]">
+            {{ userSubscribeColumn[item.id] ? '取消订阅' : '订阅' }}
           </el-button>
         </el-space>
       </el-row>
     </el-space>
-    <el-row class="foot" justify="center" v-if="data.length !== 0 || currentPage > 1">
-      <el-pagination
-          v-model:current-page="currentPage"
-          :page-size="10"
-          layout="prev, pager, next"
-          :total="pageTotal"
-      />
-    </el-row>
+    <el-skeleton class="skeleton" v-show="loading" :rows="2" animated/>
   </el-row>
 </template>
 
@@ -72,18 +64,16 @@ export default {
 </script>
 
 <script setup>
-import ColumnCreate from "../../column/component/create.vue";
 import {baseMainStore, userMainStore} from "../../../store";
 import {goToPage} from "../../../utils/globalFunc";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
-import {onMounted, ref, watch} from "vue";
-import {useRoute} from "vue-router";
+import {onBeforeMount, ref} from "vue";
 import {axiosGetAll, get, post} from "../../../utils/axios";
 import {error, success, warning} from "../../../utils/message";
-import {scrollTo} from "../../../utils/scroll";
+import {scrollToBottomListen, throttle} from "../../../utils/scroll";
 
 const userStore = userMainStore()
-const emits = defineEmits(["current-page"])
+const emits = defineEmits(["row-delete"])
 const baseStore = baseMainStore()
 const {avatar, column} = storeToRefs(baseStore)
 const {uuid} = storeToRefs(userStore)
@@ -92,76 +82,56 @@ let data = ref([])
 let list = ref([])
 let count = ref({})
 let introduce = ref({})
-let userId = ref()
-let currentPage = ref(1)
-let pageTotal = ref(1)
 let loading = ref(false)
 let visible = ref(false)
+let userSubscribeColumn = ref({})
 let request = 0
+let currentPage = 1
+let isBottom = ref(false)
+let getDataLock = false
 
 function init() {
   initData()
   getData()
-  getDataCount()
+  getUserSubscribe()
 }
 
 function initData() {
-  userId.value = useRoute().query["id"]
+  scrollToBottomListen(throttle(scrollToBottom, 1000))
+}
+
+function scrollToBottom() {
+  getData()
 }
 
 function getData() {
-  if (!userId.value) {
+  if (!uuid.value || isBottom.value || getDataLock) {
     return
   }
   data.value = []
   list.value = []
   loading.value = true
-  getUserSubscribe()
+  getDataLock = true
+  getSubscribe()
 }
 
-function getDataCount() {
-  if (!userId.value) {
-    return
-  }
-  getUserSubscribeCount()
-}
-
-function getUserSubscribe() {
-  get("/v1/get/subscribe/list?page=" + currentPage.value + "&uuid=" + userId.value).then(function (reply) {
+function getSubscribe() {
+  post("/v1/get/subscribe/list", {
+    page: currentPage,
+  }).then(function (reply) {
     list.value = reply.data.subscribe
-    request = 3
-    getStatistic()
-    getIntroduce()
-    getUserSubscribes()
-  }).catch(function (){
-    loading.value = false
-  })
-}
-
-function getUserSubscribeCount() {
-  get("/v1/get/subscribe/list/count?uuid=" + userId.value).then(function (reply) {
-    pageTotal.value = reply.data.count
-  })
-}
-
-function getStatistic() {
-  let ids = []
-  list.value.forEach(function (each) {
-    ids.push("ids=" + each["id"])
-  })
-  get("/v1/get/column/list/statistic?" + ids.join("&")).then(function (reply) {
-    reply.data.count.forEach(function (each) {
-      list.value.forEach(function (item, index) {
-        each.id === item["id"] && (list.value[index] = Object.assign(item, each))
-      })
-    })
-  }).catch(function () {
-  }).then(function () {
-    request -= 1
-    if (request === 0) {
-      data.value = list.value
+    let size = reply.data.subscribe.length
+    if (size === 0) {
+      isBottom.value = true
       loading.value = false
+      getDataLock = false
+      return
     }
+    currentPage += 1
+    getIntroduce()
+  }).catch(function () {
+    loading.value = false
+    getDataLock = false
   })
 }
 
@@ -178,36 +148,18 @@ function getIntroduce() {
     })
   }, function () {
   }, function () {
-    request -= 1
-    if (request === 0) {
-      data.value = list.value
-      loading.value = false
-    }
+    data.value = data.value.concat(list.value)
+    loading.value = false
+    getDataLock = false
   })
 }
 
-function getUserSubscribes() {
-  if (!userId.value) {
+function getUserSubscribe() {
+  if (!uuid.value) {
     return
   }
-
-  let ids = []
-  list.value.forEach(function (each) {
-    ids.push(each["id"])
-  })
-  post("/v1/get/column/subscribes", {ids: ids}).then(function (reply) {
-    reply.data["subscribes"].forEach(function (each) {
-      list.value.forEach(function (item, index) {
-        each.id === item["id"] && (list.value[index] = Object.assign(item, each))
-      })
-    })
-  }).catch(function () {
-  }).then(function () {
-    request -= 1
-    if (request === 0) {
-      data.value = list.value
-      loading.value = false
-    }
+  get("/v1/get/user/subscribe/column").then(function (reply) {
+    userSubscribeColumn.value = reply.data.subscribe
   })
 }
 
@@ -222,7 +174,7 @@ function subscribe(item) {
     return
   }
 
-  if (item['subscribeJudge'] === 1) {
+  if (userSubscribeColumn.value[item.id]) {
     cancelSubscribe(item)
   } else {
     setSubscribe(item)
@@ -231,9 +183,10 @@ function subscribe(item) {
 
 function setSubscribe(item) {
   item['subscribeLoading'] = true
-  post("/v1/subscribe/column", {id: item.id, author: item.uuid}).then(function () {
+  post("/v1/subscribe/column", {id: item.id}).then(function () {
     success("已订阅")
-    item['subscribeJudge'] = 1
+    userSubscribeColumn.value[item.id] = true
+    emits("row-delete", -1)
   }).catch(function () {
     error("订阅出错，请稍后再试")
   }).then(function () {
@@ -245,7 +198,8 @@ function cancelSubscribe(item) {
   item['subscribeLoading'] = true
   post("/v1/cancel/subscribe/column", {id: item.id}).then(function () {
     success("已取消订阅")
-    item['subscribeJudge'] = 2
+    userSubscribeColumn.value[item.id] = false
+    emits("row-delete", 1)
   }).catch(function () {
     error("取消出错，请稍后再试")
   }).then(function () {
@@ -253,12 +207,7 @@ function cancelSubscribe(item) {
   })
 }
 
-watch(currentPage, () => {
-  scrollTo("subscribe-list")
-  getData()
-})
-
-onMounted(function () {
+onBeforeMount(function () {
   init()
 })
 </script>
