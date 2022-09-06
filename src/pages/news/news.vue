@@ -40,7 +40,7 @@ export default {
 </script>
 
 <script setup>
-import {ref, onMounted} from "vue";
+import {ref, onBeforeMount} from "vue";
 import {scrollToBottomListen, throttle} from "../../utils/scroll";
 import {baseMainStore} from "../../store";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
@@ -97,7 +97,7 @@ defineExpose({
   modeChange
 })
 
-onMounted(() => {
+onBeforeMount(() => {
   init()
 })
 </script>
