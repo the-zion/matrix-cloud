@@ -21,7 +21,7 @@ export default {
 </script>
 
 <script setup>
-import {ref, onMounted} from "vue";
+import {ref, onBeforeMount} from "vue";
 
 import {validatePassword} from "../../../utils/check";
 
@@ -50,7 +50,7 @@ function checkRepeat(value) {
   return value === form.value.password
 }
 
-onMounted(function () {
+onBeforeMount(function () {
   emits("open", form.value, formRef.value)
 })
 </script>
