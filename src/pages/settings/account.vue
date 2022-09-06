@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from "vue"
+import {onBeforeMount, ref} from "vue"
 import AccountBind from "./component/bind.vue"
 import AccountUnbind from "./component/unbind.vue"
 import PasswordEdit from "./component/password-edit.vue"
@@ -114,7 +114,7 @@ function dialogClose() {
   getData()
 }
 
-onMounted(function () {
+onBeforeMount(function () {
   init()
 })
 </script>
