@@ -1,38 +1,6 @@
 <template>
   <el-container class="home-container" v-if="page">
     <el-backtop></el-backtop>
-<!--    <el-row class="tags" justify="center" align="middle" v-if="page !== 'news'">-->
-<!--      <el-row class="area" justify="space-between" align="middle">-->
-<!--        <el-space class="block" :size="20">-->
-<!--          <span v-for="item in tags" class="label" :class="{'select': item === currentTag}" @click="currentTag = item">{{-->
-<!--              item-->
-<!--            }}</span>-->
-<!--        </el-space>-->
-<!--        <el-space :size="3" class="filter" @click="tagFilter = true">-->
-<!--          <el-icon>-->
-<!--            <Filter/>-->
-<!--          </el-icon>-->
-<!--          <span>筛选器</span>-->
-<!--        </el-space>-->
-<!--        <el-dialog-->
-<!--            v-model="tagFilter"-->
-<!--            destroy-on-close-->
-<!--            :width="480"-->
-<!--            custom-class="tag-filter-dialog"-->
-<!--            @close="tagFilter = false"-->
-
-<!--        >-->
-<!--          <matrix-tag v-model:selectedTags="selectedTags"></matrix-tag>-->
-<!--          <template #footer>-->
-<!--          <span>-->
-<!--            <el-button @click="tagFilter = false" round>取消</el-button>-->
-<!--            <el-button @click="filterByTags" round type="primary"-->
-<!--            >确定</el-button>-->
-<!--          </span>-->
-<!--          </template>-->
-<!--        </el-dialog>-->
-<!--      </el-row>-->
-<!--    </el-row>-->
     <el-row class="menu" justify="space-between">
       <el-row v-for="item in menu" :key="item.key" class="menu-item" @click="select(item)">
         <span class="label" :class="{'select':page === item.key}">{{ item.label }}</span>
@@ -66,7 +34,7 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from "vue"
+import {onBeforeMount, ref} from "vue"
 import router from "../../router";
 import {useRoute, onBeforeRouteLeave} from "vue-router";
 import LeaderBoard from "./component/leaderboard.vue"
@@ -81,9 +49,6 @@ const {images} = storeToRefs(baseStore)
 let listRef = ref()
 let page = ref()
 let mode = ref("new")
-let currentTag = ref("全部")
-let tagFilter = ref(false)
-let selectedTags = ref([])
 let menu = ref([{
   key: "news",
   label: "技术头条",
@@ -120,10 +85,6 @@ function select(item) {
   router.push({name: "home", query: {page: item.key}})
 }
 
-function filterByTags() {
-
-}
-
 function modeChange(m) {
   mode.value = m
   listRef.value.modeChange(m)
@@ -134,7 +95,7 @@ onBeforeRouteLeave((to, from) => {
 })
 
 
-onMounted(function () {
+onBeforeMount(function () {
   init()
 })
 
