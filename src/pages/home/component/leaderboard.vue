@@ -30,7 +30,7 @@ export default {
 </script>
 
 <script setup>
-import {onMounted, ref} from "vue"
+import {onBeforeMount, ref} from "vue"
 import {goToPage} from "../../../utils/globalFunc";
 import {get} from "../../../utils/axios";
 import {baseMainStore} from "../../../store";
@@ -52,10 +52,10 @@ function init() {
 function getData() {
   loading.value = true
   get("/v1/get/leaderboard").then(function (reply) {
-    list = reply.data['board']
+    list = reply.data['board'].slice(0, 9)
     request = list.length
     getIntroduce(list)
-  }).catch(function (){
+  }).catch(function () {
     loading.value = false
   })
 }
@@ -121,7 +121,7 @@ function getColumnIntroduce(item, index) {
   })
 }
 
-onMounted(function () {
+onBeforeMount(function () {
   init()
 })
 </script>
