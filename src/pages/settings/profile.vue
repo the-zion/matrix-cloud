@@ -92,7 +92,7 @@
 
 <script setup>
 
-import {onMounted, ref} from "vue"
+import {onBeforeMount, ref} from "vue"
 import {error, success, warning} from "../../utils/message";
 import {get, post} from "../../utils/axios";
 import {initCos} from "../../utils/cos";
@@ -216,7 +216,7 @@ function toUpdate() {
 }
 
 
-onMounted(function () {
+onBeforeMount(function () {
   init()
 })
 
