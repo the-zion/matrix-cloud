@@ -26,7 +26,7 @@ export default {
 </script>
 
 <script setup>
-import {onMounted, ref} from "vue"
+import {onBeforeMount, ref} from "vue"
 import {validateAccount, validatePassword, validateCode} from "../../../utils/check";
 import {post} from "../../../utils/axios";
 import {error, success} from "../../../utils/message";
@@ -102,7 +102,7 @@ function countDown() {
   }, 1000)
 }
 
-onMounted(function () {
+onBeforeMount(function () {
   emits("open", form.value, formRef.value)
   init()
 })
