@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from "vue"
+import {onBeforeMount, ref} from "vue"
 import {useRoute} from "vue-router";
 import {backToHome} from "../../utils/globalFunc";
 
@@ -39,7 +39,7 @@ function initData() {
   description.value = useRoute().query["description"]
 }
 
-onMounted(function () {
+onBeforeMount(function () {
   init()
 })
 
