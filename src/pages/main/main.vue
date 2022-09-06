@@ -18,7 +18,8 @@
         <el-input v-if="activeMenu !== 'search'" :maxlength="100" v-model="search" class="search" placeholder="搜索"
                   suffix-icon="search"
                   @change="searchChange"></el-input>
-        <el-dropdown split-button type="primary" trigger="click" v-show="uuid">
+        <el-dropdown split-button type="primary" trigger="click" v-show="uuid"
+                     @click="router.push({name: 'creation'})">
           创作中心
           <template #dropdown>
             <el-dropdown-menu>
@@ -45,7 +46,7 @@
             </el-icon>
           </el-badge>
           <el-dropdown size="large" placement="bottom-end" @command="dropdownClick"
-                       popper-class="dropdown">
+                       popper-class="dropdown" trigger="hover">
             <el-avatar class="main-user-image" :size="30" icon="UserFilled"
                        :src="avatar.baseUrl + uuid + '/avatar.webp'"></el-avatar>
             <template #dropdown>
@@ -73,13 +74,12 @@
 import {goToPage} from "../../utils/globalFunc";
 import {backToHome} from "../../utils/globalFunc";
 import {useRoute} from "vue-router";
-import {ref, onMounted} from "vue";
+import {ref, onBeforeMount} from "vue";
 import {storeToRefs} from "pinia/dist/pinia";
 import Login from './component/login.vue';
 import Dropdown from './component/dropdown.vue';
 import router from "../../router";
 import {userMainStore, baseMainStore} from "../../store";
-import {info} from "../../utils/message";
 
 const userStore = userMainStore()
 const baseStore = baseMainStore()
@@ -156,13 +156,12 @@ function searchChange(s) {
   goToPage("search", {search: s})
 }
 
-onMounted(function () {
+onBeforeMount(function () {
   init()
 })
 
 router.afterEach(function (route) {
   activeMenu.value = route.name.split(".")[0]
-  console.log(activeMenu.value)
 })
 
 </script>
