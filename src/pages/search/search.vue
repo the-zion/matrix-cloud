@@ -83,11 +83,12 @@
 
 <script setup>
 import {ref, onBeforeUnmount, onMounted} from "vue";
-import {useRoute} from "vue-router";
+import {onBeforeRouteLeave, useRoute} from "vue-router";
 import ArticleSearchList from "../article/component/search.vue";
 import TalkSearchList from "../talk/component/search.vue";
 import ColumnSearchList from "../column/component/search.vue";
 import UserSearchList from "../user/component/search.vue";
+import {removeScrollToBottomListen} from "../../utils/scroll";
 
 let mainBody = null
 let listRef = ref()
@@ -151,6 +152,7 @@ function timeChange(time) {
 }
 
 function menuChange(key) {
+  removeScrollToBottomListen()
   if (key === 'user') {
     selectedTags.value = []
     timeSelect.value = "new"
@@ -164,6 +166,10 @@ function searchBuild() {
   }
   return [input.value, selectedTags.value.join(" ")].join(" ")
 }
+
+onBeforeRouteLeave((to, from) => {
+  removeScrollToBottomListen()
+})
 
 onBeforeUnmount(function () {
   mainBody.style.padding = "20px"
