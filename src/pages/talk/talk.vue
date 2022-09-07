@@ -1,7 +1,7 @@
 <template>
   <el-container class="talk-container">
     <el-backtop></el-backtop>
-    <collections-choose v-model:visible="collectionsVisible" v-model:judge="statisticJudge" :id="talkId"
+    <collections-choose v-model:visible="collectionsVisible" :id="talkId"
                         :uuid="authorUuid" :mode="'talk'"
                         @collected="collected"></collections-choose>
     <el-row class="talk-main">
@@ -37,33 +37,33 @@
           <el-row class="footer" justify="space-between">
             <el-space>
               <el-space :size="5" class="icon-block">
-                <div ref="iconAgree" @click="agreeClick" :class="{'agree-select':statisticClicked['agree']}"
+                <div ref="iconAgree" @click="agreeClick" :class="{'agree-select':userTalkAgree[talkId]}"
                      class="icon agree-transform">
-                  <svg class="symbol-icon" aria-hidden="true" v-show="!statisticClicked['agree']">
+                  <svg class="symbol-icon" aria-hidden="true" v-show="!userTalkAgree[talkId]">
                     <use :xlink:href="'#icon-like'"></use>
                   </svg>
-                  <svg class="symbol-icon" aria-hidden="true" v-show="statisticClicked['agree']">
+                  <svg class="symbol-icon" aria-hidden="true" v-show="userTalkAgree[talkId]">
                     <use :xlink:href="'#icon-like-fill'"></use>
                   </svg>
                 </div>
                 <span class="num">{{
-                    statistic.agree > 1000 ? (statistic.agree / 1000).toFixed(1) + "k" : statistic.agree
+                    statistic.agree > 1000 ? (statistic.agree / 1000).toFixed(1) + "k" : statistic.agree || 0
                   }}</span>
               </el-space>
               <el-space :size="5" class="icon-block">
-                <div ref="iconCollect" @click="collectClick" :class="{'collect-select':statisticClicked['collect']}"
+                <div ref="iconCollect" @click="collectClick" :class="{'collect-select':userTalkCollect[talkId]}"
                      class="icon collect-transform">
-                  <svg class="symbol-icon" aria-hidden="true" v-show="!statisticClicked['collect']">
+                  <svg class="symbol-icon" aria-hidden="true" v-show="!userTalkCollect[talkId]">
                     <use :xlink:href="'#icon-star'"></use>
                   </svg>
-                  <svg class="symbol-icon" aria-hidden="true" v-show="statisticClicked['collect']">
+                  <svg class="symbol-icon" aria-hidden="true" v-show="userTalkCollect[talkId]">
                     <use :xlink:href="'#icon-star-fill'"></use>
                   </svg>
                 </div>
-                <span class="num">{{ statisticClicked['collect'] ? '已收藏' : '收藏' }}</span>
+                <span class="num">{{ userTalkCollect[talkId] ? '已收藏' : '收藏' }}</span>
               </el-space>
             </el-space>
-            <el-row class="reply" @click="comment">
+            <el-row class="reply" @click="comment" v-if="data['auth'] !== 2">
               <el-icon class="icon" :size="20" color="var(--el-text-color-placeholder)">
                 <EditPen/>
               </el-icon>
@@ -71,13 +71,13 @@
             </el-row>
           </el-row>
         </el-affix>
-        <el-row class="reply-block" v-if="visible" id="reply-block">
-          <matrix-reply></matrix-reply>
+        <el-row class="reply-block" v-if="visible && data['auth'] !== 2" id="reply-block">
+          <matrix-reply :creationId="talkId" :creationType="3"></matrix-reply>
         </el-row>
       </el-row>
-      <el-row class="statistic-block" justify="space-between" align="middle">
-        <span class="word">{{ "共" + data.comment + "个回复" }}</span>
-        <el-select class="select" v-model="select">
+      <el-row class="statistic-block" justify="space-between" align="middle" v-if="data['auth'] !== 2">
+        <span class="word">{{ "共" + (statistic.comment || 0) + "个回复" }}</span>
+        <el-select class="select" v-model="select" @change="selectChange">
           <el-option
               v-for="item in options"
               :key="item.value"
@@ -86,8 +86,8 @@
           />
         </el-select>
       </el-row>
-      <el-row class="comment-block">
-        <matrix-comment shape="card"></matrix-comment>
+      <el-row class="comment-block" v-if="data['auth'] !== 2">
+        <matrix-comment shape="card" :creationId="talkId" :creationType="3" ref="commentRef"></matrix-comment>
       </el-row>
     </el-row>
     <el-affix>
@@ -101,13 +101,13 @@
 <script setup>
 import Aside from "./component/aside.vue"
 import {goToPage} from "../../utils/globalFunc"
-import {scrollTo} from "../../utils/scroll";
-import {useRoute} from "vue-router";
+import {removeScrollToBottomListen, scrollTo} from "../../utils/scroll";
+import {onBeforeRouteLeave, useRoute} from "vue-router";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {warning} from "../../utils/message";
 import {get, post} from "../../utils/axios";
 import {animationAgree, animationCollect} from "../../utils/animation";
-import {ref, onBeforeUnmount, shallowRef, onMounted} from "vue"
+import {ref, onBeforeUnmount, shallowRef, onBeforeMount} from "vue"
 import {Editor} from '@wangeditor/editor-for-vue'
 import {baseMainStore, userMainStore} from "../../store";
 import router from "../../router";
@@ -126,6 +126,7 @@ const {avatar, talk} = storeToRefs(baseStore)
 
 let talkId = ref()
 let authorUuid = ref()
+let commentRef = ref()
 let user = ref({})
 let affix = ref(false)
 let visible = ref(false)
@@ -162,14 +163,8 @@ let options = ref([
     value: "new"
   }
 ])
-let statisticJudge = ref({
-  agree: false,
-  collect: false
-})
-let statisticClicked = ref({
-  agree: false,
-  collect: false
-})
+let userTalkAgree = ref({})
+let userTalkCollect = ref({})
 
 function init() {
   animation()
@@ -200,7 +195,7 @@ function getData() {
 
 function getStatistic() {
   loading.value = true
-  get("/v1/get/talk/statistic?id=" + talkId.value).then(function (reply) {
+  get("/v1/get/talk/statistic?id=" + talkId.value + "&uuid=" + (uuid.value || "")).then(function (reply) {
     authorUuid.value = reply.data.uuid
     statistic.value = reply.data
     setView()
@@ -218,7 +213,7 @@ function setView() {
 }
 
 function getUserInfo() {
-  get("/v1/get/user/info?uuid=" + authorUuid.value).then(function (reply) {
+  get("/v1/get/user/info/visitor?uuid=" + authorUuid.value).then(function (reply) {
     user.value = reply.data
     getTalk()
   }).catch(function () {
@@ -231,7 +226,8 @@ function getTalk() {
   get(url).then(function (reply) {
     data.value = reply.data
     editorRef.value.setHtml(data.value["html"])
-    getStatisticJudge()
+    getUserTalkAgree()
+    getUserTalkCollect()
   }).catch(function () {
     talkNotExist()
   }).then(function () {
@@ -239,15 +235,21 @@ function getTalk() {
   })
 }
 
-function getStatisticJudge() {
+function getUserTalkAgree() {
   if (!talkId.value || !uuid.value) {
     return
   }
-  post("/v1/talk/statistic/judge", {
-    id: talkId.value
-  }).then(function (reply) {
-    statisticJudge.value = reply.data
-    statisticClicked.value = reply.data
+  get("/v1/get/user/talk/agree").then(function (reply) {
+    userTalkAgree.value = reply.data.agree
+  })
+}
+
+function getUserTalkCollect() {
+  if (!talkId.value || !uuid.value) {
+    return
+  }
+  get("/v1/get/user/talk/collect").then(function (reply) {
+    userTalkCollect.value = reply.data.collect
   })
 }
 
@@ -261,7 +263,7 @@ function agreeClick() {
   }
 
   clickLock = true
-  if (!statisticJudge.value["agree"]) {
+  if (!userTalkAgree.value[talkId.value]) {
     agreeAdd()
   } else {
     agreeCancel()
@@ -269,34 +271,28 @@ function agreeClick() {
 }
 
 function agreeAdd() {
-  agreeAnimation.play()
-  statisticClicked.value["agree"] = true
-  statistic.value["agree"] += 1
   post("/v1/set/talk/agree", {
     id: talkId.value,
     uuid: authorUuid.value,
   }).then(function () {
-    statisticJudge.value["agree"] = true
+    agreeAnimation.play()
+    userTalkAgree.value[talkId.value] = true
+    statistic.value["agree"] += 1
   }).catch(function () {
-    statisticClicked.value["agree"] = false
-    statistic.value["agree"] -= 1
   }).then(function () {
     clickLock = false
   })
 }
 
 function agreeCancel() {
-  agreeAnimation.play()
-  statisticClicked.value["agree"] = false
-  statistic.value["agree"] -= 1
   post("/v1/cancel/talk/agree", {
     id: talkId.value,
     uuid: authorUuid.value,
   }).then(function () {
-    statisticJudge.value["agree"] = false
+    agreeAnimation.play()
+    userTalkAgree.value[talkId.value] = false
+    statistic.value["agree"] -= 1
   }).catch(function () {
-    statisticClicked.value["agree"] = true
-    statistic.value["agree"] += 1
   }).then(function () {
     clickLock = false
   })
@@ -311,7 +307,7 @@ function collectClick() {
     return
   }
 
-  if (!statisticJudge.value['collect']) {
+  if (!userTalkCollect.value[talkId.value]) {
     collectAdd()
   } else {
     collectCancel()
@@ -324,17 +320,14 @@ function collectAdd() {
 
 function collectCancel() {
   clickLock = true
-  collectAnimation.play()
-  statisticClicked.value["collect"] = false
-  statistic.value["collect"] -= 1
   post("/v1/cancel/talk/collect", {
     id: talkId.value,
     uuid: authorUuid.value,
   }).then(function () {
     collectAnimation.play()
+    userTalkCollect.value[talkId.value] = false
+    statistic.value["collect"] -= 1
   }).catch(function () {
-    statisticClicked.value["collect"] = true
-    statistic.value["collect"] += 1
   }).then(function () {
     clickLock = false
   })
@@ -342,7 +335,7 @@ function collectCancel() {
 
 function collected() {
   collectAnimation.play()
-  statisticClicked.value["collect"] = true
+  userTalkCollect.value[talkId.value] = true
   statistic.value["collect"] += 1
 }
 
@@ -363,7 +356,11 @@ function comment() {
   }
 }
 
-onMounted(function () {
+function selectChange(value) {
+  commentRef.value.modeChange(value)
+}
+
+onBeforeMount(function () {
   init()
 })
 
@@ -371,6 +368,10 @@ onBeforeUnmount(function () {
   const editor = editorRef.value
   if (editor == null) return
   editor.destroy()
+})
+
+onBeforeRouteLeave((to, from) => {
+  removeScrollToBottomListen()
 })
 </script>
 
@@ -391,6 +392,7 @@ onBeforeUnmount(function () {
 
   .talk-main {
     width: 734px;
+    margin-bottom: 200px;
 
     .talk-block {
       width: 100%;
