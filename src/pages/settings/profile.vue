@@ -73,7 +73,8 @@
               </el-tooltip>
             </el-row>
           </template>
-          <el-avatar :src="tempAvatarUrl || form.avatar || avatar.baseUrl + uuid + '/avatar.webp'" :size="90" shape="square">
+          <el-avatar :src="tempAvatarUrl || form.avatar || avatar.baseUrl + uuid + '/avatar.webp'" :size="90"
+                     shape="square">
             <el-icon :size="50">
               <UserFilled/>
             </el-icon>
@@ -120,9 +121,16 @@ let form = ref({
   introduce: "",
   status: 1,
 })
+let token = null
+
 
 function init() {
+  initData()
   getData()
+}
+
+function initData() {
+  token = localStorage.getItem("matrix-token")
 }
 
 function getData() {
@@ -146,7 +154,7 @@ function beforeAvatarUpload(rawFile) {
 
 
 function avatarUpload(UploadRequestOptions) {
-  if (!uuid.value) {
+  if (!uuid.value || !token) {
     warning("账号未登录，请先登录")
     return
   }
@@ -159,7 +167,7 @@ function avatarUpload(UploadRequestOptions) {
     Region: avatar.value.region,
     Key: avatar.value.key + uuid.value + "/avatar." + filetype,
     Headers: {
-      'x-cos-meta-uuid': uuid.value,
+      'x-cos-meta-token': token,
     },
     Body: file,
     onProgress: function (progressData) {
