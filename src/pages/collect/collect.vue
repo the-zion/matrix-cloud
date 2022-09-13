@@ -49,7 +49,6 @@
 <script setup>
 import {get} from "../../utils/axios";
 import {onBeforeRouteLeave, useRoute} from "vue-router";
-import {initCos} from "../../utils/cos";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {onBeforeMount, ref} from "vue"
 import {baseMainStore, userMainStore} from "../../store";
@@ -59,10 +58,9 @@ import TalkCollectList from "../talk/component/collect.vue";
 import ColumnCollectList from "../column/component/collect.vue";
 import {removeScrollToBottomListen} from "../../utils/scroll";
 
-const cos = initCos()
 const userStore = userMainStore()
 const baseStore = baseMainStore()
-const {uuid} = storeToRefs(userStore)
+const {uuid, cos} = storeToRefs(userStore)
 const {collections, avatar} = storeToRefs(baseStore)
 
 let collectionsId = ref()
