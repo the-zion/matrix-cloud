@@ -101,7 +101,23 @@ let menu = ref([{
   key: "review",
   label: "违规审核",
   icon: "avatar",
-  router: "creation.review"
+  unfold: true,
+  children: [{
+    key: "picture",
+    label: "图片审核",
+    router: "creation.picture",
+    query: {menu: 'avatar'}
+  }, {
+    key: "review",
+    label: "创作审核",
+    router: "creation.review",
+    query: {menu: 'article'}
+  },{
+    key: "comment",
+    label: "评论审核",
+    router: "creation.comment",
+    query: {menu: 'comment'}
+  }],
 }])
 
 function menuSelect(each) {
@@ -153,7 +169,7 @@ onBeforeMount(function () {
   flex-direction: column;
   background-color: var(--el-color-white);
   padding: 8px;
-  height: 600px;
+  height: 700px;
 
   .navigation-block {
     width: 100%;
