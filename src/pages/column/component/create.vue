@@ -95,11 +95,8 @@ import {baseMainStore, userMainStore} from "../../../store";
 import {storeToRefs} from "pinia/dist/pinia";
 import {ref} from "vue";
 import {error, success, warning} from "../../../utils/message";
-import {initCos} from "../../../utils/cos";
 import {get, post} from "../../../utils/axios";
-import router from "../../../router";
 
-const cos = initCos()
 const emits = defineEmits(["update:visible", "createAfter", "editAfter"])
 const props = defineProps({
   mode: String,
@@ -108,7 +105,7 @@ const props = defineProps({
 })
 const baseStore = baseMainStore()
 const userStore = userMainStore()
-const {uuid} = storeToRefs(userStore)
+const {uuid, cos} = storeToRefs(userStore)
 const {column} = storeToRefs(baseStore)
 
 let draftId = ref()
@@ -143,7 +140,7 @@ function initData() {
     getLastDraft()
   } else {
     title.value = "编辑专栏"
-    getData()
+    getDataEdit()
   }
 }
 
@@ -192,6 +189,33 @@ function getData() {
   })
 }
 
+function getDataEdit() {
+  if (!uuid.value) {
+    warning("账号未登录，请先登录")
+    return
+  }
+
+  if (!draftId.value) {
+    error("专栏信息获取失败")
+    return
+  }
+
+  loading.value = true
+  let url = column.value.baseUrl + uuid.value + "/" + draftId.value + "/content-edit"
+  get(url).then(function (reply) {
+    let data = reply.data
+    form.value["id"] = data["id"]
+    form.value["name"] = data["name"]
+    form.value["introduce"] = data["introduce"]
+    form.value["cover"] = data["cover"] || ""
+    form.value["tags"] = data["tags"] ? data["tags"].split(";") : []
+    form.value["auth"] = data["auth"] || 1
+    loading.value = false
+  }).catch(function () {
+    getData()
+  })
+}
+
 function CreateDraft() {
   post("/v1/create/column/draft", {}).then(function (reply) {
     draftId.value = reply.data.id
@@ -202,7 +226,7 @@ function CreateDraft() {
 }
 
 function imageUpload(UploadRequestOptions) {
-  if (!uuid.value) {
+  if (!uuid.value || !token) {
     warning("账号未登录，请先登录")
     return
   }
@@ -219,6 +243,8 @@ function imageUpload(UploadRequestOptions) {
   uploadParams["Key"] = column.value.key + uuid.value + "/" + draftId.value + "/cover." + filetype
   uploadParams["Headers"] = {
     'x-cos-meta-token': token,
+    'x-cos-meta-id': draftId.value,
+    'x-cos-meta-kind': "cover",
     'Pic-Operations':
         '{"is_pic_info": 1, "rules": [{"fileid": "cover.webp", "rule": "imageMogr2/format/webp/interlace/0/quality/80"}]}'
   }
@@ -226,7 +252,7 @@ function imageUpload(UploadRequestOptions) {
   uploadParams["onProgress"] = function (progressData) {
     percentage.value = progressData.percent * 100
   }
-  cos.uploadFile(uploadParams, function (err) {
+  cos.value.uploadFile(uploadParams, function (err) {
     uploading.value = false
     if (err) {
       error("封面上传失败，请稍后再试")
@@ -307,7 +333,7 @@ function commitIntroduce() {
     'x-cos-meta-token': token,
   }
   uploadParams["Body"] = JSON.stringify(columnParams)
-  cos.uploadFile(uploadParams, function (err) {
+  cos.value.uploadFile(uploadParams, function (err) {
     if (err) {
       error("专栏发布失败")
       sending.value = false
@@ -324,7 +350,7 @@ function commitSearch() {
     'x-cos-meta-token': token,
   }
   uploadParams["Body"] = JSON.stringify(searchParams)
-  cos.uploadFile(uploadParams, function (err) {
+  cos.value.uploadFile(uploadParams, function (err) {
     if (err) {
       error("专栏发布失败")
       sending.value = false
@@ -339,10 +365,12 @@ function commitColumn() {
   uploadParams["Headers"] = {
     'x-cos-meta-token': token,
     'x-cos-meta-id': draftId.value + "",
-    'x-cos-meta-auth': columnParams.auth
+    'x-cos-meta-auth': columnParams.auth,
+    'x-cos-meta-title': encodeURIComponent(form.value.name),
+    'x-cos-meta-kind': mode.value,
   }
   uploadParams["Body"] = JSON.stringify(columnParams)
-  cos.uploadFile(uploadParams, function (err) {
+  cos.value.uploadFile(uploadParams, function (err) {
     if (err) {
       error("专栏发布失败")
       sending.value = false
