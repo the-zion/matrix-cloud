@@ -32,7 +32,6 @@ import {onBeforeUnmount, ref, shallowRef, onBeforeMount} from 'vue'
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 import {get, post} from "../../utils/axios";
 import {success, error, warning} from "../../utils/message";
-import {initCos} from "../../utils/cos";
 import {baseMainStore, userMainStore} from "../../store";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 
@@ -82,10 +81,10 @@ const props = defineProps({
     default: 0
   }
 })
-const cos = initCos()
+
 const userStore = userMainStore()
 const baseStore = baseMainStore()
-const {uuid} = storeToRefs(userStore)
+const {uuid, cos} = storeToRefs(userStore)
 const {comment} = storeToRefs(baseStore)
 
 let draftId = ref()
@@ -186,7 +185,9 @@ function commitContent() {
   uploadParams["Key"] = comment.value.key + uuid.value + "/" + draftId.value + "/content"
   uploadParams["Headers"] = {
     'x-cos-meta-token': token,
-    'x-cos-meta-id': draftId.value + ""
+    'x-cos-meta-id': draftId.value + "",
+    'x-cos-meta-comment': encodeURIComponent(editorRef.value.getText().slice(0, 50)),
+    'x-cos-meta-kind': mode,
   }
   if (mode === 'comment') {
     uploadParams["Headers"]['x-cos-meta-creationId'] = creationId
@@ -199,7 +200,7 @@ function commitContent() {
   }
 
   uploadParams["Body"] = JSON.stringify(commentParams)
-  cos.uploadFile(uploadParams, function (err) {
+  cos.value.uploadFile(uploadParams, function (err) {
     if (err) {
       error("评论发布失败")
       return
