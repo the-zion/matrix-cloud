@@ -55,7 +55,7 @@
         >
           <draft @draftSelect="draftSelect"></draft>
         </el-drawer>
-        <el-input placeholder="请输入标题" class="title" v-model="title"/>
+        <el-input :maxlength="50" placeholder="请输入标题" class="title" v-model="title"/>
         <Editor
             v-loading="loading"
             class="editor"
@@ -80,18 +80,15 @@ import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 import {success, info, warning, error} from "../../utils/message";
 import {customCheckVideoFn, customParseVideoSrc} from "../../utils/video";
 import {get, post} from "../../utils/axios"
-import {initCos} from "../../utils/cos";
 import Draft from './component/draft.vue'
 import Form from './component/form.vue'
 import {userMainStore, baseMainStore} from "../../store";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {useRoute} from "vue-router";
 
-
-const cos = initCos()
 const userStore = userMainStore()
 const baseStore = baseMainStore()
-const {uuid} = storeToRefs(userStore)
+const {uuid, cos} = storeToRefs(userStore)
 const {article} = storeToRefs(baseStore)
 const editorRef = shallowRef()
 const valueHtml = ref('')
@@ -142,6 +139,7 @@ let uploadParams = {
   Bucket: article.value.bucket,
   Region: article.value.region,
 }
+let token = null
 
 function handleCreated(editor) {
   editorRef.value = editor
@@ -196,7 +194,7 @@ function draftMark() {
 }
 
 function imageUpload(file, insertFn) {
-  if (!uuid.value) {
+  if (!uuid.value || !token) {
     warning("账号未登录，请先登录")
     return
   }
@@ -212,7 +210,10 @@ function imageUpload(file, insertFn) {
   uploading.value = true
   uploadParams["Key"] = article.value.key + uuid.value + "/" + draftId.value + "/" + imageId + "." + filetype
   uploadParams["Headers"] = {
-    'x-cos-meta-uuid': uuid.value,
+    'x-cos-meta-token': token,
+    'x-cos-meta-id': draftId.value,
+    'x-cos-meta-kind': "content",
+    'x-cos-meta-uid': imageId,
     'Pic-Operations':
         '{"is_pic_info": 1, "rules": [{"fileid": ' + '"' + imageId + ".webp" + '", "rule": "imageMogr2/format/webp/interlace/0/quality/80"}]}',
   }
@@ -220,7 +221,7 @@ function imageUpload(file, insertFn) {
   uploadParams["onProgress"] = function (progressData) {
     percentage.value = progressData.percent * 100
   }
-  cos.uploadFile(uploadParams, function (err) {
+  cos.value.uploadFile(uploadParams, function (err) {
     uploading.value = false
     if (err) {
       error("图片上传失败，请稍后再试")
@@ -248,7 +249,7 @@ function editSave(fn) {
     'x-cos-meta-uuid': uuid.value,
   }
   uploadParams["Body"] = JSON.stringify(uploadBox)
-  cos.uploadFile(uploadParams, fn)
+  cos.value.uploadFile(uploadParams, fn)
 }
 
 onBeforeUnmount(() => {
@@ -261,12 +262,13 @@ onBeforeUnmount(() => {
 function init() {
   initData()
   mode.value === 'create' && getLastDraft()
-  mode.value === 'edit' && getData()
+  mode.value === 'edit' && getDataEdit()
 }
 
 function initData() {
   mode.value = useRoute().query["mode"]
   draftId.value = parseInt(useRoute().query["id"])
+  token = localStorage.getItem("matrix-token")
 }
 
 function getLastDraft() {
@@ -321,6 +323,32 @@ function getData() {
     error("稿件获取失败")
   }).then(function () {
     loading.value = false
+  })
+}
+
+function getDataEdit() {
+  if (!uuid.value) {
+    warning("账号未登录，请先登录")
+    return
+  }
+
+  if (!draftId.value) {
+    error("稿件获取失败")
+    return
+  }
+
+  loading.value = true
+  let url = article.value.baseUrl + uuid.value + "/" + draftId.value + "/content-edit"
+  get(url).then(function (reply) {
+    let data = reply.data
+    let editor = editorRef.value
+    if (editor == null) return
+    title.value = data.title
+    editor.setHtml(data.html)
+    uploadBox = data
+    loading.value = false
+  }).catch(function () {
+    getData()
   })
 }
 
