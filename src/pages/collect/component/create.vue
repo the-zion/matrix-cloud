@@ -52,9 +52,7 @@ import {get, post} from "../../../utils/axios";
 import {error, success, warning} from "../../../utils/message";
 import {baseMainStore, userMainStore} from "../../../store";
 import {storeToRefs} from "pinia/dist/pinia";
-import {initCos} from "../../../utils/cos";
 
-const cos = initCos()
 const emits = defineEmits(["update:visible", "createAfter", "editAfter"])
 const props = defineProps({
   mode: String,
@@ -63,7 +61,7 @@ const props = defineProps({
 })
 const userStore = userMainStore()
 const baseStore = baseMainStore()
-const {uuid} = storeToRefs(userStore)
+const {uuid, cos} = storeToRefs(userStore)
 const {avatar, collections} = storeToRefs(baseStore)
 
 let draftId = ref()
@@ -78,7 +76,6 @@ let uploadParams = {
   Bucket: collections.value.bucket,
   Region: collections.value.region,
 }
-
 
 function open() {
   initData()
@@ -95,7 +92,7 @@ function initData() {
     getLastDraft()
   } else {
     title.value = "编辑收藏集"
-    getData()
+    getDataEdit()
   }
 }
 
@@ -148,6 +145,29 @@ function getData() {
   })
 }
 
+function getDataEdit() {
+  if (!uuid.value) {
+    warning("账号未登录，请先登录")
+    return
+  }
+
+  if (!draftId.value) {
+    error("收藏集信息获取失败")
+    return
+  }
+
+  let url = collections.value.baseUrl + uuid.value + "/" + draftId.value + "/content-edit"
+  get(url).then(function (reply) {
+    let data = reply.data
+    form.value["id"] = data["id"]
+    form.value["name"] = data["name"]
+    form.value["introduce"] = data["introduce"]
+    form.value["auth"] = data["auth"] || 1
+  }).catch(function () {
+    getData()
+  })
+}
+
 function commitCheck(formRef) {
   if (!formRef) {
     error("未知错误")
@@ -192,10 +212,12 @@ function commitCollections() {
   uploadParams["Headers"] = {
     'x-cos-meta-token': token,
     'x-cos-meta-id': draftId.value + "",
-    'x-cos-meta-auth': collectionsParams.auth
+    'x-cos-meta-auth': collectionsParams.auth,
+    'x-cos-meta-title': encodeURIComponent(form.value.name),
+    'x-cos-meta-kind': mode.value,
   }
   uploadParams["Body"] = JSON.stringify(collectionsParams)
-  cos.uploadFile(uploadParams, function (err) {
+  cos.value.uploadFile(uploadParams, function (err) {
     if (err) {
       error("收藏集创建失败")
       sending.value = false
