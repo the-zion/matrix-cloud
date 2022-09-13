@@ -84,7 +84,6 @@ export default {
 <script setup>
 import {onBeforeMount, ref} from "vue"
 import {error, success, warning} from "../../../utils/message";
-import {initCos} from "../../../utils/cos";
 import {baseMainStore, userMainStore} from "../../../store";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {get, post} from "../../../utils/axios";
@@ -98,10 +97,9 @@ const props = defineProps({
   editor: Object
 })
 
-const cos = initCos()
 const userStore = userMainStore()
 const baseStore = baseMainStore()
-const {uuid} = storeToRefs(userStore)
+const {uuid, cos} = storeToRefs(userStore)
 const {article} = storeToRefs(baseStore)
 
 let title = ref()
@@ -192,7 +190,7 @@ function commitIntroduce() {
     'x-cos-meta-token': token,
   }
   uploadParams["Body"] = JSON.stringify(introduce)
-  cos.uploadFile(uploadParams, function (err) {
+  cos.value.uploadFile(uploadParams, function (err) {
     if (err) {
       error("文章发布失败")
       return
@@ -207,7 +205,7 @@ function commitSearch() {
     'x-cos-meta-token': token,
   }
   uploadParams["Body"] = JSON.stringify(search)
-  cos.uploadFile(uploadParams, function (err) {
+  cos.value.uploadFile(uploadParams, function (err) {
     if (err) {
       error("文章发布失败")
       return
@@ -221,10 +219,12 @@ function commitArticle() {
   uploadParams["Headers"] = {
     'x-cos-meta-token': token,
     'x-cos-meta-id': draftId.value + "",
-    'x-cos-meta-auth': articleParams.auth
+    'x-cos-meta-auth': articleParams.auth,
+    'x-cos-meta-title': encodeURIComponent(title.value),
+    'x-cos-meta-kind': mode.value,
   }
   uploadParams["Body"] = JSON.stringify(articleParams)
-  cos.uploadFile(uploadParams, function (err) {
+  cos.value.uploadFile(uploadParams, function (err) {
     if (err) {
       error("文章发布失败")
       return
@@ -355,6 +355,8 @@ function imageUpload(UploadRequestOptions) {
   uploadParams["Key"] = article.value.key + uuid.value + "/" + draftId.value + "/cover." + filetype
   uploadParams["Headers"] = {
     'x-cos-meta-token': token,
+    'x-cos-meta-id': draftId.value,
+    'x-cos-meta-kind': "cover",
     'Pic-Operations':
         '{"is_pic_info": 1, "rules": [{"fileid": "cover.webp", "rule": "imageMogr2/format/webp/interlace/0/quality/80"}]}'
   }
@@ -362,7 +364,7 @@ function imageUpload(UploadRequestOptions) {
   uploadParams["onProgress"] = function (progressData) {
     percentage.value = progressData.percent * 100
   }
-  cos.uploadFile(uploadParams, function (err) {
+  cos.value.uploadFile(uploadParams, function (err) {
     uploading.value = false
     if (err) {
       error("封面上传失败，请稍后再试")
