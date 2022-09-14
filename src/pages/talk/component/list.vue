@@ -1,26 +1,37 @@
 <template>
   <el-row class="talk-list" id="talk-list">
-    <el-empty v-show="data.length === 0" class="empty" description=" "
+    <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
               :image-size="250" image="../../src/assets/images/no_data.svg"
     />
-    <el-space class="data" fill :size="props.gap || 0">
-      <el-row v-for="item in data" class="each" :class="props.shape" :key="item.id"
-              @click="goToPage('talk', item.id)">
-        <el-row class="talk-card" align="middle">
-          <el-image v-show="item.image" class="image" fit="cover" :src="item.image" lazy></el-image>
-          <el-row class="container" :class="{'full':!item.image}">
-            <el-space class="main" fill>
+    <el-space class="data" fill :size="0">
+      <el-row v-for="item in data" class="each" :key="item.id"
+              @click="goToPage('talk', {id:item.id})">
+        <el-row class="talk-card" align="top">
+          <el-image v-show="item.cover" class="image" fit="cover" :src="item.cover" lazy></el-image>
+          <el-row class="container" :class="{'full':!item.cover}">
+            <el-space class="main" fill :size="5">
               <el-space class="head">
-                <el-avatar class="avatar" :size="24" :src="item.avatar"/>
+                <el-popover placement="top-start" :show-arrow="false" :width="312" trigger="hover"
+                            popper-class="popover" @before-enter="item['showUserCard'] = true"
+                            @after-leave="item['showUserCard'] = false">
+                  <template #reference>
+                    <el-avatar @click.stop="goToPage('user', {id:item.uuid,menu:'article'})" class="avatar"
+                               :size="24" icon="UserFilled"
+                               :src="avatar.baseUrl + item.uuid + '/avatar.webp'"/>
+                  </template>
+                  <matrix-user-mini-card :uuid="item.uuid" v-if="item['showUserCard']"></matrix-user-mini-card>
+                </el-popover>
                 <el-row class="title">{{ item.title }}</el-row>
               </el-space>
               <el-space class="info">
-                <el-tag round v-show="item.tags" type="info" v-for="tag in item.tags.split(';')" :key="tag">{{
+                <el-row class="time">{{ "发布于 " + item.update }}</el-row>
+                <el-tag round v-show="item.tags" type="info" v-for="tag in (item.tags?item.tags.split(';'):[])"
+                        :key="tag">{{
                     tag
                   }}
                 </el-tag>
               </el-space>
-              <span class="content">{{ item.content }}</span>
+              <span class="content">{{ item.text }}</span>
             </el-space>
             <el-space class="foot">
               <el-space :size="3">
@@ -46,26 +57,9 @@
             </el-space>
           </el-row>
         </el-row>
-        <el-space class="operation" size="large">
-          <div v-for="op in props.operation" :key="op">
-            <el-icon v-show="op === 'delete'" class="icon" @click="doDelete(item)">
-              <delete/>
-            </el-icon>
-            <el-icon v-show="op === 'star'" class="iconfont icon-star-fill star" @click="doCollect(item)"></el-icon>
-          </div>
-        </el-space>
       </el-row>
     </el-space>
-    <el-row class="foot" justify="center" v-show="data.length !== 0">
-      <el-pagination
-          :background="props.pageBackground"
-          v-model:current-page="currentPage"
-          :page-size="20"
-          :pager-count="11"
-          layout="prev, pager, next"
-          :total="1000"
-      />
-    </el-row>
+    <el-skeleton class="skeleton" v-show="loading" :rows="3" animated/>
   </el-row>
 </template>
 
@@ -76,25 +70,25 @@ export default {
 </script>
 
 <script setup>
-import {ref, watch, onMounted} from "vue";
+import {ref, onBeforeMount} from "vue";
 import {goToPage} from "../../../utils/globalFunc";
-import {confirm} from "../../../utils/globalFunc";
-import {success} from "../../../utils/message";
-import {scrollTo} from "../../../utils/scroll";
+import {scrollToBottomListen, throttle} from "../../../utils/scroll";
+import {baseMainStore} from "../../../store";
+import {storeToRefs} from "pinia/dist/pinia.esm-browser";
+import {info} from "../../../utils/message";
+import {axiosGetAll, get} from "../../../utils/axios";
 
 const emits = defineEmits(["current-page"])
-const props = defineProps({
-  gap: Number,
-  shape: String,
-  operation: {
-    type: Array,
-    default: []
-  },
-  "page-background": Boolean,
-})
+const baseStore = baseMainStore()
+const {avatar, talk} = storeToRefs(baseStore)
 
 let data = ref([])
-let currentPage = ref(1)
+let list = ref([])
+let loading = ref(false)
+let isBottom = false
+let currentPage = 1
+let mode = "new"
+let getDataLock = false
 
 function init() {
   initData()
@@ -102,50 +96,75 @@ function init() {
 }
 
 function initData() {
+  scrollToBottomListen(throttle(scrollToBottom, 1000))
+}
+
+function scrollToBottom() {
+  getData()
 }
 
 function getData() {
-  for (let i = 0; i <= 9; i++) {
-    data.value.push({
-      id: i,
-      title: "Shopee 送命题：进程切换为什么比线程切换慢" + i,
-      avatar: "../../src/assets/images/boy.png",
-      // image: "../src/assets/images/img.png",
-      name: "刘小圆sama",
-      time: "2022-05-06",
-      content: "这个问题挺有区分度的，我也是昨天整理面经才看见的这道题。 注意这里问的是为什么进程切换比线程慢，而不是问为什么进程比线程慢。当然这里的线程",
-      tags: "go;云原生",
-      agree: 10000,
-      view: 12000,
-      comment: 1100,
-      collect: 500
-    })
+  if (isBottom) {
+    info("到最底部啦～")
+    return
   }
-}
 
-function doDelete(item) {
-  confirm("删除", "确定删除" + "：\"" + item.title + "\" 吗？").then(function () {
-    success("删除成功")
-  }).catch(() => {
+  if (getDataLock) {
+    return
+  }
+
+  loading.value = true
+  getDataLock = true
+  get((mode === "new" ? "/v1/get/talk/list?page=" : "/v1/get/talk/list/hot?page=") + currentPage).then(function (reply) {
+    list.value = reply.data.talk
+    let size = reply.data.talk.length
+    if (size === 0) {
+      isBottom = true
+      info("到最底部啦～")
+      loading.value = false
+      getDataLock = false
+      return
+    }
+    currentPage += 1
+    getIntroduce()
+  }).catch(function () {
+    loading.value = false
+    getDataLock = false
   })
 }
 
-function doCollect(item) {
-  confirm("取消收藏", "确定取消收藏" + "：\"" + item.title + "\" 吗？").then(function () {
-    success("取消成功")
-  }).catch(() => {
+function getIntroduce() {
+  let endpoints = []
+  list.value.forEach(function (item) {
+    endpoints.push(talk.value.baseUrl + item["uuid"] + "/" + item["id"] + "/introduce")
   })
+  axiosGetAll(endpoints, function (allData) {
+    allData.forEach(function (each) {
+      list.value.forEach(function (item, index) {
+        each.data.id === item["id"] && (list.value[index] = Object.assign(item, each.data))
+      })
+    })
+  }, function () {
+  }, function () {
+    data.value = data.value.concat(list.value)
+    loading.value = false
+    getDataLock = false
+  })
+}
+
+function modeChange(m) {
+  mode = m
+  isBottom = false
+  currentPage = 1
+  data.value = []
+  getData()
 }
 
 defineExpose({
-  getData
+  modeChange
 })
 
-watch(currentPage, () => {
-  scrollTo("talk-list")
-})
-
-onMounted(() => {
+onBeforeMount(() => {
   init()
 })
 </script>
@@ -172,8 +191,8 @@ onMounted(() => {
         padding: 16px;
 
         .image {
-          height: 95%;
-          width: 200px;
+          height: 125px;
+          width: 180px;
           border-radius: 6px;
           margin-right: 16px;
 
@@ -193,6 +212,7 @@ onMounted(() => {
               }
 
               .avatar {
+                font-size: 14px;
                 border: 1px solid var(--el-border-color-lighter);
               }
 
@@ -210,13 +230,18 @@ onMounted(() => {
 
             .info {
               width: 100%;
+
+              .time {
+                font-size: 14px;
+                color: var(--el-text-color-regular)
+              }
             }
 
             .content {
               width: 100%;
-              height: 45px;
+              height: 43px;
               font-size: 14px;
-              line-height: 24px;
+              line-height: 20px;
               color: var(--el-text-color-regular);
               word-break: break-word;
               align-self: stretch;
@@ -229,7 +254,7 @@ onMounted(() => {
 
           .foot {
             width: 100%;
-            margin-top: 8px;
+            margin-top: 5px;
 
             .icon {
               font-size: 18px;
@@ -247,35 +272,11 @@ onMounted(() => {
           width: 100%;
         }
       }
-
-      .operation {
-        position: absolute;
-        top: 16px;
-        right: 0;
-
-        .icon {
-          color: var(--el-text-color-placeholder);
-          font-size: 20px;
-          cursor: pointer;
-        }
-
-        .star {
-          color: #ffa116;
-          font-size: 20px;
-          cursor: pointer;
-        }
-
-        .icon:hover {
-          color: var(--el-color-primary);
-        }
-      }
     }
+  }
 
-    .card {
-      border-radius: 8px;
-      border-bottom: unset;
-      box-shadow: 0 1px 2px rgba(0, 10, 32, 0.1), 0 2px 8px rgba(0, 10, 32, 0.05);
-    }
+  .skeleton {
+    padding: 16px;
   }
 
   .foot {
