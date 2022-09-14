@@ -31,25 +31,25 @@
         </el-space>
       </el-row>
     </el-row>
-    <el-row class="talk-area">
-      <el-space class="header">
-        <el-icon :size="16">
-          <svg class="symbol-icon" aria-hidden="true">
-            <use xlink:href="#icon-remen"></use>
-          </svg>
-        </el-icon>
-        <span>相关讨论</span>
-      </el-space>
-      <el-row class="each" v-for="item in data" :key="item.id">
-        <el-popover placement="top-start" :show-arrow="false" :width="312" trigger="hover" popper-class="popover">
-          <template #reference>
-            <el-avatar icon="UserFilled" class="avatar" @click="goToPage('user', 1)" :size="22" :src="item.avatar"/>
-          </template>
-          <matrix-user-mini-card></matrix-user-mini-card>
-        </el-popover>
-        <span class="title">{{ item.title }}</span>
-      </el-row>
-    </el-row>
+<!--    <el-row class="talk-area">-->
+<!--      <el-space class="header">-->
+<!--        <el-icon :size="16">-->
+<!--          <svg class="symbol-icon" aria-hidden="true">-->
+<!--            <use xlink:href="#icon-remen"></use>-->
+<!--          </svg>-->
+<!--        </el-icon>-->
+<!--        <span>相关讨论</span>-->
+<!--      </el-space>-->
+<!--      <el-row class="each" v-for="item in data" :key="item.id">-->
+<!--        <el-popover placement="top-start" :show-arrow="false" :width="312" trigger="hover" popper-class="popover">-->
+<!--          <template #reference>-->
+<!--            <el-avatar icon="UserFilled" class="avatar" @click="goToPage('user', 1)" :size="22" :src="item.avatar"/>-->
+<!--          </template>-->
+<!--          <matrix-user-mini-card></matrix-user-mini-card>-->
+<!--        </el-popover>-->
+<!--        <span class="title">{{ item.title }}</span>-->
+<!--      </el-row>-->
+<!--    </el-row>-->
   </el-container>
 </template>
 
@@ -60,7 +60,7 @@ export default {
 </script>
 
 <script setup>
-import {onMounted, ref} from "vue"
+import {onBeforeMount, ref} from "vue"
 import {goToPage} from "../../../utils/globalFunc";
 
 const props = defineProps({
@@ -97,7 +97,7 @@ function getData() {
   }
 }
 
-onMounted(function () {
+onBeforeMount(function () {
   init()
 })
 </script>
