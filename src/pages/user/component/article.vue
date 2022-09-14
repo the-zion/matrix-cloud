@@ -2,13 +2,9 @@
   <el-container class="article-container">
     <el-row class="bar" justify="space-between" align="middle">
       <span>文章</span>
-      <el-space spacer="|" class="operation">
-        <span v-for="item in barMeta" :class="{'select': currentSelect === item.key}" @click="barSelect(item)"
-        >{{ item.label }}</span>
-      </el-space>
     </el-row>
     <el-row class="body">
-      <matrix-blog-list></matrix-blog-list>
+      <article-user-list></article-user-list>
     </el-row>
   </el-container>
 </template>
@@ -20,21 +16,8 @@ export default {
 </script>
 
 <script setup>
-import {ref} from "vue"
+import ArticleUserList from "../../article/component/user.vue";
 
-let barMeta = [{
-  key: "hot",
-  label: "热门"
-}, {
-  key: "new",
-  label: "最新"
-}]
-
-let currentSelect = ref("hot")
-
-function barSelect(item) {
-  currentSelect.value = item.key
-}
 </script>
 
 <style scoped lang="scss">
@@ -45,23 +28,12 @@ function barSelect(item) {
   .bar {
     width: 100%;
     height: 50px;
-    padding: 0 28px;
+    padding: 0 20px;
     border-bottom: 1px solid var(--el-border-color-light);
-
-    .operation {
-      font-size: 14px;
-      color: var(--el-text-color-secondary);
-      cursor: pointer;
-
-      .select {
-        color: var(--el-color-primary);
-      }
-    }
   }
 
   .body {
     width: 100%;
-    margin-bottom: 1rem;
   }
 }
 </style>
