@@ -2,13 +2,9 @@
   <el-container class="talk-container">
     <el-row class="bar" justify="space-between" align="middle">
       <span>讨论</span>
-      <el-space spacer="|" class="operation">
-        <span v-for="item in barMeta" :class="{'select': currentSelect === item.key}" @click="barSelect(item)"
-        >{{ item.label }}</span>
-      </el-space>
     </el-row>
     <el-row class="body">
-      <matrix-talk-list></matrix-talk-list>
+      <talk-user-list></talk-user-list>
     </el-row>
   </el-container>
 </template>
@@ -20,21 +16,7 @@ export default {
 </script>
 
 <script setup>
-import {ref} from "vue"
-
-let barMeta = [{
-  key: "hot",
-  label: "热门"
-}, {
-  key: "new",
-  label: "最新"
-}]
-
-let currentSelect = ref("hot")
-
-function barSelect(item) {
-  currentSelect.value = item.key
-}
+import TalkUserList from "../../talk/component/user.vue";
 </script>
 
 <style scoped lang="scss">
@@ -45,7 +27,7 @@ function barSelect(item) {
   .bar {
     width: 100%;
     height: 50px;
-    padding: 0 28px;
+    padding: 0 20px;
     border-bottom: 1px solid var(--el-border-color-light);
 
     .operation {
@@ -61,7 +43,6 @@ function barSelect(item) {
 
   .body {
     width: 100%;
-    margin-bottom: 1rem;
   }
 }
 </style>
