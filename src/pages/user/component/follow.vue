@@ -8,7 +8,7 @@
       </el-space>
     </el-row>
     <el-row class="body">
-      <matrix-user-list></matrix-user-list>
+      <matrix-user-list ref="listRef" :follows="props.follows"></matrix-user-list>
     </el-row>
   </el-container>
 </template>
@@ -22,21 +22,26 @@ export default {
 <script setup>
 import {ref} from "vue"
 
+const props = defineProps({
+  follows: {
+    type: Object,
+    default: {}
+  }
+})
+
 let barMeta = [{
   key: "follow",
   label: "关注的用户"
 }, {
   key: "followed",
   label: "关注者"
-}, {
-  key: "column",
-  label: "关注的专栏"
 }]
-
-let currentSelect = ref("hot")
+let listRef = ref()
+let currentSelect = ref("follow")
 
 function barSelect(item) {
   currentSelect.value = item.key
+  listRef.value.modeChange(item.key)
 }
 </script>
 
@@ -48,7 +53,7 @@ function barSelect(item) {
   .bar {
     width: 100%;
     height: 50px;
-    padding: 0 28px;
+    padding: 0 20px;
     border-bottom: 1px solid var(--el-border-color-light);
 
     .operation {
@@ -64,7 +69,6 @@ function barSelect(item) {
 
   .body {
     width: 100%;
-    margin-bottom: 1rem;
   }
 }
 </style>
