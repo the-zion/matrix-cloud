@@ -1,59 +1,56 @@
 <template>
   <el-row class="user-list" id="user-list">
-    <el-empty v-show="data.length === 0" class="empty" description=" "
+    <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
               :image-size="250" image="../../src/assets/images/no_data.svg"
     />
-    <el-space class="data" fill :size="props.gap || 0">
-      <el-row v-for="item in data" class="each" :class="props.shape" :key="item.id"
-              @click="goToPage('user', item.id)">
+    <el-space class="data" fill :size="0">
+      <el-row v-for="item in data" class="each" :key="item.id"
+              @click="goToPage('user', {id:item.uuid,menu:'article'})">
         <el-row class="user-card" align="middle">
-          <el-row class="container" :class="{'full':!item.image}">
+          <el-row class="container">
             <el-space class="main" size="large">
-              <el-avatar class="avatar" :size="50" :src="item.avatar"/>
+              <el-avatar class="avatar" icon="UserFilled" :size="50"
+                         :src="avatar.baseUrl + item.uuid + '/avatar.webp'"/>
               <el-space direction="vertical" alignment="flex-start" :size="1">
-                <el-row class="nickname">{{ item.nickname }}</el-row>
-                <el-row class="name">{{ item.name }}</el-row>
+                <el-row class="nickname">{{ item.username }}</el-row>
+                <el-row class="name">{{ item.introduce || '此人很懒，没有任何简介～' }}</el-row>
               </el-space>
             </el-space>
             <el-space class="foot">
               <el-space :size="3">
                 <span class="word">被阅读</span>
-                <span class="num">{{ item.view > 1000 ? (item.view / 1000).toFixed(1) + "k" : item.view }}</span>
+                <span class="num">{{ item.view > 1000 ? (item.view / 1000).toFixed(1) + "k" : item.view || 0 }}</span>
               </el-space>
               <el-space :size="3">
                 <span class="word">被赞同</span>
-                <span class="num">{{ item.agree > 1000 ? (item.agree / 1000).toFixed(1) + "k" : item.agree }}</span>
+                <span
+                    class="num">{{ item.agree > 1000 ? (item.agree / 1000).toFixed(1) + "k" : item.agree || 0 }}</span>
               </el-space>
               <el-space :size="3">
                 <span class="word">被关注</span>
                 <span class="num">{{
-                    item.followed > 1000 ? (item.followed / 1000).toFixed(1) + "k" : item.followed
+                    item["followed"] > 1000 ? (item["followed"] / 1000).toFixed(1) + "k" : item["followed"] || 0
                   }}</span>
               </el-space>
               <el-space :size="3">
                 <span class="word">关注</span>
                 <span class="num">{{
-                    item.follow > 1000 ? (item.follow / 1000).toFixed(1) + "k" : item.follow
+                    item["follow"] > 1000 ? (item["follow"] / 1000).toFixed(1) + "k" : item["follow"] || 0
                   }}</span>
               </el-space>
             </el-space>
           </el-row>
         </el-row>
         <el-space class="operation" size="large">
-          <el-button icon="Plus" type="primary">关注</el-button>
+          <el-button :type="follows[item.uuid]?'info':'primary'" :icon="follows[item.uuid]?'':'Plus'"
+                     :loading="item['followLoading']"
+                     @click.stop="follow(item)" :text="follows[item.uuid]" :bg="follows[item.uuid]">
+            {{ follows[item.uuid] ? '取消关注' : '关注' }}
+          </el-button>
         </el-space>
       </el-row>
     </el-space>
-    <el-row class="foot" justify="center" v-show="data.length !== 0">
-      <el-pagination
-          :background="props.pageBackground"
-          v-model:current-page="currentPage"
-          :page-size="20"
-          :pager-count="11"
-          layout="prev, pager, next"
-          :total="1000"
-      />
-    </el-row>
+    <el-skeleton class="skeleton" v-show="loading" :rows="2" animated/>
   </el-row>
 </template>
 
@@ -64,25 +61,37 @@ export default {
 </script>
 
 <script setup>
-import {ref, watch, onMounted} from "vue";
+import {ref, onBeforeMount} from "vue";
 import {goToPage} from "../../../utils/globalFunc";
-import {confirm} from "../../../utils/globalFunc";
-import {success} from "../../../utils/message";
-import {scrollTo} from "../../../utils/scroll";
+import {error, success, warning} from "../../../utils/message";
+import {baseMainStore, userMainStore} from "../../../store";
+import {storeToRefs} from "pinia/dist/pinia.esm-browser";
+import {useRoute} from "vue-router";
+import {get, post} from "../../../utils/axios";
+import {scrollToBottomListen, throttle} from "../../../utils/scroll";
 
 const emits = defineEmits(["current-page"])
 const props = defineProps({
-  gap: Number,
-  shape: String,
-  operation: {
-    type: Array,
-    default: []
-  },
-  "page-background": Boolean,
+  follows: {
+    type: Object,
+    default: {},
+  }
 })
+const userStore = userMainStore()
+const baseStore = baseMainStore()
+const {avatar, article} = storeToRefs(baseStore)
+const {uuid} = storeToRefs(userStore)
 
 let data = ref([])
-let currentPage = ref(1)
+let list = ref([])
+let loading = ref(false)
+let isBottom = ref(false)
+let currentPage = 1
+let userId = ref()
+let follows = ref({})
+let request = null
+let mode = "follow"
+let getDataLock = false
 
 function init() {
   initData()
@@ -90,33 +99,98 @@ function init() {
 }
 
 function initData() {
+  follows.value = props.follows
+  userId.value = useRoute().query["id"]
+  scrollToBottomListen(throttle(scrollToBottom, 1000))
+}
+
+function scrollToBottom() {
+  getData()
 }
 
 function getData() {
-  for (let i = 0; i <= 9; i++) {
-    data.value.push({
-      id: i,
-      avatar: "../../src/assets/images/boy.png",
-      nickname: "刘小圆sama",
-      name: "neo",
-      agree: 10000,
-      view: 12000,
-      followed: 1100,
-      follow: 500
-    })
+  if (!userId.value || isBottom.value || getDataLock) {
+    return
+  }
+  list.value = []
+  loading.value = true
+  getDataLock = true
+  getFollow()
+}
+
+function getFollow() {
+  get((mode === 'follow' ? '/v1/get/follow/list' : '/v1/get/followed/list') + "?uuid=" + userId.value + "&page=" + currentPage).then(function (reply) {
+    data.value = data.value.concat(reply.data.follow)
+    let size = reply.data.follow.length
+    if (size === 0) {
+      isBottom.value = true
+      loading.value = false
+      getDataLock = false
+      return
+    }
+    currentPage += 1
+  }).catch(function () {
+  }).then(function () {
+    loading.value = false
+    getDataLock = false
+  })
+}
+
+function follow(item) {
+  if (!uuid.value) {
+    warning("账号未登录，请先登录")
+    return
+  }
+
+  if (item.uuid === uuid.value) {
+    warning("不要自己关注自己哦～")
+    return
+  }
+
+  if (follows.value[item.uuid]) {
+    cancelFollow(item)
+  } else {
+    setFollow(item)
   }
 }
 
+function setFollow(item) {
+  item['followLoading'] = true
+  post("/v1/set/user/follow", {uuid: item.uuid}).then(function () {
+    success("已关注")
+    follows.value[item.uuid] = true
+  }).catch(function () {
+    error("关注出错，请稍后再试")
+  }).then(function () {
+    item['followLoading'] = false
+  })
+}
+
+function cancelFollow(item) {
+  item['followLoading'] = true
+  post("/v1/cancel/user/follow", {uuid: item.uuid}).then(function () {
+    success("已取消关注")
+    follows.value[item.uuid] = false
+  }).catch(function () {
+    error("取消出错，请稍后再试")
+  }).then(function () {
+    item['followLoading'] = false
+  })
+}
+
+function modeChange(m) {
+  mode = m
+  currentPage = 1
+  isBottom.value = false
+  data.value = []
+  getData()
+}
 
 defineExpose({
-  getData
+  modeChange
 })
 
-watch(currentPage, () => {
-  scrollTo("user-list")
-})
-
-onMounted(() => {
+onBeforeMount(() => {
   init()
 })
 </script>
@@ -124,6 +198,10 @@ onMounted(() => {
 <style scoped lang="scss">
 .user-list {
   width: 100%;
+
+  .skeleton {
+    padding: 16px;
+  }
 
   .empty {
     width: 100%;
@@ -153,6 +231,7 @@ onMounted(() => {
             }
 
             .avatar {
+              font-size: 25px;
               border: 1px solid var(--el-border-color-lighter);
             }
 
@@ -191,15 +270,8 @@ onMounted(() => {
       .operation {
         position: absolute;
         top: 16px;
-        right: 0;
-
+        right: 14px;
       }
-    }
-
-    .card {
-      border-radius: 8px;
-      border-bottom: unset;
-      box-shadow: 0 1px 2px rgba(0, 10, 32, 0.1), 0 2px 8px rgba(0, 10, 32, 0.05);
     }
   }
 
