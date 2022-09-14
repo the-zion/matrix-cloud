@@ -96,14 +96,12 @@
 import {onBeforeMount, ref} from "vue"
 import {error, success, warning} from "../../utils/message";
 import {get, post} from "../../utils/axios";
-import {initCos} from "../../utils/cos";
 import {storeToRefs} from "pinia"
 import {userMainStore, baseMainStore} from "../../store";
 
-const cos = initCos()
 const userStore = userMainStore()
 const baseStore = baseMainStore()
-const {uuid} = storeToRefs(userStore)
+const {uuid, cos} = storeToRefs(userStore)
 const {avatar} = storeToRefs(baseStore)
 
 
@@ -162,7 +160,7 @@ function avatarUpload(UploadRequestOptions) {
   percentage.value = 0
   let file = UploadRequestOptions.file
   let filetype = UploadRequestOptions.file.type.split("/")[1]
-  cos.uploadFile({
+  cos.value.uploadFile({
     Bucket: avatar.value.bucket,
     Region: avatar.value.region,
     Key: avatar.value.key + uuid.value + "/avatar." + filetype,
