@@ -31,7 +31,7 @@
     <el-progress v-show="uploading" :duration="10" class="process" :percentage="percentage"
                  :show-text="false"/>
     <el-row class="area" id="area">
-      <el-input placeholder="请输入标题" class="title" v-model="title"/>
+      <el-input :maxlength="50" placeholder="请输入标题" class="title" v-model="title"/>
       <Toolbar
           class="toolbar"
           :editor="editorRef"
@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import {onBeforeUnmount, ref, shallowRef, onMounted} from 'vue'
+import {onBeforeUnmount, ref, shallowRef, onBeforeMount} from 'vue'
 import {backToHome} from "../../utils/globalFunc";
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 import {success, info, warning, error} from "../../utils/message";
@@ -65,12 +65,10 @@ import {useRoute} from "vue-router";
 import {get, post} from "../../utils/axios";
 import {baseMainStore, userMainStore} from "../../store";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
-import {initCos} from "../../utils/cos";
 
-const cos = initCos()
 const userStore = userMainStore()
 const baseStore = baseMainStore()
-const {uuid} = storeToRefs(userStore)
+const {uuid, cos} = storeToRefs(userStore)
 const {talk} = storeToRefs(baseStore)
 const editorRef = shallowRef()
 const valueHtml = ref('')
@@ -123,6 +121,7 @@ let uploadParams = {
   Bucket: talk.value.bucket,
   Region: talk.value.region,
 }
+let token = null
 
 function handleCreated(editor) {
   editorRef.value = editor
@@ -155,7 +154,7 @@ function onMaxLength(editor) {
 function init() {
   initData()
   mode.value === 'create' && getLastDraft()
-  mode.value === 'edit' && getData()
+  mode.value === 'edit' && getDataEdit()
 }
 
 function getLastDraft() {
@@ -212,11 +211,11 @@ function editSave(fn) {
     'x-cos-meta-uuid': uuid.value,
   }
   uploadParams["Body"] = JSON.stringify(uploadBox)
-  cos.uploadFile(uploadParams, fn)
+  cos.value.uploadFile(uploadParams, fn)
 }
 
 function imageUpload(file, insertFn) {
-  if (!uuid.value) {
+  if (!uuid.value || !token) {
     warning("账号未登录，请先登录")
     return
   }
@@ -232,7 +231,10 @@ function imageUpload(file, insertFn) {
   uploading.value = true
   uploadParams["Key"] = talk.value.key + uuid.value + "/" + draftId.value + "/" + imageId + "." + filetype
   uploadParams["Headers"] = {
-    'x-cos-meta-uuid': uuid.value,
+    'x-cos-meta-token': token,
+    'x-cos-meta-id': draftId.value,
+    'x-cos-meta-kind': "content",
+    'x-cos-meta-uid': imageId,
     'Pic-Operations':
         '{"is_pic_info": 1, "rules": [{"fileid": ' + '"' + imageId + ".webp" + '", "rule": "imageMogr2/format/webp/interlace/0/quality/80"}]}',
   }
@@ -240,7 +242,7 @@ function imageUpload(file, insertFn) {
   uploadParams["onProgress"] = function (progressData) {
     percentage.value = progressData.percent * 100
   }
-  cos.uploadFile(uploadParams, function (err) {
+  cos.value.uploadFile(uploadParams, function (err) {
     uploading.value = false
     if (err) {
       error("图片上传失败，请稍后再试")
@@ -254,6 +256,7 @@ function imageUpload(file, insertFn) {
 function initData() {
   mode.value = useRoute().query["mode"]
   draftId.value = parseInt(useRoute().query["id"])
+  token = localStorage.getItem("matrix-token")
 }
 
 function getData() {
@@ -283,13 +286,39 @@ function getData() {
   })
 }
 
+function getDataEdit() {
+  if (!uuid.value) {
+    warning("账号未登录，请先登录")
+    return
+  }
+
+  if (!draftId.value) {
+    error("草稿获取失败")
+    return
+  }
+
+  loading.value = true
+  let url = talk.value.baseUrl + uuid.value + "/" + draftId.value + "/content-edit"
+  get(url).then(function (reply) {
+    let data = reply.data
+    let editor = editorRef.value
+    if (editor == null) return
+    title.value = data.title
+    editor.setHtml(data.html)
+    uploadBox = data
+    loading.value = false
+  }).catch(function () {
+    getData()
+  })
+}
+
 onBeforeUnmount(() => {
   const editor = editorRef.value
   if (editor == null) return
   editor.destroy()
 })
 
-onMounted(() => {
+onBeforeMount(() => {
   init()
 })
 
