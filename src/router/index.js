@@ -7,6 +7,7 @@ const Main = () => import('../pages/main/main.vue')
 const Article = () => import('../pages/article/article.vue')
 const Talk = () => import('../pages/talk/talk.vue')
 const Column = () => import('../pages/column/column.vue')
+const Collect = () => import('../pages/collect/collect.vue')
 const Message = () => import('../pages/message/message.vue')
 const Search = () => import('../pages/search/search.vue')
 const About = () => import('../pages/about/about.vue')
@@ -18,49 +19,42 @@ const UserCollect = () => import('../pages/user/component/collect.vue')
 const UserFollow = () => import('../pages/user/component/follow.vue')
 const write = () => import('../pages/write/write.vue')
 const ArticleWrite = () => import('../pages/article/write.vue')
-const ColumnWrite = () => import('../pages/column/write.vue')
 const TalkWrite = () => import('../pages/talk/write.vue')
 const Home = () => import('../pages/home/home.vue')
-const HomeBlog = () => import("../pages/home/blog.vue")
-const HomeColumn = () => import("../pages/home/column.vue")
-const HomeTalk = () => import("../pages/home/talk.vue")
 const Settings = () => import("../pages/settings/settings.vue")
 const SettingsProfile = () => import("../pages/settings/profile.vue")
 const SettingsAccount = () => import("../pages/settings/account.vue")
 const Result = () => import("../pages/result/result.vue")
-
+const Creation = () => import("../pages/creation/creation.vue")
+const CreationHomePage = () => import("../pages/creation/homepage.vue")
+const CreationMedal = () => import("../pages/creation/medal.vue")
+const CreationReply = () => import("../pages/creation/reply.vue")
+const CreationReplied = () => import("../pages/creation/replied.vue")
+const CreationContent = () => import("../pages/creation/content.vue")
+const CreationPicture = () => import("../pages/creation/picture.vue")
+const CreationReview = () => import("../pages/creation/review.vue")
+const CreationComment = () => import("../pages/creation/comment.vue")
 
 const routes = [
     {
         path: '/',
         name: 'root',
-        redirect: {name: 'home.blog'},
+        redirect: to => {
+            return {name: 'home', query: {page: 'news'}}
+        },
     },
     {
         path: '/main',
         name: 'main',
         component: Main,
         redirect: to => {
-            return {name: 'home', query: {page: 'article'}}
+            return {name: 'home', query: {page: 'news'}}
         },
         children: [
             {
                 path: 'home',
                 name: 'home',
                 component: Home,
-                // children: [{
-                //     path: 'blog?page=article',
-                //     name: "home.blog",
-                //     component: HomeBlog
-                // }, {
-                //     path: 'column',
-                //     name: "home.column",
-                //     component: HomeColumn
-                // }, {
-                //     path: 'talk',
-                //     name: "home.talk",
-                //     component: HomeTalk
-                // }]
             },
             {
                 path: 'article',
@@ -76,6 +70,11 @@ const routes = [
                 path: 'column',
                 name: "column",
                 component: Column,
+            },
+            {
+                path: "collect",
+                name: "collect",
+                component: Collect,
             },
             {
                 path: 'message',
@@ -120,6 +119,45 @@ const routes = [
                 }]
             },
             {
+                path: 'creation',
+                name: 'creation',
+                component: Creation,
+                redirect: {name: 'creation.homepage'},
+                children: [{
+                    path: 'homepage',
+                    name: 'creation.homepage',
+                    component: CreationHomePage
+                }, {
+                    path: 'medal',
+                    name: 'creation.medal',
+                    component: CreationMedal
+                }, {
+                    path: 'content',
+                    name: 'creation.content',
+                    component: CreationContent
+                }, {
+                    path: 'reply',
+                    name: 'creation.reply',
+                    component: CreationReply
+                }, {
+                    path: 'replied',
+                    name: 'creation.replied',
+                    component: CreationReplied
+                }, {
+                    path: 'picture',
+                    name: 'creation.picture',
+                    component: CreationPicture
+                },{
+                    path: 'review',
+                    name: 'creation.review',
+                    component: CreationReview
+                },{
+                    path: 'comment',
+                    name: 'creation.comment',
+                    component: CreationComment
+                }]
+            },
+            {
                 path: 'settings',
                 name: 'settings',
                 component: Settings,
@@ -144,10 +182,6 @@ const routes = [
             path: 'article',
             name: 'article.write',
             component: ArticleWrite
-        }, {
-            path: 'column',
-            name: "column.write",
-            component: ColumnWrite
         }, {
             path: "talk",
             name: "talk.write",
