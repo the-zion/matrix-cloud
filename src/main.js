@@ -7,6 +7,7 @@ import ArticleComponents from './pages/article/index.ts'
 import CollectComponents from './pages/collect/index.ts'
 import TalkComponents from './pages/talk/index.ts'
 import ColumnComponents from './pages/column/index.ts'
+import NewsComponent from './pages/news/index.ts'
 import TagComponents from './pages/tag/index.ts'
 import UserComponent from './pages/user/index.ts'
 import router from './router/index'
@@ -26,6 +27,7 @@ const app = createApp(App).use(pinia)
     .use(CollectComponents)
     .use(TalkComponents)
     .use(ColumnComponents)
+    .use(NewsComponent)
     .use(TagComponents)
     .use(UserComponent)
     .use(router)
