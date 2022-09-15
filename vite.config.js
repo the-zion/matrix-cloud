@@ -1,6 +1,7 @@
 import path from 'path'
 import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
+import prismjs from 'vite-plugin-prismjs';
 
 import Components from 'unplugin-vue-components/vite'
 import {ElementPlusResolver} from 'unplugin-vue-components/resolvers'
@@ -33,6 +34,14 @@ export default defineConfig({
                 }),
             ],
             dts: 'src/components.d.ts',
+        }),
+
+        prismjs({
+            languages: 'all',
+            "plugins": ["line-numbers"],
+            "theme": "default",
+            "css": true
+            //  languages: 'all',
         }),
 
         // https://github.com/antfu/unocss
