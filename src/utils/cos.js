@@ -15,7 +15,7 @@ export function initCos() {
                     ExpiredTime: data["expiredTime"],
                 });
             }).catch(function () {
-                error("图片上传失败，请稍后再试")
+                error("上传失败，请稍后再试")
             })
         }
     });
