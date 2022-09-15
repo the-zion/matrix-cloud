@@ -15,6 +15,10 @@ body {
     .el-popper__arrow {
       display: none;
     }
+
+    .el-scrollbar{
+      position: unset;
+    }
   }
 
   .tags-dropdown-select {
