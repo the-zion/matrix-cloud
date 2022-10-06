@@ -1,5 +1,5 @@
 <template>
-  <el-container class="creation-container">
+  <el-container class="creation-container" v-if="Object.keys(data).length !== 0">
     <el-backtop></el-backtop>
     <el-aside class="aside">
       <el-affix :offset="0">
