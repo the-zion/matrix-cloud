@@ -175,7 +175,7 @@ function getLevel() {
 }
 
 function userPage() {
-  router.push({name: "user", query: {id: uuid.value, menu: 'article'}})
+  router.push({name: "user", query: {id: uuid.value, menu: 'timeline'}})
 }
 
 function userCenter() {
