@@ -187,6 +187,10 @@ const {cover, avatar} = storeToRefs(baseStore)
 
 
 let barMeta = [{
+  key: "timeline",
+  label: "动态",
+  router: "user.timeline"
+},{
   key: "article",
   label: "文章",
   router: "user.article"
