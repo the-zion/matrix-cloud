@@ -5,7 +5,7 @@
     />
     <el-space class="data" fill :size="0">
       <el-row v-for="item in data" class="each" :key="item.id"
-              @click="goToPage('user', {id:item.uuid,menu:'article'})">
+              @click="goToPage('user', {id:item.uuid,menu:'timeline'})">
         <el-row class="user-card" align="middle">
           <el-row class="container">
             <el-space class="main" size="large">
