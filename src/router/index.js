@@ -9,9 +9,13 @@ const Talk = () => import('../pages/talk/talk.vue')
 const Column = () => import('../pages/column/column.vue')
 const Collect = () => import('../pages/collect/collect.vue')
 const Message = () => import('../pages/message/message.vue')
+const MessageTimeLine = () => import('../pages/message/component/timeline.vue')
+const MessageComment = () => import('../pages/message/component/comment.vue')
+const MessageNotification = () => import('../pages/message/component/notification.vue')
 const Search = () => import('../pages/search/search.vue')
 const About = () => import('../pages/about/about.vue')
 const User = () => import('../pages/user/user.vue')
+const UserTimeLine = () => import('../pages/user/component/timeline.vue')
 const UserArticle = () => import('../pages/user/component/article.vue')
 const UserColumn = () => import('../pages/user/component/column.vue')
 const UserTalk = () => import('../pages/user/component/talk.vue')
@@ -79,7 +83,21 @@ const routes = [
             {
                 path: 'message',
                 name: 'message',
-                component: Message
+                component: Message,
+                redirect: {name: 'message.timeline'},
+                children: [{
+                    path: 'timeline',
+                    name: 'message.timeline',
+                    component: MessageTimeLine
+                },{
+                    path: 'comment',
+                    name: 'message.comment',
+                    component: MessageComment
+                }, {
+                    path: 'notification',
+                    name: 'message.notification',
+                    component: MessageNotification
+                }]
             },
             {
                 path: 'search',
@@ -95,8 +113,12 @@ const routes = [
                 path: 'user',
                 name: 'user',
                 component: User,
-                redirect: {name: 'user.article'},
+                redirect: {name: 'user.timeline'},
                 children: [{
+                    path: 'timeline',
+                    name: 'user.timeline',
+                    component: UserTimeLine
+                },{
                     path: 'article',
                     name: 'user.article',
                     component: UserArticle
