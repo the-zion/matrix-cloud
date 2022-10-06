@@ -52,19 +52,15 @@ let mode = ref("new")
 let menu = ref([{
   key: "news",
   label: "技术头条",
-  image: images.value.baseUrl + "/news.svg",
 }, {
   key: "article",
   label: "博客文章",
-  image: images.value.baseUrl + "/article.svg",
 }, {
   key: "column",
   label: "专栏分享",
-  image: images.value.baseUrl + "/column.svg"
 }, {
   key: "talk",
   label: "讨论发起",
-  image: images.value.baseUrl + "/talk.svg"
 }])
 
 function init() {
