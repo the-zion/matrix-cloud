@@ -60,8 +60,7 @@ export default {
 </script>
 
 <script setup>
-import {onBeforeMount, ref} from "vue"
-import {goToPage} from "../../../utils/globalFunc";
+import {ref} from "vue"
 
 const props = defineProps({
   info: {
@@ -78,28 +77,6 @@ let info = ref({})
 let statistic = ref({})
 let data = ref([])
 
-
-function init() {
-  initData()
-  getData()
-}
-
-function initData() {
-}
-
-function getData() {
-  for (let i = 0; i <= 4; i++) {
-    data.value.push({
-      id: i,
-      avatar: '../../src/assets/images/boy.png',
-      title: "2022 力扣春招征文｜0402 腾讯 光子工作室后台开发一面"
-    })
-  }
-}
-
-onBeforeMount(function () {
-  init()
-})
 </script>
 
 <style scoped lang="scss">
