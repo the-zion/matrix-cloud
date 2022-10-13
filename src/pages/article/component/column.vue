@@ -15,7 +15,7 @@
                           @after-leave="item['showUserCard'] = false">
                 <template #reference>
                   <el-avatar @click.stop="goToPage('user', {id:item.uuid,menu:'timeline'})" class="avatar"
-                             :size="24" icon="UserFilled"
+                             :size="32" icon="UserFilled"
                              :src="avatar.baseUrl + item.uuid + '/avatar.webp'"/>
                 </template>
                 <matrix-user-mini-card :uuid="item.uuid" v-if="item['showUserCard']"></matrix-user-mini-card>
@@ -205,7 +205,7 @@ onBeforeMount(function () {
             }
 
             .avatar {
-              font-size: 14px;
+              font-size: 20px;
               border: 1px solid var(--el-border-color-lighter);
             }
 
