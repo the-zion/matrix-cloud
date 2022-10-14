@@ -14,7 +14,7 @@
               <el-space class="main">
                 <el-avatar class="avatar" :size="32" icon="UserFilled"
                            :src="avatar.baseUrl + authorUuid + '/avatar.webp'"
-                           @click="goToPage('user', {id:authorUuid,menu:'article'})"></el-avatar>
+                           @click="goToPage('user', {id:authorUuid,menu:'timeline'})"></el-avatar>
                 <el-row class="title">{{ data.name }}</el-row>
                 <el-space class="info">
                   <el-tag round v-show="data.tags" type="info" v-for="tag in (data.tags?data.tags.split(';'):[])"
@@ -61,13 +61,13 @@
                   </el-space>
                 </el-space>
                 <el-button type="primary" v-if="authorUuid === uuid" @click="includesVisible = true">文章添加</el-button>
-                <el-button :type="userSubscribeColumn[columnId]?'info':'primary'"
-                           :icon="userSubscribeColumn[columnId]?'':'Plus'" v-else
-                           :loading="subscribeLoading"
-                           @click="subscribe()" :text="userSubscribeColumn[columnId]"
-                           :bg="userSubscribeColumn[columnId]">
-                  {{ userSubscribeColumn[columnId] ? '取消订阅' : '订阅专栏' }}
-                </el-button>
+<!--                <el-button :type="userSubscribeColumn[columnId]?'info':'primary'"-->
+<!--                           :icon="userSubscribeColumn[columnId]?'':'Plus'" v-else-->
+<!--                           :loading="subscribeLoading"-->
+<!--                           @click="subscribe()" :text="userSubscribeColumn[columnId]"-->
+<!--                           :bg="userSubscribeColumn[columnId]">-->
+<!--                  {{ userSubscribeColumn[columnId] ? '取消订阅' : '订阅专栏' }}-->
+<!--                </el-button>-->
               </el-row>
             </el-row>
           </el-row>
