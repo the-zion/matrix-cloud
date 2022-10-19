@@ -13,8 +13,8 @@
       <el-row class="origin-block">
         <el-row class="header" justify="space-between" align="middle">
           <el-space>
-            <el-avatar @click.stop="goToPage('user', {id:item['uuid'],menu:'article'})" class="avatar"
-                       :size="24" icon="UserFilled"
+            <el-avatar @click.stop="goToPage('user', {id:item['uuid'],menu:'timeline'})" class="avatar"
+                       :size="32" icon="UserFilled"
                        :src="avatar.baseUrl + item['uuid'] + '/avatar.webp'"/>
             <span class="name">{{ item['userName'] }}</span>
             <span class="name reply" v-show="item['replyName']">{{ "@" + item['replyName'] }}</span>
@@ -47,8 +47,8 @@
       <el-row class="origin-block parent" v-if="item['parentId']">
         <el-row class="header" justify="space-between" align="middle">
           <el-space>
-            <el-avatar @click.stop="goToPage('user', {id: item.reply,menu:'article'})" class="avatar"
-                       :size="24" icon="UserFilled"
+            <el-avatar @click.stop="goToPage('user', {id: item.reply,menu:'timeline'})" class="avatar"
+                       :size="32" icon="UserFilled"
                        :src="avatar.baseUrl + item.reply + '/avatar.webp'"/>
             <span class="name">{{ item["replyName"] }}</span>
           </el-space>
@@ -61,8 +61,8 @@
       <el-row class="origin-block root" v-if="!item['parentId']">
         <el-row class="header" justify="space-between" align="middle">
           <el-space>
-            <el-avatar @click.stop="goToPage('user', {id:item['rootUser'],menu:'article'})" class="avatar"
-                       :size="24" icon="UserFilled"
+            <el-avatar @click.stop="goToPage('user', {id:item['rootUser'],menu:'timeline'})" class="avatar"
+                       :size="32" icon="UserFilled"
                        :src="avatar.baseUrl + item['rootUser'] + '/avatar.webp'"/>
             <span class="name">{{ item["rootName"] }}</span>
           </el-space>
@@ -79,7 +79,7 @@
 
 <script>
 export default {
-  name: "Reply"
+  name: "RepliedSub"
 }
 </script>
 
