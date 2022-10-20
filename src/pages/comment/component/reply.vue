@@ -12,8 +12,8 @@
           <span>{{ item.title }}</span>
         </el-space>
         <el-space>
-          <el-avatar @click.stop="goToPage('user', {id:uuid,menu:'article'})" class="avatar"
-                     :size="24" icon="UserFilled"
+          <el-avatar @click.stop="goToPage('user', {id:uuid,menu:'timeline'})" class="avatar"
+                     :size="32" icon="UserFilled"
                      :src="avatar.baseUrl + uuid + '/avatar.webp'"/>
           <span class="name">{{ username }}</span>
         </el-space>
