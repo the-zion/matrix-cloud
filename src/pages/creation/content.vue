@@ -51,9 +51,6 @@ const menu = [{
 }, {
   key: "collections",
   label: "收藏",
-}, {
-  key: "subscribe",
-  label: "订阅",
 }]
 
 let data = ref({})
