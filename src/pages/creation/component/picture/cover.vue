@@ -53,7 +53,7 @@
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="120" min-width="1">
           <template #default="scope">
-            <el-popover placement="top" :width="200" @before-enter="showImage(scope.row)">
+            <el-popover placement="top" :width="200" @before-enter="showImage()">
               <template #reference>
                 <el-button v-if="scope.row.id === 1" link type="primary" size="small"
                 >查看图片
@@ -142,7 +142,7 @@ function getData() {
   })
 }
 
-function showImage(item) {
+function showImage() {
   cos.value.getObjectUrl({
     Bucket: cover.value.bucket,
     Region: cover.value.region,
