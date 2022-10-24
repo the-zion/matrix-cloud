@@ -40,7 +40,7 @@
         </el-dropdown>
         <el-row class="main-login-word" v-show="!uuid" @click="login">登录</el-row>
         <el-row align="middle" v-show="uuid">
-          <el-badge :value="messageValue" :max="99" class="main-menu-icon" :hidden=messageCount(messageValue)>
+          <el-badge :value="messageValue" :is-dot="!messageValue" :max="99" class="main-menu-icon" :hidden="messageCount()">
             <el-icon :size="20" @click="router.push({name: 'message'})">
               <message/>
             </el-icon>
@@ -80,6 +80,7 @@ import Login from './component/login.vue';
 import Dropdown from './component/dropdown.vue';
 import router from "../../router";
 import {userMainStore, baseMainStore} from "../../store";
+import {get} from "../../utils/axios";
 
 const userStore = userMainStore()
 const baseStore = baseMainStore()
@@ -95,7 +96,7 @@ let menuList = ref([{
   key: "home",
   name: "学习与讨论",
   state: "home",
-  query: {page: 'article'},
+  query: {page: 'news'},
 }, {
   id: 1,
   key: "about",
@@ -104,12 +105,50 @@ let menuList = ref([{
   query: {},
 }])
 
+let notification = {
+  timeline: {},
+  comment: 0,
+  subComment: 0,
+  system: 0
+}
+
+let lastTime = 0
+let timelineActive = ref(false)
+
 function init() {
   initData()
+  getMessageNotification()
 }
 
 function initData() {
   activeMenu.value = useRoute().name.split(".")[0]
+}
+
+function getMessageNotification() {
+  get("/v1/get/message/notification").then(function (reply) {
+    notification.timeline = reply.data.timeline
+    notification.comment = reply.data.comment
+    notification.subComment = reply.data.subComment
+    notification.system = reply.data.system
+    getMailBoxLastTime()
+  })
+}
+
+function getMailBoxLastTime() {
+  get("/v1/get/mailbox/last/time").then(function (reply) {
+    lastTime = reply.data.time
+    setActive()
+  })
+}
+
+function setActive() {
+  Object.keys(notification.timeline).forEach(function (item) {
+    if (notification.timeline[item] > lastTime) {
+      timelineActive.value = true
+      return null
+    }
+  })
+  messageValue.value = notification.comment + notification.subComment + notification.system
 }
 
 function menuActive() {
@@ -120,12 +159,8 @@ function menuSelect(state, query) {
   router.push({name: state, query: query})
 }
 
-function messageCount(value) {
-  return value === 0
-}
-
-function add() {
-  messageValue.value += 1
+function messageCount() {
+  return !timelineActive.value && (messageValue.value === 0)
 }
 
 function login() {
@@ -210,7 +245,7 @@ router.afterEach(function (route) {
 
       .main-menu-icon {
         color: #909399;
-        margin: 0 20px 0 50px;
+        margin: 0 30px 0 50px;
         cursor: pointer;
         display: flex;
 
