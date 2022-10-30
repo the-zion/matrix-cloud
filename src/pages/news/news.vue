@@ -137,7 +137,7 @@ onBeforeMount(() => {
               }
 
               .avatar {
-                font-size: 14px;
+                font-size: 20px;
                 border: 1px solid var(--el-border-color-lighter);
               }
 
