@@ -150,7 +150,6 @@ function beforeAvatarUpload(rawFile) {
   return true
 }
 
-
 function avatarUpload(UploadRequestOptions) {
   if (!uuid.value || !token) {
     warning("账号未登录，请先登录")
@@ -166,6 +165,8 @@ function avatarUpload(UploadRequestOptions) {
     Key: avatar.value.key + uuid.value + "/avatar." + filetype,
     Headers: {
       'x-cos-meta-token': token,
+      'Pic-Operations':
+          '{"is_pic_info": 1, "rules": [{"fileid": "avatar.webp", "rule": "imageMogr2/format/webp/interlace/0/quality/100"}]}'
     },
     Body: file,
     onProgress: function (progressData) {
