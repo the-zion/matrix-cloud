@@ -10,7 +10,7 @@
           <el-row class="title-area" justify="space-between">
             <el-row class="title" align="top">
               <el-avatar :size="32" :src="avatar.baseUrl + authorUuid + '/avatar.webp'" icon="UserFilled" class="avatar"
-                         @click="goToPage('user', {id:authorUuid,menu:'article'})"></el-avatar>
+                         @click="goToPage('user', {id:authorUuid,menu:'timeline'})"></el-avatar>
               <el-row class="label" align="middle">{{ data.title }}</el-row>
             </el-row>
           </el-row>
