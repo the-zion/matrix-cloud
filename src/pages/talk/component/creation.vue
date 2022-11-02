@@ -12,7 +12,7 @@
           <el-row class="container" :class="{'full':!item.cover}">
             <el-space class="main" fill>
               <el-space class="head">
-                <el-avatar class="avatar" :size="24" icon="UserFilled"
+                <el-avatar class="avatar" :size="32" icon="UserFilled"
                            :src="avatar.baseUrl + item.uuid + '/avatar.webp'"/>
                 <el-row class="title">{{ item.title }}</el-row>
               </el-space>
@@ -249,7 +249,7 @@ onBeforeMount(function () {
               }
 
               .avatar {
-                font-size: 14px;
+                font-size: 20px;
                 border: 1px solid var(--el-border-color-lighter);
               }
 
