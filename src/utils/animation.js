@@ -63,7 +63,7 @@ export function animationCollect(collectRef, collectBounce) {
         left: 10, top: 10,
         parent: collectRef.value,
         stroke: '#ffa500',
-        strokeWidth: {[15]: 0},
+        strokeWidth: {15: 0},
         fill: 'none',
         scale: {0: 1, easing: 'quad.out'},
         radius: 20,
