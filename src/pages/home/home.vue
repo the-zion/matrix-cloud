@@ -6,7 +6,7 @@
         <span class="label" :class="{'select':page === item.key}">{{ item.label }}</span>
         <!--        <el-image fit="fill" class="image" :src="item.image"></el-image>-->
         <video class="image" preload="auto" muted height="10" autoplay loop
-               :src="'../src/assets/images/'+item.key+'.mp4'"></video>
+               :src="getVideo(item.key)"></video>
       </el-row>
     </el-row>
     <el-row class="main" justify="space-between">
@@ -39,9 +39,10 @@ import router from "../../router";
 import {useRoute, onBeforeRouteLeave} from "vue-router";
 import LeaderBoard from "./component/leaderboard.vue"
 import "../../utils/axios"
-import {baseMainStore} from "../../store";
+import {baseMainStore} from "../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {removeScrollToBottomListen} from "../../utils/scroll";
+import {getAssets} from "../../utils/globalFunc";
 
 const baseStore = baseMainStore()
 const {images} = storeToRefs(baseStore)
@@ -86,10 +87,13 @@ function modeChange(m) {
   listRef.value.modeChange(m)
 }
 
+function getVideo(key){
+  return getAssets(key + ".mp4")
+}
+
 onBeforeRouteLeave((to, from) => {
   removeScrollToBottomListen()
 })
-
 
 onBeforeMount(function () {
   init()

@@ -73,7 +73,7 @@
                 <el-table-column label="关键片段" prop="words" min-width="3"/>
               </el-table>
               <el-empty v-if="props.row.section.length === 0" class="empty" description=" "
-                        :image-size="250" image="../../src/assets/images/no_data.svg"
+                        :image-size="250" :image="noData"
               />
             </div>
           </template>
@@ -81,7 +81,7 @@
         <template #empty>
           <el-row align="middle" justify="center">
             <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
-                      :image-size="250" image="../../src/assets/images/no_data.svg"
+                      :image-size="250" :image="noData"
             />
           </el-row>
         </template>
@@ -102,13 +102,16 @@ import {onBeforeMount, ref} from "vue"
 import {scrollToBottomListen, throttle} from "../../../../utils/scroll";
 import {ReviewTag} from "../../../../utils/review";
 import {post} from "../../../../utils/axios";
-import {baseMainStore, userMainStore} from "../../../../store";
+import {userMainStore} from "../../../../store/user";
+import {baseMainStore} from "../../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
+import {getAssets} from "../../../../utils/globalFunc";
 
 const userStore = userMainStore()
 const baseStore = baseMainStore()
 const {uuid} = storeToRefs(userStore)
 const {collections} = storeToRefs(baseStore)
+const noData = getAssets("no_data.svg")
 
 let currentPage = 1
 let isBottom = false

@@ -5,7 +5,7 @@
       <el-menu class="main-menu" @select="menuActive" :default-active="activeMenu"
                :active-text-color="activeColor">
         <el-image class="main-matrix-logo" @click="backToHome"
-                  src="../../src/assets/images/matrix.svg"
+                  :src="logo"
                   fit="contain"
         ></el-image>
         <el-menu-item class="main-menu-item" :index="item.state" v-for="item in menuList" :key="item.key"
@@ -73,15 +73,18 @@
 <script setup>
 import {goToPage} from "../../utils/globalFunc";
 import {backToHome} from "../../utils/globalFunc";
+import {getAssets} from "../../utils/globalFunc";
 import {useRoute} from "vue-router";
 import {ref, onBeforeMount} from "vue";
 import {storeToRefs} from "pinia/dist/pinia";
 import Login from './component/login.vue';
 import Dropdown from './component/dropdown.vue';
 import router from "../../router";
-import {userMainStore, baseMainStore} from "../../store";
+import {userMainStore} from "../../store/user";
+import {baseMainStore} from "../../store/base";
 import {get} from "../../utils/axios";
 
+const logo = getAssets('matrix.svg')
 const userStore = userMainStore()
 const baseStore = baseMainStore()
 const {uuid} = storeToRefs(userStore)

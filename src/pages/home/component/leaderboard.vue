@@ -16,7 +16,7 @@
         </el-row>
         <el-skeleton class="skeleton" v-show="loading" :rows="1" animated/>
         <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
-                  :image-size="150" image="../../src/assets/images/no_data.svg"
+                  :image-size="150" :image="noData"
         />
       </el-row>
     </el-affix>
@@ -31,13 +31,14 @@ export default {
 
 <script setup>
 import {onBeforeMount, ref} from "vue"
-import {goToPage} from "../../../utils/globalFunc";
+import {getAssets, goToPage} from "../../../utils/globalFunc";
 import {get} from "../../../utils/axios";
-import {baseMainStore} from "../../../store";
+import {baseMainStore} from "../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 
 const baseStore = baseMainStore()
 const {avatar, article, talk, column} = storeToRefs(baseStore)
+const noData = getAssets("no_data.svg")
 
 let data = ref([])
 let loading = ref(false)

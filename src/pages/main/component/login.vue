@@ -9,7 +9,7 @@
         v-model="props.visible">
       <el-row class="login-body">
         <el-row justify="center" class="title">
-          <el-image class="logo" :src="'../../../../src/assets/images/matrix.svg'" lazy></el-image>
+          <el-image class="logo" :src="logo" lazy></el-image>
         </el-row>
         <Account v-if="mode === 'account'" v-model:mode="mode" @close="closeDialog"></Account>
         <Code v-if="mode === 'code'" v-model:mode="mode" @close="closeDialog"></Code>
@@ -41,11 +41,13 @@ import Account from "./account.vue"
 import Code from "./code.vue"
 import Register from "./register.vue"
 import Forget from "./forget.vue"
+import {getAssets} from "../../../utils/globalFunc";
 
 const emits = defineEmits(["update:visible"])
 const props = defineProps({
   visible: Boolean,
 })
+const logo = getAssets('matrix.svg')
 
 let mode = ref("code")
 
