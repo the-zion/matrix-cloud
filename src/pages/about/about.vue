@@ -1,35 +1,13 @@
 <template>
-  <el-upload action="#" list-type="picture-card" :auto-upload="false" ref="formRef">
-    <el-icon><Plus /></el-icon>
+  <el-button
 
-    <template #file="{ file }">
-      <div>
-        <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
-        <span class="el-upload-list__item-actions">
-          <span
-              class="el-upload-list__item-preview"
-              @click="handlePictureCardPreview(file)"
-          >
-            <el-icon><zoom-in /></el-icon>
-          </span>
-          <span
-              v-if="!disabled"
-              class="el-upload-list__item-delete"
-              @click="handleDownload(file)"
-          >
-            <el-icon><Download /></el-icon>
-          </span>
-          <span
-              v-if="!disabled"
-              class="el-upload-list__item-delete"
-              @click="handleRemove(file)"
-          >
-            <el-icon><Delete /></el-icon>
-          </span>
-        </span>
-      </div>
-    </template>
-  </el-upload>
+      class="button"
+      type="primary"
+      text
+      bg
+      loading
+  >{{ "点击获取" }}
+  </el-button>
 
   <el-dialog v-model="dialogVisible">
     <img w-full :src="dialogImageUrl" alt="Preview Image" />
@@ -37,7 +15,6 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { Delete, Download, Plus, ZoomIn } from '@element-plus/icons-vue'
 
 import type { UploadFile } from 'element-plus'
 
