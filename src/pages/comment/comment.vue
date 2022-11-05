@@ -1,7 +1,7 @@
 <template>
   <el-container class="comment-container" id="comment-container">
     <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
-              :image-size="250" image="../../src/assets/images/no_data.svg"
+              :image-size="250" :image="noData"
     />
     <el-row v-for="(item,index) in data" class="each" :key="item.id" :class="props.shape">
       <el-row class="header" justify="space-between" align="middle">
@@ -78,9 +78,10 @@ export default {
 import {onBeforeMount, ref} from "vue"
 import SubComment from "./sub-comment.vue";
 import {scrollToBottomListen, throttle} from "../../utils/scroll";
-import {confirm, goToPage} from "../../utils/globalFunc";
+import {confirm, getAssets, goToPage} from "../../utils/globalFunc";
 import {axiosGetAll, get, post} from "../../utils/axios";
-import {baseMainStore, userMainStore} from "../../store";
+import {userMainStore} from "../../store/user";
+import {baseMainStore} from "../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {warning, error} from "../../utils/message";
 import Prism from 'prismjs';
@@ -95,6 +96,7 @@ const baseStore = baseMainStore()
 const {avatar, comment} = storeToRefs(baseStore)
 const userStore = userMainStore()
 const {uuid} = storeToRefs(userStore)
+const noData = getAssets("no_data.svg")
 
 let data = ref([])
 let list = ref([])

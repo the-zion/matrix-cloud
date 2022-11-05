@@ -1,7 +1,7 @@
 <template>
   <el-container class="replied-container" id="replied-container">
     <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
-              :image-size="250" image="../../src/assets/images/no_data.svg"
+              :image-size="250" :image="noData"
     />
     <el-row v-for="(item,index) in data" class="each" :key="item.id">
       <el-row class="header" justify="space-between" align="middle">
@@ -57,8 +57,9 @@ export default {
 import {onBeforeMount, ref} from "vue";
 import {scrollToBottomListen, throttle} from "../../../utils/scroll";
 import {axiosGetAll, post} from "../../../utils/axios";
-import {baseMainStore, userMainStore} from "../../../store";
-import {confirm, goToPage} from "../../../utils/globalFunc";
+import {userMainStore} from "../../../store/user";
+import {baseMainStore} from "../../../store/base";
+import {confirm, getAssets, goToPage} from "../../../utils/globalFunc";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import Prism from 'prismjs';
 import {error, warning} from "../../../utils/message";
@@ -73,6 +74,7 @@ const userStore = userMainStore()
 const baseStore = baseMainStore()
 const {avatar, article, talk, comment} = storeToRefs(baseStore)
 const {uuid, username} = storeToRefs(userStore)
+const noData = getAssets("no_data.svg")
 
 let creation = ref("article")
 let data = ref([])
