@@ -60,38 +60,38 @@ export function GetMedalMeta() {
         key: "creation",
         children: [{
             key: "creation1",
-            label: medalMap["creation1"],
-            introduce: medalIntroduce["creation1"],
+            label: medalMap.creation1,
+            introduce: medalIntroduce.creation1,
             total: 1
         }, {
             key: "creation2",
-            label: medalMap["creation2"],
-            introduce: medalIntroduce["creation2"],
+            label: medalMap.creation2,
+            introduce: medalIntroduce.creation2,
             total: 10
         }, {
             key: "creation3",
-            label: medalMap["creation3"],
-            introduce: medalIntroduce["creation3"],
+            label: medalMap.creation3,
+            introduce: medalIntroduce.creation3,
             total: 30
         }, {
             key: "creation4",
-            label: medalMap["creation4"],
-            introduce: medalIntroduce["creation4"],
+            label: medalMap.creation4,
+            introduce: medalIntroduce.creation4,
             total: 50
         }, {
             key: "creation5",
-            label: medalMap["creation5"],
-            introduce: medalIntroduce["creation5"],
+            label: medalMap.creation5,
+            introduce: medalIntroduce.creation5,
             total: 100
         }, {
             key: "creation6",
-            label: medalMap["creation6"],
-            introduce: medalIntroduce["creation6"],
+            label: medalMap.creation6,
+            introduce: medalIntroduce.creation6,
             total: 300
         }, {
             key: "creation7",
-            label: medalMap["creation7"],
-            introduce: medalIntroduce["creation7"],
+            label: medalMap.creation7,
+            introduce: medalIntroduce.creation7,
             total: 1000
         }]
     }, {
@@ -99,18 +99,18 @@ export function GetMedalMeta() {
         key: "activeAgree",
         children: [{
             key: "agree1",
-            label: medalMap["agree1"],
-            introduce: medalIntroduce["agree1"],
+            label: medalMap.agree1,
+            introduce: medalIntroduce.agree1,
             total: 30
         }, {
             key: "agree2",
-            label: medalMap["agree2"],
-            introduce: medalIntroduce["agree2"],
+            label: medalMap.agree2,
+            introduce: medalIntroduce.agree2,
             total: 100
         }, {
             key: "agree3",
-            label: medalMap["agree3"],
-            introduce: medalIntroduce["agree3"],
+            label: medalMap.agree3,
+            introduce: medalIntroduce.agree3,
             total: 300
         }]
     }, {
@@ -118,18 +118,18 @@ export function GetMedalMeta() {
         key: "agree",
         children: [{
             key: "agree4",
-            label: medalMap["agree4"],
-            introduce: medalIntroduce["agree4"],
+            label: medalMap.agree4,
+            introduce: medalIntroduce.agree4,
             total: 50
         }, {
             key: "agree5",
-            label: medalMap["agree5"],
-            introduce: medalIntroduce["agree5"],
+            label: medalMap.agree5,
+            introduce: medalIntroduce.agree5,
             total: 300
         }, {
             key: "agree6",
-            label: medalMap["agree6"],
-            introduce: medalIntroduce["agree6"],
+            label: medalMap.agree6,
+            introduce: medalIntroduce.agree6,
             total: 1000
         }]
     }, {
@@ -137,18 +137,18 @@ export function GetMedalMeta() {
         key: "view",
         children: [{
             key: "view1",
-            label: medalMap["view1"],
-            introduce: medalIntroduce["view1"],
+            label: medalMap.view1,
+            introduce: medalIntroduce.view1,
             total: 10000
         }, {
             key: "view2",
-            label: medalMap["view2"],
-            introduce: medalIntroduce["view2"],
+            label: medalMap.view2,
+            introduce: medalIntroduce.view2,
             total: 50000
         }, {
             key: "view3",
-            label: medalMap["view3"],
-            introduce: medalIntroduce["view3"],
+            label: medalMap.view3,
+            introduce: medalIntroduce.view3,
             total: 100000
         }]
     }, {
@@ -156,18 +156,18 @@ export function GetMedalMeta() {
         key: "comment",
         children: [{
             key: "comment1",
-            label: medalMap["comment1"],
-            introduce: medalIntroduce["comment1"],
+            label: medalMap.comment1,
+            introduce: medalIntroduce.comment1,
             total: 10
         }, {
             key: "comment2",
-            label: medalMap["comment2"],
-            introduce: medalIntroduce["comment2"],
+            label: medalMap.comment2,
+            introduce: medalIntroduce.comment2,
             total: 50
         }, {
             key: "comment3",
-            label: medalMap["comment3"],
-            introduce: medalIntroduce["comment3"],
+            label: medalMap.comment3,
+            introduce: medalIntroduce.comment3,
             total: 100
         }]
     }, {
@@ -175,18 +175,18 @@ export function GetMedalMeta() {
         key: "collect",
         children: [{
             key: "collect1",
-            label: medalMap["collect1"],
-            introduce: medalIntroduce["collect1"],
+            label: medalMap.collect1,
+            introduce: medalIntroduce.collect1,
             total: 30
         }, {
             key: "collect2",
-            label: medalMap["collect2"],
-            introduce: medalIntroduce["collect2"],
+            label: medalMap.collect2,
+            introduce: medalIntroduce.collect2,
             total: 100
         }, {
             key: "collect3",
-            label: medalMap["collect3"],
-            introduce: medalIntroduce["collect3"],
+            label: medalMap.collect3,
+            introduce: medalIntroduce.collect3,
             total: 500
         }]
     }]
