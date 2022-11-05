@@ -9,7 +9,7 @@
       </el-space>
     </el-space>
     <el-empty v-show="draft.length === 0" class="empty" description=" "
-              :image-size="150" image="../../src/assets/images/no_data.svg"
+              :image-size="150" :image="noData"
     />
   </el-row>
 </template>
@@ -23,15 +23,18 @@ export default {
 <script setup>
 import {onBeforeMount, ref} from "vue"
 import {get, post} from "../../../utils/axios"
-import {userMainStore, baseMainStore} from "../../../store";
+import {userMainStore} from "../../../store/user";
+import {baseMainStore} from "../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {warning} from "../../../utils/message";
+import {getAssets} from "../../../utils/globalFunc";
 
 const userStore = userMainStore()
 const baseStore = baseMainStore()
 const {uuid} = storeToRefs(userStore)
 const {article} = storeToRefs(baseStore)
 const emits = defineEmits(["draftSelect"])
+const noData = getAssets("no_data.svg")
 let draft = ref([])
 let loading = ref(false)
 

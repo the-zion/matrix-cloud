@@ -17,7 +17,7 @@
       <el-row class="base" align="middle" justify="space-between">
         <el-space :size="20">
           <el-image class="logo" @click="backToHome"
-                    :src="'../../src/assets/images/matrix.svg'"
+                    :src="logo"
                     fit="contain"
           ></el-image>
         </el-space>
@@ -75,14 +75,15 @@
 
 <script setup>
 import {onBeforeUnmount, ref, shallowRef, onMounted} from 'vue'
-import {backToHome} from "../../utils/globalFunc";
+import {backToHome, getAssets} from "../../utils/globalFunc";
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 import {success, info, warning, error} from "../../utils/message";
 import {customCheckVideoFn, customParseVideoSrc} from "../../utils/video";
 import {get, post} from "../../utils/axios"
 import Draft from './component/draft.vue'
 import Form from './component/form.vue'
-import {userMainStore, baseMainStore} from "../../store";
+import {userMainStore} from "../../store/user";
+import {baseMainStore} from "../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {useRoute} from "vue-router";
 
@@ -121,6 +122,7 @@ const editorConfig = {
     }
   }
 }
+const logo = getAssets('matrix.svg')
 
 let title = ref("")
 let draftId = ref()
