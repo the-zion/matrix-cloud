@@ -1,7 +1,7 @@
 <template>
   <el-row class="collect-list" id="user-list">
     <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
-              :image-size="250" image="../../src/assets/images/no_data.svg"
+              :image-size="250" :image="noData"
     />
     <el-space class="data" fill :size="0">
       <el-row v-for="(item, index) in data" class="each" :key="item.id"
@@ -59,8 +59,9 @@ export default {
 </script>
 
 <script setup>
-import {baseMainStore, userMainStore} from "../../../store";
-import {confirm, goToPage} from "../../../utils/globalFunc";
+import {userMainStore} from "../../../store/user";
+import {baseMainStore} from "../../../store/base";
+import {confirm, getAssets, goToPage} from "../../../utils/globalFunc";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {onBeforeMount, ref} from "vue";
 import {useRoute} from "vue-router";
@@ -76,6 +77,7 @@ const props = defineProps({
   userId: String
 })
 const emits = defineEmits(["row-delete"])
+const noData = getAssets("no_data.svg")
 
 let data = ref([])
 let list = ref([])

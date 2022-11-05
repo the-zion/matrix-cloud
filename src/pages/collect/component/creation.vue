@@ -3,7 +3,7 @@
     <collections-create v-model:visible="visible" v-bind:mode="'edit'" v-bind:id="collectionsId"
                         @editAfter="editAfter"></collections-create>
     <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
-              :image-size="250" image="../../src/assets/images/no_data.svg"
+              :image-size="250" :image="noData"
     />
     <el-space class="data" fill :size="0">
       <el-row v-for="(item, index) in data" class="each" :key="item.id"
@@ -46,9 +46,10 @@ export default {
 
 <script setup>
 import {ref, onBeforeMount} from "vue";
-import {confirm, goToPage} from "../../../utils/globalFunc";
+import {confirm, getAssets, goToPage} from "../../../utils/globalFunc";
 import {error, success} from "../../../utils/message";
-import {baseMainStore, userMainStore} from "../../../store";
+import {userMainStore} from "../../../store/user";
+import {baseMainStore} from "../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {post, get, axiosGetAll} from "../../../utils/axios";
 import CollectionsCreate from "./create.vue";
@@ -59,6 +60,7 @@ const userStore = userMainStore()
 const {uuid} = storeToRefs(userStore)
 const {avatar, collections} = storeToRefs(baseStore)
 const emits = defineEmits(["row-delete"])
+const noData = getAssets("no_data.svg")
 
 let visible = ref(false)
 let data = ref([])

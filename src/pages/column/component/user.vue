@@ -1,7 +1,7 @@
 <template>
   <el-row class="user-list" id="user-list">
     <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
-              :image-size="250" image="../../src/assets/images/no_data.svg"
+              :image-size="250" :image="noData"
     />
     <column-create v-model:visible="visible" v-bind:mode="'edit'" :id="columnId"></column-create>
     <el-space class="data" fill :size="0">
@@ -57,8 +57,9 @@ export default {
 
 <script setup>
 import ColumnCreate from "../../column/component/create.vue";
-import {baseMainStore, userMainStore} from "../../../store";
-import {goToPage} from "../../../utils/globalFunc";
+import {userMainStore} from "../../../store/user";
+import {baseMainStore} from "../../../store/base";
+import {getAssets, goToPage} from "../../../utils/globalFunc";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {onBeforeMount, ref} from "vue";
 import {useRoute} from "vue-router";
@@ -70,6 +71,7 @@ const emits = defineEmits(["current-page"])
 const baseStore = baseMainStore()
 const {avatar, column} = storeToRefs(baseStore)
 const {uuid} = storeToRefs(userStore)
+const noData = getAssets("no_data.svg")
 
 let data = ref([])
 let list = ref([])

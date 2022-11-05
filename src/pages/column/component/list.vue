@@ -1,7 +1,7 @@
 <template>
   <el-row class="column-list" id="column-list">
     <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
-              :image-size="250" image="../../src/assets/images/no_data.svg"
+              :image-size="250" :image="noData"
     />
     <el-space class="data" fill :size="0">
       <el-row v-for="item in data" class="each" :key="item.id"
@@ -56,9 +56,9 @@ export default {
 
 <script setup>
 import {ref, onBeforeMount} from "vue";
-import {goToPage} from "../../../utils/globalFunc";
-import {info, success} from "../../../utils/message";
-import {baseMainStore} from "../../../store";
+import {getAssets, goToPage} from "../../../utils/globalFunc";
+import {info} from "../../../utils/message";
+import {baseMainStore} from "../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {scrollToBottomListen, throttle} from "../../../utils/scroll";
 import {axiosGetAll, get} from "../../../utils/axios";
@@ -66,6 +66,7 @@ import {axiosGetAll, get} from "../../../utils/axios";
 const emits = defineEmits(["current-page"])
 const baseStore = baseMainStore()
 const {avatar, column} = storeToRefs(baseStore)
+const noData = getAssets("no_data.svg")
 
 let data = ref([])
 let list = ref([])
