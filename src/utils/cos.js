@@ -1,20 +1,19 @@
-import * as COS from "cos-js-sdk-v5"
+import COS from "cos-js-sdk-v5"
 import {get} from "./axios"
 import {error} from "./message";
 
 export function initCos() {
     return new COS({
-        getAuthorization: function (options, callback) {
-            get("/v1/get/cos/session/key").then(function (reply) {
-                let data = reply.data
+        getAuthorization(options, callback) {
+            get("/v1/get/cos/session/key").then((reply) => {
                 callback({
-                    TmpSecretId: data["tmpSecretId"],
-                    TmpSecretKey: data["tmpSecretKey"],
-                    SecurityToken: data["sessionToken"],
-                    StartTime: data["startTime"],
-                    ExpiredTime: data["expiredTime"],
+                    TmpSecretId: reply.data.tmpSecretId,
+                    TmpSecretKey: reply.data.tmpSecretKey,
+                    SecurityToken: reply.data.sessionToken,
+                    StartTime: reply.data.startTime,
+                    ExpiredTime: reply.data.expiredTime,
                 });
-            }).catch(function () {
+            }).catch(() => {
                 error("上传失败，请稍后再试")
             })
         }

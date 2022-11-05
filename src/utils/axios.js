@@ -1,14 +1,14 @@
 import axios from "axios"
 import {loginTimeOut} from "./globalFunc";
-import {baseMainStore} from "../store";
+import {baseMainStore} from "../store/base";
 
-let endpoint = null
+let endpointUrl = null
 
 function getEndPoint() {
-    if (!endpoint) {
-        endpoint = baseMainStore()["endpoint"]
+    if (!endpointUrl) {
+        endpointUrl = baseMainStore().endpoint
     }
-    return endpoint
+    return endpointUrl
 }
 
 export function post(url, params) {
@@ -21,18 +21,19 @@ export function post(url, params) {
         }
     });
     if (token) {
-        instance.defaults.headers.common['Authorization'] = "Bearer " + token;
+        instance.defaults.headers.common.Authorization = `Bearer ${token}`;
+
     }
-    token && (instance.defaults.headers.common['Authorization'] = "Bearer " + token)
-    instance.interceptors.response.use(function (response) {
-        return response;
-    }, function (error) {
-        let response = error.response
-        if (response) {
-            switch (response.data.reason) {
+    token && (instance.defaults.headers.common.Authorization = `Bearer ${token}`)
+    instance.interceptors.response.use((response) => response, (error) => {
+        let r = error.response
+        if (r) {
+            switch (r.data.reason) {
                 case "TOKEN_EXPIRED":
                     loginTimeOut()
                     break
+                default:
+
             }
         }
         return Promise.reject(error)
@@ -50,17 +51,16 @@ export function get(url) {
         },
     });
     if (token) {
-        instance.defaults.headers.common['Authorization'] = "Bearer " + token;
+        instance.defaults.headers.common.Authorization = `Bearer ${token}`;
     }
-    instance.interceptors.response.use(function (response) {
-        return response;
-    }, function (error) {
-        let response = error.response
-        if (response) {
-            switch (response.data.reason) {
+    instance.interceptors.response.use((response) => response, (error) => {
+        let r = error.response
+        if (r) {
+            switch (r.data.reason) {
                 case "TOKEN_EXPIRED":
                     loginTimeOut()
                     break
+                default:
             }
         }
         return Promise.reject(error);

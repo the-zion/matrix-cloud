@@ -1,34 +1,34 @@
-import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
+import {ElMessageBox, ElNotification} from "element-plus";
 
 
-export function success(message) {
+export function success(m) {
     ElNotification({
         title: 'Success',
-        message: message,
+        message: m,
         showClose: false,
         type: 'success',
     })
 }
 
-export function warning(message) {
+export function warning(m) {
     ElNotification({
         title: 'Warning',
-        message: message,
+        message: m,
         showClose: false,
         type: 'warning',
     })
 }
 
-export function error(message) {
+export function error(m) {
     ElNotification({
         title: 'Error',
-        message: message,
+        message: m,
         showClose: false,
         type: 'error',
     })
 }
 
-export function info(message) {
+export function info(m) {
     // ElMessage({
     //     message: message,
     //     type: 'info',
@@ -36,7 +36,7 @@ export function info(message) {
     // })
     ElNotification({
         title: 'Info',
-        message: message,
+        message: m,
         showClose: false,
         type: 'info',
     })

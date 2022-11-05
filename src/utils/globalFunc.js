@@ -1,7 +1,7 @@
 import {ElMessageBox} from 'element-plus'
 import router from "../router";
 import {warning} from "./message";
-import {baseMainStore} from "../store";
+import {baseMainStore} from "../store/base";
 
 let userStoreStorage = null
 
@@ -13,45 +13,49 @@ function getUserStore() {
 }
 
 function getAverageRGB(imgEl) {
-    let blockSize = 5,
-        defaultRGB = {r: 0, g: 0, b: 0},
-        canvas = document.createElement('canvas'),
-        context = canvas.getContext && canvas.getContext('2d'),
-        data, width, height,
-        i = -4,
-        length,
-        rgb = {r: 0, g: 0, b: 0},
-        count = 0;
+    let blockSize = 5
+    let defaultRGB = {r: 0, g: 0, b: 0}
+    let canvas = document.createElement('canvas')
+    let context = canvas.getContext && canvas.getContext('2d')
+    let data
+    let width
+    let height
+    let i = -4
+    let length
+    let rgb = {r: 0, g: 0, b: 0}
+    let count = 0
 
 
     if (!context) {
         return defaultRGB;
     }
 
-    height = canvas.height = imgEl.naturalHeight || imgEl.offsetHeight || imgEl.height;
-    width = canvas.width = imgEl.naturalWidth || imgEl.offsetWidth || imgEl.width;
+    canvas.height = imgEl.naturalHeight || imgEl.offsetHeight || imgEl.height;
+    canvas.width = imgEl.naturalWidth || imgEl.offsetWidth || imgEl.width;
+    height = canvas.height
+    width = canvas.width
 
     context.drawImage(imgEl, 0, 0);
 
     try {
         data = context.getImageData(0, 0, width, height);
     } catch (e) {
-        console.log(e)
         return defaultRGB;
     }
 
     length = data.data.length;
 
-    while ((i += blockSize * 4) < length) {
+    while (i + blockSize * 4 < length) {
+        i += blockSize * 4
         ++count;
         rgb.r += data.data[i];
         rgb.g += data.data[i + 1];
         rgb.b += data.data[i + 2];
     }
 
-    rgb.r = ~~(rgb.r / count);
-    rgb.g = ~~(rgb.g / count);
-    rgb.b = ~~(rgb.b / count);
+    rgb.r = Math.floor(rgb.r / count) || 0;
+    rgb.g = Math.floor(rgb.g / count) || 0;
+    rgb.b = Math.floor(rgb.b / count) || 0;
 
     return rgb;
 }
@@ -66,7 +70,7 @@ export function reverse(base, inner) {
     let r = 255 - rgb.r
     let g = 255 - rgb.g
     let b = 255 - rgb.b
-    return r + ',' + g + ',' + b
+    return `${r},${g},${b}`
 }
 
 export function confirm(title, message, type) {
@@ -109,3 +113,5 @@ export function loginTimeOut() {
         userStore.$reset()
     }
 }
+
+export const getAssets = (name, folder = 'images') => new URL(`../assets/${folder}/${name}`, import.meta.url).href

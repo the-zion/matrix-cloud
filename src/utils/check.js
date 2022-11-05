@@ -1,3 +1,19 @@
+export function checkPhone(value) {
+    return value.match("^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$")
+}
+
+export function checkCode(value) {
+    return value.match("^[0-9]{6}$")
+}
+
+export function checkEmail(value) {
+    return value.match("\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*")
+}
+
+export function checkPassword(value) {
+    return value.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[\\s\\S]{8,16}$")
+}
+
 export function validateAccount(rule, value, callback) {
     if (!(checkPhone(value) || checkEmail(value))) {
         value || callback(new Error("账号不能为空"))
@@ -36,20 +52,4 @@ export function validateEmail(rule, value, callback) {
         callback(new Error("邮箱格式错误"))
     }
     callback()
-}
-
-export function checkPhone(value) {
-    return value.match("^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$")
-}
-
-export function checkCode(value) {
-    return value.match("^[0-9]{6}$")
-}
-
-export function checkEmail(value) {
-    return value.match("\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*")
-}
-
-export function checkPassword(value) {
-    return value.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[\\s\\S]{8,16}$")
 }
