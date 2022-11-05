@@ -109,7 +109,8 @@ import {get, post} from "../../utils/axios";
 import {animationAgree, animationCollect} from "../../utils/animation";
 import {ref, onBeforeUnmount, shallowRef, onBeforeMount} from "vue"
 import {Editor} from '@wangeditor/editor-for-vue'
-import {baseMainStore, userMainStore} from "../../store";
+import {userMainStore} from "../../store/user";
+import {baseMainStore} from "../../store/base";
 import router from "../../router";
 import CollectionsChoose from "../collect/component/choose.vue";
 

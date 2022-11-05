@@ -84,7 +84,8 @@ export default {
 <script setup>
 import {onBeforeMount, ref} from "vue"
 import {error, success, warning} from "../../../utils/message";
-import {baseMainStore, userMainStore} from "../../../store";
+import {userMainStore} from "../../../store/user";
+import {baseMainStore} from "../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {get, post} from "../../../utils/axios";
 import router from "../../../router";

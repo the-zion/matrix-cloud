@@ -25,7 +25,7 @@ export default {
 <script setup>
 import {ref} from "vue"
 import CollectionsCreate from "../../../collect/component/create.vue";
-import {userMainStore} from "../../../../store";
+import {userMainStore} from "../../../../store/user";
 import {storeToRefs} from "pinia/dist/pinia";
 import CollectCreationList from "../../../collect/component/creation.vue";
 

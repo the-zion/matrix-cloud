@@ -51,7 +51,8 @@ import {get} from "../../utils/axios";
 import {onBeforeRouteLeave, useRoute} from "vue-router";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {onBeforeMount, ref} from "vue"
-import {baseMainStore, userMainStore} from "../../store";
+import {userMainStore} from "../../store/user";
+import {baseMainStore} from "../../store/base";
 import router from "../../router";
 import ArticleCollectList from "../article/component/collect.vue";
 import TalkCollectList from "../talk/component/collect.vue";

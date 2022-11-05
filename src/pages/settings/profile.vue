@@ -97,7 +97,8 @@ import {onBeforeMount, ref} from "vue"
 import {error, success, warning} from "../../utils/message";
 import {get, post} from "../../utils/axios";
 import {storeToRefs} from "pinia"
-import {userMainStore, baseMainStore} from "../../store";
+import {userMainStore} from "../../store/user";
+import {baseMainStore} from "../../store/base";
 
 const userStore = userMainStore()
 const baseStore = baseMainStore()

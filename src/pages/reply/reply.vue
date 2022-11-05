@@ -32,7 +32,8 @@ import {onBeforeUnmount, ref, shallowRef, onBeforeMount} from 'vue'
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 import {get, post} from "../../utils/axios";
 import {success, error, warning} from "../../utils/message";
-import {baseMainStore, userMainStore} from "../../store";
+import {userMainStore} from "../../store/user";
+import {baseMainStore} from "../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 
 const editorRef = shallowRef()

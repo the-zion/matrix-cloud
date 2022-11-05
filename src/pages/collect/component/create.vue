@@ -50,7 +50,8 @@ export default {
 import {ref} from "vue"
 import {get, post} from "../../../utils/axios";
 import {error, success, warning} from "../../../utils/message";
-import {baseMainStore, userMainStore} from "../../../store";
+import {userMainStore} from "../../../store/user";
+import {baseMainStore} from "../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia";
 
 const emits = defineEmits(["update:visible", "createAfter", "editAfter"])

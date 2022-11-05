@@ -83,7 +83,8 @@ export default {
 <script setup>
 import {ref, onBeforeMount} from "vue";
 import router from "../../../router";
-import {baseMainStore, userMainStore} from "../../../store";
+import {userMainStore} from "../../../store/user";
+import {baseMainStore} from "../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia";
 import {confirm} from "../../../utils/globalFunc";
 import {get} from "../../../utils/axios";

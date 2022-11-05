@@ -50,7 +50,8 @@ export default {
 import {onBeforeMount, ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {scrollToTop} from "../../../utils/scroll";
-import {baseMainStore, userMainStore} from "../../../store";
+import {userMainStore} from "../../../store/user";
+import {baseMainStore} from "../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 
 

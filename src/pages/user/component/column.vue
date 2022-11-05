@@ -17,7 +17,7 @@ export default {
 
 <script setup>
 import {ref} from "vue"
-import {userMainStore} from "../../../store";
+import {userMainStore} from "../../../store/user";
 import {storeToRefs} from "pinia/dist/pinia";
 import {useRoute} from "vue-router";
 import ColumnUserList from "../../column/component/user.vue";

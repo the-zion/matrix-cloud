@@ -30,7 +30,7 @@ import {ref} from "vue";
 import {success, error} from "../../../utils/message";
 import {validateAccount, validatePassword} from "../../../utils/check"
 import {post} from "../../../utils/axios";
-import {userMainStore} from "../../../store";
+import {userMainStore} from "../../../store/user";
 
 const userStore = userMainStore()
 const emits = defineEmits(["update:mode", "close"])

@@ -44,7 +44,8 @@ import {ref, computed} from "vue"
 import {post, get, axiosGetAll} from "../../../utils/axios";
 import {error} from "../../../utils/message";
 import router from "../../../router";
-import {baseMainStore, userMainStore} from "../../../store";
+import {userMainStore} from "../../../store/user";
+import {baseMainStore} from "../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia";
 
 const emits = defineEmits(["update:visible", "collected"])

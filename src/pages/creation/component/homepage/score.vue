@@ -51,7 +51,8 @@ export default {
 
 <script setup>
 import {onBeforeMount, ref} from "vue"
-import {baseMainStore, userMainStore} from "../../../../store";
+import {userMainStore} from "../../../../store/user";
+import {baseMainStore} from "../../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 
 const userStore = userMainStore()

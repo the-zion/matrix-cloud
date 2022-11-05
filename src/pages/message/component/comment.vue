@@ -16,8 +16,8 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import {get, post} from "../../../utils/axios";
-import {baseMainStore} from "../../../store";
+import {post} from "../../../utils/axios";
+import {baseMainStore} from "../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia";
 import MessageReplied from "../../comment/component/message.vue";
 import MessageRepliedSub from "../../comment/component/message_sub.vue";

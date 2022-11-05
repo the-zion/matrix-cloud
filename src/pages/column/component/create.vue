@@ -91,7 +91,8 @@ export default {
 </script>
 
 <script setup>
-import {baseMainStore, userMainStore} from "../../../store";
+import {userMainStore} from "../../../store/user";
+import {baseMainStore} from "../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia";
 import {ref} from "vue";
 import {error, success, warning} from "../../../utils/message";

@@ -19,7 +19,7 @@ export default {
 import {ref} from "vue"
 import {storeToRefs} from "pinia/dist/pinia";
 import {useRoute} from "vue-router";
-import {userMainStore} from "../../../store";
+import {userMainStore} from "../../../store/user";
 import ColumnSubscribeList from "../../column/component/subscribe.vue";
 
 const userStore = userMainStore()
