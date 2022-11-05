@@ -4,7 +4,7 @@
       <el-row class="header">{{ block.label }}</el-row>
       <el-row class="block" v-for="item in block.children">
 
-        <el-image class="medal" :src="'../../src/assets/images/'+item.label+'.svg'"
+        <el-image class="medal" :src="medalSvg(item.label)"
                   fit="contain"
         ></el-image>
         <el-row class="info" justify="center">
@@ -58,9 +58,10 @@ export default {
 import {onBeforeMount, ref} from "vue"
 import {GetMedalMap, GetMedalMeta} from "../medal";
 import {get, post} from "../../../../utils/axios";
-import {userMainStore} from "../../../../store";
+import {userMainStore} from "../../../../store/user";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {success, error} from "../../../../utils/message";
+import {getAssets} from "../../../../utils/globalFunc";
 
 const userStore = userMainStore()
 const {uuid} = storeToRefs(userStore)
@@ -115,6 +116,10 @@ function accessMedal(item) {
   }).then(function () {
     item["loading"] = false
   })
+}
+
+function medalSvg(label){
+  return getAssets(label + ".svg")
 }
 
 onBeforeMount(function () {

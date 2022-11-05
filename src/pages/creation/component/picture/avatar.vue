@@ -66,7 +66,7 @@
         <template #empty>
           <el-row align="middle" justify="center">
             <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
-                      :image-size="250" image="../../src/assets/images/no_data.svg"
+                      :image-size="250" :image="noData"
             />
           </el-row>
         </template>
@@ -87,13 +87,16 @@ import {onBeforeMount, ref} from "vue"
 import {scrollToBottomListen, throttle} from "../../../../utils/scroll";
 import {ReviewTag, Category, SubLabel} from "../../../../utils/review";
 import {post} from "../../../../utils/axios";
-import {baseMainStore, userMainStore} from "../../../../store";
+import {userMainStore} from "../../../../store/user";
+import {baseMainStore} from "../../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
+import {getAssets} from "../../../../utils/globalFunc";
 
 const userStore = userMainStore()
 const baseStore = baseMainStore()
 const {uuid, cos} = storeToRefs(userStore)
 const {avatar} = storeToRefs(baseStore)
+const noData = getAssets("no_data.svg")
 
 let currentPage = 1
 let isBottom = false
