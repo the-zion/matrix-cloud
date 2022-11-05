@@ -43,17 +43,13 @@ const routes = [
     {
         path: '/',
         name: 'root',
-        redirect: to => {
-            return {name: 'home', query: {page: 'news'}}
-        },
+        redirect: {name: 'home', query: {page: 'news'}}
     },
     {
         path: '/main',
         name: 'main',
         component: Main,
-        redirect: to => {
-            return {name: 'home', query: {page: 'news'}}
-        },
+        redirect: {name: 'home', query: {page: 'news'}},
         children: [
             {
                 path: 'home',
@@ -89,7 +85,7 @@ const routes = [
                     path: 'timeline',
                     name: 'message.timeline',
                     component: MessageTimeLine
-                },{
+                }, {
                     path: 'comment',
                     name: 'message.comment',
                     component: MessageComment
@@ -118,7 +114,7 @@ const routes = [
                     path: 'timeline',
                     name: 'user.timeline',
                     component: UserTimeLine
-                },{
+                }, {
                     path: 'article',
                     name: 'user.article',
                     component: UserArticle
@@ -169,11 +165,11 @@ const routes = [
                     path: 'picture',
                     name: 'creation.picture',
                     component: CreationPicture
-                },{
+                }, {
                     path: 'review',
                     name: 'creation.review',
                     component: CreationReview
-                },{
+                }, {
                     path: 'comment',
                     name: 'creation.comment',
                     component: CreationComment
