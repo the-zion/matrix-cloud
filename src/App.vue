@@ -8,7 +8,7 @@
 
 <script setup>
 import {onBeforeMount} from "vue";
-import {userMainStore} from "./store";
+import {userMainStore} from "./store/user";
 
 const userStore = userMainStore()
 onBeforeMount(function () {
