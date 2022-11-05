@@ -1,7 +1,7 @@
 <template>
   <el-row class="search-list" id="search-list">
     <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
-              :image-size="250" image="../../src/assets/images/no_data.svg"
+              :image-size="250" :image="noData"
     />
     <el-skeleton class="skeleton" v-show="loading" :rows="2" animated/>
     <el-space class="data" fill :size="0">
@@ -62,8 +62,9 @@ export default {
 
 <script setup>
 import {onBeforeMount, ref, watch} from "vue"
-import {goToPage} from "../../../utils/globalFunc";
-import {baseMainStore, userMainStore} from "../../../store";
+import {getAssets, goToPage} from "../../../utils/globalFunc";
+import {userMainStore} from "../../../store/user";
+import {baseMainStore} from "../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {get, post} from "../../../utils/axios";
 import {scrollTo, scrollToBottomListen, throttle} from "../../../utils/scroll";
@@ -76,6 +77,7 @@ const {uuid} = storeToRefs(userStore)
 const props = defineProps({
   search: String,
 })
+const noData = getAssets("no_data.svg")
 
 let data = ref([])
 let list = ref([])

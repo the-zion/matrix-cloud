@@ -1,7 +1,7 @@
 <template>
   <el-row class="user-list" id="user-list">
     <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
-              :image-size="250" image="../../src/assets/images/no_data.svg"
+              :image-size="250" :image="noData"
     />
     <el-space class="data" fill :size="0">
       <el-row v-for="item in data" class="each" :key="item.id"
@@ -62,9 +62,10 @@ export default {
 
 <script setup>
 import {ref, onBeforeMount} from "vue";
-import {goToPage} from "../../../utils/globalFunc";
+import {getAssets, goToPage} from "../../../utils/globalFunc";
 import {error, success, warning} from "../../../utils/message";
-import {baseMainStore, userMainStore} from "../../../store";
+import {userMainStore} from "../../../store/user";
+import {baseMainStore} from "../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {useRoute} from "vue-router";
 import {get, post} from "../../../utils/axios";
@@ -81,6 +82,7 @@ const userStore = userMainStore()
 const baseStore = baseMainStore()
 const {avatar, article} = storeToRefs(baseStore)
 const {uuid} = storeToRefs(userStore)
+const noData = getAssets("no_data.svg")
 
 let data = ref([])
 let list = ref([])

@@ -1,7 +1,7 @@
 <template>
   <el-row class="timeline-list" id="timeline-list">
     <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
-              :image-size="250" image="../../src/assets/images/no_data.svg"
+              :image-size="250" :image="noData"
     />
     <el-row class="data" fill :size="0">
       <el-row v-for="item in data" class="each" :key="item.id"
@@ -10,7 +10,7 @@
           <el-space class="main" fill>
             <el-space class="head">
               <el-avatar @click.stop="goToPage('user', {id:item.uuid,menu:'timeline'})" class="avatar"
-                         :size="24" icon="UserFilled"
+                         :size="32" icon="UserFilled"
                          :src="avatar.baseUrl + item.uuid + '/avatar.webp'"/>
               <el-row class="title">{{ item.title }}</el-row>
             </el-space>
@@ -99,16 +99,9 @@
           <el-row class="container" :class="{'full':!item.cover}">
             <el-space class="main" fill :size="5">
               <el-space class="head">
-                <el-popover placement="top-start" :show-arrow="false" :width="312" trigger="hover"
-                            popper-class="popover" @before-enter="item['showUserCard'] = true"
-                            @after-leave="item['showUserCard'] = false">
-                  <template #reference>
-                    <el-avatar @click.stop="goToPage('user', {id:item.uuid,menu:'timeline'})" class="avatar"
-                               :size="24" icon="UserFilled"
-                               :src="avatar.baseUrl + item.uuid + '/avatar.webp'"/>
-                  </template>
-                  <matrix-user-mini-card :uuid="item.uuid" v-if="item['showUserCard']"></matrix-user-mini-card>
-                </el-popover>
+                <el-avatar @click.stop="goToPage('user', {id:item.uuid,menu:'timeline'})" class="avatar"
+                           :size="32" icon="UserFilled"
+                           :src="avatar.baseUrl + item.uuid + '/avatar.webp'"/>
                 <el-row class="title">{{ item.title }}</el-row>
               </el-space>
               <el-space class="info">
@@ -147,7 +140,7 @@
         </el-row>
       </el-row>
     </el-row>
-    <el-skeleton class="skeleton" v-show="loading" :rows="3" animated/>
+    <el-skeleton class="skeleton" v-show="loading" :rows="2" animated/>
   </el-row>
 </template>
 
@@ -160,20 +153,20 @@ export default {
 <script setup>
 import {ref, onBeforeMount} from "vue";
 import {throttle, scrollToBottomListen} from "../../../utils/scroll";
-import {goToPage} from "../../../utils/globalFunc";
-import {info} from "../../../utils/message";
+import {getAssets, goToPage} from "../../../utils/globalFunc";
 import {axiosGetAll, get} from "../../../utils/axios";
-import {baseMainStore} from "../../../store";
+import {baseMainStore} from "../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {useRoute} from "vue-router";
 
 const baseStore = baseMainStore()
 const {avatar, article, column, talk} = storeToRefs(baseStore)
+const noData = getAssets("no_data.svg")
 
 let data = ref([])
 let list = ref([])
 let currentPage = 1
-let loading = ref(false)
+let loading = ref(true)
 let userId = ref()
 let isBottom = false
 let mode = "new"
@@ -237,6 +230,9 @@ function getIntroduce() {
 }
 
 function userChange(m) {
+  if (m === userId.value){
+    return null
+  }
   isBottom = false
   currentPage = 1
   data.value = []
@@ -257,6 +253,7 @@ onBeforeMount(() => {
 <style scoped lang="scss">
 .timeline-list {
   width: 100%;
+  flex-direction: column;
 
   .empty {
     width: 100%;
@@ -287,7 +284,7 @@ onBeforeMount(() => {
             }
 
             .avatar {
-              font-size: 14px;
+              font-size: 20px;
               border: 1px solid var(--el-border-color-lighter);
             }
 
@@ -448,7 +445,7 @@ onBeforeMount(() => {
               }
 
               .avatar {
-                font-size: 14px;
+                font-size: 20px;
                 border: 1px solid var(--el-border-color-lighter);
               }
 
@@ -517,6 +514,7 @@ onBeforeMount(() => {
 
   .skeleton {
     padding: 16px;
+    width: calc(100% - 32px);
   }
 
   .list-foot {

@@ -1,7 +1,7 @@
 <template>
   <el-row class="card" v-loading="loading">
     <el-row class="head">
-      <el-avatar @click="goToPage('user', {id:userId,menu:'article'})" icon="UserFilled" class="avatar" shape="square"
+      <el-avatar @click="goToPage('user', {id:userId,menu:'timeline'})" icon="UserFilled" class="avatar" shape="square"
                  :size="60" :src="avatar.baseUrl + userId + '/avatar.webp'"/>
       <el-space class="info" direction="vertical" alignment="start" :size="0" fill>
         <el-space>
@@ -24,7 +24,9 @@
       </el-row>
     </el-row>
     <el-row class="foot" justify="center">
-      <el-button class="button" icon="Message" type="info" bg text>留言</el-button>
+      <el-button class="button" icon="User" type="info" @click="goToPage('user', {id:userId,menu:'timeline'})" bg text>
+        查看主页
+      </el-button>
       <el-button class="button" :type="follows[userId]?'info':'primary'" :icon="follows[userId]?'':'Plus'"
                  :loading="followLoading"
                  @click="follow()" :text="follows[userId]" :bg="follows[userId]">
@@ -45,7 +47,8 @@ import {goToPage} from "../../../utils/globalFunc";
 import {storeToRefs} from "pinia/dist/pinia";
 import {get, post} from "../../../utils/axios";
 import {onBeforeMount, ref} from "vue"
-import {baseMainStore, userMainStore} from "../../../store";
+import {userMainStore} from "../../../store/user";
+import {baseMainStore} from "../../../store/base";
 import {error, success, warning} from "../../../utils/message";
 
 const props = defineProps({

@@ -6,7 +6,7 @@
                 :src="coverUrl">
         <template #error>
           <el-image id="user-cover-inner" fit="cover" class="cover" @load="getCoverColor()"
-                    :src="'../../src/assets/images/cover.jpeg'"></el-image>
+                    :src="coverImage"></el-image>
         </template>
       </el-image>
       <el-progress v-show="uploading" :duration="10" :percentage="percentage"
@@ -116,7 +116,7 @@
                     effect="dark"
                     placement="bottom"
                 >
-                  <el-image class="medal" :src="'../../src/assets/images/'+medalMap[key]+'.svg'"
+                  <el-image class="medal" :src="medalSvg(medalMap[key])"
                             fit="contain"></el-image>
                   <template #content>
                     <el-row>{{ medalMap[key] }}</el-row>
@@ -174,8 +174,9 @@ import {storeToRefs} from "pinia"
 import {onBeforeMount, ref} from "vue"
 import {get, post} from "../../utils/axios";
 import {error, success, warning} from "../../utils/message";
-import {reverse} from "../../utils/globalFunc";
-import {baseMainStore, userMainStore} from "../../store";
+import {getAssets, reverse} from "../../utils/globalFunc";
+import {userMainStore} from "../../store/user";
+import {baseMainStore} from "../../store/base";
 import router from "../../router";
 import {removeScrollToBottomListen} from "../../utils/scroll";
 import {GetMedalIntroduce, GetMedalMap} from "../creation/component/medal";
@@ -184,6 +185,7 @@ const userStore = userMainStore()
 const baseStore = baseMainStore()
 const {uuid, cos} = storeToRefs(userStore)
 const {cover, avatar} = storeToRefs(baseStore)
+const coverImage = getAssets("cover.jpeg")
 
 
 let barMeta = [{
@@ -400,6 +402,8 @@ function coverUpload(UploadRequestOptions) {
     Key: cover.value.key + uuid.value + "/cover." + filetype,
     Headers: {
       'x-cos-meta-token': token,
+      'Pic-Operations':
+          '{"is_pic_info": 1, "rules": [{"fileid": "cover.webp", "rule": "imageMogr2/format/webp/interlace/0/quality/100"}]}'
     },
     Body: file,
     onProgress: function (progressData) {
@@ -429,6 +433,10 @@ function beforeCoverUpload(rawFile) {
     return false
   }
   return true
+}
+
+function medalSvg(key){
+  return getAssets(key + ".svg")
 }
 
 onBeforeRouteLeave((to, from) => {
