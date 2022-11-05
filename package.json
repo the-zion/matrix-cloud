@@ -1,6 +1,6 @@
 {
   "name": "matrix",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "dev": "npx eslint src && vite",
     "build": "npx eslint src && vite build",
