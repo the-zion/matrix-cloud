@@ -1,7 +1,7 @@
 <template>
   <el-row class="collect-list" id="talk-list">
     <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
-              :image-size="250" image="../../src/assets/images/no_data.svg"
+              :image-size="250" :image="noData"
     />
     <el-skeleton class="skeleton" v-show="loading" :rows="2" animated/>
     <el-space class="data" fill :size="0">
@@ -17,7 +17,7 @@
                             @after-leave="item['showUserCard'] = false">
                   <template #reference>
                     <el-avatar @click.stop="goToPage('user', {id:item.uuid,menu:'timeline'})" class="avatar"
-                               :size="24" icon="UserFilled"
+                               :size="32" icon="UserFilled"
                                :src="avatar.baseUrl + item.uuid + '/avatar.webp'"/>
                   </template>
                   <matrix-user-mini-card :uuid="item.uuid" v-if="item['showUserCard']"></matrix-user-mini-card>
@@ -74,8 +74,9 @@ export default {
 </script>
 
 <script setup>
-import {confirm, goToPage} from "../../../utils/globalFunc";
-import {baseMainStore, userMainStore} from "../../../store";
+import {confirm, getAssets, goToPage} from "../../../utils/globalFunc";
+import {userMainStore} from "../../../store/user";
+import {baseMainStore} from "../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {onBeforeMount, ref} from "vue";
 import {useRoute} from "vue-router";
@@ -91,6 +92,7 @@ const props = defineProps({
   userId: String
 })
 const emits = defineEmits(["row-delete"])
+const noData = getAssets("no_data.svg")
 
 let data = ref([])
 let list = ref([])
@@ -229,7 +231,7 @@ onBeforeMount(function () {
               }
 
               .avatar {
-                font-size: 14px;
+                font-size: 20px;
                 border: 1px solid var(--el-border-color-lighter);
               }
 

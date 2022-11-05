@@ -2,7 +2,7 @@
   <el-row class="creation-list" id="creation-list">
     <el-empty v-show="data.length === 0 && !loading" class="empty" :class="{'simple-empty': mode === 'simple'}"
               description=" "
-              :image-size="250" image="../../src/assets/images/no_data.svg"
+              :image-size="250" :image="noData"
     />
     <el-row class="data">
       <el-row v-for="(item,index) in data" class="each" :key="item.id" :class="{'simple-each': mode === 'simple'}"
@@ -76,8 +76,9 @@ export default {
 
 <script setup>
 import {onBeforeMount, ref} from "vue";
-import {confirm, goToPage} from "../../../utils/globalFunc";
-import {baseMainStore, userMainStore} from "../../../store";
+import {confirm, getAssets, goToPage} from "../../../utils/globalFunc";
+import {userMainStore} from "../../../store/user";
+import {baseMainStore} from "../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {axiosGetAll, post} from "../../../utils/axios";
 import router from "../../../router";
@@ -95,6 +96,7 @@ const props = defineProps({
   }
 })
 const emits = defineEmits(["row-delete"])
+const noData = getAssets("no_data.svg")
 
 let data = ref([])
 let list = ref([])

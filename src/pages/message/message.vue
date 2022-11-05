@@ -3,7 +3,7 @@
     <el-backtop></el-backtop>
     <el-row class="background-box">
       <el-image class="message-background"
-                src="../../src/assets/images/message.webp"
+                :src="messageBackground"
                 fit="cover"
       ></el-image>
     </el-row>
@@ -34,8 +34,9 @@ import Navigation from "./component/navigation.vue";
 import {get} from "../../utils/axios";
 import {onBeforeRouteLeave} from "vue-router";
 import {removeScrollToBottomListen} from "../../utils/scroll";
+import {getAssets} from "../../utils/globalFunc";
 
-
+const messageBackground = getAssets("message.webp")
 let notification = ref({
   timeline: {},
   comment: 0,

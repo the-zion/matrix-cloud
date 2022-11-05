@@ -5,7 +5,7 @@
     </el-row>
     <el-row class="notification-block">
       <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
-                :image-size="250" image="../../src/assets/images/no_data.svg"
+                :image-size="250" :image="noData"
       />
       <el-row class="block" v-for="item in data">
         <el-descriptions>
@@ -87,10 +87,12 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import {get, post} from "../../../utils/axios";
-import {baseMainStore, userMainStore} from "../../../store";
+import {userMainStore} from "../../../store/user";
+import {baseMainStore} from "../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia";
 import {ReviewTag} from "../../../utils/review";
 import {scrollToBottomListen, throttle} from "../../../utils/scroll";
+import {getAssets} from "../../../utils/globalFunc";
 
 
 const userStore = userMainStore()
@@ -101,6 +103,8 @@ const props = defineProps({
   system: Number,
 })
 const emits = defineEmits(["update:system"])
+const noData = getAssets("no_data.svg")
+
 let loading = ref(true)
 let data = ref([])
 let list = ref([])

@@ -2,7 +2,7 @@
   <el-container class="timeline-container">
     <el-row class="users-menu" justify="center" align="middle">
       <el-empty v-show="follows.length === 0 && !loading" class="empty" description=" "
-                :image-size="120" image="../../src/assets/images/no_data.svg"
+                :image-size="120" :image="noData"
       />
       <el-row class="avatar-block" align="middle" v-show="follows.length !== 0">
         <el-icon class="arrow" @click="left">
@@ -36,10 +36,11 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import {get, post} from "../../../utils/axios";
-import {baseMainStore} from "../../../store";
+import {baseMainStore} from "../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia";
 import TimeLineList from "../../timeline/component/list.vue";
 import {removeScrollToBottomListen} from "../../../utils/scroll";
+import {getAssets} from "../../../utils/globalFunc";
 
 const baseStore = baseMainStore()
 const {avatar} = storeToRefs(baseStore)
@@ -51,6 +52,7 @@ const props = defineProps({
   lastTime: Number
 })
 const emits = defineEmits(["update:lastTime"])
+const noData = getAssets("no_data.svg")
 
 let follows = ref([])
 let count = 0

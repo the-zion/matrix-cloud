@@ -1,7 +1,7 @@
 <template>
   <el-row class="talk-list" id="talk-list">
     <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
-              :image-size="250" image="../../src/assets/images/no_data.svg"
+              :image-size="250" :image="noData"
     />
     <el-space class="data" fill :size="0">
       <el-row v-for="item in data" class="each" :key="item.id"
@@ -16,7 +16,7 @@
                             @after-leave="item['showUserCard'] = false">
                   <template #reference>
                     <el-avatar @click.stop="goToPage('user', {id:item.uuid,menu:'timeline'})" class="avatar"
-                               :size="24" icon="UserFilled"
+                               :size="32" icon="UserFilled"
                                :src="avatar.baseUrl + item.uuid + '/avatar.webp'"/>
                   </template>
                   <matrix-user-mini-card :uuid="item.uuid" v-if="item['showUserCard']"></matrix-user-mini-card>
@@ -71,9 +71,9 @@ export default {
 
 <script setup>
 import {ref, onBeforeMount} from "vue";
-import {goToPage} from "../../../utils/globalFunc";
+import {getAssets, goToPage} from "../../../utils/globalFunc";
 import {scrollToBottomListen, throttle} from "../../../utils/scroll";
-import {baseMainStore} from "../../../store";
+import {baseMainStore} from "../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {info} from "../../../utils/message";
 import {axiosGetAll, get} from "../../../utils/axios";
@@ -81,6 +81,7 @@ import {axiosGetAll, get} from "../../../utils/axios";
 const emits = defineEmits(["current-page"])
 const baseStore = baseMainStore()
 const {avatar, talk} = storeToRefs(baseStore)
+const noData = getAssets("no_data.svg")
 
 let data = ref([])
 let list = ref([])
@@ -212,7 +213,7 @@ onBeforeMount(() => {
               }
 
               .avatar {
-                font-size: 14px;
+                font-size: 20px;
                 border: 1px solid var(--el-border-color-lighter);
               }
 

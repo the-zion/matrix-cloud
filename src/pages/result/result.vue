@@ -3,7 +3,7 @@
     <el-header class="header" height="50px">
       <el-row class="block">
         <el-image class="logo" @click="backToHome"
-                  :src="'../../src/assets/images/matrix.svg'"
+                  :src="logo"
                   fit="contain"
         ></el-image>
       </el-row>
@@ -23,8 +23,9 @@
 <script setup>
 import {onBeforeMount, ref} from "vue"
 import {useRoute} from "vue-router";
-import {backToHome} from "../../utils/globalFunc";
+import {backToHome, getAssets} from "../../utils/globalFunc";
 
+const logo = getAssets('matrix.svg')
 let type = ref("success")
 let title = ref("")
 let description = ref("")

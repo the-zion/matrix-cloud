@@ -17,7 +17,7 @@
       <el-row class="base" align="middle" justify="space-between">
         <el-space :size="20">
           <el-image class="logo" @click="backToHome"
-                    :src="'../../src/assets/images/matrix.svg'"
+                    :src="logo"
                     fit="contain"
           ></el-image>
           <span class="title">讨论发起</span>
@@ -56,20 +56,22 @@
 
 <script setup>
 import {onBeforeUnmount, ref, shallowRef, onBeforeMount} from 'vue'
-import {backToHome} from "../../utils/globalFunc";
+import {backToHome, getAssets} from "../../utils/globalFunc";
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 import {success, info, warning, error} from "../../utils/message";
 import {customCheckVideoFn, customParseVideoSrc} from "../../utils/video";
 import Form from './component/form.vue'
 import {useRoute} from "vue-router";
 import {get, post} from "../../utils/axios";
-import {baseMainStore, userMainStore} from "../../store";
+import {userMainStore} from "../../store/user";
+import {baseMainStore} from "../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 
 const userStore = userMainStore()
 const baseStore = baseMainStore()
 const {uuid, cos} = storeToRefs(userStore)
 const {talk} = storeToRefs(baseStore)
+const logo = getAssets('matrix.svg')
 const editorRef = shallowRef()
 const valueHtml = ref('')
 const mode = ref('create')

@@ -1,7 +1,7 @@
 <template>
   <el-row class="news-list" id="news-list">
     <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
-              :image-size="250" image="../../src/assets/images/no_data.svg"
+              :image-size="250" :image="noData"
     />
     <el-space class="data" fill :size="0">
       <el-row v-for="item in data" class="each" :key="item.id"
@@ -42,13 +42,15 @@ export default {
 <script setup>
 import {ref, onBeforeMount} from "vue";
 import {scrollToBottomListen, throttle} from "../../utils/scroll";
-import {baseMainStore} from "../../store";
+import {baseMainStore} from "../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {get} from "../../utils/axios";
+import {getAssets} from "../../utils/globalFunc";
 
 const emits = defineEmits(["current-page"])
 const baseStore = baseMainStore()
 const {avatar, talk} = storeToRefs(baseStore)
+const noData = getAssets("no_data.svg")
 
 let data = ref([])
 let loading = ref(false)
