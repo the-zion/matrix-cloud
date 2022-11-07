@@ -8,7 +8,7 @@
                    :class="'icon-number-'+(index+1) + (index < 3?' gold':'')"></el-icon>
           <el-space class="info" direction="vertical" fill :size="0" alignment="start">
             <el-space class="info-head" :size="4">
-              <el-avatar icon="UserFilled" :src="avatar.baseUrl + item.uuid + '/avatar.webp'" :size="22"></el-avatar>
+              <el-avatar class="info-avatar" icon="UserFilled" :src="avatar.baseUrl + item.uuid + '/avatar.webp'" :size="22"></el-avatar>
               <span class="info-title">{{ introduce[index].title || introduce[index].name }}</span>
             </el-space>
             <span class="text">{{ introduce[index].text || introduce[index].introduce }}</span>
@@ -169,6 +169,10 @@ onBeforeMount(function () {
 
         .info-head {
           width: 100%;
+
+          .info-avatar{
+            font-size: 14px;
+          }
 
           .info-title {
             width: 180px;
