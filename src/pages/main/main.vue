@@ -39,7 +39,7 @@
           </template>
         </el-dropdown>
         <el-row class="main-login-word" v-show="!uuid" @click="login">登录</el-row>
-        <el-row align="middle" v-show="uuid">
+        <el-row align="middle" v-if="uuid">
           <el-badge :value="messageValue" :is-dot="!messageValue" :max="99" class="main-menu-icon" :hidden="messageCount()">
             <el-icon :size="20" @click="router.push({name: 'message'})">
               <message/>
