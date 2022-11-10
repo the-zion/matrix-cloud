@@ -11,7 +11,7 @@
         <el-descriptions>
           <template #title>
             <el-row align="middle">
-              <el-avatar class="avatar" :size="32" :src="'../../src/assets/images/logo.svg'"></el-avatar>
+              <el-avatar class="avatar" :size="32" :src="avatarImage"></el-avatar>
               <span style="margin-left: 10px">系统通知</span>
             </el-row>
           </template>
@@ -104,6 +104,7 @@ const props = defineProps({
 })
 const emits = defineEmits(["update:system"])
 const noData = getAssets("no_data.svg")
+const avatarImage = getAssets("logo.svg")
 
 let loading = ref(true)
 let data = ref([])
