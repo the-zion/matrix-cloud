@@ -2,7 +2,7 @@
   <el-main class="medal-main">
     <el-row class="medal-block" v-for="block in blockMeta">
       <el-row class="header">{{ block.label }}</el-row>
-      <el-row class="block" v-for="item in block.children">
+      <el-row class="content" v-for="item in block.children">
 
         <el-image class="medal" :src="medalSvg(item.label)"
                   fit="contain"
@@ -140,7 +140,7 @@ onBeforeMount(function () {
       width: 100%;
     }
 
-    .block {
+    .content {
       width: 100%;
       margin: 20px 0;
 
