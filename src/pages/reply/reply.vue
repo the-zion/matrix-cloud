@@ -117,7 +117,7 @@ function initData() {
   rootId = props.rootId
   parentId = props.parentId
   mode = props.mode
-  token = localStorage.getItem("matrix-token")
+  token = localStorage.getItem(import.meta.env.VITE_MATRIX_TOKEN_KEY)
 }
 
 function getLastDraft() {

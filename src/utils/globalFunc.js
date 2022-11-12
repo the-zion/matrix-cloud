@@ -107,9 +107,9 @@ export function textEmojiRemove(text) {
 
 export function loginTimeOut() {
     let userStore = getUserStore()
-    if (localStorage.getItem("matrix-token")) {
+    if (localStorage.getItem(import.meta.env.VITE_MATRIX_TOKEN_KEY)) {
         warning("登录已过期，请重新登录")
-        localStorage.removeItem("matrix-token")
+        localStorage.removeItem(import.meta.env.VITE_MATRIX_TOKEN_KEY)
         userStore.$reset()
     }
 }

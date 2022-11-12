@@ -258,7 +258,7 @@ function imageUpload(file, insertFn) {
 function initData() {
   mode.value = useRoute().query["mode"]
   draftId.value = parseInt(useRoute().query["id"])
-  token = localStorage.getItem("matrix-token")
+  token = localStorage.getItem(import.meta.env.VITE_MATRIX_TOKEN_KEY)
 }
 
 function getData() {

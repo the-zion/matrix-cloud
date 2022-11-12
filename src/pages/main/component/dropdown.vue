@@ -189,7 +189,7 @@ function userSettings() {
 
 function signOut() {
   confirm("退出登录", "确认退出登录吗").then(function () {
-    localStorage.removeItem("matrix-token")
+    localStorage.removeItem(import.meta.env.VITE_MATRIX_TOKEN_KEY)
     userStore.$reset()
   })
 }

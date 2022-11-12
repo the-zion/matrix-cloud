@@ -300,7 +300,7 @@ function initData() {
   editor.value = props.editor
   draftId.value = props.id
   mode.value = props.mode
-  token = localStorage.getItem("matrix-token")
+  token = localStorage.getItem(import.meta.env.VITE_MATRIX_TOKEN_KEY)
 }
 
 function getData() {

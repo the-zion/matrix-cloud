@@ -134,7 +134,7 @@ function initData() {
   mode.value = props.mode
   loading.value = false
   draftId.value = props.id
-  token = localStorage.getItem("matrix-token")
+  token = localStorage.getItem(import.meta.env.VITE_MATRIX_TOKEN_KEY)
   if (mode.value === 'create') {
     title.value = "新建专栏"
     form.value = {name: "", introduce: "", tags: [], cover: "", auth: 1}

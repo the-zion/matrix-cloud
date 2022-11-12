@@ -129,7 +129,7 @@ function init() {
 }
 
 function initData() {
-  token = localStorage.getItem("matrix-token")
+  token = localStorage.getItem(import.meta.env.VITE_MATRIX_TOKEN_KEY)
 }
 
 function getData() {

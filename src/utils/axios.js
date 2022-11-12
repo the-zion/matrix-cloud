@@ -12,7 +12,7 @@ function getEndPoint() {
 }
 
 export function post(url, params) {
-    let token = localStorage.getItem("matrix-token")
+    let token = localStorage.getItem(import.meta.env.VITE_MATRIX_TOKEN_KEY)
     const instance = axios.create({
         baseURL: getEndPoint(),
         method: "post",
@@ -42,7 +42,7 @@ export function post(url, params) {
 }
 
 export function get(url) {
-    let token = localStorage.getItem("matrix-token")
+    let token = localStorage.getItem(import.meta.env.VITE_MATRIX_TOKEN_KEY)
     const instance = axios.create({
         baseURL: getEndPoint(),
         method: "get",

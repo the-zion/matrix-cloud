@@ -69,7 +69,7 @@ function toLogin() {
     password: form.value.password,
     mode: form.value.account.includes("@") ? "email" : "phone"
   }).then(function (reply) {
-    localStorage.setItem("matrix-token", reply.data.token)
+    localStorage.setItem(import.meta.env.VITE_MATRIX_TOKEN_KEY, reply.data.token)
     success("登录成功")
     userStore.getUserProfile()
     closeDialog()

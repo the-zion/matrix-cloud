@@ -273,7 +273,7 @@ function initData() {
   coverUrl.value = cover.value.baseUrl + searchId.value + '/cover.webp'
   medalMap.value = GetMedalMap()
   medalIntroduce.value = GetMedalIntroduce()
-  token = localStorage.getItem("matrix-token")
+  token = localStorage.getItem(import.meta.env.VITE_MATRIX_TOKEN_KEY)
 }
 
 function getUserFollows() {
