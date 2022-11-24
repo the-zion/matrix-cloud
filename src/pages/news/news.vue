@@ -74,7 +74,7 @@ function scrollToBottom() {
 
 function getData() {
   loading.value = true
-  get("/v1/get/news/?page=" + currentPage).then(function (reply) {
+  get("/v1/get/news?page=" + currentPage).then(function (reply) {
     data.value = data.value.concat(reply.data["news"])
     currentPage += 1
   }).catch(function () {
