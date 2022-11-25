@@ -55,7 +55,11 @@ function getData() {
   get("/v1/get/leaderboard").then(function (reply) {
     list = reply.data['board'].slice(0, 9)
     request = list.length
-    getIntroduce(list)
+    if (list.length > 0){
+      getIntroduce(list)
+    }else{
+      loading.value = false
+    }
   }).catch(function () {
     loading.value = false
   })
