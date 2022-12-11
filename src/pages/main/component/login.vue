@@ -16,9 +16,10 @@
         <Register v-if="mode === 'register'" v-model:mode="mode"
                   @close="closeDialog"></Register>
         <Forget v-if="mode === 'forget'" v-model:mode="mode" @close="closeDialog"></Forget>
+        <QrCode v-if="mode === 'qr'" :title="'微信登录'" v-model:mode="mode"></QrCode>
         <el-row class="others-login" justify="space-around">
-          <el-avatar :size="36" class="icon qq iconfont icon-QQ"/>
-          <el-avatar :size="36" class="icon wechat  iconfont icon-wechat-fill"/>
+          <el-avatar :size="36" @click="wechat" class="icon wechat iconfont icon-wechat-fill"/>
+          <el-avatar id="qqLoginBtn" :size="36" @click="qq" class="icon" :src="getAssets('qq.png')"/>
           <el-avatar :size="36" class="icon weibo iconfont icon-weibo"/>
           <el-avatar :size="36" class="icon github iconfont icon-github-fill"/>
         </el-row>
@@ -34,14 +35,15 @@ export default {
 }
 </script>
 
-
 <script setup>
 import {ref} from "vue";
 import Account from "./account.vue"
 import Code from "./code.vue"
 import Register from "./register.vue"
 import Forget from "./forget.vue"
+import QrCode from "./qrcode.vue"
 import {getAssets} from "../../../utils/globalFunc";
+import router from "../../../router";
 
 const emits = defineEmits(["update:visible"])
 const props = defineProps({
@@ -61,6 +63,21 @@ function dialogClosed() {
 
 function closeDialog() {
   beforeClose()
+}
+
+function wechat() {
+  mode.value = "qr"
+}
+
+
+function qq(){
+  let url = import.meta.env.VITE_QQ
+  let appid = import.meta.env.VITE_QQ_APPID
+  let redirect_url = encodeURIComponent(import.meta.env.VITE_QQ_REDIRECT_URL)
+  window.location.href = url + "?response_type=code&client_id=" + appid + "&redirect_uri=" + redirect_url
+  // QC.Login({
+  //   btnId:"qqLoginBtn"	//插入按钮的节点id
+  // })
 }
 
 </script>
@@ -99,10 +116,11 @@ function closeDialog() {
         font-size: 20px;
         background: unset;
         border: 1px solid var(--el-border-color);
+        cursor: pointer;
       }
 
-      .qq {
-        color: rgb(74, 154, 253)
+      ::v-deep(.el-avatar>img){
+        height: 20px!important;
       }
 
       .wechat {
