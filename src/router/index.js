@@ -4,6 +4,8 @@ import {
 } from 'vue-router'
 
 const Main = () => import('../pages/main/main.vue')
+const Platform = () => import('../pages/main/platform.vue')
+const Wechat = () => import('../pages/main/component/wechat.vue')
 const Article = () => import('../pages/article/article.vue')
 const Talk = () => import('../pages/talk/talk.vue')
 const Column = () => import('../pages/column/column.vue')
@@ -51,6 +53,16 @@ const routes = [
         component: Main,
         redirect: {name: 'home', query: {page: 'news'}},
         children: [
+            {
+                path: 'login',
+                name: 'login',
+                component: Platform,
+                children: [{
+                    path: 'wechat',
+                    name: 'login.wechat',
+                    component: Wechat
+                }]
+            },
             {
                 path: 'home',
                 name: 'home',

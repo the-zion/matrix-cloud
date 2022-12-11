@@ -183,6 +183,7 @@ function writeArticle() {
   window.open(href, "_blank");
 }
 
+
 function writeTalk() {
   const {href} = router.resolve({
     name: "talk.write",
