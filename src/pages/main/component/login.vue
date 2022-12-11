@@ -18,10 +18,38 @@
         <Forget v-if="mode === 'forget'" v-model:mode="mode" @close="closeDialog"></Forget>
         <QrCode v-if="mode === 'qr'" :title="'微信登录'" v-model:mode="mode"></QrCode>
         <el-row class="others-login" justify="space-around">
-          <el-avatar :size="36" @click="wechat" class="icon wechat iconfont icon-wechat-fill"/>
-          <el-avatar id="qqLoginBtn" :size="36" @click="qq" class="icon" :src="getAssets('qq.png')"/>
-          <el-avatar :size="36" class="icon weibo iconfont icon-weibo"/>
-          <el-avatar :size="36" class="icon github iconfont icon-github-fill"/>
+          <el-tooltip
+              effect="light"
+              content="微信登录"
+              placement="bottom"
+              :hide-after="50"
+          >
+            <el-avatar :size="36" @click="wechat" class="icon wechat iconfont icon-wechat-fill"/>
+          </el-tooltip>
+          <el-tooltip
+              effect="light"
+              content="QQ登录"
+              placement="bottom"
+              :hide-after="50"
+          >
+            <el-avatar id="qqLoginBtn" :size="36" @click="qq" class="icon" :src="getAssets('qq.png')"/>
+          </el-tooltip>
+          <el-tooltip
+              effect="light"
+              content="微博登录"
+              placement="bottom"
+              :hide-after="50"
+          >
+            <el-avatar :size="36" class="icon weibo iconfont icon-weibo"/>
+          </el-tooltip>
+          <el-tooltip
+              effect="light"
+              content="Github登录"
+              placement="bottom"
+              :hide-after="50"
+          >
+            <el-avatar :size="36" class="icon github iconfont icon-github-fill"/>
+          </el-tooltip>
         </el-row>
         <el-row justify="center" class="tail">欢迎来到matrix，魔方技术，致力于分享实用的技术干货</el-row>
       </el-row>
@@ -70,7 +98,7 @@ function wechat() {
 }
 
 
-function qq(){
+function qq() {
   let url = import.meta.env.VITE_QQ
   let appid = import.meta.env.VITE_QQ_APPID
   let redirect_url = encodeURIComponent(import.meta.env.VITE_QQ_REDIRECT_URL)
@@ -119,8 +147,8 @@ function qq(){
         cursor: pointer;
       }
 
-      ::v-deep(.el-avatar>img){
-        height: 20px!important;
+      ::v-deep(.el-avatar>img) {
+        height: 20px !important;
       }
 
       .wechat {
