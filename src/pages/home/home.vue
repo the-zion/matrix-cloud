@@ -34,18 +34,18 @@
 </template>
 
 <script setup>
-import {onBeforeMount, ref} from "vue"
-import router from "../../router";
-import {useRoute, onBeforeRouteLeave} from "vue-router";
+import {onBeforeMount, ref, watch} from "vue"
+import {useRoute, useRouter, onBeforeRouteLeave} from "vue-router";
 import LeaderBoard from "./component/leaderboard.vue"
 import "../../utils/axios"
 import {baseMainStore} from "../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {removeScrollToBottomListen} from "../../utils/scroll";
-import {getAssets} from "../../utils/globalFunc";
+import {getAssets, setTitle} from "../../utils/globalFunc";
 
 const baseStore = baseMainStore()
 const {images} = storeToRefs(baseStore)
+const router = useRouter()
 
 let listRef = ref()
 let page = ref()
@@ -65,6 +65,7 @@ let menu = ref([{
 }])
 
 function init() {
+  setTitle("首页-魔方技术")
   initData()
 }
 
@@ -87,9 +88,16 @@ function modeChange(m) {
   listRef.value.modeChange(m)
 }
 
-function getVideo(key){
+function getVideo(key) {
   return getAssets(key + ".mp4")
 }
+
+
+watch(() => router.currentRoute.value.query.page, (p) => {
+  if (p === "news") {
+    page.value = p
+  }
+}, {immediate: true, deep: true})
 
 onBeforeRouteLeave((to, from) => {
   removeScrollToBottomListen()

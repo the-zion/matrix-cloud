@@ -174,7 +174,7 @@ import {storeToRefs} from "pinia"
 import {onBeforeMount, ref} from "vue"
 import {get, post} from "../../utils/axios";
 import {error, success, warning} from "../../utils/message";
-import {getAssets, reverse} from "../../utils/globalFunc";
+import {getAssets, reverse, setTitle} from "../../utils/globalFunc";
 import {userMainStore} from "../../store/user";
 import {baseMainStore} from "../../store/base";
 import router from "../../router";
@@ -192,7 +192,7 @@ let barMeta = [{
   key: "timeline",
   label: "动态",
   router: "user.timeline"
-},{
+}, {
   key: "article",
   label: "文章",
   router: "user.article"
@@ -264,6 +264,7 @@ let medalIntroduce = ref({})
 let token = null
 
 function init() {
+  setTitle("个人主页")
   initData()
   getData()
   getUserFollows()
@@ -302,6 +303,7 @@ function getUserMedal() {
 function getData() {
   get("/v1/get/user/info/visitor?uuid=" + searchId.value).then(function (reply) {
     data.value = reply.data
+    setTitle(data["username"] + "的个人主页")
     getLevel()
     getUserMedal()
   }).catch(function () {
@@ -435,7 +437,7 @@ function beforeCoverUpload(rawFile) {
   return true
 }
 
-function medalSvg(key){
+function medalSvg(key) {
   return getAssets(key + ".svg")
 }
 

@@ -84,7 +84,7 @@
 </template>
 
 <script setup>
-import {goToPage} from "../../utils/globalFunc";
+import {goToPage, setTitle} from "../../utils/globalFunc";
 import {useRoute} from "vue-router";
 import {error, success, warning} from "../../utils/message";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
@@ -190,6 +190,7 @@ function getColumn() {
   let url = column.value.baseUrl + authorUuid.value + "/" + columnId.value + "/content"
   get(url).then(function (reply) {
     data.value = reply.data
+    setTitle(reply.data["name"])
     getUserArticleAgree()
     getUserArticleCollect()
     background(data.value["cover"])

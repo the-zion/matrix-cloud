@@ -1,11 +1,11 @@
 <template>
   <el-container class="center-container">
     <el-backtop></el-backtop>
-    <el-aside class="aside">
-      <el-affix :offset="0">
+    <el-affix>
+      <el-aside class="aside">
         <Navigation></Navigation>
-      </el-affix>
-    </el-aside>
+      </el-aside>
+    </el-affix>
     <el-row class="main">
       <router-view v-slot="{ Component }">
         <component :is="Component"/>
@@ -16,6 +16,11 @@
 
 <script setup>
 import Navigation from "./component/navigation.vue"
+import {setTitle} from "../../utils/globalFunc";
+import {onBeforeMount} from "vue";
+onBeforeMount(function (){
+  setTitle("账户设置")
+})
 </script>
 
 <style scoped lang="scss">

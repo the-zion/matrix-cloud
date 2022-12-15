@@ -56,7 +56,7 @@
 
 <script setup>
 import {onBeforeUnmount, ref, shallowRef, onBeforeMount} from 'vue'
-import {backToHome, getAssets} from "../../utils/globalFunc";
+import {backToHome, getAssets, setTitle} from "../../utils/globalFunc";
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 import {success, info, warning, error} from "../../utils/message";
 import {customCheckVideoFn, customParseVideoSrc} from "../../utils/video";
@@ -154,6 +154,7 @@ function onMaxLength(editor) {
 }
 
 function init() {
+  setTitle("讨论发起")
   initData()
   mode.value === 'create' && getLastDraft()
   mode.value === 'edit' && getDataEdit()

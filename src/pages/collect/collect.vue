@@ -58,6 +58,7 @@ import ArticleCollectList from "../article/component/collect.vue";
 import TalkCollectList from "../talk/component/collect.vue";
 import ColumnCollectList from "../column/component/collect.vue";
 import {removeScrollToBottomListen} from "../../utils/scroll";
+import {setTitle} from "../../utils/globalFunc";
 
 const userStore = userMainStore()
 const baseStore = baseMainStore()
@@ -108,6 +109,7 @@ function getCollections() {
 function getCollectionsProfile() {
   get(collections.value.baseUrl + userId.value + "/" + collectionsId.value + "/content").then(function (reply) {
     collectionProfile.value = reply.data
+    setTitle(reply.data["name"])
   })
 }
 

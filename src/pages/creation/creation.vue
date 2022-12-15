@@ -1,11 +1,11 @@
 <template>
   <el-container class="creation-container" v-if="Object.keys(data).length !== 0">
     <el-backtop></el-backtop>
-    <el-aside class="aside">
-      <el-affix :offset="0">
+    <el-affix>
+      <el-aside class="aside">
         <Navigation :username="data['username']"></Navigation>
-      </el-affix>
-    </el-aside>
+      </el-aside>
+    </el-affix>
     <el-row class="main">
       <router-view v-slot="{ Component }">
         <component :is="Component" :data="data"/>
@@ -18,10 +18,12 @@
 import {onBeforeMount, ref} from "vue"
 import Navigation from "./component/navigation.vue"
 import {get} from "../../utils/axios";
+import {setTitle} from "../../utils/globalFunc";
 
 let data = ref({})
 
 function init() {
+  setTitle("创作中心")
   getData()
 }
 

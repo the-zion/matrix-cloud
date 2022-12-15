@@ -34,7 +34,7 @@ import Navigation from "./component/navigation.vue";
 import {get} from "../../utils/axios";
 import {onBeforeRouteLeave} from "vue-router";
 import {removeScrollToBottomListen} from "../../utils/scroll";
-import {getAssets} from "../../utils/globalFunc";
+import {getAssets, setTitle} from "../../utils/globalFunc";
 
 const messageBackground = getAssets("message.webp")
 let notification = ref({
@@ -49,6 +49,7 @@ let timelineActive = ref(false)
 let loading = ref(true)
 
 function init() {
+  setTitle("消息中心")
   initData()
   getMessageNotification()
 }

@@ -100,7 +100,7 @@
 
 <script setup>
 import Aside from "./component/aside.vue"
-import {goToPage} from "../../utils/globalFunc"
+import {goToPage, setTitle} from "../../utils/globalFunc"
 import {removeScrollToBottomListen, scrollTo} from "../../utils/scroll";
 import {onBeforeRouteLeave, useRoute} from "vue-router";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
@@ -227,6 +227,7 @@ function getTalk() {
   get(url).then(function (reply) {
     data.value = reply.data
     editorRef.value.setHtml(data.value["html"])
+    setTitle(reply.data["title"])
     getUserTalkAgree()
     getUserTalkCollect()
   }).catch(function () {

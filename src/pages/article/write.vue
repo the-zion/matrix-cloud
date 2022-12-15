@@ -75,7 +75,7 @@
 
 <script setup>
 import {onBeforeUnmount, ref, shallowRef, onMounted} from 'vue'
-import {backToHome, getAssets} from "../../utils/globalFunc";
+import {backToHome, getAssets, setTitle} from "../../utils/globalFunc";
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 import {success, info, warning, error} from "../../utils/message";
 import {customCheckVideoFn, customParseVideoSrc} from "../../utils/video";
@@ -262,6 +262,7 @@ onBeforeUnmount(() => {
 })
 
 function init() {
+  setTitle("写文章")
   initData()
   mode.value === 'create' && getLastDraft()
   mode.value === 'edit' && getDataEdit()

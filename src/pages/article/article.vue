@@ -100,7 +100,7 @@
 <script setup>
 import {removeScrollToBottomListen, scrollTo} from "../../utils/scroll";
 import {onBeforeRouteLeave, useRoute} from "vue-router";
-import {goToPage} from "../../utils/globalFunc";
+import {goToPage, setTitle} from "../../utils/globalFunc";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {warning} from "../../utils/message";
 import {get, post} from "../../utils/axios";
@@ -207,6 +207,7 @@ function getArticle() {
   get(url).then(function (reply) {
     data.value = reply.data
     editorRef.value.setHtml(data.value["html"])
+    setTitle(reply.data["title"])
     getUserArticleAgree()
     getUserArticleCollect()
   }).catch(function () {

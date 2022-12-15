@@ -89,6 +89,7 @@ import TalkSearchList from "../talk/component/search.vue";
 import ColumnSearchList from "../column/component/search.vue";
 import UserSearchList from "../user/component/search.vue";
 import {removeScrollToBottomListen} from "../../utils/scroll";
+import {setTitle} from "../../utils/globalFunc";
 
 let mainBody = null
 let listRef = ref()
@@ -177,6 +178,7 @@ onBeforeUnmount(function () {
 
 
 onMounted(function () {
+  setTitle("站内搜索")
   mainBody = document.getElementsByClassName("main-body")[0]
   mainBody.style.padding = "unset"
 })
