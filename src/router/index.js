@@ -6,6 +6,8 @@ import {
 const Main = () => import('../pages/main/main.vue')
 const Platform = () => import('../pages/main/platform.vue')
 const Wechat = () => import('../pages/main/component/wechat.vue')
+const QQ = () => import('../pages/main/component/qq.vue')
+const Github = () => import('../pages/main/component/github.vue')
 const Article = () => import('../pages/article/article.vue')
 const Talk = () => import('../pages/talk/talk.vue')
 const Column = () => import('../pages/column/column.vue')
@@ -61,6 +63,14 @@ const routes = [
                     path: 'wechat',
                     name: 'login.wechat',
                     component: Wechat
+                },{
+                    path: 'qq',
+                    name: 'login.qq',
+                    component: QQ
+                },{
+                    path: 'github',
+                    name: 'login.github',
+                    component: Github
                 }]
             },
             {
