@@ -1,5 +1,5 @@
 <template>
-  <el-container class="wechat">
+  <el-container class="qq">
     <el-main>
       <el-result
           class="result"
@@ -8,7 +8,7 @@
           :sub-title="description"
       >
         <template v-if="type !== 'error'" #icon>
-          <el-avatar :size="56" shape="square" class="icon" :src="getAssets('wechat_square.png')"/>
+          <el-avatar :size="56" class="icon" :src="getAssets('qq.png')"/>
         </template>
       </el-result>
     </el-main>
@@ -40,16 +40,16 @@ function init() {
     resultMark("error", "登录失败", "参数校验失败")
     return
   }
-  wechatLogin()
+  qqLogin()
 }
 
 function stateCheck(state) {
   return wordCheck(state)
 }
 
-function wechatLogin() {
-  resultMark("", "登录中", "使用微信登录中，请稍后...")
-  post("/v1/user/login/wechat", {code: useRoute().query["code"]}).then(function (reply) {
+function qqLogin() {
+  resultMark("", "登录中", "使用QQ登录中，请稍后...")
+  post("/v1/user/login/qq", {code: useRoute().query["code"]}).then(function (reply) {
     localStorage.setItem(import.meta.env.VITE_MATRIX_TOKEN_KEY, reply.data.token)
     userStore.getUserProfile()
     router.push({name: 'home', query: {page: 'news'}})
@@ -72,12 +72,16 @@ onMounted(function () {
 </script>
 
 <style scoped lang="scss">
-.wechat {
+.qq {
   .result {
     .icon {
       font-size: 56px;
       background-color: var(--el-color-white);
       color: var(--el-color-black);
+    }
+
+    ::v-deep(.el-avatar>img) {
+      height: 40px !important;
     }
   }
 }

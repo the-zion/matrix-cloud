@@ -16,7 +16,6 @@
         <Register v-if="mode === 'register'" v-model:mode="mode"
                   @close="closeDialog"></Register>
         <Forget v-if="mode === 'forget'" v-model:mode="mode" @close="closeDialog"></Forget>
-        <QrCode v-if="mode === 'qr'" :title="'微信登录'" v-model:mode="mode"></QrCode>
         <el-row class="others-login" justify="space-around">
           <el-tooltip
               effect="light"
@@ -24,7 +23,7 @@
               placement="bottom"
               :hide-after="50"
           >
-            <el-avatar :size="36" @click="wechat" class="icon wechat iconfont icon-wechat-fill"/>
+            <el-avatar :size="36" @click="wechat" class="icon" :src="getAssets('wechat.png')"/>
           </el-tooltip>
           <el-tooltip
               effect="light"
@@ -48,10 +47,10 @@
               placement="bottom"
               :hide-after="50"
           >
-            <el-avatar :size="36" class="icon github iconfont icon-github-fill"/>
+            <el-avatar :size="36" @click="github" class="icon github iconfont icon-github-fill"/>
           </el-tooltip>
         </el-row>
-        <el-row justify="center" class="tail">欢迎来到matrix，魔方技术，致力于分享实用的技术干货</el-row>
+        <el-row justify="center" class="tail">魔方技术，致力于分享实用的技术干货</el-row>
       </el-row>
     </el-dialog>
   </el-container>
@@ -69,9 +68,8 @@ import Account from "./account.vue"
 import Code from "./code.vue"
 import Register from "./register.vue"
 import Forget from "./forget.vue"
-import QrCode from "./qrcode.vue"
 import {getAssets} from "../../../utils/globalFunc";
-import router from "../../../router";
+import {encrypt} from "../../../utils/secret";
 
 const emits = defineEmits(["update:visible"])
 const props = defineProps({
@@ -94,7 +92,10 @@ function closeDialog() {
 }
 
 function wechat() {
-  mode.value = "qr"
+  let url = import.meta.env.VITE_WECHAT
+  let appid = import.meta.env.VITE_WECHAT_APPID
+  let redirect_url = encodeURIComponent(import.meta.env.VITE_WECHAT_REDIRECT_URL)
+  window.location.href = url + "?response_type=code&appid=" + appid + "&redirect_uri=" + redirect_url + "&scope=" + import.meta.env.VITE_WECHAT_SCOPE + "&state=" + encrypt()
 }
 
 
@@ -102,10 +103,14 @@ function qq() {
   let url = import.meta.env.VITE_QQ
   let appid = import.meta.env.VITE_QQ_APPID
   let redirect_url = encodeURIComponent(import.meta.env.VITE_QQ_REDIRECT_URL)
-  window.location.href = url + "?response_type=code&client_id=" + appid + "&redirect_uri=" + redirect_url
-  // QC.Login({
-  //   btnId:"qqLoginBtn"	//插入按钮的节点id
-  // })
+  window.location.href = url + "?response_type=code&client_id=" + appid + "&redirect_uri=" + redirect_url + "&state=" + encrypt()
+}
+
+function github() {
+  let url = import.meta.env.VITE_GITHUB
+  let appid = import.meta.env.VITE_GITHUB_APPID
+  let redirect_url = import.meta.env.VITE_GITHUB_REDIRECT_URL
+  window.location.href = url + "?client_id=" + appid + "&redirect_uri=" + redirect_url
 }
 
 </script>
