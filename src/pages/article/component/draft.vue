@@ -8,7 +8,7 @@
         <span class="time">{{ item.update ? ("最近编辑于 " + item.update) : "暂未编辑" }}</span>
       </el-space>
     </el-space>
-    <el-empty v-show="draft.length === 0" class="empty" description=" "
+    <el-empty v-show="!loading && draft.length === 0" class="empty" description=" "
               :image-size="150" :image="noData"
     />
   </el-row>
@@ -36,7 +36,7 @@ const {article} = storeToRefs(baseStore)
 const emits = defineEmits(["draftSelect"])
 const noData = getAssets("no_data.svg")
 let draft = ref([])
-let loading = ref(false)
+let loading = ref(true)
 
 function init() {
   getData()
