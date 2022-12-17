@@ -23,7 +23,7 @@
               placement="bottom"
               :hide-after="50"
           >
-            <el-avatar :size="36" @click="wechat" class="icon" :src="getAssets('wechat.png')"/>
+            <el-avatar :size="36" @click="wechat()" class="icon" :src="getAssets('wechat.png')"/>
           </el-tooltip>
           <el-tooltip
               effect="light"
@@ -31,15 +31,15 @@
               placement="bottom"
               :hide-after="50"
           >
-            <el-avatar id="qqLoginBtn" :size="36" @click="qq" class="icon" :src="getAssets('qq.png')"/>
+            <el-avatar id="qqLoginBtn" :size="36" @click="qq()" class="icon" :src="getAssets('qq.png')"/>
           </el-tooltip>
           <el-tooltip
               effect="light"
-              content="微博登录"
+              content="Gitee登录"
               placement="bottom"
               :hide-after="50"
           >
-            <el-avatar :size="36" class="icon weibo iconfont icon-weibo"/>
+            <el-avatar :size="36" class="icon" @click="gitee()" :src="getAssets('gitee.svg')"/>
           </el-tooltip>
           <el-tooltip
               effect="light"
@@ -47,7 +47,7 @@
               placement="bottom"
               :hide-after="50"
           >
-            <el-avatar :size="36" @click="github" class="icon github iconfont icon-github-fill"/>
+            <el-avatar :size="36" @click="github()" class="icon github iconfont icon-github-fill"/>
           </el-tooltip>
         </el-row>
         <el-row justify="center" class="tail">魔方技术，致力于分享实用的技术干货</el-row>
@@ -69,7 +69,7 @@ import Code from "./code.vue"
 import Register from "./register.vue"
 import Forget from "./forget.vue"
 import {getAssets} from "../../../utils/globalFunc";
-import {encrypt} from "../../../utils/secret";
+import {wechat, qq, gitee, github} from "../../../utils/oauth";
 
 const emits = defineEmits(["update:visible"])
 const props = defineProps({
@@ -89,28 +89,6 @@ function dialogClosed() {
 
 function closeDialog() {
   beforeClose()
-}
-
-function wechat() {
-  let url = import.meta.env.VITE_WECHAT
-  let appid = import.meta.env.VITE_WECHAT_APPID
-  let redirect_url = encodeURIComponent(import.meta.env.VITE_WECHAT_REDIRECT_URL)
-  window.location.href = url + "?response_type=code&appid=" + appid + "&redirect_uri=" + redirect_url + "&scope=" + import.meta.env.VITE_WECHAT_SCOPE + "&state=" + encrypt()
-}
-
-
-function qq() {
-  let url = import.meta.env.VITE_QQ
-  let appid = import.meta.env.VITE_QQ_APPID
-  let redirect_url = encodeURIComponent(import.meta.env.VITE_QQ_REDIRECT_URL)
-  window.location.href = url + "?response_type=code&client_id=" + appid + "&redirect_uri=" + redirect_url + "&state=" + encrypt()
-}
-
-function github() {
-  let url = import.meta.env.VITE_GITHUB
-  let appid = import.meta.env.VITE_GITHUB_APPID
-  let redirect_url = import.meta.env.VITE_GITHUB_REDIRECT_URL
-  window.location.href = url + "?client_id=" + appid + "&redirect_uri=" + redirect_url
 }
 
 </script>
