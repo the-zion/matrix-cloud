@@ -29,6 +29,24 @@
                     placeholder="请输入职位" size="large">
           </el-input>
         </el-form-item>
+        <el-form-item prop="github" label="Github" class="form-item" :label-width="80" :rules="[{
+          type: 'url',
+          message: '网址格式错误',
+          trigger: ['blur'],
+        }]">
+          <el-input v-model="form.github" type="text" :maxlength="100" show-word-limit
+                    placeholder="请输入Github地址" size="large">
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="gitee" label="Gitee" class="form-item" :label-width="80" :rules="[{
+          type: 'url',
+          message: '网址格式错误',
+          trigger: ['blur'],
+        }]">
+          <el-input v-model="form.gitee" type="text" :maxlength="100" show-word-limit
+                    placeholder="请输入Gitee地址" size="large">
+          </el-input>
+        </el-form-item>
         <el-form-item prop="homepage" label="个人主页" class="form-item" :label-width="80" :rules="[{
           type: 'url',
           message: '网址格式错误',
@@ -116,6 +134,8 @@ let form = ref({
   school: "",
   job: "",
   company: "",
+  github: "",
+  gitee: "",
   homepage: "",
   introduce: "",
   status: 1,
