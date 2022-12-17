@@ -86,7 +86,7 @@ import router from "../../../router";
 import {userMainStore} from "../../../store/user";
 import {baseMainStore} from "../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia";
-import {confirm} from "../../../utils/globalFunc";
+import {backToHome, confirm} from "../../../utils/globalFunc";
 import {get} from "../../../utils/axios";
 
 const userStore = userMainStore()
@@ -184,13 +184,14 @@ function userCenter() {
 }
 
 function userSettings() {
-  router.push({name: "settings.profile", query: {menu: 'profile'}})
+  router.push({name: "settings.profile"})
 }
 
 function signOut() {
   confirm("退出登录", "确认退出登录吗").then(function () {
     localStorage.removeItem(import.meta.env.VITE_MATRIX_TOKEN_KEY)
     userStore.$reset()
+    backToHome()
   })
 }
 
