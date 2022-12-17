@@ -1,13 +1,30 @@
 <template>
   <el-container class="identity-container">
     <el-form :model="form" ref="formRef" class="form" :rules="rules">
-      <el-form-item v-if="props.mode === 'phone'" class="form-item" prop="phone">
+      <el-form-item class="form-item" prop="choose">
+        <el-select v-model="form.choose" class="choose" placeholder="请选择验证方式">
+          <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+              :disabled="!props.data[item.value]"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item v-if="form.choose === 'password'" class="form-item" prop="account">
+        <el-input v-model="form.account" :maxlength="50" placeholder="请输入手机号或邮箱"/>
+      </el-form-item>
+      <el-form-item v-if="form.choose === 'password'" class="form-item" prop="password">
+        <el-input v-model="form.password" :maxlength="50" show-password placeholder="请输入密码"/>
+      </el-form-item>
+      <el-form-item v-if="form.choose === 'phone'" class="form-item" prop="phone">
         <el-input v-model="form.phone" disabled :maxlength="20" placeholder="请输入手机号"/>
       </el-form-item>
-      <el-form-item v-if="props.mode === 'email'" class="form-item" prop="email">
+      <el-form-item v-if="form.choose === 'email'" class="form-item" prop="email">
         <el-input v-model="form.email" disabled :maxlength="50" placeholder="请输入邮箱账号"/>
       </el-form-item>
-      <el-form-item v-if="form.mode !== 'account'" class="form-item" prop="code">
+      <el-form-item v-if="form.choose === 'phone' || form.choose === 'email'" class="form-item" prop="code">
         <el-row class="code" justify="space-between">
           <el-input class="code-input" v-model="form.code" :maxlength="6" placeholder="请输入验证码"/>
           <el-button class="button" :disabled="countdown !== 121" :loading="codeSending" @click="sendCode">
@@ -26,8 +43,8 @@ export default {
 </script>
 
 <script setup>
-import {onBeforeMount, ref} from "vue"
-import {validateAccount, validatePassword, validateCode} from "../../../utils/check";
+import {onMounted, ref} from "vue"
+import {validatePassword, validateCode, validateAccount} from "../../../utils/check";
 import {post} from "../../../utils/axios";
 import {error, success} from "../../../utils/message";
 
@@ -41,8 +58,30 @@ const props = defineProps({
   data: Object,
   mode: String
 })
+const options = [{
+  label: "手机号验证",
+  value: "phone"
+}, {
+  label: "邮箱验证",
+  value: "email"
+}, {
+  label: "密码验证",
+  value: "password"
+}, {
+  label: "微信验证",
+  value: "wechat"
+}, {
+  label: "QQ验证",
+  value: "qq"
+}, {
+  label: "Github验证",
+  value: "github"
+}, {
+  label: "Gitee验证",
+  value: "gitee"
+}]
 
-let form = ref({phone: "", email: "", code: ""})
+let form = ref({choose: "", password: "", phone: "", email: "", account: "", code: "", mode: ""})
 let formRef = ref()
 let buttonText = ref("获取验证码")
 let codeSending = ref(false)
@@ -50,10 +89,10 @@ let countdown = ref(121)
 
 function init() {
   initData()
-  sendCode()
 }
 
 function initData() {
+  form.value.choose = props.mode
   form.value.phone = props.data["phone"]
   form.value.email = props.data["email"]
 }
@@ -61,7 +100,7 @@ function initData() {
 function sendCode() {
   codeSending.value = true
   countdown.value = 120
-  if (props.mode === "phone") {
+  if (form.value.choose === "phone") {
     sendPhoneCode()
   } else {
     sendEmailCode()
@@ -102,7 +141,7 @@ function countDown() {
   }, 1000)
 }
 
-onBeforeMount(function () {
+onMounted(function () {
   emits("open", form.value, formRef.value)
   init()
 })
@@ -118,6 +157,10 @@ onBeforeMount(function () {
     .form-item {
       width: 100%;
       margin-bottom: 30px;
+
+      .choose {
+        width: 100%;
+      }
 
       .code {
         width: 100%;

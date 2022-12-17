@@ -23,7 +23,7 @@ export default {
 </script>
 
 <script setup>
-import {ref, onBeforeMount} from "vue";
+import {ref, onBeforeMount, onMounted} from "vue";
 
 import {validateEmail, validateCode} from "../../../utils/check";
 import {post} from "../../../utils/axios";
@@ -44,7 +44,7 @@ let countdown = ref(61)
 function sendCode() {
   codeSending.value = true
   countdown.value = 60
-  post("/v1/user/code/email", {email: form.value.email, template: "3"}).then(function () {
+  post("/v1/user/code/email", {email: form.value.email, template: "4"}).then(function () {
     success("验证码已发送")
     countDown()
   }).catch(function () {
@@ -67,7 +67,7 @@ function countDown() {
   }, 1000)
 }
 
-onBeforeMount(function () {
+onMounted(function () {
   emits("open", form.value, formRef.value)
 })
 </script>

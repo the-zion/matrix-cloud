@@ -21,11 +21,13 @@ export default {
 </script>
 
 <script setup>
-import {ref} from "vue";
+import {onBeforeMount, ref} from "vue";
 import Email from "./email.vue"
 import Phone from "./phone.vue"
 import {post} from "../../../utils/axios";
-import {error, success} from "../../../utils/message";
+import {confirm, error, success} from "../../../utils/message";
+import {useRoute} from "vue-router/dist/vue-router";
+import {wordCheck} from "../../../utils/secret";
 
 let mode = ref("")
 let title = ref("")
@@ -65,59 +67,68 @@ function subOpen(f, r) {
 }
 
 function set() {
-  if (mode.value === 'phone') {
-    setPhone()
-  } else {
-    setEmail()
+  if (!formRef) {
+    error("未知错误")
+    return
   }
-}
-
-function setPhone() {
-  loading.value = true
-  post("/v1/set/user/phone", {phone: form.phone, code: form.code}).then(function () {
-    success("手机号设置成功")
-    close()
-  }).catch(function (err) {
-    let msg = "手机号设置失败"
-    let response = err.response
-    if (response) {
-      switch (response.data.reason) {
-        case "PHONE_CONFLICT":
-          msg = "该账号已存在"
+  formRef.validate((valid) => {
+    if (!valid) {
+      error("提交的信息有误，请检查")
+    } else {
+      switch (mode.value) {
+        case "phone":
+          setAccount("/v1/set/user/phone", {phone: form.phone, code: form.code}, "手机号设置成功", "手机号设置失败")
           break
-        case "VERIFY_CODE_FAILED":
-          msg = "验证码错误"
+        case "email":
+          setAccount("/v1/set/user/email", {email: form.email, code: form.code}, "邮箱设置成功", "邮箱设置失败")
           break
       }
+      return true
     }
-    error(msg)
-    loading.value = false
   })
 }
 
-function setEmail() {
-  loading.value = true
-  post("/v1/set/user/email", {email: form.email, code: form.code}).then(function () {
-    success("邮箱设置成功")
-    close()
-  }).catch(function (err) {
-    let msg = "邮箱设置失败"
-    let response = err.response
-    if (response) {
-      switch (response.data.reason) {
-        case "EMAIL_CONFLICT":
-          msg = "该账号已存在"
-          break
-        case "VERIFY_CODE_FAILED":
-          msg = "验证码错误"
-          break
+function setAccount(url, form, msg, failMsg) {
+  return new Promise((resolve, reject) => {
+    loading.value = true
+    post(url, form).then(function () {
+      success(msg)
+      close()
+      resolve()
+    }).catch(function (err) {
+      let msg = failMsg
+      let response = err.response
+      if (response) {
+        switch (response.data.reason) {
+          case "PHONE_CONFLICT":
+            msg = "该手机号已被绑定"
+            break
+          case "EMAIL_CONFLICT":
+            msg = "该邮箱已被绑定"
+            break
+          case "WECHAT_CONFLICT":
+            msg = "该微信已被绑定"
+            break
+          case "QQ_CONFLICT":
+            msg = "该QQ已被绑定"
+            break
+          case "GITEE_CONFLICT":
+            msg = "该Gitee已被绑定"
+            break
+          case "GITHUB_CONFLICT":
+            msg = "该Github已被绑定"
+            break
+          case "VERIFY_CODE_FAILED":
+            msg = "验证码错误"
+            break
+        }
       }
-    }
-    error(msg)
-    loading.value = false
+      error(msg)
+      loading.value = false
+      reject()
+    })
   })
 }
-
 
 function close() {
   emits("update:visible", false)
@@ -126,6 +137,10 @@ function close() {
 function closed() {
   emits("update:visible", false)
 }
+
+defineExpose({
+  setAccount
+})
 </script>
 
 <style scoped lang="scss">

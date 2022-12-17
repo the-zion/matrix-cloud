@@ -23,7 +23,7 @@ export default {
 </script>
 
 <script setup>
-import {ref, onBeforeMount} from "vue";
+import {ref, onBeforeMount, onMounted} from "vue";
 
 import {validatePhone, validateCode} from "../../../utils/check";
 import {post} from "../../../utils/axios";
@@ -67,7 +67,7 @@ function countDown() {
   }, 1000)
 }
 
-onBeforeMount(function () {
+onMounted(function () {
   emits("open", form.value, formRef.value)
 })
 </script>

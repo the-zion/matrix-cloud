@@ -2,12 +2,12 @@
   <el-container class="navigation-container">
     <el-row class="navigation-block">
       <el-space v-for="item in menu" :key="item.key" class="each"
-                :class="{'select': currentMenu === item.key}"
+                :class="{'select': currentMenu === item.router}"
                 @click="menuSelect(item)">
-        <el-icon class="icon" :class="{'select': currentMenu === item.key}">
+        <el-icon class="icon" :class="{'select': currentMenu === item.router}">
           <component :is="item.icon"></component>
         </el-icon>
-        <span class="label" :class="{'select': currentMenu === item.key}">{{ item.label }}</span>
+        <span class="label" :class="{'select': currentMenu === item.router}">{{ item.label }}</span>
       </el-space>
     </el-row>
   </el-container>
@@ -27,7 +27,7 @@ import router from "../../../router";
 
 let nickname = ref("刘小圆sama")
 let name = ref("neo")
-let currentMenu = ref(useRoute().query["menu"])
+let currentMenu = ref(useRoute().name)
 let menu = ref([{
   key: "profile",
   label: "个人资料",
@@ -41,9 +41,9 @@ let menu = ref([{
 }])
 
 function menuSelect(each) {
-  currentMenu.value = each.key
+  currentMenu.value = each.router
   scrollToTop()
-  router.push({name: each.router, query: {menu: each.key}})
+  router.push({name: each.router})
 }
 
 </script>

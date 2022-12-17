@@ -1,8 +1,8 @@
 <template>
   <el-container class="account-container">
     <!--    <security-edit v-model:visible="visible" v-bind:mode="mode"></security-edit>-->
-    <account-bind v-model:visible="bindVisible" v-bind:mode="mode" @close="dialogClose"></account-bind>
-    <account-unbind v-model:visible="unbindVisible" v-bind:mode="mode" :data="data"
+    <account-bind ref="bindRef" v-model:visible="bindVisible" v-bind:mode="mode" @close="dialogClose"></account-bind>
+    <account-unbind ref="unbindRef" v-model:visible="unbindVisible" v-bind:mode="mode" :data="data"
                     @close="dialogClose"></account-unbind>
     <password-edit v-model:visible="passwordVisible" v-bind:mode="mode" @close="dialogClose"></password-edit>
     <el-row class="title-block" justify="space-between">
@@ -28,15 +28,21 @@
 </template>
 
 <script setup>
-import {onBeforeMount, ref} from "vue"
+import {onBeforeMount, onMounted, ref} from "vue"
 import AccountBind from "./component/bind.vue"
 import AccountUnbind from "./component/unbind.vue"
 import PasswordEdit from "./component/password-edit.vue"
 import {get} from "../../utils/axios";
 import {error, success} from "../../utils/message";
+import {wechat, qq, gitee, github} from "../../utils/oauth";
+import {useRoute} from "vue-router/dist/vue-router";
+import {wordCheck} from "../../utils/secret";
+import router from "../../router";
 
 let bindVisible = ref(false)
 let unbindVisible = ref(false)
+let bindRef = ref()
+let unbindRef = ref()
 let passwordVisible = ref(false)
 let mode = ref()
 
@@ -54,18 +60,22 @@ let accountMeta = ref([
   {
     key: "wechat",
     label: "微信",
+    func: setWechat
   },
   {
     key: "qq",
     label: "QQ",
+    func: setQQ
   },
   {
-    key: "weibo",
-    label: "新浪微博",
+    key: "gitee",
+    label: "Gitee",
+    func: setGitee
   },
   {
     key: "github",
     label: "Github",
+    func: setGithub
   }
 ])
 
@@ -89,6 +99,42 @@ function setEmail() {
   }
 }
 
+function setWechat() {
+  mode.value = "wechat"
+  if (data.value["wechat"]) {
+    unbindVisible.value = true
+  } else {
+    wechat("bind@wechat@wechat@", import.meta.env.VITE_WECHAT_ACCOUNT_URL)
+  }
+}
+
+function setQQ() {
+  mode.value = "qq"
+  if (data.value["qq"]) {
+    unbindVisible.value = true
+  } else {
+    qq("bind@qq@qq@", import.meta.env.VITE_QQ_ACCOUNT_URL)
+  }
+}
+
+function setGitee() {
+  mode.value = "gitee"
+  if (data.value["gitee"]) {
+    unbindVisible.value = true
+  } else {
+    gitee("bind@gitee@gitee@", import.meta.env.VITE_GITEE_ACCOUNT_URL)
+  }
+}
+
+function setGithub() {
+  mode.value = "github"
+  if (data.value["github"]) {
+    unbindVisible.value = true
+  } else {
+    github("bind@github@github@", import.meta.env.VITE_GITHUB_ACCOUNT_URL)
+  }
+}
+
 function passWord() {
   passwordVisible.value = true
   if (data.value["password"]) {
@@ -100,6 +146,7 @@ function passWord() {
 
 function init() {
   getData()
+  bindAndUnbind()
 }
 
 function getData() {
@@ -110,11 +157,61 @@ function getData() {
   })
 }
 
+function bindAndUnbind() {
+  if (!useRoute().query["state"]) {
+    return
+  }
+
+  if (!useRoute().query["code"]) {
+    error("error", "绑定失败，关键参数缺失")
+    return
+  }
+  let state = useRoute().query["state"].split("@")
+  if (!stateCheck(state[3])) {
+    error("error", "登录失败，参数校验失败")
+    return
+  }
+
+  switch (state[0]) {
+    case "bind":
+      bindAccount(state[1], useRoute().query["code"])
+      break
+    case "unbind":
+      unbindAccount(state[1], state[2], useRoute().query["code"])
+      break
+  }
+}
+
+function bindAccount(account, code){
+  bindRef.value.setAccount("/v1/set/user/" + account, {
+    code: code,
+    redirect_url: import.meta.env["VITE_" + account.toUpperCase() + "_ACCOUNT_URL"]
+  }, "账号绑定成功", "账号绑定失败").then(function (){
+    getData()
+  })
+  router.push({name: "settings.account"})
+}
+
+function unbindAccount(account, choose, code){
+  unbindRef.value.unbindAccount("/v1/unbind/user/" + account, {
+    choose: choose,
+    code: code,
+    redirect_uri: import.meta.env["VITE_" + account.toUpperCase() + "_ACCOUNT_URL"]
+  }, "账号解绑成功", "账号解绑失败").then(function (){
+    getData()
+  })
+  router.push({name: "settings.account"})
+}
+
+function stateCheck(state) {
+  return wordCheck(state)
+}
+
 function dialogClose() {
   getData()
 }
 
-onBeforeMount(function () {
+onMounted(function () {
   init()
 })
 </script>
