@@ -22,7 +22,7 @@ import {useRoute} from "vue-router/dist/vue-router";
 import {post} from "../../../utils/axios";
 import {userMainStore} from "../../../store/user";
 import router from "../../../router";
-import {getAssets} from "../../../utils/globalFunc";
+import {getAssets, setTitle} from "../../../utils/globalFunc";
 import {wordCheck} from "../../../utils/secret";
 
 const userStore = userMainStore()
@@ -31,6 +31,7 @@ let title = ref()
 let description = ref()
 
 function init() {
+  setTitle("微信 登录")
   if (!useRoute().query["state"] || !useRoute().query["code"]) {
     resultMark("error", "登录失败", "关键参数缺失")
     return

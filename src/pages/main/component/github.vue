@@ -22,6 +22,7 @@ import {useRoute} from "vue-router/dist/vue-router";
 import {post} from "../../../utils/axios";
 import {userMainStore} from "../../../store/user";
 import router from "../../../router";
+import {setTitle} from "../../../utils/globalFunc";
 
 const userStore = userMainStore()
 let type = ref()
@@ -29,6 +30,7 @@ let title = ref()
 let description = ref()
 
 function init() {
+  setTitle("Github 登录")
   let err = useRoute().query["error"]
   if (err){
     type.value = "error"
