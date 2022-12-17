@@ -70,8 +70,8 @@
         </el-row>
         <el-row class="user-operation" justify="space-between">
           <el-row class="pages" justify="space-around">
-            <el-icon class="iconfont icon-weibo" :size="20"></el-icon>
-            <el-icon class="iconfont icon-github-fill" :size="20"></el-icon>
+            <el-icon class="iconfont icon-gitee" :size="20" :class="{'gitee-color':data['gitee']}" @click="giteeClick()"></el-icon>
+            <el-icon class="iconfont icon-github-fill" :size="20" :class="{'github-color':data['github']}" @click="githubClick()"></el-icon>
             <el-icon class="iconfont icon-earth" :size="20" :class="{'earth-color':data['homepage']}"
                      @click="earthClick()"></el-icon>
           </el-row>
@@ -140,6 +140,10 @@
                 </el-row>
               </el-row>
             </el-row>
+          </el-row>
+          <el-row class="uid-block" align="middle" justify="center">
+            <span class="label">{{"uid:"}}</span>
+            <span class="label">{{searchId}}</span>
           </el-row>
           <el-row class="follow-block" align="middle">
             <el-row class="follow" align="middle">
@@ -303,7 +307,7 @@ function getUserMedal() {
 function getData() {
   get("/v1/get/user/info/visitor?uuid=" + searchId.value).then(function (reply) {
     data.value = reply.data
-    setTitle(data["username"] + "的个人主页")
+    setTitle(reply.data["username"] + "的个人主页")
     getLevel()
     getUserMedal()
   }).catch(function () {
@@ -341,6 +345,14 @@ function barSelect(item) {
   removeScrollToBottomListen()
   currentSelect.value = item.key
   router.push({name: item.router, query: {id: searchId.value, menu: item.key}})
+}
+
+function giteeClick(){
+  data.value["gitee"] && window.open(data.value["gitee"]);
+}
+
+function githubClick(){
+  data.value["github"] && window.open(data.value["github"]);
 }
 
 function earthClick() {
@@ -579,6 +591,16 @@ onBeforeMount(function () {
           width: 100%;
           color: var(--el-text-color-secondary);
 
+          .github-color {
+            color: var(--el-color-black);
+            cursor: pointer;
+          }
+
+          .gitee-color{
+            color: #c71d24;
+            cursor: pointer;
+          }
+
           .earth-color {
             color: var(--el-color-primary);
             cursor: pointer;
@@ -726,6 +748,20 @@ onBeforeMount(function () {
               color: var(--el-text-color-regular);
             }
           }
+        }
+      }
+
+      .uid-block{
+        height: 75px;
+        width: 100%;
+        background-color: var(--el-color-white);
+        border: 1px solid var(--el-border-color-lighter);
+        margin-bottom: 12px;
+        .label {
+          font-size: 14px;
+          color: var(--el-text-color-placeholder);
+          font-weight: 400;
+          margin:  0 5px;
         }
       }
 
