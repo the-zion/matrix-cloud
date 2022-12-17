@@ -7,6 +7,7 @@ const Main = () => import('../pages/main/main.vue')
 const Platform = () => import('../pages/main/platform.vue')
 const Wechat = () => import('../pages/main/component/wechat.vue')
 const QQ = () => import('../pages/main/component/qq.vue')
+const Gitee = () => import('../pages/main/component/gitee.vue')
 const Github = () => import('../pages/main/component/github.vue')
 const Article = () => import('../pages/article/article.vue')
 const Talk = () => import('../pages/talk/talk.vue')
@@ -43,6 +44,12 @@ const CreationPicture = () => import("../pages/creation/picture.vue")
 const CreationReview = () => import("../pages/creation/review.vue")
 const CreationComment = () => import("../pages/creation/comment.vue")
 
+function loginCheck() {
+    if (!localStorage.getItem(import.meta.env.VITE_MATRIX_TOKEN_KEY)) {
+        return {name: 'home', query: {page: 'news'}}
+    }
+}
+
 const routes = [
     {
         path: '/',
@@ -63,11 +70,15 @@ const routes = [
                     path: 'wechat',
                     name: 'login.wechat',
                     component: Wechat
-                },{
+                }, {
                     path: 'qq',
                     name: 'login.qq',
                     component: QQ
-                },{
+                }, {
+                    path: 'gitee',
+                    name: 'login.gitee',
+                    component: Gitee
+                }, {
                     path: 'github',
                     name: 'login.github',
                     component: Github
@@ -103,6 +114,7 @@ const routes = [
                 name: 'message',
                 component: Message,
                 redirect: {name: 'message.timeline'},
+                beforeEnter: [loginCheck],
                 children: [{
                     path: 'timeline',
                     name: 'message.timeline',
@@ -163,6 +175,7 @@ const routes = [
                 name: 'creation',
                 component: Creation,
                 redirect: {name: 'creation.homepage'},
+                beforeEnter: [loginCheck],
                 children: [{
                     path: 'homepage',
                     name: 'creation.homepage',
@@ -202,6 +215,7 @@ const routes = [
                 name: 'settings',
                 component: Settings,
                 redirect: {name: 'settings.profile'},
+                beforeEnter: [loginCheck],
                 children: [{
                     path: 'profile',
                     name: 'settings.profile',
@@ -209,7 +223,7 @@ const routes = [
                 }, {
                     path: 'account',
                     name: 'settings.account',
-                    component: SettingsAccount
+                    component: SettingsAccount,
                 }]
             }]
     },
@@ -218,6 +232,7 @@ const routes = [
         name: 'write',
         component: write,
         redirect: {name: "article.write"},
+        beforeEnter: [loginCheck],
         children: [{
             path: 'article',
             name: 'article.write',
