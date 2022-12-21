@@ -91,7 +91,8 @@
         <matrix-reply :creationId="articleId" :creationType="1" v-if="data['auth'] !== 2"></matrix-reply>
       </el-row>
       <el-row class="comment-block" v-if="data['auth'] !== 2">
-        <matrix-comment :creationId="articleId" :creationType="1" :creationAuthor="authorUuid" ref="commentRef"></matrix-comment>
+        <matrix-comment :creationId="articleId" :creationType="1" :creationAuthor="authorUuid"
+                        ref="commentRef"></matrix-comment>
       </el-row>
     </el-row>
   </el-container>
@@ -164,7 +165,6 @@ const {uuid} = storeToRefs(userStore)
 const {avatar, article} = storeToRefs(baseStore)
 
 function init() {
-  animation()
   initData()
   getData()
 }
@@ -370,6 +370,10 @@ onBeforeRouteLeave((to, from) => {
 
 onBeforeMount(function () {
   init()
+})
+
+onMounted(function () {
+  animation()
 })
 
 onMounted(background)

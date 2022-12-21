@@ -88,7 +88,7 @@ import {goToPage, setTitle} from "../../utils/globalFunc";
 import {useRoute} from "vue-router";
 import {error, success, warning} from "../../utils/message";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
-import {ref, onBeforeMount} from "vue";
+import {ref, onBeforeMount, onMounted} from "vue";
 import {get, post} from "../../utils/axios";
 import {animationAgree, animationCollect} from "../../utils/animation";
 import {userMainStore} from "../../store/user";
@@ -135,7 +135,6 @@ let userColumnCollect = ref({})
 let userSubscribeColumn = ref({})
 
 function init() {
-  animation()
   initData()
   getUserSubscribe()
   getData()
@@ -356,6 +355,10 @@ function cancelSubscribe() {
 
 onBeforeMount(function () {
   init()
+})
+
+onMounted(function () {
+  animation()
 })
 </script>
 

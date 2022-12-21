@@ -107,7 +107,7 @@ import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {warning} from "../../utils/message";
 import {get, post} from "../../utils/axios";
 import {animationAgree, animationCollect} from "../../utils/animation";
-import {ref, onBeforeUnmount, shallowRef, onBeforeMount} from "vue"
+import {ref, onBeforeUnmount, shallowRef, onBeforeMount, onMounted} from "vue"
 import {Editor} from '@wangeditor/editor-for-vue'
 import {userMainStore} from "../../store/user";
 import {baseMainStore} from "../../store/base";
@@ -168,7 +168,6 @@ let userTalkAgree = ref({})
 let userTalkCollect = ref({})
 
 function init() {
-  animation()
   initData()
   getData()
 }
@@ -364,6 +363,10 @@ function selectChange(value) {
 
 onBeforeMount(function () {
   init()
+})
+
+onMounted(function () {
+  animation()
 })
 
 onBeforeUnmount(function () {
