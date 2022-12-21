@@ -67,12 +67,12 @@ export default defineConfig({
             targets: ['defaults', 'not IE 11']
         }),
         vue(),
-        AutoImport({
-            resolvers: [ElementPlusResolver()],
-        }),
-        Components({
-            resolvers: [ElementPlusResolver()],
-        }),
+        // AutoImport({
+        //     resolvers: [ElementPlusResolver()],
+        // }),
+        // Components({
+        //     resolvers: [ElementPlusResolver()],
+        // }),
         // Components({
         //     extensions: ['vue', 'md'],
         //     include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
