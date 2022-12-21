@@ -166,7 +166,7 @@ function closed() {
 function create() {
   const {href} = router.resolve({
     name: "creation.content",
-    query: {menu: 'collect'}
+    query: {menu: 'collections'}
   });
   window.open(href, "_blank");
 }
