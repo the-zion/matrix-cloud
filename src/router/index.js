@@ -3,46 +3,46 @@ import {
     createWebHistory,
 } from 'vue-router'
 
-const Main = () => import('../pages/main/main.vue')
-const Platform = () => import('../pages/main/platform.vue')
-const Wechat = () => import('../pages/main/component/wechat.vue')
-const QQ = () => import('../pages/main/component/qq.vue')
-const Gitee = () => import('../pages/main/component/gitee.vue')
-const Github = () => import('../pages/main/component/github.vue')
-const Article = () => import('../pages/article/article.vue')
-const Talk = () => import('../pages/talk/talk.vue')
-const Column = () => import('../pages/column/column.vue')
-const Collect = () => import('../pages/collect/collect.vue')
-const Message = () => import('../pages/message/message.vue')
-const MessageTimeLine = () => import('../pages/message/component/timeline.vue')
-const MessageComment = () => import('../pages/message/component/comment.vue')
-const MessageNotification = () => import('../pages/message/component/notification.vue')
-const Search = () => import('../pages/search/search.vue')
-const About = () => import('../pages/about/about.vue')
-const User = () => import('../pages/user/user.vue')
-const UserTimeLine = () => import('../pages/user/component/timeline.vue')
-const UserArticle = () => import('../pages/user/component/article.vue')
-const UserColumn = () => import('../pages/user/component/column.vue')
-const UserTalk = () => import('../pages/user/component/talk.vue')
-const UserCollect = () => import('../pages/user/component/collect.vue')
-const UserFollow = () => import('../pages/user/component/follow.vue')
-const write = () => import('../pages/write/write.vue')
-const ArticleWrite = () => import('../pages/article/write.vue')
-const TalkWrite = () => import('../pages/talk/write.vue')
-const Home = () => import('../pages/home/home.vue')
-const Settings = () => import("../pages/settings/settings.vue")
-const SettingsProfile = () => import("../pages/settings/profile.vue")
-const SettingsAccount = () => import("../pages/settings/account.vue")
-const Result = () => import("../pages/result/result.vue")
-const Creation = () => import("../pages/creation/creation.vue")
-const CreationHomePage = () => import("../pages/creation/homepage.vue")
-const CreationMedal = () => import("../pages/creation/medal.vue")
-const CreationReply = () => import("../pages/creation/reply.vue")
-const CreationReplied = () => import("../pages/creation/replied.vue")
-const CreationContent = () => import("../pages/creation/content.vue")
-const CreationPicture = () => import("../pages/creation/picture.vue")
-const CreationReview = () => import("../pages/creation/review.vue")
-const CreationComment = () => import("../pages/creation/comment.vue")
+import Main from "../pages/main/main.vue"
+import Platform from "../pages/main/platform.vue"
+import Wechat from "../pages/main/component/wechat.vue"
+import QQ from "../pages/main/component/qq.vue"
+import Gitee from "../pages/main/component/gitee.vue"
+import Github from "../pages/main/component/github.vue"
+import Article from "../pages/article/article.vue"
+import Talk from "../pages/talk/talk.vue"
+import Column from "../pages/column/column.vue"
+import Collect from "../pages/collect/collect.vue"
+import Message from "../pages/message/message.vue"
+import MessageTimeLine from "../pages/message/component/timeline.vue"
+import MessageComment from "../pages/message/component/comment.vue"
+import MessageNotification from "../pages/message/component/notification.vue"
+import Search from "../pages/search/search.vue"
+import About from "../pages/about/about.vue"
+import User from "../pages/user/user.vue"
+import UserTimeLine from "../pages/user/component/timeline.vue"
+import UserArticle from "../pages/user/component/article.vue"
+import UserColumn from "../pages/user/component/column.vue"
+import UserTalk from "../pages/user/component/talk.vue"
+import UserCollect from "../pages/user/component/collect.vue"
+import UserFollow from "../pages/user/component/follow.vue"
+import Write from "../pages/write/write.vue"
+import ArticleWrite from "../pages/article/write.vue"
+import TalkWrite from "../pages/talk/write.vue"
+import Home from "../pages/home/home.vue"
+import Settings from "../pages/settings/settings.vue"
+import SettingsProfile from "../pages/settings/profile.vue"
+import SettingsAccount from "../pages/settings/account.vue"
+import Result from "../pages/result/result.vue"
+import Creation from "../pages/creation/creation.vue"
+import CreationHomePage from "../pages/creation/homepage.vue"
+import CreationMedal from "../pages/creation/medal.vue"
+import CreationReply from "../pages/creation/reply.vue"
+import CreationReplied from "../pages/creation/replied.vue"
+import CreationContent from "../pages/creation/content.vue"
+import CreationPicture from "../pages/creation/picture.vue"
+import CreationReview from "../pages/creation/review.vue"
+import CreationComment from "../pages/creation/comment.vue"
 
 function loginCheck() {
     if (!localStorage.getItem(import.meta.env.VITE_MATRIX_TOKEN_KEY)) {
@@ -230,7 +230,7 @@ const routes = [
     {
         path: '/write',
         name: 'write',
-        component: write,
+        component: Write,
         redirect: {name: "article.write"},
         beforeEnter: [loginCheck],
         children: [{
