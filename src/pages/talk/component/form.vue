@@ -47,6 +47,7 @@ import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {get, post} from "../../../utils/axios";
 import router from "../../../router";
 import {textEmojiRemove} from "../../../utils/globalFunc";
+import {xssFilter} from "../../../utils/xss";
 
 const userStore = userMainStore()
 const baseStore = baseMainStore()
@@ -128,7 +129,7 @@ function commit() {
 function setTalkParams() {
   let image = editor.value.getElemsByType('image')[0]
   talkParams["title"] = title.value
-  talkParams["html"] = editor.value.getHtml()
+  talkParams["html"] = xssFilter(editor.value.getHtml())
   talkParams["update"] = new Date().toLocaleDateString()
   talkParams["tags"] = form.value["tags"].join(";")
   talkParams["auth"] = form.value["auth"]

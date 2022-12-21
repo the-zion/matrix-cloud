@@ -90,6 +90,7 @@ import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {get, post} from "../../../utils/axios";
 import router from "../../../router";
 import {textEmojiRemove} from "../../../utils/globalFunc";
+import {xssFilter} from "../../../utils/xss";
 
 const props = defineProps({
   mode: String,
@@ -258,7 +259,7 @@ function editArticle() {
 function setArticleParams() {
   date = new Date()
   articleParams["title"] = title.value
-  articleParams["html"] = editor.value.getHtml()
+  articleParams["html"] = xssFilter(editor.value.getHtml())
   articleParams["update"] = date.toLocaleDateString()
   articleParams["tags"] = form.value["tags"].join(";")
   articleParams["auth"] = form.value["auth"]
