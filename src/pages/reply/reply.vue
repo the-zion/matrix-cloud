@@ -7,6 +7,7 @@
           :defaultConfig="editorConfig"
           :mode="'default'"
           @onCreated="handleCreated"
+          @onFocus="handleFocus"
       />
     </el-row>
     <el-row class="reply-toolbar" align="middle" justify="space-between">
@@ -35,6 +36,7 @@ import {success, error, warning} from "../../utils/message";
 import {userMainStore} from "../../store/user";
 import {baseMainStore} from "../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
+import {xssFilter} from "~/utils/xss";
 
 const editorRef = shallowRef()
 const valueHtml = ref('')
@@ -106,9 +108,12 @@ function handleCreated(editor) {
   editorRef.value = editor
 }
 
+function handleFocus(){
+  getLastDraft()
+}
+
 function init() {
   initData()
-  getLastDraft()
 }
 
 function initData() {
@@ -176,7 +181,7 @@ function commit() {
 }
 
 function setCommentParams() {
-  commentParams["html"] = editorRef.value.getHtml()
+  commentParams["html"] = xssFilter(editorRef.value.getHtml())
   commentParams["update"] = new Date().toLocaleDateString()
   commentParams["id"] = draftId.value
 }
