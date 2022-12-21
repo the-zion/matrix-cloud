@@ -12,6 +12,7 @@ import NewsComponent from './pages/news/index.ts'
 import TagComponents from './pages/tag/index.ts'
 import UserComponent from './pages/user/index.ts'
 import router from './router/index'
+import ElementPlus from 'element-plus'
 import './assets/icon/iconfont.js'
 import './assets/icon/iconfont.css'
 import 'element-plus/dist/index.css'
@@ -21,6 +22,7 @@ import './styles/index.scss'
 
 const pinia = createPinia()
 const app = createApp(App).use(pinia)
+    .use(ElementPlus)
     .use(ReplyComponent)
     .use(CommentComponent)
     .use(ArticleComponents)
