@@ -1,9 +1,6 @@
-import {App, defineAsyncComponent} from 'vue'
+import {App} from 'vue'
 
-const MatrixReply = defineAsyncComponent(() =>
-    import('./reply.vue')
-)
-
+import MatrixReply from "./reply.vue"
 export default {
     install(app: App) {
         app.component("matrix-reply", MatrixReply)

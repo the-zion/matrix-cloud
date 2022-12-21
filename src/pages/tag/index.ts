@@ -1,9 +1,6 @@
-import {App, defineAsyncComponent} from 'vue'
+import {App} from 'vue'
 
-const MatrixTag = defineAsyncComponent(() =>
-    import('./tag.vue')
-)
-
+import MatrixTag from "./tag.vue"
 export default {
     install(app: App) {
         app.component("matrix-tag", MatrixTag)

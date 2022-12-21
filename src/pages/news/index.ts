@@ -1,8 +1,6 @@
-import {App, defineAsyncComponent} from 'vue'
+import {App} from 'vue'
 
-const MatrixNewsList = defineAsyncComponent(() =>
-    import('./news.vue')
-)
+import MatrixNewsList from "./news.vue"
 export default {
     install(app: App) {
         app.component("matrix-news-list", MatrixNewsList)

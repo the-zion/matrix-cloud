@@ -1,11 +1,7 @@
-import {App, defineAsyncComponent} from 'vue'
+import {App} from 'vue'
 
-const MatrixUserMiniCard = defineAsyncComponent(() =>
-    import('./component/mini.vue')
-)
-const MatrixUserList = defineAsyncComponent(() =>
-    import('./component/list.vue')
-)
+import MatrixUserMiniCard from "./component/mini.vue"
+import MatrixUserList from "./component/list.vue"
 
 export default {
     install(app: App) {

@@ -1,9 +1,6 @@
-import {App, defineAsyncComponent} from 'vue'
+import {App} from 'vue'
 
-const MatrixTalkList = defineAsyncComponent(() =>
-    import('./component/list.vue')
-)
-
+import MatrixTalkList from "./component/list.vue"
 export default {
     install(app: App) {
         app.component("matrix-talk-list", MatrixTalkList)

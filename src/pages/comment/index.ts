@@ -1,9 +1,6 @@
-import {App, defineAsyncComponent} from 'vue'
+import {App} from 'vue'
 
-const MatrixComment = defineAsyncComponent(() =>
-    import('./comment.vue')
-)
-
+import MatrixComment from "./comment.vue"
 export default {
     install(app: App) {
         app.component("matrix-comment", MatrixComment)
