@@ -16,7 +16,7 @@
             </el-row>
           </template>
           <template #extra>
-            <span>2022-10-11</span>
+            <span>{{item['createdAt']}}</span>
           </template>
           <el-descriptions-item :width="1000"
                                 :label="typeDict[item['notificationType']] + '审核违规'"></el-descriptions-item>
@@ -27,7 +27,7 @@
             <el-tag v-if="item.result === 2" type="warning" color="orange" effect="dark">疑似敏感</el-tag>
           </el-descriptions-item>
           <el-descriptions-item label="结果类型" :width="150">
-            <el-tag type="danger" effect="dark">{{ reviewType[item.label] }}</el-tag>
+            <el-tag type="danger" effect="dark">{{ reviewType[item.label] || item.label}}</el-tag>
           </el-descriptions-item>
           <el-descriptions-item v-if="item.title" label="标题">{{ item.title }}</el-descriptions-item>
           <el-descriptions-item v-if="item['notificationType'] === 'comment'" label="评论">{{
