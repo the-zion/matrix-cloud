@@ -2,8 +2,12 @@
   <el-container class="timeline-container">
     <el-row class="users-menu" justify="center" align="middle">
       <el-empty v-show="follows.length === 0 && !loading" class="empty" description=" "
-                :image-size="120" :image="noData"
-      />
+                :image-size="120"
+      >
+        <template #image>
+          <span class="description">No Data</span>
+        </template>
+      </el-empty>
       <el-row class="avatar-block" align="middle" v-show="follows.length !== 0">
         <el-icon class="arrow" @click="left">
           <ArrowLeftBold/>
@@ -134,6 +138,13 @@ onMounted(function () {
 
     .empty {
       padding: unset;
+      .description{
+        font-size: 15px;
+        color: var(--el-text-color-placeholder);
+      }
+      ::v-deep(.el-empty__description){
+        display: none;
+      }
     }
 
     .avatar-block {
