@@ -66,6 +66,7 @@ import {get, post} from "../../utils/axios";
 import {userMainStore} from "../../store/user";
 import {baseMainStore} from "../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
+import {xssFilter} from "../../utils/xss";
 
 const userStore = userMainStore()
 const baseStore = baseMainStore()
@@ -90,7 +91,7 @@ const toolbarConfig = {
     'uploadVideo',
     'group-justify',
     'group-indent',
-
+    'group-video',
   ]
 }
 
@@ -190,7 +191,7 @@ function CreateDraft() {
 
 function editChange(editor) {
   uploadBox["title"] = title.value
-  uploadBox["html"] = editor.getHtml()
+  uploadBox["html"] = xssFilter(editor.getHtml())
   uploadBox["update"] = new Date().toLocaleDateString()
   editSave(function () {
     time.value = "最近保存：" + uploadBox["update"]
@@ -288,6 +289,7 @@ function getData() {
     loading.value = false
   })
 }
+
 
 function getDataEdit() {
   if (!uuid.value) {

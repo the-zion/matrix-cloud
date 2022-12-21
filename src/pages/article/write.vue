@@ -86,6 +86,7 @@ import {userMainStore} from "../../store/user";
 import {baseMainStore} from "../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {useRoute} from "vue-router";
+import {xssFilter} from "../../utils/xss";
 
 const userStore = userMainStore()
 const baseStore = baseMainStore()
@@ -100,8 +101,8 @@ const toolbarConfig = {
     'uploadVideo',
     "bgColor",
     "fontSize",
-    "fontFamily",
     "lineHeight",
+    'group-video',
     "|",
   ]
 }
@@ -178,7 +179,7 @@ function draftSelect(id) {
 
 function editChange(editor) {
   uploadBox["title"] = title.value
-  uploadBox["html"] = editor.getHtml()
+  uploadBox["html"] = xssFilter(editor.getHtml())
   uploadBox["update"] = new Date().toLocaleDateString()
   editSave(function () {
     time.value = "最近保存：" + uploadBox["update"]
