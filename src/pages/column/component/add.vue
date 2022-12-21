@@ -187,6 +187,8 @@ function closed() {
 
 <style scoped lang="scss">
 .table {
+  display: flex;
+  width: 100%;
   height: 440px;
   overflow-y: scroll;
 
