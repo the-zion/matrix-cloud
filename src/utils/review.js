@@ -5,6 +5,7 @@ export function ReviewTag() {
         Politics: "涉政",
         Ads: "广告",
         Illegal: "违法",
+        Abuse: "辱骂"
     }
 }
 
