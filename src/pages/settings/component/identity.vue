@@ -108,7 +108,7 @@ function sendCode() {
 }
 
 function sendPhoneCode() {
-  post("/v1/user/code/phone", {phone: form.value.phone, template: "3"}).then(function () {
+  post("/v1/user/code/phone", {phone: form.value.phone, template: "4"}).then(function () {
     success("验证码已发送")
     countDown()
   }).catch(function () {
@@ -118,7 +118,7 @@ function sendPhoneCode() {
 }
 
 function sendEmailCode() {
-  post("/v1/user/code/email", {email: form.value.email, template: "3"}).then(function () {
+  post("/v1/user/code/email", {email: form.value.email, template: "4"}).then(function () {
     success("验证码已发送")
     countDown()
   }).catch(function () {
