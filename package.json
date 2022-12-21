@@ -18,7 +18,8 @@
     "pinia": "^2.0.14",
     "prismjs": "^1.28.0",
     "vue": "^3.2.25",
-    "vue-router": "^4.0.12"
+    "vue-router": "^4.0.12",
+    "xss": "^1.0.14"
   },
   "devDependencies": {
     "@types/node": "^17.0.38",
