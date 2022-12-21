@@ -3,7 +3,7 @@
     <el-backtop></el-backtop>
     <el-row class="search-block">
       <el-row class="search">
-        <el-input class="input" prefix-icon="Search" placeholder="请输入搜索内容" v-model="input"
+        <el-input class="input" prefix-icon="Search" placeholder="请输入搜索内容" v-model="input" maxlength="100" show-word-limit
                   @change="inputChange"></el-input>
       </el-row>
     </el-row>
@@ -220,6 +220,10 @@ onMounted(function () {
           border-radius: 9999px;
           box-shadow: unset;
           background-color: rgba(0, 10, 32, .05);
+        }
+
+        ::v-deep(.el-input__count-inner){
+          background: unset;
         }
       }
     }
