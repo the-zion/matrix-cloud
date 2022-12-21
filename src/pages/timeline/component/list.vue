@@ -188,6 +188,7 @@ function scrollToBottom() {
 
 function getData() {
   if (isBottom || getDataLock || !userId.value) {
+    loading.value = false
     return
   }
 
