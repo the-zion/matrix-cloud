@@ -179,6 +179,7 @@ function indexFormatter(index) {
 <style scoped lang="scss">
 .table {
   height: 440px;
+  display: flex;
 
   .skeleton {
     padding: 16px;

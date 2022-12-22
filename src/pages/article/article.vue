@@ -259,6 +259,7 @@ function animation() {
 function agreeClick() {
   if (!uuid.value) {
     warning("账号未登录，请先登录")
+    return
   }
 
   if (!articleId.value || !authorUuid.value || clickLock) {
@@ -304,6 +305,7 @@ function agreeCancel() {
 function collectClick() {
   if (!uuid.value) {
     warning("账号未登录，请先登录")
+    return
   }
 
   if (!articleId.value || !authorUuid.value) {

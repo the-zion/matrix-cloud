@@ -257,6 +257,7 @@ function getUserTalkCollect() {
 function agreeClick() {
   if (!uuid.value) {
     warning("账号未登录，请先登录")
+    return
   }
 
   if (!talkId.value || !authorUuid.value || clickLock) {
@@ -302,6 +303,7 @@ function agreeCancel() {
 function collectClick() {
   if (!uuid.value) {
     warning("账号未登录，请先登录")
+    return
   }
 
   if (!talkId.value || !authorUuid.value) {
