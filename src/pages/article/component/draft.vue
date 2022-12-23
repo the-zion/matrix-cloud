@@ -123,6 +123,7 @@ onBeforeMount(function () {
     padding: 10px 15px;
     border-bottom: 1px solid var(--el-border-color-lighter);
     cursor: pointer;
+    position: relative;
 
     .image {
       width: 70px;
