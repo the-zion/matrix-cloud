@@ -1,39 +1,33 @@
 <template>
-  <el-button
-
-      class="button"
-      type="primary"
-      text
-      bg
-      loading
-  >{{ "点击获取" }}
-  </el-button>
-
-  <el-dialog v-model="dialogVisible">
-    <img w-full :src="dialogImageUrl" alt="Preview Image" />
-  </el-dialog>
+  <el-container class="about">
+    <el-row class="block">
+      <el-image class="image" :src="getAssets('matrix.png')" :fit="'cover'"/>
+      <span>{{"这是一个基于微服务框架Kratos所做的知识分享网站，期望能靠内容出圈吧 (⸝⸝>ᴗ(>ᴗ<⸝⸝）"}}</span>
+    </el-row>
+  </el-container>
+  <div ref="root"></div>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue'
 
-import type { UploadFile } from 'element-plus'
+<script setup>
+import {getAssets} from "../../utils/globalFunc";
 
-const formRef = ref()
-const dialogImageUrl = ref('')
-const dialogVisible = ref(false)
-const disabled = ref(false)
-
-const handleRemove = (file: UploadFile) => {
-  console.log(file)
-}
-
-const handlePictureCardPreview = (file: UploadFile) => {
-  dialogImageUrl.value = file.url!
-  dialogVisible.value = true
-}
-
-const handleDownload = (file: UploadFile) => {
-  console.log(file)
-  console.log(formRef)
-}
 </script>
+
+<style scoped lang="scss">
+.about {
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+
+  .block {
+    width: 650px;
+
+    .image {
+      width: 100%;
+      margin-bottom: 20px;
+      background: var(--el-color-white);
+      height: 300px;
+    }
+  }
+}
+</style>
