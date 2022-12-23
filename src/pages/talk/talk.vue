@@ -1,5 +1,6 @@
 <template>
   <el-container class="talk-container">
+    <el-image-viewer v-if="imageUrlList.length" :url-list="imageUrlList" @close="imageViewerClose"></el-image-viewer>
     <el-backtop></el-backtop>
     <collections-choose v-model:visible="collectionsVisible" :id="talkId"
                         :uuid="authorUuid" :mode="'talk'"
@@ -138,6 +139,7 @@ let collectionsVisible = ref(false)
 let select = ref("hot")
 let agreeBounce = ref(1);
 let collectBounce = ref(1);
+let imageUrlList = ref([])
 let agreeAnimation = null
 let collectAnimation = null
 let clickLock = false
@@ -229,6 +231,7 @@ function getTalk() {
     setTitle(reply.data["title"])
     getUserTalkAgree()
     getUserTalkCollect()
+    addClickListenToImg()
   }).catch(function () {
     talkNotExist()
   }).then(function () {
@@ -252,6 +255,20 @@ function getUserTalkCollect() {
   get("/v1/get/user/talk/collect").then(function (reply) {
     userTalkCollect.value = reply.data.collect
   })
+}
+
+
+function addClickListenToImg(){
+  const images = document.getElementsByClassName("w-e-image-container")
+  Array.prototype.forEach.call(images, function (image) {
+    image.addEventListener("click",function (){
+      imageUrlList.value = [image.lastElementChild.currentSrc]
+    })
+  });
+}
+
+function imageViewerClose(){
+  imageUrlList.value = []
 }
 
 function agreeClick() {

@@ -1,6 +1,7 @@
 <template>
   <el-container class="article-container" v-loading="loading">
     <el-backtop></el-backtop>
+    <el-image-viewer v-if="imageUrlList.length" :url-list="imageUrlList" @close="imageViewerClose"></el-image-viewer>
     <collections-choose v-model:visible="collectionsVisible" :id="articleId"
                         :uuid="authorUuid" :mode="'article'"
                         @collected="collected"></collections-choose>
@@ -152,6 +153,7 @@ let options = ref([
 ])
 let userArticleAgree = ref({})
 let userArticleCollect = ref({})
+let imageUrlList = ref([])
 
 const editorRef = shallowRef()
 const mode = ref('default')
@@ -210,11 +212,21 @@ function getArticle() {
     setTitle(reply.data["title"])
     getUserArticleAgree()
     getUserArticleCollect()
+    addClickListenToImg()
   }).catch(function () {
     articleNotExist()
   }).then(function () {
     loading.value = false
   })
+}
+
+function addClickListenToImg(){
+  const images = document.getElementsByClassName("w-e-image-container")
+  Array.prototype.forEach.call(images, function (image) {
+    image.addEventListener("click",function (){
+      imageUrlList.value = [image.lastElementChild.currentSrc]
+    })
+  });
 }
 
 function getUserArticleAgree() {
@@ -272,6 +284,10 @@ function agreeClick() {
   } else {
     agreeCancel()
   }
+}
+
+function imageViewerClose(){
+  imageUrlList.value = []
 }
 
 function agreeAdd() {
