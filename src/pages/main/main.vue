@@ -63,10 +63,10 @@
       </router-view>
     </el-main>
     <el-footer class="main-footer">
-      <a class="beian" href="https://beian.miit.gov.cn/" target="_blank">魔方技术 互联网ICP备案：粤ICP备2021123846号 </a>
-      <img style="margin: 0 2px 0 5px;" src="../../assets/images/police.png">
-      <a class="beian" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=45040302000206"
-         target="_blank"> 桂公网安备 45040302000206号</a>
+<!--      <a class="beian" href="https://beian.miit.gov.cn/" target="_blank">魔方技术 互联网ICP备案：粤ICP备2021123846号 </a>-->
+<!--      <img style="margin: 0 2px 0 5px;" src="../../assets/images/police.png">-->
+<!--      <a class="beian" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=45040302000206"-->
+<!--         target="_blank"> 桂公网安备 45040302000206号</a>-->
     </el-footer>
   </el-container>
 </template>
