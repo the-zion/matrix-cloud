@@ -8,6 +8,7 @@
                   :src="logo"
                   fit="contain"
         ></el-image>
+        <div>魔方技术</div>
         <el-menu-item class="main-menu-item" :index="item.state" v-for="item in menuList" :key="item.key"
                       @click="menuSelect(item.state, item.query)">
           <template #title>
