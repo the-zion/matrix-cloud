@@ -8,7 +8,6 @@
                   :src="logo"
                   fit="contain"
         ></el-image>
-        <div>魔方技术</div>
         <el-menu-item class="main-menu-item" :index="item.state" v-for="item in menuList" :key="item.key"
                       @click="menuSelect(item.state, item.query)">
           <template #title>
@@ -63,12 +62,6 @@
         <component :is="Component"/>
       </router-view>
     </el-main>
-    <el-footer class="main-footer">
-<!--      <a class="beian" href="https://beian.miit.gov.cn/" target="_blank">魔方技术 互联网ICP备案：粤ICP备2021123846号 </a>-->
-<!--      <img style="margin: 0 2px 0 5px;" src="../../assets/images/police.png">-->
-<!--      <a class="beian" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=45040302000206"-->
-<!--         target="_blank"> 桂公网安备 45040302000206号</a>-->
-    </el-footer>
   </el-container>
 </template>
 
@@ -266,19 +259,6 @@ router.afterEach(function (route) {
     overflow: unset;
     min-height: 1000px;
     padding: unset;
-  }
-
-  .main-footer {
-    background: var(--el-color-black);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    .beian {
-      font: 12px -apple-system, BlinkMacSystemFont, Helvetica Neue, Helvetica, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif;
-      color: var(--el-fill-color-blank);
-      text-decoration: unset;
-    }
   }
 
 }
