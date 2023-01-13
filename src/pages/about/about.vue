@@ -26,7 +26,7 @@ import {getAssets} from "../../utils/globalFunc";
       width: 100%;
       margin-bottom: 20px;
       background: var(--el-color-white);
-      height: 300px;
+      height: 350px;
     }
   }
 }
