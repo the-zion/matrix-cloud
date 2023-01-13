@@ -8,7 +8,8 @@
                    :class="'icon-number-'+(index+1) + (index < 3?' gold':'')"></el-icon>
           <el-space class="info" direction="vertical" fill :size="0" alignment="start">
             <el-space class="info-head" :size="4">
-              <el-avatar class="info-avatar" icon="UserFilled" :src="avatar.baseUrl + item.uuid + '/avatar.webp'" :size="22"></el-avatar>
+              <el-avatar class="info-avatar" icon="UserFilled" :src="avatar.baseUrl + item.uuid + '/avatar.webp'"
+                         :size="22"></el-avatar>
               <span class="info-title">{{ introduce[index].title || introduce[index].name }}</span>
             </el-space>
             <span class="text">{{ introduce[index].text || introduce[index].introduce }}</span>
@@ -18,6 +19,17 @@
         <el-empty v-show="data.length === 0 && !loading" class="empty" description=" "
                   :image-size="150" :image="noData"
         />
+      </el-row>
+      <el-row class="body" justify="center">
+        <el-row class="title">魔方技术</el-row>
+        <el-row class="beian">
+          <a class="text" href="https://beian.miit.gov.cn/" target="_blank">互联网ICP备案：粤ICP备2021123846号 </a>
+        </el-row>
+        <el-row class="beian">
+          <img style="margin: 0 5px 0 0;" src="../../../assets/images/police.png">
+          <a class="text" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=45040302000221"
+             target="_blank"> 桂公网安备 45040302000221号</a>
+        </el-row>
       </el-row>
     </el-affix>
   </el-container>
@@ -55,9 +67,9 @@ function getData() {
   get("/v1/get/leaderboard").then(function (reply) {
     list = reply.data['board'].slice(0, 9)
     request = list.length
-    if (list.length > 0){
+    if (list.length > 0) {
       getIntroduce(list)
-    }else{
+    } else {
       loading.value = false
     }
   }).catch(function () {
@@ -141,6 +153,7 @@ onBeforeMount(function () {
     padding: 16px 0;
     background-color: var(--el-color-white);
     border: 1px solid var(--el-border-color-lighter);
+    margin-bottom: 10px;
 
     .title {
       font-size: 14px;
@@ -150,6 +163,18 @@ onBeforeMount(function () {
       margin-bottom: 10px;
       padding: 0 18px;
       width: 100%;
+    }
+
+    .beian {
+      padding: 0 18px;
+      width: 100%;
+      margin: 10px 0;
+
+      .text {
+        font: 12px -apple-system, BlinkMacSystemFont, Helvetica Neue, Helvetica, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif;
+        color: var(--el-text-color-placeholder);
+        text-decoration: unset;
+      }
     }
 
     .each {
@@ -174,7 +199,7 @@ onBeforeMount(function () {
         .info-head {
           width: 100%;
 
-          .info-avatar{
+          .info-avatar {
             font-size: 14px;
           }
 
