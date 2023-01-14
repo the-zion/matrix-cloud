@@ -6,7 +6,7 @@
                         :uuid="authorUuid" :mode="'article'"
                         @collected="collected"></collections-choose>
     <el-row class="main" v-show="!loading">
-      <el-image v-if="data.cover" fit="cover" class="cover" :src="data.cover"></el-image>
+      <el-image v-if="data.cover" fit="cover" class="cover" :src="data.cover" :preview-src-list="[data.cover]"></el-image>
       <el-row class="header">
         <el-row class="title-area" justify="space-between">
           <el-row class="title" align="top">
