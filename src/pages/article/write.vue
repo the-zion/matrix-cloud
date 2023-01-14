@@ -179,7 +179,7 @@ function draftSelect(id) {
 
 function editChange(editor) {
   uploadBox["title"] = title.value
-  uploadBox["html"] = xssFilter(editor.getHtml())
+  uploadBox["html"] = editor.getHtml()
   uploadBox["update"] = new Date().toLocaleDateString()
   editSave(function () {
     time.value = "最近保存：" + uploadBox["update"]
@@ -359,7 +359,7 @@ function getDataEdit() {
 onMounted(() => {
   body = document.body
   body.style.backgroundColor = "var(--el-color-white)"
-  init()
+  setTimeout(init, 1000)
 })
 </script>
 
