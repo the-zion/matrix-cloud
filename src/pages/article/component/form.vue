@@ -259,7 +259,7 @@ function editArticle() {
 function setArticleParams() {
   date = new Date()
   articleParams["title"] = title.value
-  articleParams["html"] = xssFilter(editor.value.getHtml())
+  articleParams["html"] = editor.value.getHtml()
   articleParams["update"] = date.toLocaleDateString()
   articleParams["tags"] = form.value["tags"].join(";")
   articleParams["auth"] = form.value["auth"]
