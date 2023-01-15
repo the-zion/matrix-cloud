@@ -9,61 +9,58 @@ export const baseMainStore = defineStore("base", {
             bucket: "user-1309416642",
             key: "cover/",
             freezeKey: "audit_freeze_backup/increment_audit/cover/",
-            baseUrl: "https://matrixtech.cloud/cover/",
-            freezeUrl: "https://matrixtech.cloud/audit_freeze_backup/increment_audit/cover/"
+            baseUrl: import.meta.env.VITE_USER_BASE_URL + "/cover/",
+            freezeUrl: import.meta.env.VITE_USER_BASE_URL + "/audit_freeze_backup/increment_audit/cover/"
         },
         avatar: {
             region: "ap-shanghai",
             bucket: "user-1309416642",
             key: "avatar/",
             freezeKey: "audit_freeze_backup/increment_audit/avatar/",
-            baseUrl: "https://matrixtech.cloud/avatar/",
-            freezeUrl: "https://matrixtech.cloud/audit_freeze_backup/increment_audit/avatar/"
+            baseUrl: import.meta.env.VITE_USER_BASE_URL + "/avatar/",
+            freezeUrl: import.meta.env.VITE_USER_BASE_URL + "/audit_freeze_backup/increment_audit/avatar/"
         },
         article: {
             region: "ap-shanghai",
             bucket: "creation-1309416642",
             key: "article/",
             freezeKey: "audit_freeze_backup/increment_audit/article/",
-            baseUrl: "https://matrixtech.cloud/article/",
-            freezeUrl: "https://matrixtech.cloud/audit_freeze_backup/increment_audit/article/"
+            baseUrl: import.meta.env.VITE_CREATION_BASE_URL + "/article/",
+            freezeUrl: import.meta.env.VITE_CREATION_BASE_URL + "/audit_freeze_backup/increment_audit/article/"
         },
         talk: {
             region: "ap-shanghai",
             bucket: "creation-1309416642",
             key: "talk/",
             freezeKey: "audit_freeze_backup/increment_audit/talk/",
-            baseUrl: "https://matrixtech.cloud/talk/",
-            freezeUrl: "https://matrixtech.cloud/audit_freeze_backup/increment_audit/talk/"
+            baseUrl: import.meta.env.VITE_CREATION_BASE_URL + "/talk/",
+            freezeUrl: import.meta.env.VITE_CREATION_BASE_URL + "/audit_freeze_backup/increment_audit/talk/"
         },
         column: {
             region: "ap-shanghai",
             bucket: "creation-1309416642",
             key: "column/",
             freezeKey: "audit_freeze_backup/increment_audit/column/",
-            baseUrl: "https://matrixtech.cloud/column/",
-            freezeUrl: "https://matrixtech.cloud/audit_freeze_backup/increment_audit/column/"
+            baseUrl: import.meta.env.VITE_CREATION_BASE_URL + "/column/",
+            freezeUrl: import.meta.env.VITE_CREATION_BASE_URL + "/audit_freeze_backup/increment_audit/column/"
         },
         collect: {
             region: "ap-shanghai",
             bucket: "creation-1309416642",
             key: "collect/",
-            baseUrl: "https://creation-1309416642.cos.ap-shanghai.myqcloud.com/collect/"
+            baseUrl: import.meta.env.VITE_CREATION_BASE_URL + "/collect/"
         },
         collections: {
             region: "ap-shanghai",
             bucket: "creation-1309416642",
             key: "collections/",
-            baseUrl: "https://creation-1309416642.cos.ap-shanghai.myqcloud.com/collections/"
+            baseUrl: import.meta.env.VITE_CREATION_BASE_URL + "/collections/"
         },
         comment: {
             region: "ap-shanghai",
             bucket: "comment-1309416642",
             key: "comment/",
-            baseUrl: "https://comment-1309416642.cos.ap-shanghai.myqcloud.com/comment/"
+            baseUrl: import.meta.env.VITE_CREATION_BASE_URL + "/comment/"
         },
-        images: {
-            baseUrl: "https://images-1309416642.cos.ap-shanghai.myqcloud.com"
-        }
     }),
 })
