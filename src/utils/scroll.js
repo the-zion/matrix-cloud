@@ -40,6 +40,18 @@ export function scrollTo(location) {
     })
 }
 
+export function scrollToContainer(container, location) {
+    let c = document.getElementById(container)
+    let e = document.getElementById(location)
+    if (!c || !e) {
+        return
+    }
+    c.scrollTo({
+        top: e.getBoundingClientRect().top  - c.getBoundingClientRect().top + c.scrollTop,
+        behavior: "smooth"
+    })
+}
+
 export function scrollToBottomListen(fn) {
     delayMethod = throttle(handleScroll(fn), 10)
     window.addEventListener('scroll', delayMethod);
