@@ -66,6 +66,7 @@ import {get, post} from "../../utils/axios";
 import {userMainStore} from "../../store/user";
 import {baseMainStore} from "../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
+import {throttle} from "../../utils/scroll";
 
 const userStore = userMainStore()
 const baseStore = baseMainStore()
@@ -125,6 +126,7 @@ let uploadParams = {
   Region: talk.value.region,
 }
 let token = null
+let delayEdit = null
 
 function handleCreated(editor) {
   editorRef.value = editor
@@ -193,9 +195,11 @@ function editChange(editor) {
   uploadBox["title"] = title.value
   uploadBox["html"] = editor.getHtml()
   uploadBox["update"] = new Date().toLocaleDateString()
-  editSave(function () {
-    time.value = "最近保存：" + uploadBox["update"]
-  })
+  delayEdit ? delayEdit() : delayEdit= throttle(function (){
+    editSave(function () {
+      time.value = "最近保存：" + uploadBox["update"]
+    })
+  }, 1000)
 }
 
 function editSave(fn) {
