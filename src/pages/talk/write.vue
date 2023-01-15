@@ -66,7 +66,6 @@ import {get, post} from "../../utils/axios";
 import {userMainStore} from "../../store/user";
 import {baseMainStore} from "../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
-import {xssFilter} from "../../utils/xss";
 
 const userStore = userMainStore()
 const baseStore = baseMainStore()
@@ -114,6 +113,7 @@ const editorConfig = {
 
 let title = ref()
 let drawer = ref(false)
+let userRouteValue = useRoute()
 let draftId = ref()
 let time = ref("自动保存至草稿箱")
 let loading = ref(false)
@@ -191,7 +191,7 @@ function CreateDraft() {
 
 function editChange(editor) {
   uploadBox["title"] = title.value
-  uploadBox["html"] = xssFilter(editor.getHtml())
+  uploadBox["html"] = editor.getHtml()
   uploadBox["update"] = new Date().toLocaleDateString()
   editSave(function () {
     time.value = "最近保存：" + uploadBox["update"]
@@ -258,8 +258,8 @@ function imageUpload(file, insertFn) {
 }
 
 function initData() {
-  mode.value = useRoute().query["mode"]
-  draftId.value = parseInt(useRoute().query["id"])
+  mode.value = userRouteValue.query["mode"]
+  draftId.value = parseInt(userRouteValue.query["id"])
   token = localStorage.getItem(import.meta.env.VITE_MATRIX_TOKEN_KEY)
 }
 

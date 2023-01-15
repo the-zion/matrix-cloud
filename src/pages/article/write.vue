@@ -86,7 +86,6 @@ import {userMainStore} from "../../store/user";
 import {baseMainStore} from "../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {useRoute} from "vue-router";
-import {xssFilter} from "../../utils/xss";
 
 const userStore = userMainStore()
 const baseStore = baseMainStore()
@@ -129,6 +128,7 @@ let title = ref("")
 let draftId = ref()
 let affixRef = ref()
 let time = ref("文章将自动保存至草稿箱")
+let userRouteValue = useRoute()
 let mode = ref("create")
 let draft = ref(false)
 let drawer = ref(false)
@@ -270,8 +270,8 @@ function init() {
 }
 
 function initData() {
-  mode.value = useRoute().query["mode"]
-  draftId.value = parseInt(useRoute().query["id"])
+  mode.value = userRouteValue.query["mode"]
+  draftId.value = parseInt(userRouteValue.query["id"])
   token = localStorage.getItem(import.meta.env.VITE_MATRIX_TOKEN_KEY)
 }
 

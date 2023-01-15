@@ -90,7 +90,6 @@ import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {get, post} from "../../../utils/axios";
 import router from "../../../router";
 import {textEmojiRemove} from "../../../utils/globalFunc";
-import {xssFilter} from "../../../utils/xss";
 
 const props = defineProps({
   mode: String,
