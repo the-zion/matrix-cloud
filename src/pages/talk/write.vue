@@ -324,7 +324,9 @@ onBeforeUnmount(() => {
 })
 
 onBeforeMount(() => {
-  setTimeout(init, 1000)
+  setTimeout(function (){
+    init()
+  }, 1000)
 })
 
 </script>

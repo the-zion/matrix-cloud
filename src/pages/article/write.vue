@@ -359,7 +359,9 @@ function getDataEdit() {
 onMounted(() => {
   body = document.body
   body.style.backgroundColor = "var(--el-color-white)"
-  setTimeout(init, 1000)
+  setTimeout(function (){
+    init()
+  }, 1000)
 })
 </script>
 
