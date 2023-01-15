@@ -2,7 +2,7 @@
   <el-container class="about">
     <el-row class="block">
       <el-image class="image" :src="getAssets('matrix.png')" :fit="'cover'"/>
-      <span>{{"这是一个基于微服务框架Kratos所做的知识分享网站，期望能靠内容出圈吧 (⸝⸝>ᴗ(>ᴗ<⸝⸝）@"}}</span>
+      <span>{{"这是一个基于微服务框架Kratos所做的知识分享网站，期望能靠内容出圈吧 (⸝⸝>ᴗ(>ᴗ<⸝⸝）"}}</span>
     </el-row>
   </el-container>
   <div ref="root"></div>
