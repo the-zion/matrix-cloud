@@ -45,7 +45,11 @@
         </el-row>
       </el-affix>
     </el-row>
-    <el-row class="main">
+    <el-row class="catalog">
+      <span class="title" v-if="headers">文章目录</span>
+      <ul id="header-container" class="header-container"></ul>
+    </el-row>
+    <el-row class="main" id="article-write-main">
       <el-row class="area" id="area">
         <el-drawer
             v-model="draft"
@@ -77,6 +81,7 @@
 import {onBeforeUnmount, ref, shallowRef, onMounted} from 'vue'
 import {backToHome, getAssets, setTitle} from "../../utils/globalFunc";
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
+import {SlateNode} from '@wangeditor/editor'
 import {success, info, warning, error} from "../../utils/message";
 import {customCheckVideoFn, customParseVideoSrc} from "../../utils/video";
 import {get, post} from "../../utils/axios"
@@ -86,6 +91,7 @@ import {userMainStore} from "../../store/user";
 import {baseMainStore} from "../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {useRoute} from "vue-router";
+import {scrollToContainer, throttle} from "../../utils/scroll";
 
 const userStore = userMainStore()
 const baseStore = baseMainStore()
@@ -135,6 +141,8 @@ let drawer = ref(false)
 let loading = ref(false)
 let uploading = ref(false)
 let percentage = ref(0)
+let headers = ref(false)
+let headerContainer = null
 let body = null
 let draftMarked = false
 let uploadBox = {}
@@ -143,6 +151,7 @@ let uploadParams = {
   Region: article.value.region,
 }
 let token = null
+let delayEdit = null
 
 function handleCreated(editor) {
   editorRef.value = editor
@@ -181,11 +190,20 @@ function editChange(editor) {
   uploadBox["title"] = title.value
   uploadBox["html"] = editor.getHtml()
   uploadBox["update"] = new Date().toLocaleDateString()
-  editSave(function () {
-    time.value = "最近保存：" + uploadBox["update"]
-  })
+  headerContainer.innerHTML = editor.getElemsByTypePrefix('header').map(header => {
+    const text = SlateNode.string(header)
+    const {id, type} = header
+    return `<li id="catalog-${id}" class="li ${type}">${text}</li>`
+  }).join('')
+  headerContainer.innerHTML && (headers.value = true)
   mode.value === 'create' && draftMark()
+  delayEdit ? delayEdit() : delayEdit= throttle(function (){
+    editSave(function () {
+      time.value = "最近保存：" + uploadBox["update"]
+    })
+  }, 1000)
 }
+
 
 function draftMark() {
   if (!draftId.value || draftMarked || !uuid.value) {
@@ -273,6 +291,23 @@ function initData() {
   mode.value = userRouteValue.query["mode"]
   draftId.value = parseInt(userRouteValue.query["id"])
   token = localStorage.getItem(import.meta.env.VITE_MATRIX_TOKEN_KEY)
+  headerContainer = document.getElementById('header-container')
+  headerContainer.addEventListener('mousedown', event => {
+    if (event.target.tagName !== 'LI') return
+    event.preventDefault()
+    const id = event.target.id.slice(8)
+    scrollToContainer("article-write-main", id)
+  })
+}
+
+function heightToTop(container, ele){
+  let root = container;
+  let height = 0;
+  do{
+    height += ele.offsetTop;
+    ele = ele.offsetParent;
+  }while( ele && ele !== root )
+  return height;
 }
 
 function getLastDraft() {
@@ -359,7 +394,7 @@ function getDataEdit() {
 onMounted(() => {
   body = document.body
   body.style.backgroundColor = "var(--el-color-white)"
-  setTimeout(function (){
+  setTimeout(function () {
     init()
   }, 1000)
 })
@@ -435,6 +470,60 @@ onMounted(() => {
     }
   }
 
+  .catalog {
+    position: absolute;
+    top: 127px;
+    bottom: 0;
+    right: calc(52% + 360px);
+    width: 250px;
+    overflow-y: auto;
+    z-index: 100;
+    display: unset;
+
+    .title{
+      font-size: 25px;
+      color: var(--el-text-color-regular)
+    }
+
+    .header-container {
+      list-style-type: none;
+      padding-left: 0;
+      width: 100%;
+      margin-top: 0;
+      ::v-deep(.li) {
+        color: var(--el-text-color-secondary);
+        margin: 10px 0;
+        cursor: pointer;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      ::v-deep(.li:hover) {
+        color: var(--el-color-primary);
+      }
+      ::v-deep(.header1) {
+        font-size: 20px;
+      }
+      ::v-deep(.header2) {
+        font-size: 16px;
+        padding-left: 15px;
+      }
+      ::v-deep(.header3) {
+        font-size: 14px;
+        padding-left: 30px;
+      }
+      ::v-deep(.header4) {
+        font-size: 12px;
+        padding-left: 45px;
+      }
+      ::v-deep(.header5) {
+        font-size: 12px;
+        padding-left: 60px;
+      }
+    }
+  }
+
+
   .main {
     position: absolute;
     top: 91px;
@@ -444,7 +533,7 @@ onMounted(() => {
     overflow-y: auto;
 
     .area {
-      width: 700px;
+      width: 720px;
       margin: 0 auto;
       height: fit-content;
 

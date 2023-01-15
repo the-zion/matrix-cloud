@@ -5,6 +5,10 @@
     <collections-choose v-model:visible="collectionsVisible" :id="articleId"
                         :uuid="authorUuid" :mode="'article'"
                         @collected="collected"></collections-choose>
+    <el-row class="catalog">
+      <span class="title" v-if="headers">文章目录</span>
+      <ul id="header-container" class="header-container"></ul>
+    </el-row>
     <el-row class="main" v-show="!loading">
       <el-image v-if="data.cover" fit="cover" class="cover" :src="data.cover" :preview-src-list="[data.cover]"></el-image>
       <el-row class="header">
@@ -111,8 +115,8 @@ import {ref, onBeforeUnmount, shallowRef, onBeforeMount, onMounted} from "vue";
 import {Editor} from '@wangeditor/editor-for-vue'
 import {userMainStore} from "../../store/user";
 import {baseMainStore} from "../../store/base";
-import router from "../../router";
 import CollectionsChoose from "../collect/component/choose.vue";
+import {SlateNode} from "@wangeditor/editor";
 
 let e = null
 let agreeAnimation = null
@@ -137,6 +141,7 @@ let iconCollect = ref(null)
 let loading = ref(false)
 let visible = ref(false)
 let collectionsVisible = ref(false)
+let headers = ref(false)
 let agreeBounce = ref(1);
 let collectBounce = ref(1);
 let comment = ref(0)
@@ -210,6 +215,7 @@ function getArticle() {
     data.value = reply.data
     editorRef.value.setHtml(data.value["html"])
     setTitle(reply.data["title"])
+    setHeaders()
     getUserArticleAgree()
     getUserArticleCollect()
     addClickListenToImg()
@@ -218,6 +224,22 @@ function getArticle() {
   }).then(function () {
     loading.value = false
   })
+}
+
+function setHeaders(){
+  let headerContainer = document.getElementById('header-container')
+  headerContainer.addEventListener('mousedown', event => {
+    if (event.target.tagName !== 'LI') return
+    event.preventDefault()
+    const id = event.target.id.slice(8)
+    scrollTo( id)
+  })
+  headerContainer.innerHTML = editorRef.value.getElemsByTypePrefix('header').map(header => {
+    const text = SlateNode.string(header)
+    const {id, type} = header
+    return `<li id="catalog-${id}" class="li ${type}">${text}</li>`
+  }).join('')
+  headerContainer.innerHTML && (headers.value = true)
 }
 
 function addClickListenToImg(){
@@ -255,7 +277,7 @@ function setView() {
 }
 
 function articleNotExist() {
-  router.push({name: "result", query: {type: "error", title: '获取文章失败', description: "文章不存在或已被删除"}})
+  // router.push({name: "result", query: {type: "error", title: '获取文章失败', description: "文章不存在或已被删除"}})
 }
 
 function background() {
@@ -418,6 +440,59 @@ onBeforeUnmount(function () {
 
     .el-dialog__body {
       padding: 0 20px
+    }
+  }
+
+  .catalog {
+    position: fixed;
+    top: 85px;
+    bottom: 0;
+    right: calc(52% + 360px);
+    width: 250px;
+    overflow-y: auto;
+    z-index: 100;
+    display: unset;
+
+    .title{
+      font-size: 25px;
+      color: var(--el-text-color-regular)
+    }
+
+    .header-container {
+      list-style-type: none;
+      padding-left: 0;
+      width: 100%;
+      margin-top: 0;
+      ::v-deep(.li) {
+        color: var(--el-text-color-secondary);
+        margin: 10px 0;
+        cursor: pointer;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      ::v-deep(.li:hover) {
+        color: var(--el-color-primary);
+      }
+      ::v-deep(.header1) {
+        font-size: 20px;
+      }
+      ::v-deep(.header2) {
+        font-size: 16px;
+        padding-left: 15px;
+      }
+      ::v-deep(.header3) {
+        font-size: 14px;
+        padding-left: 30px;
+      }
+      ::v-deep(.header4) {
+        font-size: 12px;
+        padding-left: 45px;
+      }
+      ::v-deep(.header5) {
+        font-size: 12px;
+        padding-left: 60px;
+      }
     }
   }
 
