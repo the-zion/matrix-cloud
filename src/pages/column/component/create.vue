@@ -97,6 +97,7 @@ import {storeToRefs} from "pinia/dist/pinia";
 import {ref} from "vue";
 import {error, success, warning} from "../../../utils/message";
 import {get, post} from "../../../utils/axios";
+import {charFilter, textEmojiRemove} from "../../../utils/globalFunc";
 
 const emits = defineEmits(["update:visible", "createAfter", "editAfter"])
 const props = defineProps({
@@ -308,20 +309,20 @@ function commit() {
 }
 
 function setColumnParams() {
-  columnParams["name"] = form.value.name
+  columnParams["name"] = charFilter(form.value.name)
   columnParams["update"] = new Date().toLocaleDateString()
-  columnParams["tags"] = form.value["tags"].join(";")
+  columnParams["tags"] = charFilter(form.value["tags"].join(";"))
   columnParams["auth"] = form.value["auth"]
-  columnParams["introduce"] = form.value["introduce"]
+  columnParams["introduce"] = charFilter(form.value["introduce"])
   columnParams["cover"] = form.value["cover"]
   columnParams["id"] = form.value["id"]
 }
 
 function setSearchParams() {
-  searchParams["name"] = form.value.name
+  searchParams["name"] = charFilter(textEmojiRemove(form.value.name))
   searchParams["update"] = new Date().toLocaleDateString()
-  searchParams["tags"] = form.value["tags"].join(";")
-  searchParams["introduce"] = form.value["introduce"]
+  searchParams["tags"] = charFilter(textEmojiRemove(form.value["tags"].join(";")))
+  searchParams["introduce"] = charFilter(textEmojiRemove(form.value["introduce"]))
   searchParams["cover"] = form.value["cover"]
   searchParams["id"] = form.value["id"]
   searchParams["uuid"] = uuid.value

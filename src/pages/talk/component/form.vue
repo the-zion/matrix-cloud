@@ -46,7 +46,7 @@ import {baseMainStore} from "../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {get, post} from "../../../utils/axios";
 import router from "../../../router";
-import {textEmojiRemove} from "../../../utils/globalFunc";
+import {charFilter, textEmojiRemove} from "../../../utils/globalFunc";
 
 const userStore = userMainStore()
 const baseStore = baseMainStore()
@@ -127,31 +127,31 @@ function commit() {
 
 function setTalkParams() {
   let image = editor.value.getElemsByType('image')[0]
-  talkParams["title"] = title.value
+  talkParams["title"] = charFilter(title.value)
   talkParams["html"] = editor.value.getHtml()
   talkParams["update"] = new Date().toLocaleDateString()
-  talkParams["tags"] = form.value["tags"].join(";")
+  talkParams["tags"] = charFilter(form.value["tags"].join(";"))
   talkParams["auth"] = form.value["auth"]
   talkParams["id"] = form.value["id"]
-  talkParams["text"] = editor.value.getText().slice(0, 256)
+  talkParams["text"] = charFilter(editor.value.getText().slice(0, 256))
   talkParams["cover"] = image && image["src"] || ""
 }
 
 function setIntroduceParams() {
   introduce["id"] = talkParams["id"]
-  introduce["title"] = talkParams["title"]
-  introduce["text"] = talkParams["text"]
+  introduce["title"] = charFilter(talkParams["title"])
+  introduce["text"] = charFilter(talkParams["text"])
   introduce["update"] = talkParams["update"]
-  introduce["tags"] = talkParams["tags"]
+  introduce["tags"] = charFilter(talkParams["tags"])
   introduce["cover"] = talkParams["cover"]
 }
 
 function setSearchParams() {
   search["uuid"] = uuid.value
-  search["title"] = textEmojiRemove(talkParams["title"])
-  search["text"] = textEmojiRemove(editor.value.getText())
+  search["title"] = charFilter(textEmojiRemove(talkParams["title"]))
+  search["text"] = charFilter(textEmojiRemove(editor.value.getText()))
   search["update"] = talkParams["update"]
-  search["tags"] = talkParams["tags"]
+  search["tags"] = charFilter(textEmojiRemove(talkParams["tags"]))
   search["cover"] = talkParams["cover"]
 }
 

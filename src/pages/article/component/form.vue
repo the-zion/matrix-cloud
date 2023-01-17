@@ -89,7 +89,7 @@ import {baseMainStore} from "../../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
 import {get, post} from "../../../utils/axios";
 import router from "../../../router";
-import {textEmojiRemove} from "../../../utils/globalFunc";
+import {charFilter, textEmojiRemove} from "../../../utils/globalFunc";
 
 const props = defineProps({
   mode: String,
@@ -257,10 +257,10 @@ function editArticle() {
 
 function setArticleParams() {
   date = new Date()
-  articleParams["title"] = title.value
+  articleParams["title"] = charFilter(title.value)
   articleParams["html"] = editor.value.getHtml()
   articleParams["update"] = date.toLocaleDateString()
-  articleParams["tags"] = form.value["tags"].join(";")
+  articleParams["tags"] = charFilter(form.value["tags"].join(";"))
   articleParams["auth"] = form.value["auth"]
   articleParams["source"] = form.value["source"]
   articleParams["url"] = form.value["url"]
@@ -274,20 +274,22 @@ function setArticleParams() {
 
 function setIntroduceParams() {
   introduce["id"] = articleParams["id"]
-  introduce["title"] = articleParams["title"]
-  introduce["text"] = articleParams["text"]
+  introduce["title"] = charFilter(articleParams["title"])
+  introduce["text"] = charFilter(articleParams["text"])
   introduce["update"] = articleParams["update"]
-  introduce["tags"] = articleParams["tags"]
+  introduce["tags"] = charFilter(articleParams["tags"])
   introduce["cover"] = articleParams["cover"]
 }
 
 function setSearchParams() {
   search["uuid"] = uuid.value
-  search["title"] = textEmojiRemove(articleParams["title"])
-  search["text"] = textEmojiRemove(editor.value.getText())
+  search["title"] = charFilter(textEmojiRemove(articleParams["title"]))
+  search["text"] = charFilter(textEmojiRemove(editor.value.getText()))
   search["update"] = articleParams["update"]
-  search["tags"] = articleParams["tags"]
+  search["tags"] = charFilter(textEmojiRemove(articleParams["tags"]))
   search["cover"] = articleParams["cover"]
+  console.log(editor.value.getText())
+  console.log(search["text"])
 }
 
 function init() {

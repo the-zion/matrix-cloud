@@ -117,7 +117,7 @@ import {get, post} from "../../utils/axios";
 import {storeToRefs} from "pinia"
 import {userMainStore} from "../../store/user";
 import {baseMainStore} from "../../store/base";
-import {textEmojiRemove} from "../../utils/globalFunc";
+import {charFilter, textEmojiRemove} from "../../utils/globalFunc";
 
 const userStore = userMainStore()
 const baseStore = baseMainStore()
@@ -228,7 +228,7 @@ function update(formRef) {
 }
 
 function toUpdate() {
-  form.value.username = textEmojiRemove(form.value.username)
+  form.value.username = charFilter(textEmojiRemove(form.value.username))
   post("/v1/set/user/profile/update", form.value).then(function () {
     form.value.status = 2
     success("更改成功，后台审核中")
