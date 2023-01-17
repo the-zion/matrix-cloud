@@ -69,6 +69,8 @@
             </el-select>
           </el-space>
         </el-row>
+        <news-search-list v-if="current === 'news'" ref="listRef" :search="searchBuild()" :time="timeSelect"
+                             :tags="selectedTags"></news-search-list>
         <article-search-list v-if="current === 'article'" ref="listRef" :search="searchBuild()" :time="timeSelect"
                              :tags="selectedTags"></article-search-list>
         <talk-search-list v-if="current === 'talk'" ref="listRef" :search="searchBuild()" :time="timeSelect"
@@ -84,6 +86,7 @@
 <script setup>
 import {ref, onBeforeUnmount, onMounted} from "vue";
 import {onBeforeRouteLeave, useRoute} from "vue-router";
+import NewsSearchList from "../news/search.vue";
 import ArticleSearchList from "../article/component/search.vue";
 import TalkSearchList from "../talk/component/search.vue";
 import ColumnSearchList from "../column/component/search.vue";
@@ -93,12 +96,16 @@ import {setTitle} from "../../utils/globalFunc";
 
 let mainBody = null
 let listRef = ref()
-let current = ref("article")
+let current = ref("news")
 let input = ref(useRoute().query["search"] || "")
 let tagFilter = ref(false)
 let selectedTags = ref([])
 let timeSelect = ref("new")
 let options = [{
+  key: "news",
+  label: "头条",
+  icon: "document",
+},{
   key: "article",
   label: "文章",
   icon: "document",
@@ -162,10 +169,14 @@ function menuChange(key) {
 }
 
 function searchBuild() {
+  let tags = selectedTags.value.join(" ")
   if (input.value === "") {
-    return selectedTags.value.join(" ")
+    return tags
   }
-  return [input.value, selectedTags.value.join(" ")].join(" ")
+  if(tags){
+    return [input.value, tags].join(" ")
+  }
+  return input.value
 }
 
 onBeforeRouteLeave((to, from) => {
