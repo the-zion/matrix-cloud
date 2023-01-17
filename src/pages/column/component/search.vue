@@ -10,17 +10,17 @@
           <el-image class="image" fit="cover" :src="item.cover" lazy></el-image>
           <el-row class="container" align="top">
             <el-space class="main">
-              <el-row class="title" v-html="item.name"></el-row>
+              <el-row class="title" v-html="item.name" align="middle"></el-row>
               <el-space class="info">
-                <el-tag round v-show="item.tags" :type="tags.includes(tag)?'primary':'info'"
-                        :effect="tags.includes(tag) && 'dark'"
+                <el-tag round v-show="item.tags" :type="(tags.includes(tag) || [search].includes(tag))?'primary':'info'"
+                        :effect="(tags.includes(tag) || [search].includes(tag)) && 'dark'"
                         v-for="tag in (item.tags?item.tags.split(';'):[])" :key="tag">{{
                     tag
                   }}
                 </el-tag>
               </el-space>
             </el-space>
-            <el-row class="content" v-html="item.introduce"></el-row>
+            <el-row class="content" v-html="item.introduce" align="middle"></el-row>
             <el-space class="foot">
               <el-space :size="3">
                 <el-icon class="iconfont icon-like icon"></el-icon>
@@ -81,8 +81,8 @@ const noData = getAssets("no_data.svg")
 let data = ref([])
 let tags = ref([])
 let loading = ref(false)
+let search = ref("")
 let currentPage = 1
-let search = ""
 let time = "new"
 let request = null
 let getDataLock = false
@@ -94,7 +94,7 @@ function init() {
 }
 
 function initData() {
-  search = props.search
+  search.value = props.search
   time = props.time
   tags.value = props.tags
   scrollToBottomListen(throttle(scrollToBottom, 1000))
@@ -114,7 +114,7 @@ function getData() {
 }
 
 function getColumnSearch() {
-  get("/v1/get/column/search?page=" + currentPage + "&search=" + search + "&time=" + time).then(function (reply) {
+  get("/v1/get/column/search?page=" + currentPage + "&search=" + search.value + "&time=" + time).then(function (reply) {
     data.value = data.value.concat(reply.data.list)
     let size = reply.data.list.length
     if (size === 0) {
@@ -130,7 +130,7 @@ function getColumnSearch() {
 }
 
 function searchChange(s, t, selectTags) {
-  search = s
+  search.value = s
   time = t
   currentPage = 1
   data.value = []

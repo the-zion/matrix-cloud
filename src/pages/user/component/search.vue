@@ -13,7 +13,7 @@
               <el-avatar class="avatar" icon="UserFilled" :size="50"
                          :src="avatar.baseUrl + item.uuid + '/avatar.webp'"/>
               <el-space direction="vertical" alignment="flex-start" :size="1">
-                <el-row class="nickname" v-html="item.username"></el-row>
+                <el-row class="nickname" v-html="item.username" align="middle"></el-row>
                 <el-row class="name">{{ item.introduce || '此人很懒，没有任何简介～' }}</el-row>
               </el-space>
             </el-space>

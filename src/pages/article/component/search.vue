@@ -11,12 +11,12 @@
             <el-space class="head">
               <el-avatar class="avatar" :size="32" icon="UserFilled"
                          :src="avatar.baseUrl + item.uuid + '/avatar.webp'"/>
-              <el-row class="title" v-html="item.title"></el-row>
+              <el-row class="title" v-html="item.title" align="middle"></el-row>
             </el-space>
             <el-space class="info">
               <el-row class="time">{{ "发布于 " + item.update }}</el-row>
-              <el-tag round v-show="item.tags" :type="tags.includes(tag)?'primary':'info'"
-                      :effect="tags.includes(tag) && 'dark'"
+              <el-tag round v-show="item.tags" :type="(tags.includes(tag) || [search].includes(tag))?'primary':'info'"
+                      :effect="(tags.includes(tag) || [search].includes(tag)) && 'dark'"
                       v-for="tag in (item.tags?item.tags.split(';'):[])" :key="tag">{{
                   tag
                 }}
@@ -25,7 +25,7 @@
             <el-space class="body" alignment="flex-start">
               <el-image v-if="item.cover" class="image" fit="cover" :src="item.cover"
                         lazy></el-image>
-              <span class="content" v-html="item.text"></span>
+              <span class="content" v-html="item.text" align="middle"></span>
             </el-space>
           </el-space>
           <el-space class="foot">
@@ -96,8 +96,8 @@ const noData = getAssets("no_data.svg")
 let data = ref([])
 let tags = ref([])
 let loading = ref(false)
+let search = ref("")
 let currentPage = 1
-let search = ""
 let time = "new"
 let request = null
 let getDataLock = false
@@ -109,7 +109,7 @@ function init() {
 }
 
 function initData() {
-  search = props.search
+  search.value = props.search
   time = props.time
   tags.value = props.tags
   scrollToBottomListen(throttle(scrollToBottom, 1000))
@@ -129,7 +129,7 @@ function getData() {
 }
 
 function getArticleSearch() {
-  get("/v1/get/article/search?page=" + currentPage + "&search=" + search + "&time=" + time).then(function (reply) {
+  get("/v1/get/article/search?page=" + currentPage + "&search=" + search.value + "&time=" + time).then(function (reply) {
     data.value = data.value.concat(reply.data.list)
     let size = reply.data.list.length
     if (size === 0) {
@@ -145,7 +145,7 @@ function getArticleSearch() {
 }
 
 function searchChange(s, t, selectTags) {
-  search = s
+  search.value = s
   time = t
   currentPage = 1
   data.value = []
