@@ -117,6 +117,7 @@ import {userMainStore} from "../../store/user";
 import {baseMainStore} from "../../store/base";
 import CollectionsChoose from "../collect/component/choose.vue";
 import {SlateNode} from "@wangeditor/editor";
+import router from "../../router";
 
 let e = null
 let agreeAnimation = null
@@ -277,7 +278,7 @@ function setView() {
 }
 
 function articleNotExist() {
-  // router.push({name: "result", query: {type: "error", title: '获取文章失败', description: "文章不存在或已被删除"}})
+  router.push({name: "result", query: {type: "error", title: '获取文章失败', description: "文章不存在或已被删除"}})
 }
 
 function background() {
