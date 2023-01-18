@@ -369,7 +369,7 @@ onBeforeMount(function () {
 
     .main {
       width: 100%;
-      word-break: break-word;
+      word-break: break-all;
 
       ::v-deep(div) {
         width: 100%;

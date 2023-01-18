@@ -239,7 +239,7 @@ onBeforeMount(function () {
         font-size: .75rem;
         line-height: 1rem;
         color: var(--el-text-color-secondary);
-        word-break: break-word;
+        word-break: break-all;
         overflow: hidden;
         display: -webkit-box;
         -webkit-box-orient: vertical;

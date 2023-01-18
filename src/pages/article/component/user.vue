@@ -236,7 +236,7 @@ onBeforeMount(function () {
               font-size: 14px;
               line-height: 24px;
               color: var(--el-text-color-regular);
-              word-break: break-word;
+              word-break: break-all;
               align-self: stretch;
               overflow: hidden;
               display: -webkit-box;
