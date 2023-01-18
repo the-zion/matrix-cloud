@@ -24,6 +24,11 @@
                   <span>{{item.author}}</span>
                 </el-space>
               </el-space>
+              <el-space v-if="item.introduce" class="body" alignment="flex-start">
+                <el-image v-if="item.cover" class="image" fit="cover" :src="news.baseUrl + item.id + '/cover.webp'"
+                          lazy :preview-src-list="[news.baseUrl + item.id + '/cover.webp']" @click.stop="" preview-teleported></el-image>
+                <span class="content">{{ item.introduce }}</span>
+              </el-space>
             </el-space>
           </el-row>
         </el-row>
@@ -44,20 +49,23 @@ import {ref, onBeforeMount} from "vue";
 import {scrollToBottomListen, throttle} from "../../utils/scroll";
 import {baseMainStore} from "../../store/base";
 import {storeToRefs} from "pinia/dist/pinia.esm-browser";
-import {get} from "../../utils/axios";
+import {axiosGetAll, get} from "../../utils/axios";
 import {getAssets} from "../../utils/globalFunc";
+import {info} from "~/utils/message";
 
 const emits = defineEmits(["current-page"])
 const baseStore = baseMainStore()
-const {avatar, talk} = storeToRefs(baseStore)
+const {news} = storeToRefs(baseStore)
 const noData = getAssets("no_data.svg")
 
 let data = ref([])
+let list = ref([])
 let loading = ref(false)
 let isBottom = false
 let currentPage = 1
 let request = 0
 let mode = "technology"
+let getDataLock = false
 
 function init() {
   initData()
@@ -73,13 +81,51 @@ function scrollToBottom() {
 }
 
 function getData() {
+  if (isBottom) {
+    info("到最底部啦～")
+    return
+  }
+
+  if (getDataLock) {
+    return
+  }
+
   loading.value = true
+  getDataLock = true
   get("/v1/get/news?page=" + currentPage).then(function (reply) {
-    data.value = data.value.concat(reply.data["news"])
+    list.value = reply.data.news
+    let size = reply.data.news.length
+    if (size === 0) {
+      isBottom = true
+      info("到最底部啦～")
+      loading.value = false
+      getDataLock = false
+      return
+    }
     currentPage += 1
+    getIntroduce()
   }).catch(function () {
-  }).then(function () {
     loading.value = false
+    getDataLock = false
+  })
+}
+
+function getIntroduce() {
+  let endpoints = []
+  list.value.forEach(function (item) {
+    endpoints.push(news.value.baseUrl + item["id"] + "/introduce")
+  })
+  axiosGetAll(endpoints, function (allData) {
+    allData.forEach(function (each) {
+      list.value.forEach(function (item, index) {
+        each.data.id === item["id"] && (list.value[index] = Object.assign(item, each.data))
+      })
+    })
+  }, function () {
+  }, function () {
+    data.value = data.value.concat(list.value)
+    loading.value = false
+    getDataLock = false
   })
 }
 
@@ -168,20 +214,28 @@ onBeforeMount(() => {
                 color: var(--el-text-color-secondary);
               }
             }
-          }
 
-          .foot {
-            width: 100%;
-            margin-top: 5px;
+            .body {
+              width: 100%;
+              max-height: 80px;
 
-            .icon {
-              font-size: 18px;
-              color: var(--el-text-color-secondary)
-            }
+              .image {
+                height: 80px;
+                width: 120px;
+                border-radius: 6px;
+              }
 
-            .num {
-              font-size: 14px;
-              color: var(--el-text-color-secondary)
+              .content {
+                font-size: 14px;
+                line-height: 24px;
+                color: var(--el-text-color-regular);
+                word-break: break-all;
+                align-self: stretch;
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 3;
+              }
             }
           }
         }

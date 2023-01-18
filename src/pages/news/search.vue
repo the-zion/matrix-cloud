@@ -25,6 +25,11 @@
                   <span>{{item.author}}</span>
                 </el-space>
               </el-space>
+              <el-space v-if="item.content" class="body" alignment="flex-start">
+                <el-image v-if="item.cover" class="image" fit="cover" :src="news.baseUrl + item.id + '/cover.webp'"
+                          lazy :preview-src-list="[news.baseUrl + item.id + '/cover.webp']" @click.stop="" preview-teleported></el-image>
+                <span class="content" v-html="item.content"></span>
+              </el-space>
             </el-space>
           </el-row>
         </el-row>
@@ -51,7 +56,7 @@ import {scrollToBottomListen, throttle} from "../../utils/scroll";
 
 const userStore = userMainStore()
 const baseStore = baseMainStore()
-const {avatar, article} = storeToRefs(baseStore)
+const {news} = storeToRefs(baseStore)
 const {uuid} = storeToRefs(userStore)
 const props = defineProps({
   search: String,
@@ -205,20 +210,28 @@ onBeforeMount(function () {
                 color: var(--el-text-color-secondary);
               }
             }
-          }
 
-          .foot {
-            width: 100%;
-            margin-top: 5px;
+            .body {
+              width: 100%;
+              max-height: 80px;
 
-            .icon {
-              font-size: 18px;
-              color: var(--el-text-color-secondary)
-            }
+              .image {
+                height: 80px;
+                width: 120px;
+                border-radius: 6px;
+              }
 
-            .num {
-              font-size: 14px;
-              color: var(--el-text-color-secondary)
+              .content {
+                font-size: 14px;
+                line-height: 24px;
+                color: var(--el-text-color-regular);
+                word-break: break-all;
+                align-self: stretch;
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 3;
+              }
             }
           }
         }
