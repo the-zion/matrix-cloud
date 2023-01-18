@@ -9,7 +9,7 @@
       <el-row class="column-block">
         <el-row class="header">
           <el-row class="column-card" align="middle">
-            <el-image class="image" fit="cover" :src="data.cover" lazy></el-image>
+            <el-image class="image" fit="cover" :src="data.cover" lazy :preview-src-list="[data.cover]" @click.stop="" preview-teleported></el-image>
             <el-row class="container" align="top">
               <el-space class="main">
                 <el-avatar class="avatar" :size="32" icon="UserFilled"
@@ -470,7 +470,7 @@ onMounted(function () {
             font-size: 12px;
             line-height: 20px;
             color: var(--el-text-color-secondary);
-            word-break: break-word;
+            word-break: break-all;
             align-self: stretch;
             overflow: hidden;
             display: -webkit-box;

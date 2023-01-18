@@ -24,7 +24,7 @@
             </el-space>
             <el-space class="body" alignment="flex-start">
               <el-image v-if="item.cover" class="image" fit="cover" :src="item.cover"
-                        lazy></el-image>
+                        lazy :preview-src-list="[item.cover]" @click.stop="" preview-teleported></el-image>
               <span class="content" v-html="item.text" align="middle"></span>
             </el-space>
           </el-space>
@@ -243,7 +243,7 @@ onBeforeMount(function () {
               font-size: 14px;
               line-height: 24px;
               color: var(--el-text-color-regular);
-              word-break: break-word;
+              word-break: break-all;
               align-self: stretch;
               overflow: hidden;
               display: -webkit-box;

@@ -7,7 +7,7 @@
       <el-row v-for="item in data" class="each" :key="item.id"
               @click="goToPage('column', {id:item.id})">
         <el-row class="column-card" align="top">
-          <el-image class="image" fit="cover" :src="item.cover" lazy></el-image>
+          <el-image class="image" fit="cover" :src="item.cover" lazy :preview-src-list="[item.cover]" @click.stop="" preview-teleported></el-image>
           <el-row class="container" align="top">
             <el-space class="main">
               <el-row class="title">{{ item.name }}</el-row>
@@ -218,7 +218,7 @@ onBeforeMount(() => {
           font-size: 14px;
           line-height: 20px;
           color: var(--el-text-color-secondary);
-          word-break: break-word;
+          word-break: break-all;
           align-self: stretch;
           overflow: hidden;
           display: -webkit-box;

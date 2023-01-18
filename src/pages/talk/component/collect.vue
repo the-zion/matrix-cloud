@@ -8,7 +8,7 @@
       <el-row v-for="(item, index) in data" class="each" :key="item.id"
               @click="goToPage('talk', {id:item.id})">
         <el-row class="talk-card" align="top">
-          <el-image v-show="item.cover" class="image" fit="cover" :src="item.cover" lazy></el-image>
+          <el-image v-show="item.cover" class="image" fit="cover" :src="item.cover" lazy :preview-src-list="[item.cover]" @click.stop="" preview-teleported></el-image>
           <el-row class="container" :class="{'full':!item.cover}">
             <el-space class="main" fill>
               <el-space class="head">
@@ -262,7 +262,7 @@ onBeforeMount(function () {
               font-size: 14px;
               line-height: 24px;
               color: var(--el-text-color-regular);
-              word-break: break-word;
+              word-break: break-all;
               align-self: stretch;
               overflow: hidden;
               display: -webkit-box;
