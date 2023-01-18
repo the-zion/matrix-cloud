@@ -56,6 +56,12 @@ export const baseMainStore = defineStore("base", {
             key: "collections/",
             baseUrl: import.meta.env.VITE_CREATION_BASE_URL + "/collections/"
         },
+        news: {
+            region: "ap-shanghai",
+            bucket: "creation-1309416642",
+            key: "news/",
+            baseUrl: import.meta.env.VITE_CREATION_BASE_URL + "/news/"
+        },
         comment: {
             region: "ap-shanghai",
             bucket: "comment-1309416642",
