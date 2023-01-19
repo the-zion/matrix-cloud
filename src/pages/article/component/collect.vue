@@ -234,9 +234,10 @@ onBeforeMount(function () {
             }
 
             .title {
+              display: unset;
               font-size: 16px;
               font-weight: 500;
-              color: var(--el-text-color-primary)
+              color: var(--el-text-color-primary);
             }
 
             .title:hover {
