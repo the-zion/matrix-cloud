@@ -465,6 +465,8 @@ onMounted(() => {
 
         .process {
           width: 100%;
+          position: absolute;
+          z-index: 1;
         }
       }
     }
@@ -577,6 +579,9 @@ onMounted(() => {
       .editor {
         width: 100%;
         min-height: 300px;
+        ::v-deep(a:-webkit-any-link){
+          text-decoration: unset;
+        }
       }
 
       .bottom {
