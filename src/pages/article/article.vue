@@ -10,7 +10,8 @@
       <ul id="header-container" class="header-container"></ul>
     </el-row>
     <el-row class="main" v-show="!loading">
-      <el-image v-if="data.cover" fit="cover" class="cover" :src="data.cover" :preview-src-list="[data.cover]"></el-image>
+      <el-image v-if="data.cover" fit="cover" class="cover" :src="data.cover"
+                :preview-src-list="[data.cover]"></el-image>
       <el-row class="header">
         <el-row class="title-area" justify="space-between">
           <el-row class="title" align="top">
@@ -227,13 +228,13 @@ function getArticle() {
   })
 }
 
-function setHeaders(){
+function setHeaders() {
   let headerContainer = document.getElementById('header-container')
   headerContainer.addEventListener('mousedown', event => {
     if (event.target.tagName !== 'LI') return
     event.preventDefault()
     const id = event.target.id.slice(8)
-    scrollTo( id)
+    scrollTo(id)
   })
   headerContainer.innerHTML = editorRef.value.getElemsByTypePrefix('header').map(header => {
     const text = SlateNode.string(header)
@@ -243,10 +244,10 @@ function setHeaders(){
   headerContainer.innerHTML && (headers.value = true)
 }
 
-function addClickListenToImg(){
+function addClickListenToImg() {
   const images = document.getElementsByClassName("w-e-image-container")
   Array.prototype.forEach.call(images, function (image) {
-    image.addEventListener("click",function (){
+    image.addEventListener("click", function () {
       imageUrlList.value = [image.lastElementChild.currentSrc]
     })
   });
@@ -309,7 +310,7 @@ function agreeClick() {
   }
 }
 
-function imageViewerClose(){
+function imageViewerClose() {
   imageUrlList.value = []
 }
 
@@ -454,7 +455,7 @@ onBeforeUnmount(function () {
     z-index: 100;
     display: unset;
 
-    .title{
+    .title {
       font-size: 25px;
       color: var(--el-text-color-regular)
     }
@@ -464,6 +465,7 @@ onBeforeUnmount(function () {
       padding-left: 0;
       width: 100%;
       margin-top: 0;
+
       ::v-deep(.li) {
         color: var(--el-text-color-secondary);
         margin: 10px 0;
@@ -472,24 +474,30 @@ onBeforeUnmount(function () {
         text-overflow: ellipsis;
         white-space: nowrap;
       }
+
       ::v-deep(.li:hover) {
         color: var(--el-color-primary);
       }
+
       ::v-deep(.header1) {
         font-size: 20px;
       }
+
       ::v-deep(.header2) {
         font-size: 16px;
         padding-left: 15px;
       }
+
       ::v-deep(.header3) {
         font-size: 14px;
         padding-left: 30px;
       }
+
       ::v-deep(.header4) {
         font-size: 12px;
         padding-left: 45px;
       }
+
       ::v-deep(.header5) {
         font-size: 12px;
         padding-left: 60px;
@@ -565,7 +573,11 @@ onBeforeUnmount(function () {
 
     .editor {
       min-height: 676px;
-      width: 100%
+      width: 100%;
+
+      ::v-deep(a:-webkit-any-link) {
+        text-decoration: unset;
+      }
     }
 
     .footer {
