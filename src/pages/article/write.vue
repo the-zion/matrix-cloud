@@ -114,7 +114,7 @@ const toolbarConfig = {
 const editorConfig = {
   placeholder: '请输入内容...',
   scroll: false,
-  maxLength: 5000,
+  maxLength: 10000,
   autoFocus: false,
   MENU_CONF: {
     insertVideo: {

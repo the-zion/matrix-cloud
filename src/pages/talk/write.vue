@@ -97,7 +97,7 @@ const toolbarConfig = {
 
 const editorConfig = {
   placeholder: '请输入内容...',
-  maxLength: 2000,
+  maxLength: 5000,
   autoFocus: false,
   MENU_CONF: {
     insertVideo: {
