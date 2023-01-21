@@ -226,6 +226,7 @@ onBeforeMount(function () {
             }
 
             .content {
+              text-align: left;
               width: 100%;
               height: 43px;
               font-size: 14px;

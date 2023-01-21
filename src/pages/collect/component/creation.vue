@@ -237,6 +237,7 @@ onBeforeMount(() => {
             }
 
             .content {
+              text-align: left;
               font-size: 14px;
               line-height: 24px;
               color: var(--el-text-color-regular);

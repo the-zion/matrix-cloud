@@ -214,6 +214,7 @@ onBeforeMount(() => {
         }
 
         .content {
+          text-align: left;
           margin-top: 8px;
           height: 40px;
           font-size: 14px;
