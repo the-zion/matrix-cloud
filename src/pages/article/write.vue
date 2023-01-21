@@ -453,10 +453,15 @@ onMounted(() => {
       .block {
         width: 100%;
         border-bottom: 1px solid var(--el-border-color-lighter);
+        height: 42px;
 
         .toolbar {
           width: 1000px;
           margin: auto;
+          position: absolute;
+          top: 1px;
+          z-index: 2;
+          left: calc(50% - 500px);
 
           ::v-deep(.w-e-toolbar) {
             justify-content: center;
@@ -467,6 +472,7 @@ onMounted(() => {
           width: 100%;
           position: absolute;
           z-index: 1;
+          top: 42px;
         }
       }
     }
@@ -528,7 +534,7 @@ onMounted(() => {
 
   .main {
     position: absolute;
-    top: 91px;
+    top: 92px;
     bottom: 0;
     left: 0;
     right: 0;
