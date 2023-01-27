@@ -485,7 +485,7 @@ onMounted(() => {
     right: calc(52% + 360px);
     width: 250px;
     overflow-y: auto;
-    z-index: 100;
+    z-index: 1;
     display: unset;
 
     .title{
