@@ -148,10 +148,8 @@ function getIntroduce() {
     endpoints.push(column.value.baseUrl + item["uuid"] + "/" + item["id"] + "/introduce")
   })
   axiosGetAll(endpoints, function (allData) {
-    allData.forEach(function (each) {
-      list.value.forEach(function (item, index) {
-        each.data.id === item["id"] && (list.value[index] = Object.assign(item, each.data))
-      })
+    allData.forEach(function (each, index) {
+      list.value[index] = Object.assign(list.value[index], each.data)
     })
   }, function () {
   }, function () {

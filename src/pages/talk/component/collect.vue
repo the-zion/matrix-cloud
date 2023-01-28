@@ -150,9 +150,7 @@ function getIntroduce() {
   })
   axiosGetAll(endpoints, function (allData) {
     allData.forEach(function (each, index) {
-      list.value.forEach(function (item, index) {
-        each.data.id === item["id"] && (list.value[index] = Object.assign(item, each.data))
-      })
+      list.value[index] = Object.assign(list.value[index], each.data)
     })
   }, function () {
   }, function () {

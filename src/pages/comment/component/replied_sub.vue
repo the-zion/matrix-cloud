@@ -181,10 +181,8 @@ function getCreationIntroduce() {
     }
   })
   axiosGetAll(endpoints, function (allData) {
-    allData.forEach(function (each) {
-      list.value.forEach(function (item, index) {
-        each.data.id === item["creationId"] && (list.value[index]["title"] = each.data["title"])
-      })
+    allData.forEach(function (each, index) {
+      list.value[index]["title"] = each.data["title"]
     })
   }, function () {
   }, function () {
@@ -206,10 +204,8 @@ function getComment() {
     endpoints.push(comment.value.baseUrl + item["uuid"] + "/" + item["id"] + "/content")
   })
   axiosGetAll(endpoints, function (allData) {
-    allData.forEach(function (each) {
-      list.value.forEach(function (item, index) {
-        each.data.id === item["id"] && (list.value[index] = Object.assign(item, each.data))
-      })
+    allData.forEach(function (each, index) {
+      list.value[index] = Object.assign(list.value[index], each.data)
     })
   }, function () {
   }, function () {
