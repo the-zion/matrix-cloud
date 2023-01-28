@@ -217,10 +217,8 @@ function getIntroduce() {
     endpoints.push((item["mode"] === 1 ? article.value.baseUrl : (item["mode"] === 2 ? column.value.baseUrl : talk.value.baseUrl)) + item["uuid"] + "/" + item["creationId"] + "/introduce")
   })
   axiosGetAll(endpoints, function (allData) {
-    allData.forEach(function (each) {
-      list.value.forEach(function (item, index) {
-        each.data.id === item["creationId"] && (list.value[index] = Object.assign(item, each.data))
-      })
+    allData.forEach(function (each, index) {
+      list.value[index] = Object.assign(list.value[index], each.data)
     })
   }, function () {
   }, function () {
